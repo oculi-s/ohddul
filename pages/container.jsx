@@ -5,7 +5,7 @@ import Aside from '@/pages/common/aside'
 import Footer from '@/pages/common/footer'
 import dir from '@/module/dir';
 import { getSession, useSession } from 'next-auth/react';
-import { Loading, Updating } from '@/component/_base';
+import { Loading } from '@/component/_base';
 import { useState } from 'react';
 import { edit4Q, earnStack, earnonPrice } from '@/component/chart/earnStack';
 
@@ -14,14 +14,12 @@ Array.prototype.remove = function (v) {
 	if (i > -1) this.splice(i, 1);
 }
 export const getServerSideProps = async (ctx) => {
-	const updating = json.read(dir.stock.update, { updating: 0 }).updating;
 	let userMeta = {}, price = [], meta = {}, group = {}, predict = {};
 	let index = {}, induty = {};
 	let props = {
 		userMeta, price, meta, group, predict,
 		index, induty, updating
 	};
-	if (updating) return { props };
 
 	try {
 		const code = ctx.query?.code;
@@ -34,7 +32,7 @@ export const getServerSideProps = async (ctx) => {
 		index = json.read(dir.stock.induty);
 		induty = json.read(dir.stock.dart.induty);
 		props = {
-			updating, userMeta,
+			userMeta,
 			price, meta, group, index, induty,
 			predict,
 		};
@@ -105,7 +103,6 @@ export default function Container(Component) {
 		// 	setHydrated(true);
 		// }, []);
 		// if (!hydrated) return null;
-		if (props.updating) return Updating();
 		if (status == 'loading') return Loading();
 		props = {
 			...props,
