@@ -7,7 +7,7 @@ import { getSession } from 'next-auth/react';
 import dir from '@/module/dir';
 import { Div } from '@/module/ba';
 import Link from 'next/link';
-import { PredBar } from '../stock/Head';
+import { PredBar } from '../../pages/stock/Head';
 
 export const getServerSideProps = async (ctx) => {
     const update = json.read('$/.update', { updating: 0, startTime: dt.num() });

@@ -1,6 +1,7 @@
 import path from 'path';
 
 const o = process.cwd();
+console.log(o);
 const adict = {
     "@": o,
     "$": o + "/public",

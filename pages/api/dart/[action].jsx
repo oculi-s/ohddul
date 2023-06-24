@@ -1,4 +1,4 @@
-import Dart from '@/module/stock/dart';
+import Dart from '@/admin/module/dart';
 
 export default function handler(req, res) {
     let { action } = req.query;

@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "cd /home/oculis/ohddul; next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cd /home/oculis/ohddul; next start",
     "lint": "next lint"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import { updateAll } from '@/module/stock/update';
+import { updateAll } from '@/admin/module/update';
 import json from '@/module/json';
 import dir from '@/module/dir';
 

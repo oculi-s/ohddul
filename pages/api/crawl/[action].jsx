@@ -1,4 +1,4 @@
-import crawl from '@/module/stock/crawl';
+import crawl from '@/admin/stock/crawl';
 
 export default function handler(req, res) {
     let { action } = req.query;
