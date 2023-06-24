@@ -2,11 +2,10 @@
   "name": "ohddul",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "cd /home/oculis/ohddul; next dev",
+    "dev": "next dev",
     "build": "next build",
-    "start": "cd /home/oculis/ohddul; next start",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -14,7 +13,6 @@
     "@emotion/styled": "^11.10.8",
     "@mui/material": "^5.12.2",
     "@svgr/webpack": "^8.0.1",
-    "adm-zip": "^0.5.10",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "chart.js": "^4.3.0",
@@ -35,7 +33,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.62.0",
-    "sharp": "^0.32.1",
-    "yahoo-finance": "^0.3.8"
+    "sharp": "^0.32.1"
   }
 }

@@ -1,6 +1,7 @@
 import encode from '@/module/alias';
 
 export const stock = {
+    update: encode('_/.update'),
     code: encode('_/code.json'),
     crno: encode('_/crno.json'),
     name: encode('_/name.json'),

@@ -125,6 +125,7 @@ const DateForm = ({ date = 1, setDate }) => {
 const PriceForm = ({
     change, origin, setChange, submitProps
 }) => {
+    console.log(change, origin);
     const set = (p) => {
         p = parseInt(p || 0);
         p = Math.min(p, origin * 5);
@@ -197,7 +198,7 @@ export const PredBar = ({
     setBar, setOpacity,
     testing = false, help = true, defaultType = 0
 }) => {
-    const origin = last?.close;
+    const origin = last?.close || 0;
     const [change, setChange] = useState(0);
     const [type, setType] = useState(defaultType);
     const [date, setDate] = useState(1);

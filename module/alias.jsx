@@ -1,7 +1,6 @@
 import path from 'path';
 
-const o = process.cwd();
-console.log(o);
+const o = path.resolve('.');
 const adict = {
     "@": o,
     "$": o + "/public",
@@ -10,6 +9,6 @@ const adict = {
 }
 export default function encode(url) {
     url = url.split('/').filter(e => e);
-    url = url.map(e => adict[e] ? adict[e] : e);
-    return url.join('/');
+    url = url.map(e => String(adict[e] ? adict[e] : e));
+    return path.join(...url);
 }

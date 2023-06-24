@@ -14,7 +14,7 @@ Array.prototype.remove = function (v) {
 	if (i > -1) this.splice(i, 1);
 }
 export const getServerSideProps = async (ctx) => {
-	const updating = json.read('$/.update', { updating: 0 }).updating;
+	const updating = json.read(dir.stock.update, { updating: 0 }).updating;
 	let userMeta = {}, price = [], meta = {}, group = {}, predict = {};
 	let index = {}, induty = {};
 	let props = {
@@ -26,7 +26,7 @@ export const getServerSideProps = async (ctx) => {
 	try {
 		const code = ctx.query?.code;
 
-		meta = json.read(dir.stock.meta);
+		meta = json.read(dir.stock.meta, { data: {}, index: {} });
 		group = json.read(dir.stock.group);
 		price = json.read(dir.stock.all);
 		predict = json.read(dir.stock.predAll);

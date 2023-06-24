@@ -22,6 +22,7 @@ export const NumFix = (v = 0) => {
 }
 
 export const Fix = (f, n = 2) => {
+    if (isNaN(f)) f = 0;
     return (f > 0 ? '+' : '') + f.toFixed(n);
 }
 

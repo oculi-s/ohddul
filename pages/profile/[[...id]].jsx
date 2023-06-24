@@ -100,7 +100,8 @@ const FavTable = ({ userFavs, userPred, meta, price, uid }) => {
     </tr>
     const Rows = ({ code }) => {
         const name = meta[code]?.name;
-        const { close, prev } = price[code];
+        const close = price[code]?.close;
+        const prev = price[code]?.prev;
         const [favs, setFavs] = useState(true);
         return <>
             <tr>
