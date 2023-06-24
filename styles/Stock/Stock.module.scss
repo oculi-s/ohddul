@@ -1,0 +1,96 @@
+@import '../variables';
+
+.meta {
+    width: fit-content;
+    min-width: 250px;
+    margin-left: auto;
+
+    .percent {
+        font-size: .8em;
+    }
+}
+
+.predTable {
+    min-height: 400px;
+    border-radius: 10px;
+
+    * {
+        text-align: center;
+    }
+}
+
+.earnTable {
+    table-layout: fixed;
+
+    tr>* {
+        text-align: center;
+        position: relative;
+    }
+
+    td {
+        >span {
+            z-index: 1;
+            position: relative;
+        }
+
+        .bar {
+            background: $bar-color;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            z-index: 0;
+            max-width: 100%;
+        }
+    }
+
+    .more {
+        cursor: pointer;
+    }
+}
+
+.share {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: $bg-mid;
+    border-radius: 20px;
+
+    >* {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    canvas {
+        height: 100% !important;
+    }
+
+    .shareTable {
+        padding: 10px;
+        margin: auto 10px;
+        border-radius: 10px;
+        text-align: center;
+
+        tbody th {
+            max-width: 100px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .date {
+            font-size: .9em;
+        }
+    }
+}
+
+@include mobtab {
+    .share {
+        flex-direction: column;
+
+        >* {
+            width: auto;
+        }
+    }
+}

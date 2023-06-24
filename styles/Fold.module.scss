@@ -1,0 +1,50 @@
+.title {
+    padding-top: 5px;
+    border: 1px solid var(--border-color);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: block;
+    min-height: 19px;
+    text-align: center;
+    background: var(--th-color);
+    cursor: pointer;
+    overflow-y: clip !important;
+
+    * {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    img {
+        max-height: 50px;
+        padding: 5px;
+    }
+}
+
+.title::after {
+    content: "[펼치기 / 접기]";
+    width: 100%;
+    display: block;
+    margin-top: 5px;
+    padding: 5px 0;
+    background: var(--td-color);
+    border-top: 1px solid var(--border-color);
+}
+
+.content {
+    max-height: 0;
+    transition: max-height .3s ease-out;
+    overflow-wrap: break-word;
+    overflow-y: clip !important;
+
+    td,
+    thead * {
+        text-align: center;
+        white-space: nowrap;
+    }
+}
+
+.view+.content {
+    max-height: 10000px !important;
+    transition: max-height .3s ease-in !important;
+}

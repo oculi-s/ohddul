@@ -1,0 +1,25 @@
+.tabGroup {
+    margin: 10px auto;
+    box-shadow: 0px -4px 0px -2px var(--border-color) inset;
+    // border-bottom: 1px solid var(--border-color);
+    padding: 5px;
+    padding-bottom: 0;
+    background: var(--bg-main);
+
+    .tab {
+        padding: 8px 10px;
+        display: inline-block;
+        cursor: pointer;
+        transition: all .3s;
+        border-bottom: 2px solid transparent;
+        min-width: 60px;
+        text-align: center;
+    }
+
+    .tab.active,
+    .tab:hover {
+        background: var(--th-color);
+        border-color: var(--text-color);
+        transition: all .3s;
+    }
+}

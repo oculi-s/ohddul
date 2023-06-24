@@ -1,0 +1,48 @@
+@import './variables';
+
+.area {
+    background: $bg-mid;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.chartArea {
+    .wrap {
+        display: flex;
+        flex-direction: column;
+
+        .chart {
+            max-height: 200px;
+        }
+
+        .fa {
+            margin: auto 3px;
+            display: flex;
+        }
+
+        .percent {
+            font-size: .8em;
+            margin: auto 2px;
+        }
+
+        >* {
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+    }
+}
+
+@include desktop {
+    .inline {
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+@include mobile {
+    .inline {
+        .wrap {}
+    }
+}

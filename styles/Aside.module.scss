@@ -1,0 +1,132 @@
+@import './variables.scss';
+
+.aside {
+    position: absolute;
+    width: var(--nav-width);
+    right: var(--nav-margin);
+    top: var(--top);
+
+    >div {
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 10px;
+        color: var(--text-color);
+    }
+
+    .search {
+        display: none;
+    }
+}
+
+.box {
+    position: relative;
+    min-height: 150px;
+    margin-bottom: 10px;
+    background: var(--bg-main);
+    font-size: .9em;
+
+    >span {
+        display: block;
+        font-weight: bold;
+    }
+
+    th {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100px;
+        max-width: 100px;
+    }
+}
+
+.user {
+    width: 100%;
+
+    form * {
+        color: var(--text-color);
+        border-color: var(--border-color) !important;
+    }
+
+    >form {
+        padding-top: 5px;
+        text-align: center;
+    }
+
+    button {
+        background: var(--bg-body);
+        color: var(--text-color);
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+    }
+
+}
+
+.up::before {
+    content: "\01F4C8";
+}
+
+.down::before {
+    content: "\01F4C9";
+}
+
+.rank::before {
+    content: "\01F4B8";
+}
+
+.shadow {
+    display: none;
+}
+
+@include mobtab {
+    .aside {
+        position: fixed;
+        top: 0;
+        right: calc(-1 * var(--nav-width));
+        z-index: 30;
+        background: var(--bg-body);
+        transition: right .3s;
+
+        .search {
+            display: block;
+
+            >div {
+                position: relative !important;
+            }
+
+            form>button {
+                display: none;
+            }
+        }
+    }
+
+    .aside.show {
+        right: 0;
+        transition: right .3s;
+    }
+
+    .shadow {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background: rgba(0, 0, 0, .5);
+        left: 0;
+        top: 0;
+        padding: 20px;
+
+        >button {
+            padding: 0;
+            justify-content: left;
+        }
+    }
+
+    .aside.show+.shadow {
+        display: block;
+    }
+
+    .box {
+        min-height: 130px;
+    }
+
+}
