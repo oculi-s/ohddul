@@ -18,7 +18,7 @@ export const getServerSideProps = async (ctx) => {
 	let index = {}, induty = {};
 	let props = {
 		userMeta, price, meta, group, predict,
-		index, induty, updating
+		index, induty
 	};
 
 	try {

@@ -10,8 +10,6 @@ import Board from './board';
 import ToggleTab from '@/component/base/tab';
 
 export const getServerSideProps = async (ctx) => {
-    const updating = json.read('$/.update', { updating: 0 }).updating;
-    if (updating) return { props: { updating } };
     const userInfo = (await getSession(ctx))?.user;
     const uid = userInfo?.uid;
     const userMeta = json.read(dir.user.meta);
@@ -37,11 +35,8 @@ export const getServerSideProps = async (ctx) => {
         .filter(code => fs.existsSync(dir.stock.earn(code))).length;
     const shareCount = Object.keys(meta.data)
         .filter(code => fs.existsSync(dir.stock.share(code))).length;
-    const update = json.read('$/.update', {
-        updating: 0, startTime: dt.num()
-    });
     const props = {
-        ...update, now, price, meta,
+        now, price, meta,
         uid, userMeta,
         earnCount, shareCount, earnTotal
     };

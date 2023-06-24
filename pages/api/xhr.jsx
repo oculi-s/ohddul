@@ -26,24 +26,3 @@ export const json = {
         return await Fetch('/api/json/toggle', props);
     }
 }
-
-export const crawl = {
-    meta: async (props) => {
-        return await Fetch('/api/crawl/meta', props);
-    }, group: async (props) => {
-        return await Fetch('/api/crawl/group', props);
-    }, price: async (props) => {
-        return await Fetch('/api/crawl/price', props);
-    }, earn: async (props) => {
-        return await Fetch('/api/crawl/earn', props);
-    }, share: async (props) => {
-        return await Fetch('/api/crawl/share', props);
-    }
-}
-export const dart = {
-    list: async (props) => {
-        return await Fetch('/api/dart/list', props);
-    }, earn: async (props) => {
-        return await Fetch('/api/dart/earn', props);
-    },
-}
