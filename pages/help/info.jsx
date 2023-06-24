@@ -5,10 +5,11 @@ import styles from '@/styles/Help.module.scss';
 import { Div } from '@/module/ba';
 
 const InfoBlock1 = ({
-    meta, price, earnNull, earnCount, shareNull
+    meta, price,
+    earnNull, earnCount, shareNull
 }) => {
     const count = Object.keys(meta).length
-    const priceCount = Object.keys(price).length;
+    const priceCount = Object.keys(meta).filter(e => price[e]).length;
     const YEARS = dt.YEARS();
     const len = YEARS.length;
     return <div className={styles.box}>
@@ -19,22 +20,22 @@ const InfoBlock1 = ({
             <tr>
                 <th>가격</th>
                 <td>
-                    <span className='red'>{count - priceCount}</span>
+                    <span className='red'>{priceCount}</span>
                     ({Div(priceCount, count)}) 개 종목의 가격정보가 제공됩니다.
                 </td>
             </tr>
             <tr>
                 <th>실적</th>
                 <td>
-                    <span className='red'>{count - earnNull}</span>
-                    ({Div(count - earnNull, count)}) 개 종목의 실적정보가 제공됩니다.
+                    <span className='red'>{count - earnNull.length}</span>
+                    ({Div(count - earnNull.length, count)}) 개 종목의 실적정보가 제공됩니다.
                 </td>
             </tr>
             <tr>
                 <th>지분</th>
                 <td>
-                    <span className='red'>{shareNull}</span>
-                    ({Div(count - shareNull, count)}) 개 종목의 지분정보가 제공됩니다.
+                    <span className='red'>{count - shareNull.length}</span>
+                    ({Div(count - shareNull.length, count)}) 개 종목의 지분정보가 제공됩니다.
                 </td>
             </tr>
         </tbody></table>
@@ -108,8 +109,9 @@ const InfoBlock2 = ({ meta, price }) => {
 }
 
 const Info = (props) => {
-    props.meta = props.meta?.data;
-    if (!props.meta) return <></>;
+    const meta = props?.meta?.data;
+    if (!meta) return <></>;
+    props = { ...props, meta };
     return <div>
         <InfoBlock1 {...props} />
         <InfoBlock2 {...props} />

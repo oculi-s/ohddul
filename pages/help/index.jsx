@@ -10,18 +10,18 @@ import ToggleTab from '@/component/base/tab';
 
 export const getServerSideProps = async (ctx) => {
     const userInfo = (await getSession(ctx))?.user;
-    const uid = userInfo?.uid;
+    const uid = userInfo?.uid || false;
     const userMeta = json.read(dir.user.meta);
     const now = dt.num();
-    const price = json.read(dir.stock.all);
+    const price = json.read(dir.stock.all, {});
     const meta = json.read(dir.stock.meta);
     const earnCount = {};
-    const earnDatas = Object.fromEntries(Object.keys(meta)
+    const earnDatas = Object.fromEntries(Object.keys(meta.data)
         .map(code => [code, json.read(dir.stock.earn(code), { data: [] })]));
-    const shareDatas = Object.fromEntries(Object.keys(meta)
+    const shareDatas = Object.fromEntries(Object.keys(meta.data)
         .map(code => [code, json.read(dir.stock.share(code), { data: [] })]));
     const types = { 3: '-03-31', 2: '-06-30', 4: '-09-30', 1: '-12-31' };
-    for await (let year of dt.YEARS) {
+    for await (let year of dt.YEARS()) {
         earnCount[year] = [0, 0, 0, 0];
         for await (let type of '1423') {
             const key = `${year}${types[type]}`;

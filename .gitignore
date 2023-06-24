@@ -3,6 +3,7 @@
 /public/.update
 *meta/
 /public/stock/
+.env
 
 # dependencies
 /node_modules

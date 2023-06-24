@@ -69,7 +69,6 @@ const callbacks = {
     }
 }
 
-
 export default async function auth(req, res) {
     return await NextAuth(req, res, {
         providers,

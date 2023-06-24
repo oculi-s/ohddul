@@ -27,8 +27,9 @@ const Header = ({ rank, num, bg, id }) => (
 )
 
 const Profile = (props) => {
-    let { rank, score, userPred } = props;
-    let { queue, data } = userPred;
+    const { rank, score, userPred } = props;
+    let queue = userPred?.queue;
+    let data = userPred?.data;
     let ts = score;
     data = data
         ?.sort(dt.sort)
@@ -54,7 +55,7 @@ const Profile = (props) => {
 }
 
 const Graph = ({ id, rank, forNext, userPred }) => {
-    const props = { horLine: rank, data: userPred.data, name: id };
+    const props = { horLine: rank, data: userPred?.data, name: id };
     return (
         <>
             <div className={styles.bar}>
