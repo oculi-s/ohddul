@@ -31,8 +31,8 @@ const Profile = (props) => {
     let { queue, data } = userPred;
     let ts = score;
     data = data
-        .sort(dt.sort)
-        .map(e => {
+        ?.sort(dt.sort)
+        ?.map(e => {
             e.value = ts;
             ts -= e.change;
             return e;
@@ -45,7 +45,7 @@ const Profile = (props) => {
                 <b>{rank[0].toUpperCase() + rank.slice(-1)} {score}</b>
             </div>
             <span>
-                <p>{data.length || 0}개 예측완료 {queue.length || 0}개 대기중</p>
+                <p>{data?.length || 0}개 예측완료 {queue?.length || 0}개 대기중</p>
                 <p>오/떨 적중 (N/N) 회 (30 %)</p>
                 가입일, 최종 접속시간
             </span>
@@ -122,7 +122,7 @@ const FavTable = ({ userFavs, userPred, meta, price, uid }) => {
             </tr>
         </>
     }
-    const body = userFavs.map(code => {
+    const body = userFavs?.map(code => {
         return <tbody key={code}>
             <Rows {...{ code }} />
         </tbody>

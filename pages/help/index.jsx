@@ -3,7 +3,6 @@ import dt from '@/module/dt';
 import styles from '@/styles/Help.module.scss';
 import { getSession } from 'next-auth/react';
 import dir from '@/module/dir';
-import fs from 'fs';
 import Info from './info';
 import Pred from './pred';
 import Board from './board';
@@ -16,39 +15,39 @@ export const getServerSideProps = async (ctx) => {
     const now = dt.num();
     const price = json.read(dir.stock.all);
     const meta = json.read(dir.stock.meta);
-    const YEARS = dt.YEARS();
     const earnCount = {};
-    const earns = Object.keys(meta.data).map(e => json.read(dir.stock.earn(e)).data);
+    const earnDatas = Object.fromEntries(Object.keys(meta)
+        .map(code => [code, json.read(dir.stock.earn(code), { data: [] })]));
+    const shareDatas = Object.fromEntries(Object.keys(meta)
+        .map(code => [code, json.read(dir.stock.share(code), { data: [] })]));
     const types = { 3: '-03-31', 2: '-06-30', 4: '-09-30', 1: '-12-31' };
-    for await (let year of YEARS) {
+    for await (let year of dt.YEARS) {
         earnCount[year] = [0, 0, 0, 0];
         for await (let type of '1423') {
             const key = `${year}${types[type]}`;
             const i = dt.toJson(key).M / 3 - 1;
-            earnCount[year][i] = earns
+            earnCount[year][i] = Object.values(earnDatas)
+                .filter(e => e.data?.length)
                 .filter(e =>
-                    e.find(c => (c.date == key) && c.data)
+                    e.data?.find(c => (c.date == key) && c.data)
                 ).length;
         }
     }
-    const earnTotal = Object.keys(meta.data)
-        .filter(code => fs.existsSync(dir.stock.earn(code))).length;
-    const shareCount = Object.keys(meta.data)
-        .filter(code => fs.existsSync(dir.stock.share(code))).length;
+    const earnNull = Object.entries(earnDatas)
+        .filter(([k, v]) => !v.data?.length)
+        .map(e => e[0]);
+    const shareNull = Object.entries(shareDatas)
+        .filter(([k, v]) => !v.data?.length)
+        .map(e => e[0]);
     const props = {
         now, price, meta,
         uid, userMeta,
-        earnCount, shareCount, earnTotal
+        earnCount, shareNull, earnNull
     };
     return { props };
 }
 
-const index = ({
-    meta, price, induty, index, predict,
-    earnCount, shareCount, earnTotal
-}) => {
-    meta = meta.data;
-    const props = { meta, price, induty, index, predict, earnCount, earnTotal, shareCount };
+const index = (props) => {
     const names = [
         '기본정보', '예측과 랭크', '커뮤니티규칙'
     ];
