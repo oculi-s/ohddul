@@ -1,11 +1,16 @@
 import path from 'path';
 
-const o = path.resolve('.');
+var o;
+if (process.platform == 'linux') {
+    o = path.resolve('/');
+} else {
+    o = path.resolve('.');
+}
 const adict = {
     "@": o,
-    "$": o + "/public",
-    "&": o + "/public/stock",
-    "_": o + "/public/meta",
+    "$": path.join(o, "public"),
+    "&": path.join(o, "public", "stock"),
+    "_": path.join(o, "public", "meta"),
 }
 export default function encode(url) {
     url = url.split('/').filter(e => e);
