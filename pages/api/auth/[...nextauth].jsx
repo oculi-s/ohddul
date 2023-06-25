@@ -8,7 +8,8 @@ const errorMsg = {
     exist: "이미 존재하는 ID입니다.",
     empty: "패스워드를 입력해주세요.",
     regex: "패스워드 형식이 맞지 않습니다.",
-    pwdiff: "확인 패스워드가 같지 않습니다."
+    pwdiff: "확인 패스워드가 같지 않습니다.",
+    failed: "잘못된 ID/비밀번호입니다."
 }
 const pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*\W)(?!.* ).{8,16}$/);
 
@@ -39,12 +40,13 @@ const providers = [
                     return { id, uid };
                 }
             }
+            console.log(user);
             if (!user) {
-                throw new Error(msg);
+                throw new Error(errorMsg.failed);
             };
             const result = compareSync(pw, user.pw);
             if (!result) {
-                throw new Error(msg);
+                throw new Error(errorMsg.failed);
             }
             const uid = user.uid;
             const admin = user.admin;
