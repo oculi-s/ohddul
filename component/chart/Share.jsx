@@ -57,7 +57,7 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
             borderWidth: 0
         })
         setLoad(false);
-    }, [share]);
+    }, [data]);
     return (
         <div className={styles.wrap}>
             <canvas id={id}></canvas>

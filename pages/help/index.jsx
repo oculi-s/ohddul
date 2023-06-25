@@ -63,7 +63,9 @@ const index = (props) => {
         </div>
     ]
     return <div className={styles.docs}>
-        예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
+        <span className={styles.title}>
+            예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
+        </span>
         <ToggleTab {...{ names, datas }} />
     </div>;
 }

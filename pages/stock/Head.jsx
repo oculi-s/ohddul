@@ -125,7 +125,6 @@ const DateForm = ({ date = 1, setDate }) => {
 const PriceForm = ({
     change, origin, setChange, submitProps
 }) => {
-    console.log(change, origin);
     const set = (p) => {
         p = parseInt(p || 0);
         p = Math.min(p, origin * 5);

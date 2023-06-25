@@ -16,7 +16,6 @@
         counter-increment: h4;
         content: counter(h3) "." counter(h4) ". ";
     }
-
 }
 
 .box {
@@ -96,6 +95,27 @@
 
         >* {
             width: 100%;
+        }
+    }
+
+    .box {
+        padding: 15px;
+    }
+
+    .title {
+        display: block;
+        margin: auto 10px;
+    }
+
+    .predWrap {
+        padding: 5px;
+
+        >div {
+            padding: 5px;
+        }
+
+        button {
+            margin: 0 5px;
         }
     }
 }

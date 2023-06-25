@@ -10,7 +10,6 @@ const adjustDir = ({ ref, dir, setDir }) => {
     } else if (left < 0) {
         setDir('right');
     }
-    console.log(left, right, width, dir);
 }
 
 const Help = ({ des, data, span }) => {
