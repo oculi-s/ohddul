@@ -11,6 +11,7 @@ const dt = {
         return `${Y}-${M}-${D}`;
     },
     update: (dict) => {
+        if (dt.now().getDay() == 1) return 0;
         return (dt.toString() != dt.toString(dict?.last || 0));
     },
     now: () => {

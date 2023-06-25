@@ -18,7 +18,6 @@ const GroupMeta = ({ name, group, price, meta }) => {
     const priceSum = groupPrice.map(e => e.price).sum();
     const first = groupPrice[0];
     return <div className={styles.meta}>
-
         <table>
             <tbody>
                 <tr><th colSpan={2}>
@@ -49,7 +48,7 @@ const GroupMeta = ({ name, group, price, meta }) => {
  */
 const N = 8;
 const sortKeys = ['시가총액순', '자산순']
-const GroupBubble = ({ group, price, meta }) => {
+const GroupBubble = ({ group = {}, price, meta }) => {
     const [sortBy, setSortBy] = useState(0);
     const sortFunction = [(b, a) => {
         const sa = group[a]?.child?.map(e => price[e]?.close * meta.data[e]?.amount).sum();
@@ -61,7 +60,7 @@ const GroupBubble = ({ group, price, meta }) => {
         .slice(0, N);
 
     const datas = names.map(name => {
-        return <div>
+        return <div key={name}>
             <GroupMeta {...{ name, group, price, meta }} />
             <div className={styles.chart}>
                 <GroupDoughnutChart {...{ name, group, price, meta }} />
