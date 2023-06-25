@@ -1,0 +1,187 @@
+@import '../variables';
+
+.type {
+    display: flex;
+    margin: 5px auto;
+    padding: 10px;
+    border-radius: 10px;
+    background: $bg-bright;
+    justify-content: space-around;
+
+    >button {
+        padding: 10px;
+        background: $bg-dark;
+        border-radius: 10px;
+        width: 45%;
+        margin: 0 10px;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .return {
+        width: fit-content
+    }
+}
+
+.type1 {
+    .up {
+        background: $red;
+    }
+
+    .up:hover {
+        background: $red-bright;
+    }
+
+    .down {
+        background: $blue;
+    }
+
+    .down:hover {
+        background: $blue-bright;
+    }
+
+    button:hover {
+        transition: all .3s;
+    }
+
+    button {
+        color: $text-bright;
+        transition: all .3s;
+    }
+}
+
+.slide:has(.help:hover) {
+    overflow-y: visible !important;
+}
+
+.slide {
+    overflow-y: hidden;
+}
+
+.slide:not(.view) {
+    >* {
+        margin-top: -100px !important;
+        // transition: margin-top .3s ease-out;
+    }
+}
+
+.slide.view>* {
+    margin-top: 0;
+    transition: margin-top .3s ease-in;
+}
+
+.fade {
+    transition: opacity .5s ease-in !important;
+}
+
+// .type2 {
+//     .help {}
+// }
+
+.predForm {
+    display: flex;
+    width: 93%;
+
+    >div {
+        border-radius: 5px;
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+        background: $bg-mid;
+        margin: auto 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+
+    >button {
+        width: 40px;
+        padding: 0;
+    }
+
+    .date {
+
+        input {
+            font-size: 1em;
+            max-width: 2em;
+            text-align: center;
+        }
+    }
+
+    .price {
+        width: 100%;
+
+        input {
+            margin-right: auto;
+            font-size: 1em;
+            width: 100%;
+        }
+
+        span {
+            text-align: right;
+
+            .priceDiff {
+                margin-right: 5px;
+            }
+
+            .pricePercent::after {
+                content: "%";
+            }
+        }
+    }
+}
+
+.head {
+    display: flex;
+    align-items: baseline;
+    padding-bottom: 10px;
+    margin-top: 2em;
+
+    .market::before {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        width: 20px;
+        height: 20px;
+        font-size: 15px;
+        display: inline-block;
+        padding: 0;
+        text-align: center;
+        margin-left: 5px;
+    }
+
+    .market.k::before {
+        content: "유";
+        background: var(--green);
+        color: black;
+    }
+
+    .market.q::before {
+        content: "코";
+        background: var(--red);
+        color: black;
+    }
+
+    .open {
+        margin-left: auto;
+        align-self: baseline;
+        font-size: 1em;
+
+        button:before {
+            transform-origin: 50% 50%;
+            display: inline-block;
+            transition: all .3s;
+        }
+
+        .up::before {
+            transform: rotate(180deg);
+            transition: all .3s;
+        }
+    }
+
+    h2 {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+}

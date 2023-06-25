@@ -1,0 +1,38 @@
+@import './variables.scss';
+
+.rank {
+    >span {
+        font-weight: bold;
+    }
+
+    >*[rank^="bronze"] {
+        color: var(--rank-bronze);
+    }
+
+    >*[rank^="silver"] {
+        color: var(--rank-silver);
+    }
+
+    >*[rank^="gold"] {
+        color: var(--rank-gold);
+    }
+
+    >*[rank^="platinum"] {
+        color: var(--rank-platinum);
+    }
+
+    >*[rank^="diamond"] {
+        color: var(--rank-diamond);
+    }
+}
+
+.id {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.user {
+    padding: 10px;
+    background: $bg-mid;
+    border-radius: 5px;
+}

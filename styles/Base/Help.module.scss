@@ -1,0 +1,73 @@
+.help.inline {
+    vertical-align: top;
+    margin-left: 5px;
+
+    >* {
+        vertical-align: top;
+        text-align: left;
+    }
+}
+
+.wrap {
+    text-align: right;
+}
+
+.help.left {
+    dialog {
+        right: 0;
+        left: auto;
+    }
+}
+
+.help {
+    position: relative;
+    padding-left: 5px;
+
+    >* {
+        vertical-align: middle;
+        font-size: .9em;
+    }
+
+    >span {
+        padding-bottom: 5px;
+    }
+
+    dialog {
+        display: none;
+        position: absolute;
+        padding: 0;
+        z-index: 50;
+        max-width: min(50vw, 300px);
+        white-space: break-spaces;
+        width: max-content;
+
+        >* {
+            width: 100%;
+            display: block;
+            font-size: .9em;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-body);
+            padding: 10px;
+            margin: 0;
+            margin-left: auto;
+            text-align: left;
+        }
+
+        table {
+            margin: 0;
+
+            tr>* {
+                padding: 3px 5px;
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                text-align: center;
+            }
+        }
+    }
+
+    >span:hover+dialog,
+    dialog:hover {
+        display: block;
+    }
+}

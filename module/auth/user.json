@@ -1,0 +1,17 @@
+{
+    "index": {
+        "oculis": "88b9327a-09ed-4320-a31c-b72df921c13e",
+        "temp": "8ca54f30-88ff-452f-ae97-034ae1ee90f2"
+    },
+    "88b9327a-09ed-4320-a31c-b72df921c13e": {
+        "id": "oculis",
+        "pw": "$2b$05$KUGQ56tJ3T/vpDsVAO4kz.G7j8m9clQKLGCcbO/LLSA6n1Hc9.0gK",
+        "uid": "88b9327a-09ed-4320-a31c-b72df921c13e",
+        "admin": true
+    },
+    "8ca54f30-88ff-452f-ae97-034ae1ee90f2": {
+        "id": "temp",
+        "pw": "$2b$05$eNFzWCG5J4deutPFKTNn6OaGkZC3H5Ok4ovJKPq8OM8.7XTT2zKS6",
+        "uid": "8ca54f30-88ff-452f-ae97-034ae1ee90f2"
+    }
+}

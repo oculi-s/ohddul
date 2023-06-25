@@ -1,0 +1,42 @@
+$mid-width: 950px;
+$mob-width: 450px;
+
+$bg-dark: #04111e;
+$bg-mid: #0b1325;
+$bg-bright: #10192C;
+
+$text-color: #aaa;
+$text-bright: #e5e5e5;
+
+$anchor: #7ec5db;
+$border-color: #21212d;
+$bar-color: #313b53;
+
+$red: #e3665d;
+$red-bright: #e33327;
+$blue: #727ddd;
+$blue-bright: #3a4be0;
+
+@mixin mobile {
+    @media screen and (max-width:$mob-width) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media screen and (max-width:$mid-width) and (min-width:$mob-width) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media screen and (min-width:$mid-width) {
+        @content;
+    }
+}
+
+@mixin mobtab {
+    @media screen and (max-width:$mid-width) {
+        @content;
+    }
+}

@@ -1,0 +1,93 @@
+@import 'variables';
+
+.id {
+    display: inline-block;
+    color: white;
+
+    >span {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        background-size: cover;
+        margin-right: 10px;
+        border-radius: 50%;
+        box-shadow: 0px 0px 3px 3px;
+    }
+
+    >span::after {
+        color: white;
+        content: attr(rankNum);
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        right: 0;
+        width: 18px;
+        height: 18px;
+        margin: auto;
+        font-size: 14px;
+        text-align: center;
+        background: var(--bg-body);
+        border-radius: 50%;
+    }
+}
+
+.chart {
+    margin-top: 20px;
+}
+
+.bar {
+    height: 20px;
+    width: 100%;
+    margin: 10px auto;
+    border-radius: 5px;
+    background: var(--border-color);
+
+    // overflow: hidden;
+    >div {
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    >div[rank^="bronze"] {
+        background: var(--rank-bronze);
+    }
+
+    >div[rank^="silver"] {
+        background: var(--rank-silver);
+    }
+
+    >div[rank^="gold"] {
+        background: var(--rank-gold);
+    }
+
+    >div[rank^="platinum"] {
+        background: var(--rank-platinum);
+    }
+
+    >div[rank^="diamond"] {
+        background: var(--rank-diamond);
+    }
+
+    >div[rank^="master"] {
+        background: var(--rank-master);
+    }
+
+    >div:hover {
+        box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.profile {
+    padding: 30px;
+}
+
+.curtain {
+    opacity: 0.3;
+    width: 100%;
+    height: 80px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}

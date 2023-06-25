@@ -1,0 +1,96 @@
+@import 'variables';
+
+.search {
+    position: fixed;
+    z-index: 11;
+    top: 8px;
+    right: var(--nav-margin);
+    margin: auto;
+    height: fit-content;
+
+    form {
+        background: var(--bg-body);
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+
+        * {
+            font-size: 1em;
+        }
+    }
+
+    input {
+        border: none;
+        font-size: 1em;
+    }
+
+    .result {
+        position: absolute;
+        right: 0;
+        width: 300px;
+        background: var(--bg-body);
+        font-weight: normal;
+        border: 1px solid var(--border-color);
+        z-index: 40;
+        font-size: .9em;
+
+        .title {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+
+        .list {
+            padding: 10px;
+        }
+
+        >div:first-child {
+            margin: 0;
+        }
+
+        >div:nth-child(2) {
+            padding: 10px;
+            margin: 0;
+        }
+
+        .element {
+            padding: 5px 10px;
+            border-radius: 8px;
+
+            >span {
+                width: 40%;
+                display: inline-block;
+            }
+        }
+
+        .element:focus {
+            background: #221f5e;
+            color: #fff !important;
+            outline: none !important;
+        }
+
+        span {
+            margin-right: 8px;
+            font-size: 1em;
+        }
+
+        a {
+            width: 100%;
+            padding: 0;
+            white-space: nowrap;
+            display: block;
+        }
+    }
+
+    .d {
+        display: none;
+    }
+}
+
+@include mobtab {
+    .search {
+        top: 0;
+        padding: 10px;
+    }
+}
