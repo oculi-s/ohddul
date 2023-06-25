@@ -1,6 +1,9 @@
+@import 'variables';
+
 .search {
     position: fixed;
-    top: 0;
+    z-index: 11;
+    top: 8px;
     right: var(--nav-margin);
     margin: auto;
     height: fit-content;
@@ -82,5 +85,12 @@
 
     .d {
         display: none;
+    }
+}
+
+@include mobtab {
+    .search {
+        top: 0;
+        padding: 10px;
     }
 }

@@ -6,19 +6,15 @@
     right: var(--nav-margin);
     top: var(--top);
 
-    >div {
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 10px;
-        color: var(--text-color);
-    }
-
-    .search {
-        display: none;
-    }
+    // >div {
+    // }
 }
 
 .box {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px;
+    color: var(--text-color);
     position: relative;
     min-height: 150px;
     margin-bottom: 10px;
@@ -82,10 +78,13 @@
     .aside {
         position: fixed;
         top: 0;
-        right: calc(-1 * var(--nav-width));
+        right: calc(-1 * var(--nav-width) - 50px);
         z-index: 30;
         background: var(--bg-body);
         transition: right .3s;
+        box-sizing: content-box;
+        padding-left: 10px;
+        height: 100%;
 
         .search {
             display: block;

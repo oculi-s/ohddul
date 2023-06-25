@@ -1,9 +1,7 @@
 import styles from '@/styles/Nav.module.scss'
-import Search from './search';
 import Link from 'next/link';
 
-export default function Nav({ meta, group, mobAside, setAsideShow, userMeta }) {
-    const props = { meta, group, userMeta };
+export default function Nav({ mobAside, setAsideShow }) {
     return (
         <nav className={styles.nav}>
             <div className={styles.buttonList}>

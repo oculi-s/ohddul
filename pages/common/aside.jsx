@@ -15,8 +15,9 @@ const SignIn = async (e) => {
     const id = e.target.id.value;
     const pw = e.target.pw.value;
     const res = await signIn("my-credential", {
-        id, pw, redirect: false
+        id, pw, redirect: true
     })
+    console.log(res);
     return res;
 }
 
@@ -37,6 +38,7 @@ const Wrap = ({ children }) => {
 }
 const Info = ({ userMeta }) => {
     const { status } = useSession();
+    console.log(status);
     const [valid, setValid] = useState(false);
     const helper = valid ? "잘못된 ID/비밀번호입니다." : "";
     if (status == "authenticated") {
