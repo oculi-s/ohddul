@@ -60,6 +60,7 @@
         width: 100%;
         display: flex;
         align-items: center;
+        max-width: 50%;
     }
 
     canvas {
@@ -90,7 +91,7 @@
         flex-direction: column;
 
         >* {
-            width: auto;
+            max-width: unset;
         }
     }
 }

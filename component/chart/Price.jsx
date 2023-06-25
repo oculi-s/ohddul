@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
-import { Chart } from "chart.js/auto";
+import { useState } from "react"
+import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import { ko } from 'date-fns/locale';
 import Help from "@/component/base/help";
 import styles from '@/styles/Chart/Price.module.scss';
 import dt from "@/module/dt";
+import { Line } from "react-chartjs-2";
+import colors from "@/module/colors";
 
 Math.avg = (d) => {
     return Math.round(d.reduce((a, b) => a + b, 0) / d.length);
@@ -15,79 +17,57 @@ Math.std = (d, k) => {
     return Math.round(mean + k * Math.sqrt(diff / d.length));
 }
 
-const drawChart = (id, { dates, datasets }) => {
-    const myChart = Chart.getChart(id);
-    if (myChart) {
-        myChart.clear();
-        myChart.destroy();
-    }
-    new Chart(id, {
-        plugins: [{
-            afterDraw: chart => {
-                if (chart.tooltip?._active?.length) {
-                    let x = chart.tooltip._active[0].element.x;
-                    let yAxis = chart.scales.y;
-                    let ctx = chart.ctx;
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(x, yAxis.top);
-                    ctx.lineTo(x, yAxis.bottom);
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = "#3e95cd";
-                    ctx.stroke();
-                    ctx.restore();
-                }
-            }
-        }],
-        data: {
-            labels: dates,
-            datasets
+const options = {
+    plugins: {
+        tooltip: {
+            callbacks: {
+                // title: function (tooltipItem, data) {
+                //     return dt.toString(tooltipItem[0]?.label);
+                // },
+                // label: function (tooltipItem, data) {
+                //     return data;
+                // },
+                // afterLabel: function (tooltipItem, data) {
+                //     let percent = 1;
+                //     return '(' + percent + '%)';
+                // }
+            },
         },
-        options: {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        // title: function (tooltipItem, data) {
-                        //     return dt.toString(tooltipItem[0]?.label);
-                        // },
-                        // label: function (tooltipItem, data) {
-                        //     return data;
-                        // },
-                        // afterLabel: function (tooltipItem, data) {
-                        //     let percent = 1;
-                        //     return '(' + percent + '%)';
-                        // }
-                    },
-                },
+    },
+    interaction: { intersect: false, mode: 'index', },
+    spanGaps: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            type: "time",
+            adapters: { date: { locale: ko, }, },
+            time: {
+                unit: 'day',
+                unitStepSize: 1,
+                tooltipFormat: "yyyy-MM-dd",
             },
-            interaction: {
-                intersect: false,
-                mode: 'index',
-            },
-            spanGaps: true,
-
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: "time",
-                    adapters: {
-                        date: {
-                            locale: ko,
-                        },
-                    },
-                    time: {
-                        unit: 'day',
-                        unitStepSize: 1,
-                        tooltipFormat: "yyyy-MM-dd",
-                    },
-                    ticks: {
-                        maxTicksLimit: 5
-                    }
-                }
-            }
+            ticks: { maxTicksLimit: 5 }
         }
-    });
+    }
 }
+
+const plugins = [{
+    afterDraw: chart => {
+        if (chart.tooltip?._active?.length) {
+            let x = chart.tooltip._active[0].element.x;
+            let yAxis = chart.scales.y;
+            let ctx = chart.ctx;
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x, yAxis.top);
+            ctx.lineTo(x, yAxis.bottom);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = colors[0];
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+}];
 
 function refineData({ price, amount, addEarn, addBollinger, N }) {
     price = price?.sort(dt.lsort);
@@ -110,7 +90,6 @@ function refineData({ price, amount, addEarn, addBollinger, N }) {
     return props;
 }
 
-const colors = ['#3cba9f', 'red']
 function getData({ prices, metas, addEarn, addBollinger, N }) {
     let datasets = [], date;
     prices.forEach((price, i) => {
@@ -122,7 +101,6 @@ function getData({ prices, metas, addEarn, addBollinger, N }) {
         date = dates;
         datasets = [
             {
-                type: 'line',
                 data: priceAvg,
                 label: `${name || ''} ${N}일 이평`,
                 fill: false,
@@ -132,7 +110,6 @@ function getData({ prices, metas, addEarn, addBollinger, N }) {
                 pointRadius: 0
             },
             {
-                type: 'line',
                 data: priceRaw,
                 label: name || '종가',
                 borderColor: "#2e2e4a",
@@ -143,54 +120,46 @@ function getData({ prices, metas, addEarn, addBollinger, N }) {
             ...datasets
         ];
         if (addEarn) {
+            const def = { lineTension: 0, borderWidth: 2, pointRadius: 0 }
             datasets = [
                 {
-                    type: 'line',
                     data: stockEps,
                     label: "EPS",
                     borderColor: "#A6D0DD",
                     backgroundColor: "#A6D0DD",
-                    lineTension: 0,
-                    borderWidth: 2,
-                    pointRadius: 0
+                    ...def
                 },
                 {
-                    type: 'line',
                     data: stockBps,
                     label: "BPS",
                     borderColor: "#FF6969",
                     backgroundColor: "#FF6969",
-                    lineTension: 0,
-                    borderWidth: 2,
-                    pointRadius: 0
+                    ...def
                 },
                 ...datasets
             ];
         }
         if (addBollinger) {
+            const def = { borderWidth: 1, pointRadius: 0 }
             datasets = [
                 {
-                    type: 'line',
                     data: priceTop,
                     label: "BB상단",
                     borderColor: "#FF6969",
                     backgroundColor: "#FF6969",
-                    borderWidth: 1,
-                    pointRadius: 0
+                    ...def
                 }, {
-                    type: 'line',
                     data: priceBot,
                     label: "BB하단",
                     borderColor: "#A6D0DD",
                     backgroundColor: "#A6D0DD",
-                    borderWidth: 1,
-                    pointRadius: 0
+                    ...def
                 },
                 ...datasets
             ]
         }
     });
-    return { dates: date, datasets };
+    return { labels: date, datasets };
 }
 
 function PriceChart({
@@ -198,26 +167,10 @@ function PriceChart({
     addEarn = true, addBollinger,
 }) {
     let [N, setN] = useState(20);
-    let [isLoad, setLoad] = useState();
-    const id = `chart${parseInt(Math.random() * 100)}`;
     prices = prices.map(price => {
         price?.sort(dt.sort);
         return price?.slice(0, 5 * 252);
     })
-    useEffect(() => {
-        drawChart(id, getData({
-            prices, metas, addEarn, addBollinger, N
-        }));
-    });
-
-    // let lastPrice = price.slice(-1)[0]?.close;
-    // let lastTop = priceTop.slice(-1)[0];
-    // let lastBot = priceBot.slice(-1)[0];
-    // let percentB = (lastPrice - lastBot) / (lastTop - lastBot);
-    // let percentBW = (lastTop - lastBot) / lastPrice;
-    if (isLoad) {
-        return <></>;
-    }
     const props = {
         des: ' 도움말',
         data: <>
@@ -237,7 +190,13 @@ function PriceChart({
         <div className={styles.wrap}>
             <Help {...props} />
             <div className={styles.chart}>
-                <canvas id={id}></canvas>
+                <Line
+                    options={options}
+                    plugins={plugins}
+                    data={
+                        getData({ prices, metas, addEarn, addBollinger, N })
+                    }
+                />
             </div>
         </div >
     )

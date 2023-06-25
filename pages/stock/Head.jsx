@@ -276,7 +276,6 @@ export const PredBar = ({
 const Open = ({ time, view, setView }) => {
     const { status } = useSession();
     if (status != 'authenticated') return <></>;
-    console.log(time);
     if (time && dt.toString(time) == dt.toString())
         return (
             <span className={styles.open}>

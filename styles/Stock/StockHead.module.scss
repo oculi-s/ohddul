@@ -136,6 +136,7 @@
     align-items: baseline;
     padding-bottom: 10px;
     margin-top: 2em;
+    margin-left: 10px;
 
     .market::before {
         border: 1px solid var(--border-color);
@@ -197,6 +198,5 @@
         >button:not(:last-child) {
             margin-right: 5px;
         }
-
     }
 }

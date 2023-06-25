@@ -15,16 +15,17 @@ const ShareTable = ({ meta, stockShare, stockMeta }) => {
     const total = amount;
     let res = 0;
     const data = stockShare?.map(e => {
-        let { name, amount, date } = e;
+        const { name, amount, date } = e;
         res += amount;
-        let code = meta?.index[name];
+        const code = meta?.index[name];
+        let data = name;
         if (code) {
-            name = <Link href={`/stock/${code}`}>{name}</Link>;
+            data = <Link href={`/stock/${code}`}>{name}</Link>;
         } else if (nameDict[name]) {
-            name = nameDict[name];
+            data = nameDict[name];
         }
         return <tr key={name}>
-            <th>{name}</th><td>{Div(amount, total, 1)}</td>
+            <th>{data}</th><td>{Div(amount, total, 1)}</td>
             <td className={styles.date}>{date}</td>
         </tr>
     });

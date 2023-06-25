@@ -4,12 +4,11 @@ import User from '@/pages/_user'
 import { useSession } from "next-auth/react"
 import { Button, TextField } from '@mui/material';
 import { signIn, signOut } from "next-auth/react";
-import { useState, useRouter } from 'react';
+import { useState } from 'react';
 import { getRank } from '@/pages/_user';
 import Search from '@/pages/common/search';
 
-import { Per, Color, Fix, Num } from '@/module/ba';
-import toggleOnPageChange from '@/component/base/toggle';
+import { Per, Color, Num } from '@/module/ba';
 
 const SignIn = async (e) => {
     e.preventDefault();
@@ -39,7 +38,6 @@ const Wrap = ({ children }) => {
 }
 const Info = ({ userMeta }) => {
     const { status } = useSession();
-    console.log(status);
     const [valid, setValid] = useState(false);
     const helper = valid ? "잘못된 ID/비밀번호입니다." : "";
     if (status == "authenticated") {

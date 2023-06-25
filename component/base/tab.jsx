@@ -3,15 +3,18 @@ import { useState } from "react";
 import toggleOnPageChange from "./toggle";
 import { useRouter } from "next/router";
 
-const ToggleTab = ({ names, datas }) => {
+const ToggleTab = ({ names, datas, tabIndex = 0, setTabIndex }) => {
     const router = useRouter();
-    const [view, setView] = useState(0);
-    toggleOnPageChange(router, setView, 0);
+    if (!tabIndex && !setTabIndex) {
+        [tabIndex, setTabIndex] = useState(tabIndex);
+    }
+    toggleOnPageChange(router, setTabIndex, 0);
     names = names?.map((e, i) =>
         <span
+
             key={`Tab${i}`}
-            className={`${styles.tab} ${view == i ? styles.active : ""}`}
-            onClick={e => { setView(i) }}
+            className={`${styles.tab} ${tabIndex == i ? styles.active : ""}`}
+            onClick={e => { setTabIndex(i) }}
         >
             {e}
         </span>
@@ -19,7 +22,7 @@ const ToggleTab = ({ names, datas }) => {
     datas = datas?.map((e, i) =>
         <div
             key={`TabData${i}`}
-            className={i == view ? '' : 'd'}
+            className={i == tabIndex ? '' : 'd'}
         >
             {e}
         </div>

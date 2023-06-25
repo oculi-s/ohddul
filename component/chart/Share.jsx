@@ -1,8 +1,8 @@
-import { Fix } from '@/module/ba';
-import colors from '@/module/colors';
 import styles from '@/styles/Chart/Share.module.scss';
-import { Chart } from "chart.js/auto";
-import { useEffect, useState } from 'react';
+import colors from '@/module/colors';
+import { Fix } from '@/module/ba';
+import 'chartjs-plugin-labels'
+import { Doughnut } from 'react-chartjs-2';
 
 const ShareChart = ({ stockShare: share, stockMeta }) => {
     if (!share?.length) {
@@ -17,50 +17,36 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
     const amount = stockMeta?.amount;
     let res = amount - share.map(e => e.amount).reduce((a, b) => a + b, 0);
     res = Math.max(0, res);
-    const data = share.map(e => Fix(e.amount / amount * 100, 1));
+    const shareData = share.map(e => Fix(e.amount / amount * 100, 1));
     const labels = share.map(e => e.name);
-    data.push(Fix(res / amount * 100, 1));
+    shareData.push(Fix(res / amount * 100, 1));
     labels.push('데이터없음');
 
-    const [isLoad, setLoad] = useState(false);
-    const id = 'shareChart';
-    const drawChart = (id, option) => {
-        let myChart = Chart.getChart(id);
-        if (myChart) {
-            myChart.clear();
-            myChart.destroy();
-        }
-        new Chart(id, {
-            type: 'doughnut',
-            data: {
-                labels,
-                datasets: [option]
+    const options = {
+        spanGaps: true,
+        maintainAspectRatio: false,
+        plugins: {
+            labels: {
+                render: 'percentage',
+                fontColor: 'white'
             },
-            options: {
-                spanGaps: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                }
-            }
-        });
+            legend: {
+                display: false
+            },
+        }
     }
-
-    useEffect(() => {
-        if (isLoad) return;
-        setLoad(true);
-        drawChart(id, {
-            data,
+    const data = {
+        labels,
+        datasets: [{
+            data: shareData,
             backgroundColor: colors,
             borderWidth: 0
-        })
-        setLoad(false);
-    }, [data]);
+        }]
+    }
+
     return (
         <div className={styles.wrap}>
-            <canvas id={id}></canvas>
+            <Doughnut data={data} options={options} />
         </div>
     )
 }
