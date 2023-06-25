@@ -81,7 +81,7 @@ import BGF from './BGF.svg';
 import 다우키움 from './다우키움.svg';
 // import 대우조선해양 from './대우조선해양.svg';
 
-export default {
+const groupImg = {
     삼성, SK, 현대차, LG, POSCO, 롯데, 한화,
     GS, HD현대, 농협, 신세계, KT, CJ, 한진,
     카카오, LS, 두산, DL, HMM, 중흥건설, 현대백화점,
@@ -97,3 +97,5 @@ export default {
     다우키움,
     // 대우조선해양,
 };
+
+export default groupImg;

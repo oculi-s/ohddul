@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import Help from '@/component/base/help';
 import StockHead from './Head';
 import ToggleTab from '@/component/base/tab';
+import '@/module/array';
 
 import GroupFold from './Group';
 import IndutyFold from './Induty';
@@ -14,9 +15,6 @@ import EarnElement from './Earn';
 import ShareElement from './Share';
 import PredElement from './Pred';
 
-Array.prototype.sum = function () {
-    return this.reduce((a, b) => a + b, 0)
-};
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  

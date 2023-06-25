@@ -7,12 +7,11 @@ import dir from '@/module/dir';
 import { getSession, useSession } from 'next-auth/react';
 import { Loading } from '@/component/_base';
 import { useState } from 'react';
-import { edit4Q, earnStack, earnonPrice } from '@/component/chart/earnStack';
+import { editQuar, earnStack, earnonPrice } from '@/module/editData/earnStack';
+import { priceDivide } from '@/module/editData/priceDivide';
 
-Array.prototype.remove = function (v) {
-	let i = this.indexOf(v);
-	if (i > -1) this.splice(i, 1);
-}
+import '@/module/array';
+
 export const getServerSideProps = async (ctx) => {
 	let userMeta = {}, price = [], meta = {}, group = {}, predict = {};
 	let index = {}, induty = {};
@@ -42,9 +41,10 @@ export const getServerSideProps = async (ctx) => {
 		if (code) {
 			const stockPrice = json.read(dir.stock.price(code));
 			stockPrice.data = stockPrice.data.slice(0, N);
+			await priceDivide(stockPrice);
 			const stockEarn = json.read(dir.stock.earn(code));
 			stockEarn.data = stockEarn.data.filter(e => e.data);
-			await edit4Q(stockEarn);
+			await editQuar(stockEarn);
 			await earnStack(stockEarn);
 			await earnonPrice({ stockPrice, stockEarn });
 			const stockShare = json.read(dir.stock.share(code));
@@ -71,7 +71,8 @@ export const getServerSideProps = async (ctx) => {
 			const id = ctx.query.id;
 			const uid = Object.keys(userMeta).find(k => userMeta[k].id == id);
 			const userPred = json.read(dir.user.pred(uid), { queue: [], data: [] });
-			props = { ...props, userPred };
+			const userFavs = json.read(dir.user.fav(uid), []);
+			props = { ...props, userPred, userFavs };
 		}
 	} catch (e) {
 		console.log(e);

@@ -4,7 +4,7 @@ import styles from '@/styles/Profile.module.scss'
 import { useSession } from "next-auth/react";
 import LineChart from '@/component/chart/line';
 import Link from "next/link";
-import { Num, Fix, Div, Per, Color } from '@/module/ba'
+import { Num, Fix, Per, Color } from '@/module/ba'
 import dt from "@/module/dt";
 import ToggleTab from "@/component/base/tab";
 
@@ -93,7 +93,7 @@ const PredTable = ({ userPred, meta, price }) => {
     return <table><tbody>{queueTable}</tbody></table>;
 }
 
-const FavTable = ({ userFavs, userPred, meta, price, uid }) => {
+const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
     const head = <tr>
         <th>종목</th>
         <th>가격</th>
@@ -107,7 +107,7 @@ const FavTable = ({ userFavs, userPred, meta, price, uid }) => {
         return <>
             <tr>
                 <th>
-                    <FavStar {...{ code, uid, setFavs, favs }} />
+                    {mine && <FavStar {...{ code, uid, setFavs, favs }} />}
                     <Link href={`/stock/${code}`}>{name}</Link>
                 </th>
                 <td>{close}</td>
@@ -168,7 +168,7 @@ const Index = ({
     const bg = getBg(rank);
 
     const props = {
-        score, id, rank, nextRank, prevScore, forNext, num, bg,
+        score, id, rank, nextRank, prevScore, forNext, num, bg, mine,
         userPred
     };
     const tabContents = {
@@ -184,7 +184,7 @@ const Index = ({
             </div>,
             <div key={2}>
                 <h3>관심 종목</h3>
-                <FavTable {...{ userFavs, meta, price, uid, userPred }} />
+                <FavTable {...{ userFavs, meta, price, uid, userPred, mine }} />
             </div>
         ]
     }

@@ -17,6 +17,11 @@ Math.std = (d, k) => {
     return Math.round(mean + k * Math.sqrt(diff / d.length));
 }
 
+/**
+ * tooltip custom 하는 방법
+ * 
+ * interaction : hover에서 
+ */
 const options = {
     plugins: {
         tooltip: {

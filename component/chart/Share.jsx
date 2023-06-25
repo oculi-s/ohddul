@@ -1,8 +1,32 @@
+import '@/module/array';
 import styles from '@/styles/Chart/Share.module.scss';
 import colors from '@/module/colors';
-import { Fix } from '@/module/ba';
-import 'chartjs-plugin-labels'
+import { Div, Fix } from '@/module/ba';
 import { Doughnut } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+const options = {
+    spanGaps: true,
+    maintainAspectRatio: false,
+    plugins: {
+        datalabels: {
+            formatter: (value, ctx) => {
+                const i = ctx?.dataIndex;
+                const data = ctx?.chart?.data;
+                const sum = data?.datasets[0].data?.sum();
+                const label = data?.labels[i];
+                return `${label}\n${Div(value, sum, 1)}`;
+            },
+            color: '#fff',
+            textAlign: 'center',
+            font: {
+                size: 16,
+            },
+            display: 'auto'
+        },
+        legend: false,
+    }
+}
 
 const ShareChart = ({ stockShare: share, stockMeta }) => {
     if (!share?.length) {
@@ -17,24 +41,13 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
     const amount = stockMeta?.amount;
     let res = amount - share.map(e => e.amount).reduce((a, b) => a + b, 0);
     res = Math.max(0, res);
-    const shareData = share.map(e => Fix(e.amount / amount * 100, 1));
+    const shareData = share.map(e => e.amount);
+    shareData.push(res);
+    // const shareData = share.map(e => Fix(e.amount / amount * 100, 1));
+    // shareData.push(Fix(res / amount * 100, 1));
     const labels = share.map(e => e.name);
-    shareData.push(Fix(res / amount * 100, 1));
     labels.push('데이터없음');
 
-    const options = {
-        spanGaps: true,
-        maintainAspectRatio: false,
-        plugins: {
-            labels: {
-                render: 'percentage',
-                fontColor: 'white'
-            },
-            legend: {
-                display: false
-            },
-        }
-    }
     const data = {
         labels,
         datasets: [{
@@ -46,7 +59,7 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
 
     return (
         <div className={styles.wrap}>
-            <Doughnut data={data} options={options} />
+            <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
         </div>
     )
 }

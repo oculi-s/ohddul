@@ -8,7 +8,7 @@ const types = { 3: '-03-31', 2: '-06-30', 4: '-09-30', 1: '-12-31' };
  * 4분기 누적액 보정
  * 
  */
-export const edit4Q = async (earn) => {
+export const editQuar = async (earn) => {
     for await (let year of years) {
         let sum = { revenue: 0, profit: 0, cnt: 0 }
         for await (let type of '3241') {

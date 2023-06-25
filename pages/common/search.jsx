@@ -102,7 +102,7 @@ const resKeydown = ({ e, setTabIndex, tabIndex, refs }) => {
     }
 }
 
-const moveQuery = ({ e, meta, userMeta, router, setAsideShow }) => {
+const moveQuery = ({ e, meta, userMeta, router, setAsideShow, result }) => {
     e.preventDefault();
     const q = e.target?.q?.value?.toLowerCase();
     const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.name?.toLowerCase() == q);
@@ -132,7 +132,7 @@ const Search = ({ meta, group, router, refs, userMeta, setAsideShow, view, setVi
     const [tabIndex, setTabIndex] = useState(0);
     const props = {
         setResult, refs, router,
-        meta, group, userMeta,
+        meta, group, userMeta, result,
         setView, tabIndex, setTabIndex, setAsideShow
     }
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import groupImg from '@/public/group';
+import groupImg from '@/public/group/Default';
 import { Num, Price } from '@/module/ba';
 import Fold from '@/component/base/fold';
 
