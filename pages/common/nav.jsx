@@ -13,9 +13,6 @@ export default function Nav({ meta, group, mobAside, setAsideShow, userMeta }) {
                 <Link href="/idea" className={styles.button}>의견게시판</Link>
                 {/* <Button href="/community">커뮤니티</Button> */}
             </div>
-            <div className={styles.search}>
-                <Search {...props} />
-            </div>
             <button
                 className={`${styles.menuOpen} fa fa-bars`}
                 onClick={e => { setAsideShow(!mobAside) }}
