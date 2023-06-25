@@ -9,13 +9,14 @@ import { getRank } from '@/pages/_user';
 import Search from '@/pages/common/search';
 
 import { Per, Color, Fix, Num } from '@/module/ba';
+import toggleOnPageChange from '@/component/base/toggle';
 
 const SignIn = async (e) => {
     e.preventDefault();
     const id = e.target.id.value;
     const pw = e.target.pw.value;
     const res = await signIn("my-credential", {
-        id, pw, redirect: true
+        id, pw, redirect: false
     })
     console.log(res);
     return res;
@@ -178,7 +179,9 @@ export default function Index({
     userMeta,
     mobAside, setAsideShow
 }) {
-    let props = { meta, userMeta, price, setAsideShow };
+    const [view, setView] = useState(false);
+    const props = { meta, userMeta, price, setAsideShow, view, setView };
+
     return (
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>
@@ -192,10 +195,10 @@ export default function Index({
                 {/* <Total {...props} /> */}
             </aside>
             <div className={styles.shadow}
-                onClick={e => { setAsideShow(false) }}
+                onClick={e => { setAsideShow(false); setView(false); }}
             >
                 <button className='fa fa-close'
-                    onClick={e => { setAsideShow(false) }}
+                    onClick={e => { setAsideShow(false); setView(false); }}
                 />
             </div>
         </>

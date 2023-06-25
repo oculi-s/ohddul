@@ -8,6 +8,7 @@ const Kospi = ({ market, price, meta }) => {
     const { kospi, kosdaq } = market;
     kospi.sort(dt.sort);
     kosdaq.sort(dt.sort);
+    const lastDate = kospi[0]?.date;
     const last = {
         kospi: kospi[0]?.close,
         kosdaq: kosdaq[0]?.close
@@ -33,53 +34,57 @@ const Kospi = ({ market, price, meta }) => {
         }
     }
     return (
-        <div className={`${styles.inline} ${styles.area} ${styles.chartArea}`}>
-            <div className={styles.wrap}>
-                <h3>
-                    코스피&nbsp;
-                    <span>{Num(last.kospi)}</span>&nbsp;
-                    <span className={Color(last.kospi - prev.kospi)}>
-                        ({Per(last.kospi, prev.kospi)})
-                    </span>
-                </h3>
-                <div>
-                    <span className={`fa fa-chevron-up red ${styles.fa}`} />
-                    {count.up.kospi}
-                    <span className={styles.percent}> ({Div(count.up.kospi, count.all.kospi)})</span>
-                    <span className={`fa fa-chevron-down blue ${styles.fa}`} />
-                    {count.down.kospi}
-                    <span className={styles.percent}> ({Div(count.down.kospi, count.all.kospi)})</span>
+        <div className={`${styles.area} ${styles.chartArea}`}>
+            <div className={styles.inline}>
+
+                <div className={styles.wrap}>
+                    <h3>
+                        코스피&nbsp;
+                        <span>{Num(last.kospi)}</span>&nbsp;
+                        <span className={Color(last.kospi - prev.kospi)}>
+                            ({Per(last.kospi, prev.kospi)})
+                        </span>
+                    </h3>
+                    <div>
+                        <span className={`fa fa-chevron-up red ${styles.fa}`} />
+                        {count.up.kospi}
+                        <span className={styles.percent}> ({Div(count.up.kospi, count.all.kospi)})</span>
+                        <span className={`fa fa-chevron-down blue ${styles.fa}`} />
+                        {count.down.kospi}
+                        <span className={styles.percent}> ({Div(count.down.kospi, count.all.kospi)})</span>
+                    </div>
+                    <div className={styles.chart}>
+                        <PriceChart {...{
+                            prices: [kospi],
+                            addEarn: false,
+                        }} />
+                    </div>
                 </div>
-                <div className={styles.chart}>
-                    <PriceChart {...{
-                        prices: [kospi],
-                        addEarn: false,
-                    }} />
+                <div className={styles.wrap}>
+                    <h3>
+                        코스닥&nbsp;
+                        <span>{Num(last.kosdaq)}</span>&nbsp;
+                        <span className={Color(last.kosdaq - prev.kosdaq)}>
+                            ({Per(last.kosdaq, prev.kosdaq)})
+                        </span>
+                    </h3>
+                    <div>
+                        <span className={`fa fa-chevron-up red ${styles.fa}`} />
+                        {count.up.kosdaq}
+                        <span className={styles.percent}> ({Div(count.up.kosdaq, count.all.kosdaq)})</span>
+                        <span className={`fa fa-chevron-down blue ${styles.fa}`} />
+                        {count.down.kosdaq}
+                        <span className={styles.percent}> ({Div(count.down.kosdaq, count.all.kosdaq)})</span>
+                    </div>
+                    <div className={styles.chart}>
+                        <PriceChart {...{
+                            prices: [kosdaq],
+                            addEarn: false,
+                        }} />
+                    </div>
                 </div>
             </div>
-            <div className={styles.wrap}>
-                <h3>
-                    코스닥&nbsp;
-                    <span>{Num(last.kosdaq)}</span>&nbsp;
-                    <span className={Color(last.kosdaq - prev.kosdaq)}>
-                        ({Per(last.kosdaq, prev.kosdaq)})
-                    </span>
-                </h3>
-                <div>
-                    <span className={`fa fa-chevron-up red ${styles.fa}`} />
-                    {count.up.kosdaq}
-                    <span className={styles.percent}> ({Div(count.up.kosdaq, count.all.kosdaq)})</span>
-                    <span className={`fa fa-chevron-down blue ${styles.fa}`} />
-                    {count.down.kosdaq}
-                    <span className={styles.percent}> ({Div(count.down.kosdaq, count.all.kosdaq)})</span>
-                </div>
-                <div className={styles.chart}>
-                    <PriceChart {...{
-                        prices: [kosdaq],
-                        addEarn: false,
-                    }} />
-                </div>
-            </div>
+            <p className='des'>기준일자 : {lastDate}</p>
         </div>
     )
 }

@@ -206,8 +206,7 @@ const Search = ({ meta, group, router, refs, userMeta, setAsideShow, view, setVi
     )
 }
 
-export default function Index({ meta, group, userMeta, setAsideShow }) {
-    const [view, setView] = useState(false);
+export default function Index({ meta, group, userMeta, setAsideShow, view, setView }) {
     const refs = useRef({ stock: [], user: [] });
     const router = useRouter();
     toggleOnPageChange(router, setAsideShow);
