@@ -38,7 +38,7 @@ const MetaTable = ({ stockMeta: { amount }, stockPredict, last, stockEarn }) => 
         <div className={`${styles.meta} clear`}>
             <table>
                 <tbody>
-                    <tr><th colSpan={2}><p className='des'>기준일 : {lastDate}</p></th></tr>
+                    <tr><th colSpan={2}><p className='des'>기준일자 : {lastDate}</p></th></tr>
                     {/* <tr><th>종목코드</th><td>{code}</td></tr> */}
                     <tr><th>시가총액</th><td>{Price(total)}</td></tr>
                     <tr><th>최근종가</th><td>{Num(lastPrice)}</td></tr>

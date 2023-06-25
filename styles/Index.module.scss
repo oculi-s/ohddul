@@ -32,6 +32,11 @@
             margin: 0;
         }
     }
+
+    >p {
+        margin-top: 10px;
+    }
+
 }
 
 @include desktop {

@@ -32,9 +32,10 @@
         width: 300px;
         background: var(--bg-body);
         font-weight: normal;
-        border: 1px solid var(--border-color);
         z-index: 40;
         font-size: .9em;
+        padding: 10px;
+        border-radius: 10px;
 
         .title {
             font-size: 1em;

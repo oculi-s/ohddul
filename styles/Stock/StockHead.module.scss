@@ -185,3 +185,18 @@
         margin-top: 0;
     }
 }
+
+@include mobile {
+    .type {
+        padding: 8px 5px;
+
+        >button {
+            margin: 0;
+        }
+
+        >button:not(:last-child) {
+            margin-right: 5px;
+        }
+
+    }
+}
