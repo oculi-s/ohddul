@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'variables.module.scss';
 
 .nav {
     position: fixed;
@@ -16,7 +16,7 @@
         height: 100%;
 
         .button {
-            color: $text-color;
+            color: $textColor;
             text-decoration: none;
             vertical-align: middle;
             height: 100%;
@@ -30,7 +30,7 @@
         }
 
         .button:hover {
-            background: $bg-dark;
+            background: $bgDark;
             transition: all .3s;
         }
     }

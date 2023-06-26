@@ -1,6 +1,33 @@
 import styles from '@/styles/Index.module.scss';
 import Kospi from './subindex/Kospi';
+import Group from './subindex/Group';
+
 import GroupBubble from './subindex/GroupBubble';
+import container from "@/pages/container";
+
+import json from '@/module/json';
+import dir from '@/module/dir';
+
+const N = 252 * 5;
+export const getServerSideProps = () => {
+    const meta = json.read(dir.stock.meta, { data: {}, index: {} });
+    const group = json.read(dir.stock.group);
+    const price = json.read(dir.stock.all);
+    const predict = json.read(dir.stock.predAll);
+    const userMeta = json.read(dir.user.meta);
+    const index = json.read(dir.stock.induty);
+    const induty = json.read(dir.stock.dart.induty);
+
+    const market = json.read(dir.stock.market, { kospi: [], kosdaq: [] });
+    market.kospi = market.kospi?.slice(0, N);
+    market.kosdaq = market.kosdaq?.slice(0, N);
+    const props = {
+        userMeta,
+        price, meta, group, index, induty,
+        predict, market
+    };
+    return { props };
+}
 
 const Column = () => {
     return <>
@@ -46,12 +73,11 @@ const index = function ({
         <div>
             <Kospi {...props} />
             {/* <Column /> */}
-            <GroupBubble {...props} />
+            <Group {...props} />
+            {/* <GroupBubble {...props} /> */}
             <GroupInduty {...props} />
         </div>
     )
 }
 
-import container, { getServerSideProps } from "@/pages/container";
-export { getServerSideProps };
 export default container(index);

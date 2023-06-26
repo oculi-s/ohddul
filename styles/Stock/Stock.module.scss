@@ -1,4 +1,4 @@
-@import '../variables';
+@import '../variables.module.scss';
 
 .meta {
     width: fit-content;
@@ -34,7 +34,7 @@
         }
 
         .bar {
-            background: $bar-color;
+            background: $barColor;
             position: absolute;
             top: 0;
             left: 0;
@@ -53,7 +53,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background: $bg-mid;
+    background: $bgMid;
     border-radius: 20px;
 
     >* {

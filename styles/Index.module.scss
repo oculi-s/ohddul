@@ -1,10 +1,14 @@
-@import './variables';
+@import './variables.module.scss';
 
 .area {
-    background: $bg-mid;
+    background: $bgMid;
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
+
+    >p {
+        margin-top: 10px;
+    }
 }
 
 .chartArea {
@@ -33,9 +37,7 @@
         }
     }
 
-    >p {
-        margin-top: 10px;
-    }
+
 }
 
 .groupArea {
@@ -57,8 +59,10 @@
     }
 
     .chart {
-        height: 300px;
+        background: $bgBright;
+        height: 500px;
     }
+
 }
 
 @include desktop {

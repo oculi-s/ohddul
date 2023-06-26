@@ -26,6 +26,11 @@ export const Fix = (f, n = 2) => {
     return (f > 0 ? '+' : '') + f.toFixed(n);
 }
 
+export const parseFix = (f, n = 2) => {
+    if (isNaN(f)) f = 0;
+    return parseFloat(f.toFixed(n));
+}
+
 export const Color = (v = 0) => {
     return v == 0 ? '' : v > 0 ? 'red' : 'blue';
 }

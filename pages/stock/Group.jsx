@@ -21,7 +21,7 @@ const GroupFold = ({
         <Link href={`/group/${gname}`}>
             <Image src={groupImg[imgName]} alt={`${gname}로고`} />
         </Link>
-        <p>{gname}그룹 자산 : ({Price(group.sum * 10)}, {group.rank}위) 시총 : ({Price(priceSum)})</p>
+        <p>{gname}그룹 자산 : ({Price(group.equity * 10)}, {group.rank}위) 시총 : ({Price(priceSum)})</p>
     </>
     const head = <>
         <tr>

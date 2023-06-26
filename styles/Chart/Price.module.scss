@@ -1,4 +1,4 @@
-@import '../variables';
+@import '../variables.module.scss';
 
 .wrap {
     width: 100%;
@@ -10,7 +10,7 @@
         padding: 10px;
         margin: 5px 0;
         border-radius: 10px;
-        background: $bg-bright;
+        background: $bgBright;
         text-align: center;
         display: flex;
         align-items: center;

@@ -1,4 +1,4 @@
-@import 'variables';
+@import 'variables.module.scss';
 
 :root {
     --red: #e3665d;
@@ -30,6 +30,11 @@
     --bg-main: #10192C;
     --th-color: #0f1122;
     --td-color: #161824;
+}
+
+.highcharts-text-outline {
+    fill: none !important;
+    stroke: none !important;
 }
 
 @include mobtab {
@@ -84,15 +89,15 @@ h1,
 h2,
 h3,
 h4 {
-    color: $text-bright;
+    color: $textBright;
 
     * {
-        color: $text-bright !important;
+        color: $textBright !important;
     }
 }
 
 body {
-    background: $bg-dark;
+    background: $bgDark;
     margin: 0;
     padding: 0;
     height: 100%;

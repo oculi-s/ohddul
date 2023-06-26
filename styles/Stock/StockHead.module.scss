@@ -1,16 +1,16 @@
-@import '../variables';
+@import '../variables.module.scss';
 
 .type {
     display: flex;
     margin: 5px auto;
     padding: 10px;
     border-radius: 10px;
-    background: $bg-bright;
+    background: $bgBright;
     justify-content: space-around;
 
     >button {
         padding: 10px;
-        background: $bg-dark;
+        background: $bgDark;
         border-radius: 10px;
         width: 45%;
         margin: 0 10px;
@@ -29,7 +29,7 @@
     }
 
     .up:hover {
-        background: $red-bright;
+        background: $redBright;
     }
 
     .down {
@@ -37,7 +37,7 @@
     }
 
     .down:hover {
-        background: $blue-bright;
+        background: $blueBright;
     }
 
     button:hover {
@@ -45,7 +45,7 @@
     }
 
     button {
-        color: $text-bright;
+        color: $textBright;
         transition: all .3s;
     }
 }
@@ -87,7 +87,7 @@
         height: 100%;
         display: inline-flex;
         align-items: center;
-        background: $bg-mid;
+        background: $bgMid;
         margin: auto 5px;
         padding-left: 10px;
         padding-right: 10px;

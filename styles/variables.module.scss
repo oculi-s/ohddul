@@ -1,0 +1,61 @@
+$midWidth: 950px;
+$mobWidth: 450px;
+
+$bgDark: #04111e;
+$bgMid: #0b1325;
+$bgBright: #10192C;
+
+$textColor: #aaa;
+$textBright: #e5e5e5;
+$anchor: #7ec5db;
+$anchorBright: #c2d8df;
+
+$borderColor: #21212d;
+$barColor: #313b53;
+
+$red: #e3665d;
+$redBright: #e33327;
+$blue: #727ddd;
+$blueBright: #3a4be0;
+
+:export {
+    bgDark: $bgDark;
+    bgMid: $bgMid;
+    bgBright: $bgBright;
+
+    textColor: $textColor;
+    textBright: $textBright;
+    anchor: $anchor;
+    anchorBright: $anchorBright;
+
+    borderColor: $borderColor;
+    barColor: $barColor;
+
+    red: $red;
+    redBright: $redBright;
+    blue: $blue;
+}
+
+@mixin mobile {
+    @media screen and (max-width:$mobWidth) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media screen and (max-width:$midWidth) and (min-width:$mobWidth) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media screen and (min-width:$midWidth) {
+        @content;
+    }
+}
+
+@mixin mobtab {
+    @media screen and (max-width:$midWidth) {
+        @content;
+    }
+}

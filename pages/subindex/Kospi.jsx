@@ -85,7 +85,7 @@ const Kospi = ({ market, price, meta }) => {
                     </div>
                 </div>
             </div>
-            <p className='des'>기준일자 : {lastDate}</p>
+            <p className='des'>기준일 : {lastDate}</p>
         </div>
     )
 }

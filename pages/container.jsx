@@ -21,8 +21,6 @@ export const getServerSideProps = async (ctx) => {
 	};
 
 	try {
-		const code = ctx.query?.code;
-
 		meta = json.read(dir.stock.meta, { data: {}, index: {} });
 		group = json.read(dir.stock.group);
 		price = json.read(dir.stock.all);
@@ -36,6 +34,8 @@ export const getServerSideProps = async (ctx) => {
 			predict,
 		};
 
+		let code = ctx.query?.code;
+		if (!parseInt(code)) code = meta.index[code];
 		const N = 252 * 5;
 		// stockPage
 		if (code) {
@@ -50,11 +50,6 @@ export const getServerSideProps = async (ctx) => {
 			const stockShare = json.read(dir.stock.share(code));
 			const stockPredict = json.read(dir.stock.pred(code));
 			props = { ...props, stockPrice, stockEarn, stockShare, stockPredict };
-		} else {
-			const market = json.read(dir.stock.market, { kospi: [], kosdaq: [] });
-			market.kospi = market.kospi?.slice(0, N);
-			market.kosdaq = market.kosdaq?.slice(0, N);
-			props = { ...props, market };
 		}
 
 		// userExist

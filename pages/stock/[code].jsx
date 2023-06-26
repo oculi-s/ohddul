@@ -36,7 +36,7 @@ const MetaTable = ({ stockMeta: { amount }, stockPredict, last, stockEarn }) => 
         <div className={`${styles.meta} clear`}>
             <table>
                 <tbody>
-                    <tr><th colSpan={2}><p className='des'>기준일자 : {lastDate}</p></th></tr>
+                    <tr><th colSpan={2}><p className='des'>기준일 : {lastDate}</p></th></tr>
                     {/* <tr><th>종목코드</th><td>{code}</td></tr> */}
                     <tr><th>시가총액</th><td>{Price(total)}</td></tr>
                     <tr><th>최근종가</th><td>{Num(lastPrice)}</td></tr>
@@ -85,8 +85,10 @@ const Index = ({
     const { data: session } = useSession();
     const uid = session?.user?.uid;
     const router = useRouter();
-    const { code } = router.query;
-    if (!meta?.data) return <></>;
+    let { code } = router.query;
+    if (!meta?.data) return;
+    if (!parseInt(code)) code = meta.index[code];
+    if (!code) return;
     const stockMeta = meta?.data[code];
     if (!stockMeta) {
         return (

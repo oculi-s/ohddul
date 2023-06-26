@@ -6,8 +6,8 @@ const pad = (v) => String(v).padStart(2, '0');
 const dt = {
     DAY: 1000 * 60 * 60 * 24,
     YEARS: () => Array.from(Array(10).keys(), x => dt.toJson().Y - x).sort(),
-    parse: (str) => {
-        return moment(str).format('YYYY-MM-DD');
+    parse: (str, format = 'YYYY-MM-DD') => {
+        return moment(str).format(format);
     },
     /**
      * 현재가 장중인지 return 하는 함수
@@ -69,7 +69,13 @@ const dt = {
         y.s = y.Y + y.M + y.D;
     },
     num: (m = moment()) => moment(m).valueOf(),
+    /**
+     * 시간 내림차순 정렬 (현재 -> 과거)
+     */
     sort: (a, b) => moment(b.date) - moment(a.date),
+    /**
+     * 시간 오름차순 정렬 (과거 -> 현재)
+     */
     lsort: (a, b) => moment(a.date) - moment(b.date),
     min: (...arr) => moment(Math.min(...arr.map(e => moment(e)))),
     toString: (m = moment(), props = { time: 0 }) => {
@@ -83,4 +89,4 @@ const dt = {
     },
 }
 
-export default dt;
+module.exports = dt;
