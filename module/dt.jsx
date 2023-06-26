@@ -1,75 +1,86 @@
-let pad = (v) => String(v).padStart(2, '0');
+const moment = require('moment');
+require('moment-timezone');
+moment.tz.setDefault("Asia/Seoul");
+const pad = (v) => String(v).padStart(2, '0');
 
 const dt = {
     DAY: 1000 * 60 * 60 * 24,
     YEARS: () => Array.from(Array(10).keys(), x => dt.toJson().Y - x).sort(),
     parse: (str) => {
-        let Y, M, D;
-        Y = str.slice(0, 4);
-        M = str.slice(4, 6);
-        D = str.slice(6);
-        return `${Y}-${M}-${D}`;
+        return moment(str).format('YYYY-MM-DD');
     },
+    /**
+     * 현재가 장중인지 return 하는 함수
+     * 장중이면 return 0
+     * 
+     * update하는 시간이 1시간까지 걸리는 것을 감안해 
+     * 8:00부터 3:40분까지를 장중으로 함
+     * before이면 -1, after이면 1을 return
+     */
+    market: (m = moment()) => {
+        m = moment(m);
+        const day = m.day();
+        if (day == 0 || day == 6) return 1;
+        const v = m.hour() * 60 + m.minute();
+        if (v < 480) return -1;
+        if (v > 940) return 1;
+        return 0;
+    },
+    /**
+     * 업데이트를 해야 하면 return 1
+     * 
+     * * 데이터가 없으면 (last=0) 요일 관계없이 업데이트 함
+     * * 장중에는 업데이트 안함
+     * * 월요일 장후 부터 토요일 0시까지는 당일 8시로 설정한 뒤 last가 더 작으면 함
+     * * 토요일 0시부터 월요일 장전까지는 금요일 8시로 설정한 뒤 last가 더 작으면 함
+     */
     update: (dict) => {
-        if (dt.now().getDay() == 1) return 0;
-        return (dt.toString() != dt.toString(dict?.last || 0));
+        const last = dict?.last || 0;
+        if (!last) return 1;
+        if (!dt.market()) return 0;
+        const m = moment();
+        const day = m.day();
+        var fri = day == 0 || day == 6;
+        if (day == 1 && dt.market() == -1) fri = 1;
+        m.set({ hour: 8, minute: 0, second: 0 });
+        if (day == 0) m.set({ date: m.date() - 2 });
+        if (day == 6) m.set({ date: m.date() - 1 });
+        if (day == 1 && fri) m.set({ date: m.date() - 3 });
+        return last < m;
     },
-    now: () => {
-        const curr = new Date();
-        const utc =
-            curr.getTime() +
-            (curr.getTimezoneOffset() * 60 * 1000);
-
-        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-        return new Date(utc + (KR_TIME_DIFF));
-    },
-    toJson: (now = dt.now()) => {
-        now = new Date(now);
+    toJson: (m = moment()) => {
+        m = moment(m);
         let Y, M, D;
-        Y = String(now.getFullYear());
-        M = pad(now.getMonth() + 1);
-        D = pad(now.getDate());
+        Y = String(m.year());
+        M = pad(m.month() + 1);
+        D = pad(m.date());
         return {
-            now, Y, M, D,
-            day: (1 + now.getDay()) % 7,
+            now: m, Y, M, D,
+            day: (1 + m.day()) % 7,
             s: Y + M + D
         }
     },
-    toString: (now = dt.now(), props = { time: 0 }) => {
-        now = new Date(now);
-        let Y = now.getFullYear();
-        let M = now.getMonth() + 1;
-        let D = now.getDate();
-        let res = `${Y}-${pad(M)}-${pad(D)}`;
-        if (!props.time) return res;
-        let h = now.getHours();
-        let m = now.getMinutes();
-        let s = now.getSeconds();
-        return `${res} ${pad(h)}:${pad(m)}:${pad(s)}`;
-    },
-    hhmmss: (now = new Date()) => {
-        const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-        now = new Date(now - KR_TIME_DIFF);
-        let h = now.getHours();
-        let m = now.getMinutes();
-        let s = now.getSeconds();
-        return `${pad(h)}:${pad(m)}:${pad(s)}`;
-    },
     prev: (y) => {
-        y.now.setDate(y.now.getDate() - 1);
-        y.Y = y.now.getFullYear().toString();
-        y.M = (y.now.getMonth() + 1).toString().padStart(2, '0');
-        y.D = y.now.getDate().toString().padStart(2, '0');
-        y.day = (1 + y.now.getDay()) % 7;
+        y.now.set({ date: y.now.date() - 1 });
+        y.Y = y.now.year().toString();
+        y.M = pad(y.now.month() + 1);
+        y.D = pad(y.now.date());
+        y.day = (1 + y.now.day()) % 7;
         y.s = y.Y + y.M + y.D;
     },
-    num: (now = Date.now()) => {
-        now = new Date(now);
-        return now.getTime();
+    num: (m = moment()) => moment(m).valueOf(),
+    sort: (a, b) => moment(b.date) - moment(a.date),
+    lsort: (a, b) => moment(a.date) - moment(b.date),
+    min: (...arr) => moment(Math.min(...arr.map(e => moment(e)))),
+    toString: (m = moment(), props = { time: 0 }) => {
+        m = moment(m);
+        if (!props.time) return m.format('YYYY-MM-DD');
+        return m.format('YYYY-MM-DD HH:mm:ss');
     },
-    sort: (a, b) => new Date(b.date) - new Date(a.date),
-    lsort: (a, b) => new Date(a.date) - new Date(b.date),
-    min: (...arr) => new Date(Math.min(...arr.map(e => new Date(e)))),
+    hhmmss: (m = moment()) => {
+        m = moment.duration(m);
+        return `${pad(m.hours())}:${pad(m.minutes())}:${pad(m.seconds())}`;
+    },
 }
 
 export default dt;
