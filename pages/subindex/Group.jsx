@@ -18,7 +18,8 @@ const groupColors = {
 }
 
 const Group = ({ group, price, meta }) => {
-    meta = meta.data;
+    meta = meta?.data;
+    if (!meta) return;
     const total = Object.values(group).map(e => e.price).sum() / 100;
     const lastDate = dt.parse(group.last);
     const data = Object.values(group)
@@ -35,22 +36,20 @@ const Group = ({ group, price, meta }) => {
             });
             return {
                 name,
-                y: parseFix(e.price / total, 2),
+                y: parseFix(e?.price / total, 2),
                 color: groupColors[name] || colors[i],
-                drilldown: {
-                    name, children, prices
-                },
+                drilldown: { name, children, prices },
             }
         });
-    data.sort((b, a) => a.y - b.y);
+    data?.sort((b, a) => a?.y - b?.y);
     for (let sub of data) {
-        const len = sub.drilldown.prices.length;
+        const len = sub?.drilldown?.prices?.length;
         for (let j = 0; j < len; j++) {
             let brightness = 0.1 - (j / len) / 5;
-            stockData.push({
-                name: sub.drilldown.children[j],
-                y: sub.drilldown.prices[j],
-                color: Highcharts.color(sub.color).brighten(brightness).get()
+            stockData?.push({
+                name: sub?.drilldown?.children[j],
+                y: sub?.drilldown?.prices[j],
+                color: Highcharts?.color(sub?.color)?.brighten(brightness)?.get()
             });
         }
     }
@@ -79,7 +78,7 @@ const Group = ({ group, price, meta }) => {
             data,
             size: '60%',
             dataLabels: {
-                format: `<div><a href=/group/{point.name} style="color:${scss.anchorBright}">{point.name}</a><br><p style="opacity: 0.5;font-size:12px;">{y}%</p></div>`,
+                format: `<div><a href=/group/{point.name} style="color:${scss?.anchorBright}">{point.name}</a><br><p style="opacity: 0.5;font-size:12px;">{y}%</p></div>`,
                 color: '#ffffff',
                 distance: -30,
                 style: {
@@ -91,7 +90,7 @@ const Group = ({ group, price, meta }) => {
             size: '80%',
             innerSize: '60%',
             dataLabels: {
-                format: `<a href=/stock/{point.name} style="color:${scss.anchor}"><b>{point.name}</b></a><br> <span style="opacity: 0.5">{y}%</span>`,
+                format: `<a href=/stock/{point.name} style="color:${scss?.anchor}"><b>{point.name}</b></a><br> <span style="opacity: 0.5">{y}%</span>`,
                 filter: {
                     property: 'y',
                     operator: '>',
