@@ -6,6 +6,8 @@ import HighchartsReact from 'highcharts-react-official'
 import scss from '@/styles/variables.module.scss';
 import '@/module/array';
 import { parseFix } from '@/module/ba';
+import { renderToStaticMarkup } from "react-dom/server"
+import Link from 'next/link';
 
 var stockData = []
 
@@ -18,6 +20,7 @@ const groupColors = {
 }
 
 const Group = ({ group, price, meta }) => {
+    group = group?.data;
     meta = meta?.data;
     if (!meta) return;
     const total = Object.values(group).map(e => e.price).sum() / 100;
@@ -69,7 +72,19 @@ const Group = ({ group, price, meta }) => {
             }
         },
         tooltip: {
-            enabled: false
+            backgroundColor: scss?.bgMid,
+            style: {
+                color: scss?.textColor
+            },
+            formatter: function (t) {
+                console.log(this, t);
+                return renderToStaticMarkup(<div style={{ backgroundColor: scss?.bgMid, borderWidth: 0 }}>
+                    <div style={{ backgroundColor: this.color, width: 15, height: 15 }}></div>
+                    {this.key} :&nbsp;
+                    <p style={{ fontSize: 12 }}>{this.y}%</p>
+                </div>)
+            }
+            // format: `<div><span style="color:{point.color};width:15px;height:15px;display:inline-block;">&nbsp;</span>{point.name}:<p style="font-size:12px;">{y}%</p></div>`,
         },
         credits: {
             enabled: false
@@ -78,7 +93,14 @@ const Group = ({ group, price, meta }) => {
             data,
             size: '60%',
             dataLabels: {
-                format: `<div><a href=/group/{point.name} style="color:${scss?.anchorBright}">{point.name}</a><br><p style="opacity: 0.5;font-size:12px;">{y}%</p></div>`,
+                formatter: function (t) {
+                    return renderToStaticMarkup(<div>
+                        <a href={`/group/${this.key}`} style={{ color: scss?.anchorBright }}>
+                            {this.key}
+                        </a><br />
+                        <p style={{ opacity: 0.5, fontSize: 12 }}>${this.y}%</p>
+                    </div>)
+                },
                 color: '#ffffff',
                 distance: -30,
                 style: {
@@ -90,7 +112,12 @@ const Group = ({ group, price, meta }) => {
             size: '80%',
             innerSize: '60%',
             dataLabels: {
-                format: `<a href=/stock/{point.name} style="color:${scss?.anchor}"><b>{point.name}</b></a><br> <span style="opacity: 0.5">{y}%</span>`,
+                formatter: function (t) {
+                    return renderToStaticMarkup(<div>
+                        <Link href={`/stock/${this.key}`} style={{ color: scss?.anchor, fontWeight: 'bold' }}>{this.key}</Link><br />
+                        <span style={{ opacity: .5 }}>{this.y}%</span>
+                    </div>)
+                },
                 filter: {
                     property: 'y',
                     operator: '>',
@@ -123,7 +150,7 @@ const Group = ({ group, price, meta }) => {
 
     return <>
         <div className={`${styles.area} ${styles.groupArea}`}>
-            <h3>그룹사 시가총액 순위</h3>
+            <h3>오늘의 시가총액</h3>
             <div className={styles.chart}>
                 <HighchartsReact highcharts={Highcharts} options={options} />
             </div>

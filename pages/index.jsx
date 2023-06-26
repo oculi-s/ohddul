@@ -67,7 +67,6 @@ const GroupInduty = ({ group, price, meta, induty, index }) => {
 const index = function ({
     group, induty, index, market, price, meta
 }) {
-    group = group?.data;
     const props = { group, meta, induty, market, index, price };
     return (
         <div>

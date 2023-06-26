@@ -173,12 +173,12 @@ const Total = () => {
 }
 
 export default function Index({
-    price, meta,
+    price, meta, group,
     userMeta,
     mobAside, setAsideShow
 }) {
     const [view, setView] = useState(false);
-    const props = { meta, userMeta, price, setAsideShow, view, setView };
+    const props = { meta, userMeta, price, group, setAsideShow, view, setView };
 
     return (
         <>

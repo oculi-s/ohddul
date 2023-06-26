@@ -127,7 +127,9 @@ const moveQuery = ({ e, meta, userMeta, router, setAsideShow, result }) => {
     if (setAsideShow) setAsideShow(false);
 }
 
-const Search = ({ meta, group, router, refs, userMeta, setAsideShow, view, setView }) => {
+const Search = ({
+    meta, group, router, refs, userMeta, setAsideShow, view, setView
+}) => {
     const [result, setResult] = useState({ stock: [], user: [], group: [] });
     const [tabIndex, setTabIndex] = useState(0);
     const props = {
@@ -229,7 +231,9 @@ const Search = ({ meta, group, router, refs, userMeta, setAsideShow, view, setVi
     )
 }
 
-export default function Index({ meta, group, userMeta, setAsideShow, view, setView }) {
+export default function Index({
+    meta, group, userMeta, setAsideShow, view, setView
+}) {
     const refs = useRef({ stock: [], user: [] });
     const router = useRouter();
     toggleOnPageChange(router, setAsideShow);
