@@ -86,21 +86,19 @@ async function refineData(data) {
 }
 
 const Group = ({ group, price, meta }) => {
-    group = group?.data;
-    meta = meta?.data;
-    if (!meta) return;
+    group = group?.data || {};
+    meta = meta?.data || {};
     const [options, setOptions] = useState(defaultOptions);
-    const total = Object.values(group).map(e => e.price).sum() / 100;
-    const lastDate = dt.parse(group.last);
+    const lastDate = dt.parse(group?.last);
+    const total = Object.values(group)?.map(e => e?.price)?.sum() / 100;
     const data = Object.values(group)
-        ?.filter(e => e.price / total >= 2)
-        // ?.slice(0, 5)
+        ?.filter(e => e?.price / total >= 2)
         ?.map((e, i) => {
             e.child = e.child?.sort((b, a) =>
                 meta[a]?.amount * price[a]?.close - meta[b]?.amount * price[b]?.close);
             const name = e.name;
-            const child = e.child.map(code => meta[code]?.name);
-            const prices = e.child.map(code => {
+            const child = e.child?.map(code => meta[code]?.name);
+            const prices = e.child?.map(code => {
                 const amount = meta[code]?.amount;
                 const close = price[code]?.close;
                 return parseFix(amount * close / total, 2);
@@ -176,6 +174,7 @@ const Group = ({ group, price, meta }) => {
             })
         })
     }, [])
+    if (!meta) return;
     return <>
         <div className={`${styles.area} ${styles.groupArea}`}>
             <h3>오늘의 시가총액</h3>
