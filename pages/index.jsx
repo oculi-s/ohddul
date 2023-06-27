@@ -1,10 +1,8 @@
-import styles from '@/styles/Index.module.scss';
 import Kospi from './subindex/Kospi';
 import Group from './subindex/Group';
+import Induty from './subindex/Induty';
 
-import GroupBubble from './subindex/GroupBubble';
 import container from "@/pages/container";
-
 import json from '@/module/json';
 import dir from '@/module/dir';
 
@@ -38,32 +36,6 @@ const Column = () => {
     </>
 }
 
-const GroupInduty = ({ group, price, meta, induty, index }) => {
-    meta = meta?.data;
-    Object.keys(group)
-        .filter(name => group[name].child?.length)
-        .map(name => {
-            const data = group[name].child;
-            return data.map(code => {
-
-            })
-        })
-    return <div className={styles.area}>
-        <h3>그룹/업종</h3>
-        <div className={styles.inline}>
-            <div>
-                <table><tbody>
-
-                </tbody></table>
-            </div>
-            <div>
-                <table><tbody>
-                </tbody></table>
-            </div>
-        </div>
-    </div>;
-}
-
 const index = function ({
     group, induty, index, market, price, meta
 }) {
@@ -71,10 +43,8 @@ const index = function ({
     return (
         <div>
             <Kospi {...props} />
-            {/* <Column /> */}
             <Group {...props} />
-            {/* <GroupBubble {...props} /> */}
-            <GroupInduty {...props} />
+            <Induty {...props} />
         </div>
     )
 }

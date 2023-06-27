@@ -36,50 +36,29 @@
             margin: 0;
         }
     }
-
-
 }
 
 .groupArea {
-    .meta {
-        width: fit-content;
-        margin-left: auto;
-        text-align: center;
-        margin-bottom: 10px;
-
-        img {
-            padding: 15px;
-            max-width: 200px;
-            display: block;
-        }
-
-        p {
-            margin: 0;
-        }
-    }
-
     .chart {
+        border-radius: 10px;
+        padding: 5px;
         background: $bgBright;
-        height: 500px;
     }
-
 }
 
-@include desktop {
-    .inline {
-        display: flex;
-        justify-content: space-around;
+.inline {
+    display: flex;
+    justify-content: space-around;
+
+    >* {
+        max-width: 49%;
     }
 }
 
 @include mobile {
-    .inline {
-        .wrap {}
-    }
-
-    .chartArea {
-        .wrap:first-child {
-            margin-bottom: 20px;
+    .groupArea {
+        .chart>* {
+            height: 300px;
         }
     }
 }

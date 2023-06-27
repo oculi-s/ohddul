@@ -1,0 +1,18 @@
+@import '../variables.module.scss';
+
+.meta {
+    width: fit-content;
+    margin-left: auto;
+    text-align: center;
+    margin-bottom: 10px;
+
+    img {
+        padding: 15px;
+        max-width: 200px;
+        display: block;
+    }
+
+    p {
+        margin: 0;
+    }
+}

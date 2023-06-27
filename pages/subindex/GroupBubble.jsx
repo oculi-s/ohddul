@@ -1,50 +1,13 @@
 import '@/module/array';
 import styles from '@/styles/Index.module.scss';
 import ToggleTab from '@/component/base/tab';
-import { Price } from '@/module/ba';
-import Link from 'next/link';
 import { useState } from 'react';
 import GroupDoughnutChart from '@/component/chart/GroupDoughnut';
-import groupImg from "@/public/group/Default";
-import Image from 'next/image';
-
-const GroupMeta = ({ name, group, price, meta }) => {
-    meta = meta?.data;
-    group = group[name];
-    const equityTotal = group?.sum;
-    const groupPrice = group?.child
-        ?.map(e => { return { code: e, price: meta[e]?.amount * price[e]?.close } })
-        ?.sort((b, a) => a.price - b.price);
-    const priceSum = groupPrice.map(e => e.price).sum();
-    const first = groupPrice[0];
-    return <div className={styles.meta}>
-        <table>
-            <tbody>
-                <tr><th colSpan={2}>
-                    <Image
-                        alt={`${name}그룹 로고`}
-                        src={groupImg[name]}
-                    />
-                    <Link href={`/group/${name}`}>{name}그룹</Link>
-                </th></tr>
-                <tr><th>자산총액</th><td>{Price(10 * equityTotal)}</td></tr>
-                <tr><th>시가총액</th><td>{Price(priceSum)}</td></tr>
-                <tr><th>종목 수</th><td>{group?.child?.length}</td></tr>
-                <tr>
-                    <th>대장주</th>
-                    <td>
-                        <Link href={`/stock/${first?.code}`}>
-                            {meta[first?.code]?.name}
-                        </Link>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-}
 
 /**
  * sort by는 0일 때 자산, 1일 때 시총으로
+ * 
+ * 2023.06.26 2layer piechart로 변경하면서 폐기
  */
 const N = 8;
 const sortKeys = ['시가총액순', '자산순']
@@ -61,7 +24,6 @@ const GroupBubble = ({ group = {}, price, meta }) => {
 
     const datas = names.map(name => {
         return <div key={name}>
-            <GroupMeta {...{ name, group, price, meta }} />
             <div className={styles.chart}>
                 <GroupDoughnutChart {...{ name, group, price, meta }} />
             </div>

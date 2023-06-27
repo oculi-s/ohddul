@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import { ko } from 'date-fns/locale';
@@ -38,6 +38,7 @@ const options = {
                 // }
             },
         },
+        legend: { display: true }
     },
     interaction: { intersect: false, mode: 'index', },
     spanGaps: true,
@@ -74,16 +75,16 @@ const plugins = [{
     }
 }];
 
-function refineData({ price, amount, addEarn, addBollinger, N }) {
+async function getData({ price, amount, addEarn, addBollinger, num }) {
     price = price?.sort(dt.lsort);
     const dates = price?.map(e => e.date);
     const priceRaw = price?.map(e => e.close);
-    const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - N, i)))
+    const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - num, i)))
     let props = { dates, priceRaw, priceAvg };
 
     if (addBollinger) {
-        const priceTop = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - N, i), 2))
-        const priceBot = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - N, i), -2))
+        const priceTop = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), 2))
+        const priceBot = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), -2))
         props = { ...props, priceTop, priceBot };
     }
 
@@ -95,97 +96,99 @@ function refineData({ price, amount, addEarn, addBollinger, N }) {
     return props;
 }
 
-function getData({ prices, metas, addEarn, addBollinger, N }) {
+async function refineData({
+    prices, metas, addEarn, addBollinger, num,
+}) {
     let datasets = [], date;
-    prices.forEach((price, i) => {
+    const len = prices?.length;
+    for await (let i of Array(len).keys()) {
+        const price = prices[i];
         const amount = metas[i]?.amount;
         const name = metas[i]?.name;
         const {
             dates, priceRaw, priceAvg, priceTop, priceBot, stockEps, stockBps
-        } = refineData({ price, amount, addEarn, addBollinger, N });
+        } = await getData({ price, amount, addEarn, addBollinger, num });
         date = dates;
-        datasets = [
-            {
-                data: priceAvg,
-                label: `${name || ''} ${N}일 이평`,
-                fill: false,
-                borderColor: colors[i],
-                backgroundColor: colors[i],
-                borderWidth: 1.5,
-                pointRadius: 0
-            },
-            {
-                data: priceRaw,
-                label: name || '종가',
-                borderColor: "#2e2e4a",
-                backgroundColor: "#2e2e4a",
-                borderWidth: 1,
-                pointRadius: 0
-            },
-            ...datasets
-        ];
+        datasets = [{
+            data: priceAvg,
+            label: `${name || ''} ${num}일 이평`,
+            fill: false,
+            borderColor: colors[i],
+            backgroundColor: colors[i],
+            borderWidth: 1.5,
+            pointRadius: 0
+        }, {
+            data: priceRaw,
+            label: name || '종가',
+            borderColor: "#2e2e4a",
+            backgroundColor: "#2e2e4a",
+            borderWidth: 1,
+            pointRadius: 0
+        }, ...datasets];
         if (addEarn) {
             const def = { lineTension: 0, borderWidth: 2, pointRadius: 0 }
-            datasets = [
-                {
-                    data: stockEps,
-                    label: "EPS",
-                    borderColor: "#A6D0DD",
-                    backgroundColor: "#A6D0DD",
-                    ...def
-                },
-                {
-                    data: stockBps,
-                    label: "BPS",
-                    borderColor: "#FF6969",
-                    backgroundColor: "#FF6969",
-                    ...def
-                },
-                ...datasets
-            ];
+            datasets = [{
+                data: stockEps,
+                label: "EPS",
+                borderColor: "#A6D0DD",
+                backgroundColor: "#A6D0DD",
+                ...def
+            }, {
+                data: stockBps,
+                label: "BPS",
+                borderColor: "#FF6969",
+                backgroundColor: "#FF6969",
+                ...def
+            }, ...datasets];
         }
         if (addBollinger) {
             const def = { borderWidth: 1, pointRadius: 0 }
-            datasets = [
-                {
-                    data: priceTop,
-                    label: "BB상단",
-                    borderColor: "#FF6969",
-                    backgroundColor: "#FF6969",
-                    ...def
-                }, {
-                    data: priceBot,
-                    label: "BB하단",
-                    borderColor: "#A6D0DD",
-                    backgroundColor: "#A6D0DD",
-                    ...def
-                },
-                ...datasets
-            ]
+            datasets = [{
+                data: priceTop,
+                label: "BB상단",
+                borderColor: "#FF6969",
+                backgroundColor: "#FF6969",
+                ...def
+            }, {
+                data: priceBot,
+                label: "BB하단",
+                borderColor: "#A6D0DD",
+                backgroundColor: "#A6D0DD",
+                ...def
+            }, ...datasets]
         }
-    });
+    }
     return { labels: date, datasets };
 }
 
 function PriceChart({
     prices = [{}], metas = [{}],
-    addEarn = true, addBollinger,
+    addEarn = true, addBollinger = false, N, help = true,
+    axis = true, legend = true,
 }) {
-    let [N, setN] = useState(20);
+    const [num, setNum] = useState(N);
+    const [data, setData] = useState({ labels: [], datasets: [] });
+    options.plugins.legend.display = legend;
     prices = prices.map(price => {
         price?.sort(dt.sort);
         return price?.slice(0, 5 * 252);
     })
+    useEffect(() => {
+        refineData({
+            prices, metas, addEarn, addBollinger, num,
+            axis, legend,
+        }).then(r => { setData(r); })
+    }, [])
     const props = {
         des: ' 도움말',
         data: <>
             {
-                addBollinger ?
+                help && addBollinger ?
                     <><tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
                         <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr></> : null
             }
             {
-                addEarn ?
+                help && addEarn ?
                     <><tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
                         <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr></> : null
             }
@@ -198,9 +201,7 @@ function PriceChart({
                 <Line
                     options={options}
                     plugins={plugins}
-                    data={
-                        getData({ prices, metas, addEarn, addBollinger, N })
-                    }
+                    data={data}
                 />
             </div>
         </div >

@@ -58,6 +58,11 @@ const Kospi = ({ market, price, meta }) => {
                         <PriceChart {...{
                             prices: [kospi],
                             addEarn: false,
+                            addBollinger: true,
+                            N: 120,
+                            help: false,
+                            axis: false,
+                            legend: false,
                         }} />
                     </div>
                 </div>
@@ -81,6 +86,11 @@ const Kospi = ({ market, price, meta }) => {
                         <PriceChart {...{
                             prices: [kosdaq],
                             addEarn: false,
+                            addBollinger: true,
+                            help: false,
+                            N: 120,
+                            axis: false,
+                            legend: false,
                         }} />
                     </div>
                 </div>
