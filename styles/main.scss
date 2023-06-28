@@ -37,6 +37,10 @@
     stroke: none !important;
 }
 
+div:has(>.highcharts-container) {
+    height: 100% !important;
+}
+
 @include mobtab {
     :root {
         --main-width: 100%;

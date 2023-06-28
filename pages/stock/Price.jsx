@@ -1,4 +1,4 @@
-import PriceChart from "@/component/chart/Price";
+import PriceChart from "@/component/chart/PriceLine";
 
 const PriceTable = ({ last }) => {
     const tbody = <>
@@ -13,8 +13,8 @@ const PriceTable = ({ last }) => {
 const PriceElement = (props) => {
     const { stockPrice, stockMeta } = props;
     const chartProps = {
-        prices: [stockPrice],
-        metas: [{ amount: stockMeta?.amount }]
+        price: stockPrice,
+        meta: stockMeta
     }
     return <>
         <PriceChart {...chartProps} />

@@ -1,7 +1,7 @@
 import styles from '@/styles/Index.module.scss';
-import PriceChart from '@/component/chart/Price';
 import { Per, Color, Num, Div } from '@/module/ba';
 import dt from '@/module/dt';
+import PriceChart from '@/component/chart/PriceLine';
 
 const Kospi = ({ market, price, meta }) => {
     meta = meta?.data;
@@ -9,7 +9,6 @@ const Kospi = ({ market, price, meta }) => {
     const { kospi, kosdaq } = market;
     kospi.sort(dt.sort);
     kosdaq.sort(dt.sort);
-    const lastDate = kospi[0]?.date;
     const last = {
         kospi: kospi[0]?.close,
         kosdaq: kosdaq[0]?.close
@@ -56,7 +55,7 @@ const Kospi = ({ market, price, meta }) => {
                     </div>
                     <div className={styles.chart}>
                         <PriceChart {...{
-                            prices: [kospi],
+                            price: kospi,
                             addEarn: false,
                             addBollinger: true,
                             N: 120,
@@ -84,7 +83,7 @@ const Kospi = ({ market, price, meta }) => {
                     </div>
                     <div className={styles.chart}>
                         <PriceChart {...{
-                            prices: [kosdaq],
+                            price: kosdaq,
                             addEarn: false,
                             addBollinger: true,
                             help: false,
@@ -95,7 +94,6 @@ const Kospi = ({ market, price, meta }) => {
                     </div>
                 </div>
             </div>
-            <p className='des'>기준일 : {lastDate}</p>
         </div>
     )
 }

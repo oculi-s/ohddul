@@ -6,13 +6,12 @@ import { XMLParser } from 'fast-xml-parser/src/fxp';
 
 const json = {
     read: (url, def = { data: [], last: 0 }) => {
-        url = encode(url);
-        if (fs.existsSync(url)) {
-            let data = fs.readFileSync(url, 'utf-8');
+        if (!fs.existsSync(url)) return def;
+        let data = fs.readFileSync(url, 'utf-8');
+        try {
             data = JSON.parse(data);
-            return data;
-        }
-        return def;
+        } catch { }
+        return data;
     },
     xml: async (url, def = { data: [], last: dt.num() }) => {
         const option = { numberParseOptions: { leadingZeros: false } };

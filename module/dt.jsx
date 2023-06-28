@@ -72,11 +72,11 @@ const dt = {
     /**
      * 시간 내림차순 정렬 (현재 -> 과거)
      */
-    sort: (a, b) => moment(b.date) - moment(a.date),
+    sort: (a, b) => moment(b.d || b.date) - moment(a.d || a.date),
     /**
      * 시간 오름차순 정렬 (과거 -> 현재)
      */
-    lsort: (a, b) => moment(a.date) - moment(b.date),
+    lsort: (a, b) => moment(a.d || a.date) - moment(b.d || b.date),
     min: (...arr) => moment(Math.min(...arr.map(e => moment(e)))),
     toString: (m = moment(), props = { time: 0 }) => {
         m = moment(m);

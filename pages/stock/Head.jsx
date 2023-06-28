@@ -11,6 +11,10 @@ import dir from '@/module/dir';
 import dt from '@/module/dt';
 
 const toggleFav = async ({ favs, setFavs, code, uid }) => {
+    if (!uid) {
+        alert("로그인 후 이용해주세요");
+        return;
+    }
     setFavs(!favs);
     await json.toggle({
         url: dir.user.fav(uid),
@@ -302,7 +306,7 @@ const StockHead = ({
     const predTime = userPred?.queue?.find(e => e.code == code)?.date;
     const { status } = useSession();
     const orig = userFavs?.find(e => e == code);
-    const type = stockMeta?.type;
+    const type = stockMeta?.t;
 
     const [bar, setBar] = useState(true);
     const [view, setView] = useState(0);

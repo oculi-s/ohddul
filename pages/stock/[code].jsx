@@ -20,9 +20,10 @@ import PredElement from './Pred';
  *  
  * ROE는 제공하지 않음. 대부분 5% 이내로 의미 없음
 */
-const MetaTable = ({ stockMeta: { amount }, stockPredict, last, stockEarn }) => {
-    const lastPrice = last?.close;
-    const lastDate = last?.date;
+const MetaTable = ({ stockMeta, stockPredict, last, stockEarn }) => {
+    const lastPrice = last?.c;
+    const lastDate = last?.d;
+    const amount = stockMeta?.a;
     const total = amount * lastPrice;
     const cnt = stockPredict?.data?.length || 0 + stockPredict?.queue?.length || 0;
     const EPS = (last?.eps || 0) / amount;
@@ -97,11 +98,10 @@ const Index = ({
             </>
         )
     }
-    const name = stockMeta?.name;
+    const name = stockMeta?.n;
     stockPrice = stockPrice?.data?.sort(dt.lsort);
-    stockEarn = stockEarn?.data;
+    stockEarn = stockEarn?.data?.sort(dt.lsort);
     stockShare = stockShare?.data;
-    stockEarn = stockEarn?.sort(dt.lsort);
     const last = stockPrice?.slice(-1)[0];
     const props = {
         code, name, last, router,
@@ -123,7 +123,7 @@ const Index = ({
                 <p className='des'>* 기준일 : {dt.toString(stockEarn?.last)}</p>
             </div>,
             <div key={2}>
-                <ShareElement {...props} />
+                {/* <ShareElement {...props} /> */}
             </div>,
             <div key={3}>
                 <PredElement {...props} />

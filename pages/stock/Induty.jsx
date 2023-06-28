@@ -2,20 +2,21 @@ import Link from 'next/link';
 import { Price, Big } from '@/module/ba';
 import Fold from '@/component/base/fold';
 import json from '@/module/json';
+import '@/module/array'
 
 const setStock = ({ induty, code, meta, price, dict, stockDict }) => {
     const stock = Object.entries(induty)
         .filter(([e, v]) => v == code)
         .filter(([e, v]) =>
-            meta[e]?.amount && price[e]?.close)
+            meta[e]?.a && price[e]?.c)
         .sort(([a, _1], [b, _2]) =>
-            meta[b]?.amount * price[b]?.close -
-            meta[a]?.amount * price[a]?.close
+            meta[b]?.a * price[b]?.c -
+            meta[a]?.a * price[a]?.c
         )
     stock.forEach(([e, v]) => {
-        const name = meta[e]?.name;
-        const amount = meta[e]?.amount;
-        const close = price[e]?.close;
+        const name = meta[e]?.n;
+        const amount = meta[e]?.a;
+        const close = price[e]?.c;
         const stockKey = `<a href=/stock/${e}>${name}</a>`
         dict[stockKey] = `<td>${Price(amount * close) || "-"}</td>`;
         stockDict[e] = 1;
@@ -78,7 +79,7 @@ const IndutyFold = ({
     });
     const stock = Object.keys(stockDict)
         .filter(e => meta[e] && price[e]);
-    const total = stock.map(e => meta[e].amount * price[e].close || 0).reduce((a, b) => a + b, 0);
+    const total = stock.map(e => meta[e].a * price[e].c || 0).sum();
     const name = <>
         <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${induty[code]}`}>{iname}</Link></h3>
         <p>{stock.length} 종목 시총 : ({Price(total)})</p>

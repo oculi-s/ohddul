@@ -69,10 +69,10 @@ export const earnStack = async (earn) => {
 
 async function close(data, date, dates) {
     if (!dates.length) return false;
-    date = new Date(date);
+    date = dt.num(date);
     const close = await dates.reduce((prev, curr) => {
-        const pd = new Date(prev);
-        const cd = new Date(curr);
+        const pd = dt.num(prev);
+        const cd = dt.num(curr);
         return (Math.abs(cd - date) < Math.abs(pd - date) ? curr : prev);
     });
     return data.find(e => e.date == close) || false;
@@ -87,7 +87,7 @@ export const earnonPrice = async ({ stockPrice, stockEarn }) => {
     const earnDates = stockEarn.map(e => e.date);
 
     for await (const e of stockPrice.data) {
-        const closeEarn = await close(stockEarn, e.date, earnDates);
+        const closeEarn = await close(stockEarn, e.d, earnDates);
         if (closeEarn?.equity && closeEarn.sum?.profit) {
             e.bps = closeEarn.equity;
             e.eps = closeEarn.sum?.profit;

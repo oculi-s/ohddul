@@ -11,7 +11,7 @@ const MetaTable = ({ group, meta, price, code }) => {
     const equityTotal = group?.equity;
     const priceTotal = group?.price;
     const groupPrice = group?.child
-        ?.map(e => { return { code: e, price: meta[e]?.amount * price[e]?.close } })
+        ?.map(e => { return { code: e, price: meta[e]?.a * price[e]?.c } })
         ?.sort((b, a) => a.price - b.price);
     const first = groupPrice[0];
     return <div className={styles.meta}>
@@ -24,7 +24,7 @@ const MetaTable = ({ group, meta, price, code }) => {
                     <th>대표주</th>
                     <td>
                         <Link href={`/stock/${first?.code}`}>
-                            {meta[first?.code]?.name}
+                            {meta[first?.code]?.n}
                         </Link>
                     </td>
                 </tr>

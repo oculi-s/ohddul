@@ -15,7 +15,7 @@ const GroupFold = ({
     meta = meta?.data;
     group = group?.data[gname];
     if (!group) return <></>;
-    const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.amount * price[e]?.close]));
+    const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
     const priceSum = Object.values(priceDict).reduce((a, b) => a + b, 0)
     const name = <>
         <Link href={`/group/${gname}`}>
@@ -41,11 +41,9 @@ const GroupFold = ({
             return (
                 <tr key={code}>
                     <th>
-                        <Link href={`/stock/${code}`}>
-                            {meta[code]?.name}
-                        </Link>
+                        <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                     </th>
-                    <td>{Num(price[code]?.close)}</td>
+                    <td>{Num(price[code]?.c)}</td>
                     <td>{Price(priceDict[code])}</td>
                     <td>{cnt}</td>
                     <td>{(predict[code]?.right || 0 / cnt) || 0}%</td>

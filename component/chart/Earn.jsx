@@ -17,7 +17,7 @@ function EarnChart({ stockEarn: earn, stockMeta }) {
             </div>
         )
     }
-    const amount = stockMeta?.amount || 1;
+    const amount = stockMeta?.a || 1;
     earn = earn || [];
     earn = earn.sort((a, b) => new Date(a.date) - new Date(b.date));
     const labels = earn.map(e => e.date);

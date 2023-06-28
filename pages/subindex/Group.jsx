@@ -95,12 +95,12 @@ const Group = ({ group, price, meta }) => {
         ?.filter(e => e?.price / total >= 2)
         ?.map((e, i) => {
             e.child = e.child?.sort((b, a) =>
-                meta[a]?.amount * price[a]?.close - meta[b]?.amount * price[b]?.close);
+                meta[a]?.a * price[a]?.c - meta[b]?.a * price[b]?.c);
             const name = e.name;
-            const child = e.child?.map(code => meta[code]?.name);
+            const child = e.child?.map(code => meta[code]?.n);
             const prices = e.child?.map(code => {
-                const amount = meta[code]?.amount;
-                const close = price[code]?.close;
+                const amount = meta[code]?.a;
+                const close = price[code]?.c;
                 return parseFix(amount * close / total, 2);
             });
             return {

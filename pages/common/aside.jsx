@@ -8,7 +8,9 @@ import { useState } from 'react';
 import { getRank } from '@/pages/_user';
 import Search from '@/pages/common/search';
 
-import { Per, Color, Num } from '@/module/ba';
+import { Per, Color, Num, Price } from '@/module/ba';
+import dt from '@/module/dt';
+import { Loading } from '@/component/_base';
 
 const SignIn = async (e) => {
     e.preventDefault();
@@ -80,58 +82,84 @@ const Info = ({ userMeta }) => {
 }
 
 const N = 8;
-const PriceTable = ({ code, price, i, meta }) => {
-    const { prev, close } = price;
+const PriceTable = ({ meta, price, sortBy, N }) => {
+    if (!meta || !price) return <Loading />
+    const body = Object.keys(meta)
+        .filter(code => meta[code])
+        .sort(sortBy)
+        .slice(0, N)
+        .map(code => {
+            const c = price[code]?.c;
+            const p = price[code]?.p;
+            return <tr key={code}>
+                <th>
+                    <Link href={`/stock/${code}`}>
+                        {meta[code]?.n}
+                    </Link>
+                </th>
+                <td align='right'>{Num(c)}</td>
+                <td>{Price(c * meta[code]?.a)}</td>
+                <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
+            </tr>
+        });
+    return <table><tbody>{body}</tbody></table>
+}
+
+const MarketSumList = ({ price, meta }) => {
+    meta = meta?.data;
+    if (!price || !meta) return <Loading />;
+    const sortBy = (b, a) => {
+        const pa = price[a];
+        const pb = price[b];
+        return pa?.c * meta[a]?.a - pb?.c * meta[b]?.a;
+    }
     return (
-        <tr key={i}>
-            <th>
-                <Link href={`/stock/${code}`}>
-                    {meta.data[code]?.name}
-                </Link>
-            </th>
-            <td align='right'>{Num(close)}</td>
-            <td className={Color(close - prev)} align='center'>
-                {Per(close, prev)}
-            </td>
-        </tr>
+        <div className={styles.box}>
+            <Link href="/stock/sum">
+                <span className={styles.sum}>시가총액 순위</span>
+                &nbsp;<span className='fa fa-chevron-right'></span>
+            </Link>
+            <PriceTable {...{ price, meta, N, sortBy }} />
+            <p className='des'>기준일 : {dt.parse(price?.last)}</p>
+        </div>
     )
 }
 
-const Up = ({ price, meta }) => {
-    if (!price || !meta) {
-        return (<>로딩중입니다...</>)
+const UpList = ({ price, meta }) => {
+    meta = meta?.data;
+    if (!price || !meta) return <Loading />;
+    const sortBy = (b, a) => {
+        const pa = price[a];
+        const pb = price[b];
+        return (pa?.c - pa?.p) * pb?.p - pa?.p * (pb?.c - pb?.p);
     }
-    let data = Object.entries(price)
-        .filter(([code, price], i) => meta.data[code])
-        .sort(([ka, a], [kb, b]) => (b.close - b.prev) * a.prev - b.prev * (a.close - a.prev))
-        .slice(0, N)
-        .map(([code, price], i) => PriceTable({ code, price, i, meta }));
     return (
         <div className={styles.box}>
             <Link href="/stock/up">
                 <span className={styles.up}>오른종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <table><tbody>{data}</tbody></table>
+            <PriceTable {...{ price, meta, N, sortBy }} />
+            <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
     )
 }
-const Down = ({ price, meta }) => {
-    if (!price || !meta) {
-        return (<>로딩중입니다...</>)
+const DownList = ({ price, meta }) => {
+    meta = meta?.data;
+    if (!price || !meta) return <Loading />;
+    const sortBy = (a, b) => {
+        const pa = price[a];
+        const pb = price[b];
+        return (pa?.c - pa?.p) * pb?.p - pa?.p * (pb?.c - pb?.p);
     }
-    let data = Object.entries(price)
-        .filter(([code, price], i) => meta.data[code])
-        .sort(([ka, a], [kb, b]) => (a.close - a.prev) * b.prev - a.prev * (b.close - b.prev))
-        .slice(0, N)
-        .map(([code, price], i) => PriceTable({ code, price, i, meta }));
     return (
         <div className={styles.box}>
             <Link href="/stock/down">
                 <span className={styles.down}>떨어진종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <table><tbody>{data}</tbody></table>
+            <PriceTable {...{ price, meta, N, sortBy }} />
+            <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
     )
 }
@@ -177,9 +205,9 @@ export default function Index({
     userMeta,
     mobAside, setAsideShow
 }) {
+    if (!meta) return;
     const [view, setView] = useState(false);
     const props = { meta, userMeta, price, group, setAsideShow, view, setView };
-
     return (
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>
@@ -188,9 +216,9 @@ export default function Index({
                 </div>
                 <Info {...props} />
                 {/* <Rank {...props} /> */}
-                <Up {...props} />
-                <Down {...props} />
-                {/* <Total {...props} /> */}
+                <MarketSumList {...props} />
+                <UpList {...props} />
+                <DownList {...props} />
             </aside>
             <div className={styles.shadow}
                 onClick={e => { setAsideShow(false); setView(false); }}

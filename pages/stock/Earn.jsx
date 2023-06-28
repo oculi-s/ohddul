@@ -1,6 +1,6 @@
 import styles from '@/styles/Stock/Stock.module.scss';
 import toggleOnPageChange from '@/component/base/toggle';
-import EarnChart from '@/component/chart/Earn';
+import EarnChart from '@/component/chart/EarnLine';
 import dt from '@/module/dt';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '@/component/base/help';
 
 const EarnTable = ({ stockMeta, stockEarn }) => {
-    const amount = stockMeta?.amount;
+    const amount = stockMeta?.a;
     const [N, setN] = useState(5);
     const [view, setView] = useState(true);
     const router = useRouter();

@@ -7,15 +7,7 @@ import styles from '@/styles/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
 import colors from "@/module/colors";
-
-Math.avg = (d) => {
-    return Math.round(d.reduce((a, b) => a + b, 0) / d.length);
-}
-Math.std = (d, k) => {
-    let mean = Math.avg(d);
-    let diff = d.map(e => (e - mean) * (e - mean)).reduce((a, b) => a + b, 0);
-    return Math.round(mean + k * Math.sqrt(diff / d.length));
-}
+import '@/module/array'
 
 /**
  * tooltip custom 하는 방법
@@ -77,8 +69,8 @@ const plugins = [{
 
 async function getData({ price, amount, addEarn, addBollinger, num }) {
     price = price?.sort(dt.lsort);
-    const dates = price?.map(e => e.date);
-    const priceRaw = price?.map(e => e.close);
+    const dates = price?.map(e => e.d);
+    const priceRaw = price?.map(e => e.c);
     const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - num, i)))
     let props = { dates, priceRaw, priceAvg };
 
@@ -163,7 +155,7 @@ async function refineData({
 
 function PriceChart({
     prices = [{}], metas = [{}],
-    addEarn = true, addBollinger = false, N, help = true,
+    addEarn = true, addBollinger = false, N = 20, help = true,
     axis = true, legend = true,
 }) {
     const [num, setNum] = useState(N);
@@ -181,22 +173,21 @@ function PriceChart({
     }, [])
     const props = {
         des: ' 도움말',
-        data: <>
-            {
-                help && addBollinger ?
-                    <><tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
-                        <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr></> : null
-            }
-            {
-                help && addEarn ?
-                    <><tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
-                        <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr></> : null
-            }
+        data: <>{addBollinger &&
+            <>
+                <tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
+                <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr>
+            </>}
+            {addEarn &&
+                <>
+                    <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
+                    <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr>
+                </>}
         </>
     };
     return (
         <div className={styles.wrap}>
-            <Help {...props} />
+            {help && <Help {...props} />}
             <div className={styles.chart}>
                 <Line
                     options={options}
