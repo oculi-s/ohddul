@@ -205,9 +205,9 @@ export default function Index({
     userMeta,
     mobAside, setAsideShow
 }) {
-    if (!meta) return;
     const [view, setView] = useState(false);
     const props = { meta, userMeta, price, group, setAsideShow, view, setView };
+    if (!meta) return;
     return (
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>
