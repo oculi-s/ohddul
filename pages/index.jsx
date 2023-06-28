@@ -1,4 +1,4 @@
-import Kospi from './subindex/Kospi';
+import Market from './subindex/Market';
 import Group from './subindex/Group';
 import Induty from './subindex/Induty';
 
@@ -42,7 +42,7 @@ const index = function ({
     const props = { group, meta, induty, market, index, price };
     return (
         <div>
-            <Kospi {...props} />
+            <Market {...props} />
             <Group {...props} />
             <Induty {...props} />
         </div>

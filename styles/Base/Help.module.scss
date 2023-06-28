@@ -1,12 +1,4 @@
-.help.inline {
-    vertical-align: top;
-    margin-left: 5px;
-
-    >* {
-        vertical-align: top;
-        text-align: left;
-    }
-}
+@import '../variables.module.scss';
 
 .wrap {
     text-align: right;
@@ -14,14 +6,35 @@
 
 .help.left {
     dialog {
-        right: 0;
+        right: -5px;
         left: auto;
     }
+
+    dialog::before {
+        right: 10px;
+    }
 }
+
+.help.right {
+    dialog {
+        left: -5px;
+        right: auto;
+    }
+
+    dialog::before {
+        left: 10px;
+    }
+}
+
 
 .help {
     position: relative;
     padding-left: 5px;
+
+    .head {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
 
     >* {
         vertical-align: middle;
@@ -32,12 +45,23 @@
         padding-bottom: 5px;
     }
 
+    dialog::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        width: 0;
+        height: 0;
+        border: 5px solid transparent;
+        border-bottom-color: $borderColor;
+    }
+
     dialog {
         display: none;
         position: absolute;
         padding: 0;
         z-index: 50;
-        max-width: min(50vw, 300px);
+        min-width: min(50vw, 350px);
+        max-width: 350px;
         white-space: break-spaces;
         width: max-content;
 
@@ -52,6 +76,10 @@
             margin: 0;
             margin-left: auto;
             text-align: left;
+        }
+
+        span+table {
+            margin-top: 10px;
         }
 
         table {

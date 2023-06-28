@@ -42,7 +42,12 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn }) => {
                     <tr><th>시가총액</th><td>{Price(total)}</td></tr>
                     <tr><th>최근종가</th><td>{Num(lastPrice)}</td></tr>
                     <tr className={EPS ? '' : 'd'}>
-                        <th>EPS<Help span="(초기자본 + 누적이익) / (발행 주식)" /></th>
+                        <th>EPS
+                            <Help
+                                title={`Earning Per Share, 주당 순이익`}
+                                span={"1년 단위의 순이익을 발행 주식수로 나누어 계산하는 수익성 지표입니다. 원래 계산식과 달리 오떨에서는 초기자본금에 누적된 순이익(손실)을 발행주식수로 나누어 계산합니다.\n(초기자본 + 누적이익) / (발행 주식)"}
+                            />
+                        </th>
                         <td>
                             {Num(EPS)}&nbsp;
                             <span className={styles.percent}>
@@ -53,7 +58,12 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn }) => {
                         </td>
                     </tr>
                     <tr className={BPS ? '' : 'd'}>
-                        <th>BPS<Help span="(분기별 자본금) / 발행주식" /></th>
+                        <th>BPS
+                            <Help
+                                title={`Book per share, 주당 순자산`}
+                                span={"회사가 가진 돈을 발행 주식수로 나누어 계산하는 안전성 지표입니다.\n(분기별 자본금) / 발행주식"}
+                            />
+                        </th>
                         <td>
                             {Num(BPS)}&nbsp;
                             <span className={styles.percent}>
@@ -64,7 +74,12 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn }) => {
                         </td>
                     </tr>
                     <tr className={revenueSum && profitSum ? '' : 'd'}>
-                        <th>이익률<Help span="이익총합 / 매출총합" /></th>
+                        <th>이익률
+                            <Help
+                                title={`Profit Margin, 이익률`}
+                                span={`회사가 활동을 통해 벌어들인 돈의 마진율을 계산한 값입니다. 높을수록 회사가 안정적임을 의미하지만 업종별로 차이가 있어 동일 업종의 평균값 대비 이익률을 보는 것이 좋습니다.\n이익총합 / 매출총합`}
+                            />
+                        </th>
                         <td>{Div(profitSum, revenueSum)}</td>
                     </tr>
                     <tr><th>총 예측 수</th><td>{cnt}</td></tr>

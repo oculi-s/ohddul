@@ -54,20 +54,23 @@ const PriceChart = ({
     const [equityOptions, setEquityOptions] = useState(defaultOptions(stockEarn));
     const [profitOptions, setProfitOptions] = useState(defaultOptions(stockEarn));
     useEffect(() => {
-        stockEarn = stockEarn.sort(dt.lsort);
-        setEquityOptions({
-            ...equityOptions,
-            series: [{
-                data: stockEarn.map(e => Int(e.equity / amount))
-            }],
-        })
-        setProfitOptions({
-            ...profitOptions,
-            series: [{
-                data: stockEarn.map(e => Int(e.sum?.profit / amount))
-            }],
-        })
-    }, [stockEarn])
+        // console.log('earn 차트 렌더링중')
+        if (stockEarn) {
+            stockEarn = stockEarn.sort(dt.lsort);
+            setEquityOptions({
+                ...equityOptions,
+                series: [{
+                    data: stockEarn.map(e => Int(e.equity / amount))
+                }],
+            })
+            setProfitOptions({
+                ...profitOptions,
+                series: [{
+                    data: stockEarn.map(e => Int(e.sum?.profit / amount))
+                }],
+            })
+        }
+    }, [stockMeta])
     const props = {
         des: ' 도움말', data: <>
             <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>

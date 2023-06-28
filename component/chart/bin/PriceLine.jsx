@@ -1,14 +1,21 @@
+/**
+ * Highcharts를 사용하는 문서
+ * 
+ * 상업적 이용은 유료라는 글을 보고 폐기
+ */
+
+
 import colors from '@/module/colors';
 import dt from '@/module/dt';
 import styles from '@/styles/Chart/Price.module.scss';
-import Highcharts, { color } from 'highcharts'
+import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 import scss from '@/styles/variables.module.scss';
 import '@/module/array';
 import { parseFix } from '@/module/ba';
 import { renderToStaticMarkup } from "react-dom/server"
 import { useEffect, useRef, useState } from 'react';
-import Help from '../base/help';
+import Help from '../../base/help';
 
 const defaultOptions = {
     title: { text: '' },
@@ -55,11 +62,19 @@ async function refineData({
     price, meta, addEarn, addBollinger, num,
 }) {
     price = price?.sort(dt.lsort);
+    var maxIndex = 0, minIndex = 0;
     const dates = price?.map(e => e.d);
-    const priceData = price?.map(e => e.c);
+    const priceData = price?.map((e, i) => {
+        if (e.c > price[maxIndex].c) {
+            maxIndex = i;
+        } else if (e.c < price[minIndex].c) {
+            minIndex = i;
+        }
+        return e.c
+    });
     const avgData = priceData?.map((e, i) =>
         Math.avg(priceData?.slice(i - num, i + 1)));
-    let props = { dates, priceData, avgData }
+    let props = { dates, priceData, avgData, maxIndex, minIndex }
     if (addBollinger) {
         const priceTop = avgData?.map((e, i) =>
             Math.std(priceData?.slice(i - num, i), 2));
@@ -77,66 +92,70 @@ async function refineData({
 }
 
 const PriceChart = ({
-    price = [], meta = {}, help = true,
+    price = [], meta = {},
     addBollinger = false, addEarn = true, N = 120,
 }) => {
-    price = price.slice(252);
+    price = price.slice(-5 * 252);
     const [num, setNum] = useState(N);
     const [options, setOptions] = useState(defaultOptions);
     useEffect(() => {
-        refineData({
-            price, meta, addEarn, addBollinger, num
-        }).then(({ dates, priceData, avgData, priceTop, priceBot, stockEps, stockBps }) => {
-            setOptions({
+        // console.log('price 차트 렌더링중');
+        refineData({ price, meta, addBollinger, addEarn, num }).then(({
+            dates, maxIndex, minIndex,
+            priceData, avgData,
+            priceTop, priceBot, stockEps, stockBps
+        }) => {
+            maxIndex -= num;
+            minIndex -= num;
+            setOptions(options => ({
                 ...options,
                 xAxis: {
-                    categories: dates.slice(N)
+                    categories: dates.slice(num)
                 },
                 series: [{
                     name: '종가',
-                    data: priceData?.slice(N),
-                    color: 'gray'
+                    data: priceData?.slice(num),
+                    color: 'gray',
+                    id: 'raw',
                 }, {
-                    name: `${N}일 이평`,
-                    data: avgData?.slice(N),
+                    name: `${num}일 이평`,
+                    data: avgData?.slice(num),
                     color: colors[0]
                 }, {
                     name: `BB상단`,
-                    data: priceTop?.slice(N),
+                    data: priceTop?.slice(num),
                     color: scss.red,
                 }, {
                     name: `BB하단`,
-                    data: priceBot?.slice(N),
+                    data: priceBot?.slice(num),
                     color: scss.blue,
                 }, {
                     name: `BPS`,
-                    data: stockBps?.slice(N),
+                    data: stockBps?.slice(num),
                     color: scss.redBright,
                 }, {
                     name: `EPS`,
-                    data: stockEps?.slice(N),
+                    data: stockEps?.slice(num),
                     color: scss.blueBright,
+                },
+                {
+                    type: 'flags',
+                    data: [{
+                        x: maxIndex,
+                        title: 'MAX',
+                        text: 'your text'
+                    }, {
+                        x: minIndex,
+                        title: 'MIN',
+                        text: 'your text'
+                    }],
+                    onSeries: 'raw'
                 }],
-            })
+            }))
         })
-    }, [])
-    const props = {
-        des: ' 도움말',
-        data: <>{addBollinger &&
-            <>
-                <tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
-                <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr>
-            </>}
-            {addEarn &&
-                <>
-                    <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
-                    <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr>
-                </>}
-        </>
-    };
+    }, [meta])
     return (
         <div className={styles.wrap}>
-            {help && <Help {...props} />}
             <div className={styles.chart}>
                 <HighchartsReact
                     highcharts={Highcharts}

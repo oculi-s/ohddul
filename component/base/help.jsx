@@ -1,10 +1,14 @@
 import styles from '@/styles/Base/Help.module.scss';
 import { innerText } from '@/component/_base';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const adjustDir = ({ ref, dir, setDir }) => {
-    const { left, right } = ref?.current?.getBoundingClientRect();
+const setDirWidth = ({ ref, dir, setDir }) => {
+    var { left, right } = ref?.current?.getBoundingClientRect();
     const width = window?.innerWidth;
+    left = Math.max(left, 20);
+    right = Math.min(right, width - 20);
+    ref.current.style.width = Math.max(right - left) + 'px';
+    var { left, right } = ref?.current?.getBoundingClientRect();
     if (width < right) {
         setDir('left');
     } else if (left < 0) {
@@ -12,39 +16,34 @@ const adjustDir = ({ ref, dir, setDir }) => {
     }
 }
 
-const Help = ({ des, data, span }) => {
+const Help = ({ data, span, title }) => {
     const [dir, setDir] = useState('right');
     const ref = useRef();
     const inner = data || span;
     if (!innerText(inner)) return <></>;
-    if (span) {
-        return (
-            <span className={`${styles.help} ${styles[dir]}`}
-                onMouseDown={() => { adjustDir({ ref, dir, setDir }) }}>
-                <span className='fa fa-question-circle'>{des}</span>
-                <dialog ref={ref}>
-                    <span>
-                        {span}
-                    </span>
-                </dialog>
-            </span>
-        )
-    }
+    useEffect(() => {
+        setDirWidth({ ref, dir, setDir })
+    })
+    const innerData = <span className={`${styles.help} ${styles[dir]}`}
+        onMouseDown={() => { setDirWidth({ ref, dir, setDir }) }}>
+        <span className='fa fa-question-circle'></span>
+        <dialog ref={ref}>
+            <div>
+                {title && <h4 className={styles.head}>{title}</h4>}
+                {span && <span>{span}</span>}
+                {data && <table>
+                    <tbody>
+                        {data}
+                    </tbody>
+                </table>}
+            </div>
+        </dialog>
+    </span>
+    if (span)
+        return innerData;
     return (
         <div className={`${styles.wrap}`}>
-            <span className={`${styles.help} ${styles[dir]}`}
-                onMouseDown={() => { adjustDir({ ref, dir, setDir }) }}>
-                <span className='fa fa-question-circle'>{des}</span>
-                <dialog ref={ref}>
-                    <div>
-                        <table>
-                            <tbody>
-                                {data}
-                            </tbody>
-                        </table>
-                    </div>
-                </dialog>
-            </span>
+            {innerData}
         </div>
     )
 }

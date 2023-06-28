@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
+import { ko } from 'date-fns/locale';
 import Help from "@/component/base/help";
 import styles from '@/styles/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
 import colors from "@/module/colors";
-import scss from '@/styles/variables.module.scss';
 import '@/module/array'
 
 /**
@@ -30,12 +30,23 @@ const options = {
                 // }
             },
         },
-        legend: {}
     },
+    legend: { display: false },
     interaction: { intersect: false, mode: 'index', },
     spanGaps: true,
     maintainAspectRatio: false,
-    scales: { x: {}, y: {} }
+    scales: {
+        x: {
+            type: "time",
+            adapters: { date: { locale: ko, }, },
+            time: {
+                unit: 'day',
+                unitStepSize: 1,
+                tooltipFormat: "yyyy-MM-dd",
+            },
+            ticks: { maxTicksLimit: 5 }
+        }
+    }
 }
 
 const plugins = [{
@@ -86,14 +97,11 @@ async function refineData({
         const price = prices[i];
         const amount = metas[i]?.a;
         const {
-            dates,
-            priceRaw, priceAvg,
-            priceTop, priceBot,
-            stockEps, stockBps
+            dates, priceRaw, priceAvg, priceTop, priceBot, stockEps, stockBps
         } = await getData({ price, amount, addEarn, addBollinger, num });
-        date = dates.slice(num);
+        date = dates;
         datasets = [{
-            data: priceAvg.slice(num),
+            data: priceAvg,
             label: `${num}일 이평`,
             fill: false,
             borderColor: colors[i],
@@ -101,41 +109,42 @@ async function refineData({
             borderWidth: 1.5,
             pointRadius: 0
         }, {
-            data: priceRaw.slice(num),
+            data: priceRaw,
             label: '종가',
-            borderColor: 'gray',
+            borderColor: "#2e2e4a",
+            backgroundColor: "#2e2e4a",
             borderWidth: 1,
             pointRadius: 0
         }, ...datasets];
         if (addEarn) {
-            const def = { borderWidth: 2, pointRadius: 0 }
+            const def = { lineTension: 0, borderWidth: 2, pointRadius: 0 }
             datasets = [{
-                data: stockEps.slice(num),
+                data: stockEps,
                 label: "EPS",
-                borderColor: scss.red,
-                backgroundColor: scss.red,
+                borderColor: "#A6D0DD",
+                backgroundColor: "#A6D0DD",
                 ...def
             }, {
-                data: stockBps.slice(num),
+                data: stockBps,
                 label: "BPS",
-                borderColor: scss.blue,
-                backgroundColor: scss.blue,
+                borderColor: "#FF6969",
+                backgroundColor: "#FF6969",
                 ...def
             }, ...datasets];
         }
         if (addBollinger) {
             const def = { borderWidth: 1, pointRadius: 0 }
             datasets = [{
-                data: priceTop.slice(num),
+                data: priceTop,
                 label: "BB상단",
-                borderColor: scss.red,
-                backgroundColor: scss.red,
+                borderColor: "#FF6969",
+                backgroundColor: "#FF6969",
                 ...def
             }, {
-                data: priceBot.slice(num),
+                data: priceBot,
                 label: "BB하단",
-                borderColor: scss.blue,
-                backgroundColor: scss.blue,
+                borderColor: "#A6D0DD",
+                backgroundColor: "#A6D0DD",
                 ...def
             }, ...datasets]
         }
@@ -145,12 +154,9 @@ async function refineData({
 
 function PriceChart({
     prices = [{}], metas = [{}],
-    addEarn = true, addBollinger = false, N = 60,
-    x = false, y = false, legend = false,
+    addEarn = true, addBollinger = false, N = 20, help = true,
+    axis = true, legend = true,
 }) {
-    options.plugins.legend.display = legend;
-    options.scales.x.display = x;
-    options.scales.y.display = y;
     const [num, setNum] = useState(N);
     const [data, setData] = useState({ labels: [], datasets: [] });
     prices = prices.map(price => {
@@ -158,13 +164,28 @@ function PriceChart({
         return price?.slice(0, 5 * 252);
     })
     useEffect(() => {
-        console.log('price 차트 렌더링중')
         refineData({
             prices, metas, addEarn, addBollinger, num,
+            axis, legend,
         }).then(r => { setData(r); })
     }, [metas])
+    const props = {
+        des: ' 도움말',
+        data: <>{addBollinger &&
+            <>
+                <tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
+                <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr>
+            </>}
+            {addEarn &&
+                <>
+                    <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
+                    <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr>
+                </>}
+        </>
+    };
     return (
         <div className={styles.wrap}>
+            {help && <Help {...props} />}
             <div className={styles.chart}>
                 <Line
                     options={options}

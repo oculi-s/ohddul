@@ -67,16 +67,6 @@ export const earnStack = async (earn) => {
     }
 }
 
-async function close(data, date, dates) {
-    if (!dates.length) return false;
-    date = dt.num(date);
-    const close = await dates.reduce((prev, curr) => {
-        const pd = dt.num(prev);
-        const cd = dt.num(curr);
-        return (Math.abs(cd - date) < Math.abs(pd - date) ? curr : prev);
-    });
-    return data.find(e => e.date == close) || false;
-}
 /**
  * priceChart에 bps와 eps나타내기
  * 
@@ -84,13 +74,29 @@ async function close(data, date, dates) {
 export const earnonPrice = async ({ stockPrice, stockEarn }) => {
     stockEarn = stockEarn.data;
     stockPrice.data?.sort(dt.lsort);
-    const earnDates = stockEarn.map(e => e.date);
+    stockEarn?.sort(dt.lsort);
+    for await (const i of Array(stockEarn?.length - 1).keys()) {
+        const prev = stockEarn[i];
+        const curr = stockEarn[i + 1];
 
-    for await (const e of stockPrice.data) {
-        const closeEarn = await close(stockEarn, e.d, earnDates);
-        if (closeEarn?.equity && closeEarn.sum?.profit) {
-            e.bps = closeEarn.equity;
-            e.eps = closeEarn.sum?.profit;
+        const pd = dt.num(prev?.date);
+        const pe = prev?.equity;
+        const pp = prev?.sum?.profit;
+
+        const cd = dt.num(curr?.date);
+        const ce = curr?.equity;
+        const cp = curr?.sum?.profit;
+
+        for await (let price of stockPrice?.data) {
+            const date = dt.num(price?.d);
+            if (cd <= date) {
+                // if (pd <= date && date <= cd) {
+                const k = (date - pd) / (cd - pd);
+                price.bps = pe + (ce - pe) * k;
+                price.eps = pp + (cp - pp) * k;
+                continue;
+            }
         }
     };
+    // console.log(stockPrice?.data[0])
 };

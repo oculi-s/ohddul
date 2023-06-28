@@ -1,6 +1,6 @@
 import styles from '@/styles/Stock/Stock.module.scss';
 import toggleOnPageChange from '@/component/base/toggle';
-import EarnChart from '@/component/chart/EarnLine';
+import EarnChart from '@/component/chart/Earn';
 import dt from '@/module/dt';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -101,7 +101,7 @@ const EarnTable = ({ stockMeta, stockEarn }) => {
 const EarnElement = (props) => {
     return <>
         <h3>실적 차트</h3>
-        <EarnChart {...props} />
+        <EarnChart {...props} y={true} />
         <EarnTable {...props} />
     </>
 }

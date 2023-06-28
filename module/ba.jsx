@@ -42,6 +42,10 @@ export const Price = (v = 0) => {
     return `${Num(v)}억`;
 }
 
+
+/**
+ * cur - prev / prev의 퍼센트를 구하는 지표
+ */
 export const Per = (cur, prev) => {
     return Fix((cur - prev) / prev * 100, 1) + '%'
 }
