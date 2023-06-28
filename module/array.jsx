@@ -8,11 +8,11 @@ Array.prototype.remove = function (v) {
 }
 
 Math.avg = (d) => {
-    return Math.round(d.reduce((a, b) => a + b, 0) / d.length);
+    return Math.round(d.sum() / d.length);
 }
 
 Math.std = (d, k) => {
     let mean = Math.avg(d);
-    let diff = d.map(e => (e - mean) * (e - mean)).reduce((a, b) => a + b, 0);
+    let diff = d.map(e => (e - mean) * (e - mean)).sum();
     return Math.round(mean + k * Math.sqrt(diff / d.length));
 }

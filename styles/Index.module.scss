@@ -5,6 +5,7 @@
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
+    width: 100%;
 
     >p {
         margin-top: 10px;
@@ -12,6 +13,11 @@
 }
 
 .chartArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+
     .fa {
         margin: auto 3px;
         display: flex;
@@ -22,11 +28,14 @@
         margin: auto 2px;
     }
 
-    .chart>*>* {
+    .chart {
+        margin-top: 10px;
         height: 200px;
+        background: $bgBright;
     }
 
     .wrap {
+        width: 49%;
         display: flex;
         flex-direction: column;
 
@@ -38,22 +47,21 @@
     }
 }
 
-.groupArea {
-    .chart {
-        border-radius: 10px;
-        padding: 5px;
-        background: $bgBright;
-    }
+.chart {
+    border-radius: 10px;
+    padding: 5px;
+    background: $bgBright;
 }
 
-.inline {
-    display: flex;
-    justify-content: space-around;
 
-    >* {
-        width: 49%;
-    }
-}
+// .inline {
+//     display: flex;
+//     justify-content: space-around;
+
+//     >* {
+//         width: 49%;
+//     }
+// }
 
 @include mobile {
     .area {
@@ -64,6 +72,12 @@
         h3,
         h4 {
             margin: 3px auto;
+        }
+    }
+
+    .chartArea {
+        .chart {
+            height: 100px;
         }
     }
 

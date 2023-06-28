@@ -6,7 +6,7 @@ import container from "@/pages/container";
 import json from '@/module/json';
 import dir from '@/module/dir';
 
-const N = 252 * 5;
+const N = 252;
 export const getServerSideProps = () => {
     const meta = json.read(dir.stock.meta, { data: {}, index: {} });
     const group = json.read(dir.stock.group);

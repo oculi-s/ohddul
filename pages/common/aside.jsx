@@ -85,7 +85,7 @@ const N = 8;
 const PriceTable = ({ meta, price, sortBy, N }) => {
     if (!meta || !price) return <Loading />
     const body = Object.keys(meta)
-        .filter(code => meta[code])
+        .filter(e => price[e]?.c && meta[e]?.a)
         .sort(sortBy)
         .slice(0, N)
         .map(code => {
@@ -98,7 +98,6 @@ const PriceTable = ({ meta, price, sortBy, N }) => {
                     </Link>
                 </th>
                 <td align='right'>{Num(c)}</td>
-                <td>{Price(c * meta[code]?.a)}</td>
                 <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
             </tr>
         });
@@ -111,7 +110,7 @@ const MarketSumList = ({ price, meta }) => {
     const sortBy = (b, a) => {
         const pa = price[a];
         const pb = price[b];
-        return pa?.c * meta[a]?.a - pb?.c * meta[b]?.a;
+        return (pa?.c * meta[a]?.a) - (pb?.c * meta[b]?.a);
     }
     return (
         <div className={styles.box}>

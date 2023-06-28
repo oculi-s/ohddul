@@ -37,8 +37,13 @@
     stroke: none !important;
 }
 
+.highcharts-container {
+    width: 100% !important;
+}
+
 div:has(>.highcharts-container) {
     height: 100% !important;
+    width: 100% !important;
 }
 
 @include mobtab {
@@ -113,7 +118,6 @@ body {
     border-color: var(--border-color);
     box-sizing: border-box;
     font-family: sans-serif;
-    max-height: inherit;
 }
 
 img {

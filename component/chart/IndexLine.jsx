@@ -1,6 +1,6 @@
 import colors from '@/module/colors';
 import dt from '@/module/dt';
-import styles from '@/styles/Chart/Price.module.scss';
+import styles from '@/styles/Index.module.scss';
 import Highcharts, { color } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import scss from '@/styles/variables.module.scss';
@@ -52,7 +52,7 @@ const defaultOptions = {
 }
 
 async function refineData({
-    price, meta, addEarn, addBollinger, num,
+    price, addBollinger, num,
 }) {
     price = price?.sort(dt.lsort);
     const dates = price?.map(e => e.d);
@@ -67,84 +67,48 @@ async function refineData({
             Math.std(priceData?.slice(i - num, i), -2));
         props = { ...props, priceTop, priceBot };
     }
-    if (addEarn) {
-        const amount = meta?.a;
-        const stockEps = price?.map(e => Math.round(e?.eps / amount));
-        const stockBps = price?.map(e => Math.round(e?.bps / amount));
-        props = { ...props, stockEps, stockBps };
-    }
     return props;
 }
 
-const PriceChart = ({
-    price = [], meta = {}, help = true,
-    addBollinger = false, addEarn = true, N = 120,
+const IndexChart = ({
+    price = [], meta = {},
+    addBollinger = false, N = 20,
 }) => {
-    price = price.slice(252);
     const [num, setNum] = useState(N);
     const [options, setOptions] = useState(defaultOptions);
     useEffect(() => {
         refineData({
-            price, meta, addEarn, addBollinger, num
-        }).then(({ dates, priceData, avgData, priceTop, priceBot, stockEps, stockBps }) => {
+            price, meta, addBollinger, num
+        }).then(({ dates, priceData, avgData, priceTop, priceBot }) => {
             setOptions({
                 ...options,
                 xAxis: {
-                    categories: dates.slice(N)
+                    categories: dates.slice(num)
                 },
                 series: [{
                     name: '종가',
-                    data: priceData?.slice(N),
+                    data: priceData?.slice(num),
                     color: 'gray'
                 }, {
                     name: `${N}일 이평`,
-                    data: avgData?.slice(N),
+                    data: avgData?.slice(num),
                     color: colors[0]
                 }, {
                     name: `BB상단`,
-                    data: priceTop?.slice(N),
+                    data: priceTop?.slice(num),
                     color: scss.red,
                 }, {
                     name: `BB하단`,
-                    data: priceBot?.slice(N),
+                    data: priceBot?.slice(num),
                     color: scss.blue,
-                }, {
-                    name: `BPS`,
-                    data: stockBps?.slice(N),
-                    color: scss.redBright,
-                }, {
-                    name: `EPS`,
-                    data: stockEps?.slice(N),
-                    color: scss.blueBright,
                 }],
             })
         })
     }, [])
-    const props = {
-        des: ' 도움말',
-        data: <>{addBollinger &&
-            <>
-                <tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
-                <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr>
-            </>}
-            {addEarn &&
-                <>
-                    <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
-                    <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr>
-                </>}
-        </>
-    };
-    return (
-        <div className={styles.wrap}>
-            {help && <Help {...props} />}
-            <div className={styles.chart}>
-                <HighchartsReact
-                    highcharts={Highcharts}
-                    options={options}
-                />
-            </div>
-        </div >
-    )
+    return <HighchartsReact
+        highcharts={Highcharts}
+        options={options}
+    />
 }
 
-export default PriceChart;
+export default IndexChart;
