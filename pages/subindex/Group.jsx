@@ -10,7 +10,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 import Link from 'next/link';
 import Image from 'next/image';
 import groupImg from '@/public/group/Default';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const groupColors = {
     삼성: '#034ea2',

@@ -138,7 +138,7 @@ const Index = ({
                 <p className='des'>* 기준일 : {dt.toString(stockEarn?.last)}</p>
             </div>,
             <div key={2}>
-                {/* <ShareElement {...props} /> */}
+                <ShareElement {...props} />
             </div>,
             <div key={3}>
                 <PredElement {...props} />

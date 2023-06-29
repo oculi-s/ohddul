@@ -1,5 +1,5 @@
 import Market from './subindex/Market';
-import Group from './subindex/Group';
+// import Group from './subindex/Group';
 import Induty from './subindex/Induty';
 
 import container from "@/pages/container";
@@ -43,7 +43,7 @@ const index = function ({
     return (
         <div>
             <Market {...props} />
-            <Group {...props} />
+            {/* <Group {...props} /> */}
             <Induty {...props} />
         </div>
     )

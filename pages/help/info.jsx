@@ -10,7 +10,7 @@ const InfoBlock1 = ({
 }) => {
     const count = Object.keys(meta).length
     const priceCount = Object.keys(meta).filter(e => price[e]).length;
-    const YEARS = dt.YEARS();
+    const YEARS = dt.YEARS;
     const len = YEARS.length;
     return <div className={styles.box}>
         <h3>데이터 정보</h3>

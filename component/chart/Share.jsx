@@ -4,19 +4,19 @@ import colors from '@/module/colors';
 import { Div, Fix } from '@/module/ba';
 import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import scss from '@/styles/variables.module.scss';
 
 const options = {
     spanGaps: true,
     maintainAspectRatio: false,
     plugins: {
+        // tooltip: {
+        //     formatter: function (value, ctx) {
+
+        //     }
+        // },
         datalabels: {
-            formatter: (value, ctx) => {
-                const i = ctx?.dataIndex;
-                const data = ctx?.chart?.data;
-                const sum = data?.datasets[0].data?.sum();
-                const label = data?.labels[i];
-                return `${label}\n${Div(value, sum, 1)}`;
-            },
+            useHTML: true,
             color: '#fff',
             textAlign: 'center',
             font: {
@@ -28,7 +28,7 @@ const options = {
     }
 }
 
-const ShareChart = ({ stockShare: share, stockMeta }) => {
+const ShareChart = ({ stockShare: share, stockMeta, meta }) => {
     if (!share?.length) {
         return (
             <div style={{ textAlign: "center" }}>
@@ -38,8 +38,8 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
             </div>
         )
     }
-    const amount = stockMeta?.amount;
-    let res = amount - share.map(e => e.amount).reduce((a, b) => a + b, 0);
+    const amount = stockMeta?.a;
+    let res = amount - share.map(e => e.amount).sum();
     res = Math.max(0, res);
     const shareData = share.map(e => e.amount);
     shareData.push(res);
@@ -47,6 +47,19 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
     // shareData.push(Fix(res / amount * 100, 1));
     const labels = share.map(e => e.name);
     labels.push('데이터없음');
+    colors[shareData.length - 1] = scss.bgDark;
+
+    options.plugins.datalabels.formatter = function (value, ctx) {
+        const i = ctx?.dataIndex;
+        const data = ctx?.chart?.data;
+        const sum = data?.datasets[0].data?.sum();
+        var label = data?.labels[i];
+        console.log(label);
+        if (meta.index[label]) {
+            label = `<a href=/stock/${meta.index[label]}>${label}</a>`
+        }
+        return `${label}\n${Div(value, sum, 1)}`;
+    };
 
     const data = {
         labels,
@@ -59,7 +72,11 @@ const ShareChart = ({ stockShare: share, stockMeta }) => {
 
     return (
         <div className={styles.wrap}>
-            <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />
+            <Doughnut
+                data={data}
+                options={options}
+                plugins={[ChartDataLabels]}
+            />
         </div>
     )
 }

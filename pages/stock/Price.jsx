@@ -5,7 +5,7 @@ import '@/module/array';
 import { Color, Per } from '@/module/ba';
 
 const MaTable = ({ stockPrice }) => {
-    const last = stockPrice.slice(-1)[0].c;
+    const last = stockPrice?.slice(-1)[0].c;
     const avg20 = Math.avg(stockPrice.slice(-20).map(e => e.c));
     const avg60 = Math.avg(stockPrice.slice(-60).map(e => e.c));
     const avg120 = Math.avg(stockPrice.slice(-120).map(e => e.c));
@@ -34,7 +34,7 @@ const MaTable = ({ stockPrice }) => {
 }
 
 const BBTable = ({ stockPrice }) => {
-    const avg60 = Math.avg(stockPrice.slice(-60).map(e => e.c));
+    const avg60 = Math.avg(stockPrice?.slice(-60).map(e => e.c));
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
@@ -62,6 +62,7 @@ const PriceTable = (props) => {
 
 const PriceElement = (props) => {
     const { stockPrice, stockMeta } = props;
+    if (!stockPrice || !stockMeta) return;
     const chartProps = {
         prices: [stockPrice],
         metas: [stockMeta]

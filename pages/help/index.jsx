@@ -21,7 +21,7 @@ export const getServerSideProps = async (ctx) => {
     const shareDatas = Object.fromEntries(Object.keys(meta.data)
         .map(code => [code, json.read(dir.stock.share(code), { data: [] })]));
     const types = { 3: '-03-31', 2: '-06-30', 4: '-09-30', 1: '-12-31' };
-    for await (let year of dt.YEARS()) {
+    for await (let year of dt.YEARS) {
         earnCount[year] = [0, 0, 0, 0];
         for await (let type of '1423') {
             const key = `${year}${types[type]}`;
