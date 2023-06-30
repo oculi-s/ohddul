@@ -24,6 +24,7 @@ const options = {
         },
         legend: {}
     },
+    animation: { duration: 300 },
     interaction: { intersect: false, mode: 'index', },
     spanGaps: true,
     maintainAspectRatio: false,

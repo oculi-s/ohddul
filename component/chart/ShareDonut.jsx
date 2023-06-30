@@ -9,6 +9,7 @@ import scss from '@/styles/variables.module.scss';
 const options = {
     spanGaps: true,
     maintainAspectRatio: false,
+    animation: { duration: 300 },
     plugins: {
         // tooltip: {
         //     formatter: function (value, ctx) {

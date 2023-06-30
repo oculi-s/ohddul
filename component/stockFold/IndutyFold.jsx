@@ -26,31 +26,20 @@ const setStock = ({ induty, code, meta, price, dict, stockDict }) => {
 /**
  * 재귀함수인데 너무 오래걸림
  * 
- * induty.json에 count를 미리 저장해둘것
+ * induty.json에 count를 미리 저장해둘것 2023.06.30 추가완료
  */
-const countStock = (data, induty) => {
-    const validKeys = Object.keys(data).filter(e => e != '_');
-    const code = data?._?.slice(1);
-    var stock = Object.entries(induty)
-        .filter(([e, v]) => v == code).length;
-    for (let key of validKeys) {
-        stock += countStock(data[key], induty);
-    }
-    return stock;
-}
-
 const setIndex = ({
     data, dict, key, origin, index, induty,
     i, meta, price, stockDict, go = true
 }) => {
     if (!data) return;
     if (!data._) return;
-    const cnt = countStock(data, induty);
+    const cnt = data?._?.c;
     if (!cnt) return;
     const next = i ? key.slice(1) : key.slice(2);
     key = i ? key.slice(0, 1) : key.slice(0, 2);
-    const name = index?.index[data?._];
-    const code = data?._?.slice(1);
+    const name = index?.index[data?._?.n];
+    const code = data?._?.n?.slice(1);
     const newKey = code ? `<a href=/induty/${code}>${name}</a> (${cnt}개)` : name;
     dict[newKey] = { isth: true, cs: 2 };
     const validKeys = Object.keys(data).filter(e => e != '_');
@@ -62,7 +51,7 @@ const setIndex = ({
         stockDict, code
     }
     if (key.length) { // key가 남아있으면 그 key에 대해서만 진행
-        if (key.length > 1) {
+        if (next.length) {
             delete dict[newKey];
             nextProps.dict = dict;
         }
@@ -93,16 +82,16 @@ const IndutyFold = ({
     if (!data) return <></>;
     const dict = {};
     const stockDict = {};
+    const key = stockInduty.slice(1);
     setIndex({
-        data, dict, key: stockInduty.slice(1),
-        origin: stockInduty.slice(1),
+        data, dict, key,
+        origin: key,
         i: 0, index, induty, meta, price, stockDict
     });
-    const stock = Object.keys(stockDict)
-        .filter(e => meta[e] && price[e]);
+    const stock = Object.keys(stockDict).filter(e => meta[e] && price[e]);
     const total = stock.map(e => meta[e].a * price[e].c || 0).sum();
     const name = <>
-        <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${induty[code]}`}>{iname}</Link></h3>
+        <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${key}`}>{iname}</Link></h3>
         <p>{stock.length} 종목 시총 : ({Price(total)})</p>
     </>
     const body = json.toTable(dict);

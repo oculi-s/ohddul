@@ -1,6 +1,8 @@
+@import '../variables.module.scss';
+
 .title {
     padding-top: 5px;
-    border: 1px solid var(--border-color);
+    border: 1px solid $borderColor;
     margin-top: 10px;
     margin-bottom: 10px;
     display: block;
@@ -8,6 +10,10 @@
     text-align: center;
     background: var(--th-color);
     overflow-y: clip !important;
+
+    h3 * {
+        color: $textBright;
+    }
 
     * {
         max-width: 100%;
@@ -37,11 +43,32 @@
     overflow-wrap: break-word;
     overflow-y: clip !important;
 
-    td,
-    thead * {
-        text-align: center;
-        white-space: nowrap;
+    table {
+        width: 100%;
+
+        thead {
+            text-align: center;
+        }
+
+        tr>* {
+            overflow: hidden;
+            white-space: inherit;
+            overflow-wrap: anywhere;
+            text-overflow: ellipsis;
+        }
+
+        th:not(:first-child),
+        td {
+            width: min-content;
+        }
+
+        td {
+            text-align: center;
+            white-space: nowrap;
+            // width: 100px;
+        }
     }
+
 }
 
 .view+.content {

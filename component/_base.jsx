@@ -1,7 +1,6 @@
 import { CircularProgress } from '@mui/material';
-import { useRef, useState } from 'react';
 import styles from '@/styles/Base/Index.module.scss';
-import Game2048 from '#/game/2048.jsx';
+// import Game2048 from '#/game/2048.jsx';
 
 const Temp = ({ children }) => {
     return (

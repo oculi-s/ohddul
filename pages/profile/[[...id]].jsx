@@ -72,8 +72,8 @@ const Graph = ({ id, rank, forNext, userPred }) => {
 const PredTable = ({ userPred, meta, price }) => {
     const queueTable = userPred?.queue?.map((e, i) => {
         const { code, change, date } = e;
-        const name = meta[code]?.name;
-        const lastPrice = price[code]?.close;
+        const name = meta[code]?.n;
+        const lastPrice = price[code]?.c;
         const target = lastPrice + change;
         return (
             <tr key={`pred${i}`}>
@@ -100,9 +100,9 @@ const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
         <th>전일비</th>
     </tr>
     const Rows = ({ code }) => {
-        const name = meta[code]?.name;
-        const close = price[code]?.close;
-        const prev = price[code]?.prev;
+        const name = meta[code]?.n;
+        const close = price[code]?.c;
+        const prev = price[code]?.p;
         const [favs, setFavs] = useState(true);
         return <>
             <tr>

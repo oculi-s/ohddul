@@ -6,7 +6,7 @@ if (process.platform == 'linux') {
 } else {
     o = path.resolve('.');
 }
-console.log(o);
+
 const adict = {
     "@": o,
     "$": path.join(o, "public"),

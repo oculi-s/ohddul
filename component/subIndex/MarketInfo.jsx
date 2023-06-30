@@ -25,6 +25,9 @@ const Kospi = ({ last, prev, count, kospi }) => {
                 prices: [kospi],
                 metas: [{ 'name': 'kospi' }],
                 addBollinger: true,
+                bollingerBtn: false,
+                timeBtn: false,
+                minMax: false,
                 N: 60,
             }} />
         </div>
@@ -53,6 +56,9 @@ const Kosdaq = ({ last, prev, count, kosdaq }) => {
                 prices: [kosdaq],
                 metas: [{ 'name': 'kosdaq' }],
                 addBollinger: true,
+                bollingerBtn: false,
+                timeBtn: false,
+                minMax: false,
                 N: 60,
             }} />
         </div>

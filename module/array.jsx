@@ -16,3 +16,19 @@ Math.std = (d, k) => {
     let diff = d.map(e => (e - mean) * (e - mean)).sum();
     return Math.round(mean + k * Math.sqrt(diff / d.length));
 }
+
+Math.randInt = () => {
+    return parseInt(Math.random() * 1000);
+}
+
+Object.prototype.deepMerge = function (b) {
+    const merge = (a, b) => {
+        return Object.entries(b).reduce((o, [k, v]) => {
+            o[k] = v && typeof v === 'object'
+                ? merge(o[k] = o[k] || (Array.isArray(v) ? [] : {}), v)
+                : v;
+            return o;
+        }, a);
+    }
+    return [{}, this, b].reduce(merge);
+}

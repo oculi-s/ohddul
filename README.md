@@ -3,3 +3,4 @@
 Database : File-system  
 Framework : Next.js  
 UserControl : NextAuth  
+Server : Ubuntu + Nginx
