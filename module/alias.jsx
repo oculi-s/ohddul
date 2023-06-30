@@ -10,8 +10,8 @@ console.log(o);
 const adict = {
     "@": o,
     "$": path.join(o, "public"),
-    "&": path.join(o, "public", "stock"),
-    "_": path.join(o, "public", "meta"),
+    "&": path.join(o, "data", "stock"),
+    "_": path.join(o, "data", "meta"),
 }
 export default function encode(url) {
     url = url.split('/').filter(e => e);

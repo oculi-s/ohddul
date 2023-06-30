@@ -36,5 +36,3 @@ const GroupBubble = ({ group = {}, price, meta }) => {
         {ToggleTab({ names, datas })}
     </div>
 }
-
-export default GroupBubble;
