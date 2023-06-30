@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import { ko } from 'date-fns/locale';
-import Help from "@/component/base/help";
 import styles from '@/styles/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
@@ -169,23 +168,8 @@ function PriceChart({
             axis, legend,
         }).then(r => { setData(r); })
     }, [metas])
-    const props = {
-        des: ' 도움말',
-        data: <>{addBollinger &&
-            <>
-                <tr><th>%B</th><td>(현재가-하단가) / 밴드길이<br />낮을수록 상승가능성 높음</td></tr>
-                <tr><th>%BW</th><td>밴드길이 / 현재가<br />낮을수록 가격변동성 높음</td></tr>
-            </>}
-            {addEarn &&
-                <>
-                    <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
-                    <tr><th>EPS</th><td>(초기자본 + 누적이익) / (발행 주식)</td></tr>
-                </>}
-        </>
-    };
     return (
         <div className={styles.wrap}>
-            {help && <Help {...props} />}
             <div className={styles.chart}>
                 <Line
                     options={options}

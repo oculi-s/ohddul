@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Price, Big } from '@/module/ba';
-import Fold from '@/component/base/fold';
+import Fold from '#/base/Fold';
 import json from '@/module/json';
 import '@/module/array'
 

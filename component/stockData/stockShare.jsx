@@ -1,7 +1,7 @@
 import styles from '@/styles/Stock/Stock.module.scss';
-import ShareChart from "@/component/chart/Share";
+import ShareDonut from "#/chart/ShareDonut";
 import { Div } from "@/module/ba";
-import Help from '@/component/base/help';
+import Help from '#/base/Help';
 import Link from 'next/link';
 
 const nameDict = {
@@ -55,7 +55,7 @@ const ShareElement = (props) => {
     return <div>
         <h3>지분 차트</h3>
         <div className={styles.share}>
-            <ShareChart {...props} />
+            <ShareDonut {...props} />
             <ShareTable {...props} />
         </div>
     </div>

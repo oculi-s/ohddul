@@ -1,5 +1,5 @@
 import styles from '@/styles/Help.module.scss';
-import { PredBar } from '../stock/Head';
+import { PredBar } from '#/stockData/stockHead';
 import Image from 'next/image';
 import helpImage from '$/help';
 import Link from 'next/link';
@@ -53,7 +53,7 @@ const PredBlock2 = ({ price }) => {
     </div>
 }
 
-const Pred = (props) => {
+const PredHowto = (props) => {
     if (!props.meta) return <></>;
     return <div>
         <PredBlock1 {...props} />
@@ -61,4 +61,4 @@ const Pred = (props) => {
     </div>
 }
 
-export default Pred;
+export default PredHowto;

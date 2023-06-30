@@ -1,28 +1,27 @@
-import styles from '@/styles/Stock/Stock.module.scss';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import styles from '@/styles/Stock/Stock.module.scss';
 import { Num, Fix, Price, Color, Quar, Per, Div } from '@/module/ba';
 import dt from '@/module/dt';
-import { useSession } from 'next-auth/react';
-import Help from '@/component/base/help';
-import StockHead from './Head';
-import ToggleTab from '@/component/base/tab';
+import StockHead from '#/stockData/stockHead';
+import ToggleTab from '#/base/ToggleTab';
+import Help from '#/base/Help';
 import '@/module/array';
 
-import GroupFold from './Group';
-import IndutyFold from './Induty';
-import PriceElement from './Price';
-import EarnElement from './Earn';
-import ShareElement from './Share';
-import PredElement from './Pred';
+import GroupFold from '#/stockFold/GroupFold';
+import IndutyFold from '#/stockFold/IndutyFold';
+import PriceElement from '#/stockData/stockPrice';
+import EarnElement from '#/stockData/stockEarn';
+import ShareElement from '#/stockData/stockShare';
+import PredElement from '#/stockData/PredTable';
 
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
  * ROE는 제공하지 않음. 대부분 5% 이내로 의미 없음
 */
-const MetaTable = ({ stockMeta, stockPredict, last, stockEarn }) => {
+const MetaTable = ({ stockMeta, stockPredict, last, stockEarn = [] }) => {
     const lastPrice = last?.c;
-    const lastDate = last?.d;
     const amount = stockMeta?.a;
     const total = amount * lastPrice;
     const cnt = stockPredict?.data?.length || 0 + stockPredict?.queue?.length || 0;
@@ -37,7 +36,6 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn }) => {
         <div className={`${styles.meta} clear`}>
             <table>
                 <tbody>
-                    <tr><th colSpan={2}><p className='des'>기준일 : {lastDate}</p></th></tr>
                     {/* <tr><th>종목코드</th><td>{code}</td></tr> */}
                     <tr><th>시가총액</th><td>{Price(total)}</td></tr>
                     <tr><th>최근종가</th><td>{Num(lastPrice)}</td></tr>

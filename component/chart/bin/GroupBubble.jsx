@@ -1,8 +1,8 @@
 import '@/module/array';
 import styles from '@/styles/Index.module.scss';
-import ToggleTab from '@/component/base/tab';
+import ToggleTab from '#/base/ToggleTab';
 import { useState } from 'react';
-import GroupDoughnutChart from '@/component/chart/GroupDoughnut';
+import GroupDoughnutChart from '#/chart/GroupDoughnut';
 
 /**
  * sort by는 0일 때 자산, 1일 때 시총으로

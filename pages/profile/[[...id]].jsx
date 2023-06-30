@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import { getRank, getBg } from "@/pages/_user";
 import styles from '@/styles/Profile.module.scss'
 import { useSession } from "next-auth/react";
-import LineChart from '@/component/chart/line';
+import LineChart from '#/chart/line';
 import Link from "next/link";
 import { Num, Fix, Per, Color } from '@/module/ba'
 import dt from "@/module/dt";
-import ToggleTab from "@/component/base/tab";
+import ToggleTab from "#/base/ToggleTab";
 
 const Curtain = ({ rank }) => (
     <div
@@ -198,7 +198,7 @@ const Index = ({
 }
 
 import container, { getServerSideProps } from "@/pages/container";
-import { FavStar, PredBar } from "../stock/Head";
+import { FavStar, PredBar } from "../../component/stockData/stockHead";
 import { useState } from "react";
 export { getServerSideProps };
 export default container(Index);

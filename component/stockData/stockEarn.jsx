@@ -1,11 +1,11 @@
 import styles from '@/styles/Stock/Stock.module.scss';
-import toggleOnPageChange from '@/component/base/toggle';
-import EarnChart from '@/component/chart/Earn';
+import toggleOnPageChange from '#/toggle';
+import EarnChart from '#/chart/Earn';
 import dt from '@/module/dt';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Color, Div, Num, Quar } from '@/module/ba';
-import Help from '@/component/base/help';
+import Help from '#/base/Help';
 
 const EarnTable = ({ stockMeta, stockEarn }) => {
     const amount = stockMeta?.a;

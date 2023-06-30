@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
-import GroupFold from "../stock/Group";
 import styles from '@/styles/Group/Index.module.scss'
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { Price } from "@/module/ba";
+import GroupFold from "#/stockFold/GroupFold";
 
 const MetaTable = ({ group, meta, price, code }) => {
     meta = meta?.data;

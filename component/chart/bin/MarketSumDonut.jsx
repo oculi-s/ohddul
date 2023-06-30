@@ -1,3 +1,9 @@
+/**
+ * Highcharts를 이용해 완벽하게 2중 파이차트를 만들었지만
+ * 
+ * 상업적 이용이 유료라 2023.06.28 폐기
+ */
+
 import colors from '@/module/colors';
 import dt from '@/module/dt';
 import styles from '@/styles/Index.module.scss';

@@ -1,6 +1,5 @@
-import Market from './subindex/Market';
-// import Group from './subindex/Group';
-import Induty from './subindex/Induty';
+import Market from '#/subIndex/MarketInfo';
+import Induty from '#/subIndex/IndutySummary';
 
 import container from "@/pages/container";
 import json from '@/module/json';

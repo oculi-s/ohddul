@@ -8,7 +8,7 @@ Array.prototype.remove = function (v) {
 }
 
 Math.avg = (d) => {
-    return Math.round(d.sum() / d.length);
+    return Math.round(d?.sum() / d?.length);
 }
 
 Math.std = (d, k) => {

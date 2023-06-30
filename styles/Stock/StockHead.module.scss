@@ -184,6 +184,10 @@
         margin-right: 10px;
         margin-bottom: 0;
         margin-top: 0;
+
+        * {
+            color: $textBright
+        }
     }
 }
 

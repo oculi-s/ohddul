@@ -1,6 +1,6 @@
 import 'chartjs-adapter-date-fns';
 import styles from '@/styles/Chart/Earn.module.scss';
-import Help from "@/component/base/help";
+import Help from "#/base/Help";
 import { Line } from "react-chartjs-2";
 
 /**

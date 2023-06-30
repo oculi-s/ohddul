@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import IndutyFold from "../stock/Induty";
+import IndutyFold from "#/stockFold/IndutyFold";
 
 const Index = ({ meta, price, induty, index, predict }) => {
     const router = useRouter();

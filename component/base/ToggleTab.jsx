@@ -1,6 +1,6 @@
 import styles from "@/styles/Base/Tab.module.scss";
 import { useState } from "react";
-import toggleOnPageChange from "./toggle";
+import toggleOnPageChange from "#/toggle";
 import { useRouter } from "next/router";
 
 const ToggleTab = ({ names, datas, tabIndex = 0, setTabIndex }) => {

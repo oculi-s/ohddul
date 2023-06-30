@@ -3,10 +3,11 @@ import dt from '@/module/dt';
 import styles from '@/styles/Help.module.scss';
 import { getSession } from 'next-auth/react';
 import dir from '@/module/dir';
-import Info from './info';
-import Pred from './pred';
-import Board from './board';
-import ToggleTab from '@/component/base/tab';
+
+import BaseInfo from '#/helpArticle/BaseInfo';
+import PredHowto from '#/helpArticle/PredHowto';
+import BoardRules from '#/helpArticle/BoardRules';
+import ToggleTab from '#/base/ToggleTab';
 
 export const getServerSideProps = async (ctx) => {
     const userInfo = (await getSession(ctx))?.user;
@@ -53,13 +54,13 @@ const index = (props) => {
     ];
     const datas = [
         <div key={0}>
-            <Info {...props} />
+            <BaseInfo {...props} />
         </div>,
         <div key={1}>
-            <Pred {...props} />
+            <PredHowto {...props} />
         </div>,
         <div key={2}>
-            <Board {...props} />
+            <BoardRules {...props} />
         </div>
     ]
     return <div className={styles.docs}>

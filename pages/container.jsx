@@ -1,12 +1,11 @@
 import json from '@/module/json';
 import Head from 'next/head'
-import Nav from '@/pages/common/nav'
-import Aside from '@/pages/common/aside'
-import Footer from '@/pages/common/footer'
+import Nav from '#/common/nav'
+import Aside from '#/common/aside'
+import Footer from '#/common/footer'
 import dir from '@/module/dir';
-import dt from '@/module/dt';
 import { getSession, useSession } from 'next-auth/react';
-import { Loading } from '@/component/_base';
+import { Loading } from '#/_base';
 import { useState } from 'react';
 import { editQuar, earnStack, earnonPrice } from '@/module/editData/earnStack';
 import { priceDivide } from '@/module/editData/priceDivide';

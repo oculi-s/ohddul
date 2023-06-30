@@ -1,7 +1,7 @@
 import styles from '@/styles/Index.module.scss';
 import { Per, Color, Num, Div } from '@/module/ba';
 import dt from '@/module/dt';
-import IndexChart from '@/component/chart/Price';
+import PriceLine from '#/chart/PriceLine';
 
 const Kospi = ({ last, prev, count, kospi }) => {
     return <div className={styles.wrap}>
@@ -21,7 +21,7 @@ const Kospi = ({ last, prev, count, kospi }) => {
             <span className={styles.percent}> ({Div(count.down.kospi, count.all.kospi)})</span>
         </div>
         <div className={styles.chart}>
-            <IndexChart {...{
+            <PriceLine {...{
                 prices: [kospi],
                 metas: [{ 'name': 'kospi' }],
                 addBollinger: true,
@@ -49,7 +49,7 @@ const Kosdaq = ({ last, prev, count, kosdaq }) => {
             <span className={styles.percent}> ({Div(count.down.kosdaq, count.all.kosdaq)})</span>
         </div>
         <div className={styles.chart}>
-            <IndexChart {...{
+            <PriceLine {...{
                 prices: [kosdaq],
                 metas: [{ 'name': 'kosdaq' }],
                 addBollinger: true,

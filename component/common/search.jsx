@@ -1,8 +1,8 @@
 import styles from '@/styles/Search.module.scss'
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import ToggleTab from '@/component/base/tab';
-import toggleOnPageChange from '@/component/base/toggle';
+import ToggleTab from '#/base/ToggleTab';
+import toggleOnPageChange from '#/toggle';
 import Inko from 'inko';
 import Link from 'next/link';
 const inko = new Inko();

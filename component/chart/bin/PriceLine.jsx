@@ -15,7 +15,7 @@ import '@/module/array';
 import { parseFix } from '@/module/ba';
 import { renderToStaticMarkup } from "react-dom/server"
 import { useEffect, useRef, useState } from 'react';
-import Help from '../../base/help';
+import Help from '../../base/Help';
 
 const defaultOptions = {
     title: { text: '' },

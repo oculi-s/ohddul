@@ -1,4 +1,4 @@
-import toggleOnPageChange from '@/component/base/toggle';
+import toggleOnPageChange from '#/toggle';
 import styles from '@/styles/Fold.module.scss';
 import { useState } from 'react';
 

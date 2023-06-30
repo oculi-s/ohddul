@@ -6,11 +6,11 @@ import { Button, TextField } from '@mui/material';
 import { signIn, signOut } from "next-auth/react";
 import { useState } from 'react';
 import { getRank } from '@/pages/_user';
-import Search from '@/pages/common/search';
+import Search from '#/common/search';
 
 import { Per, Color, Num, Price } from '@/module/ba';
 import dt from '@/module/dt';
-import { Loading } from '@/component/_base';
+import { Loading } from '#/_base';
 
 const SignIn = async (e) => {
     e.preventDefault();

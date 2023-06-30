@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
-import Help from "@/component/base/help";
 import styles from '@/styles/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
@@ -91,9 +90,9 @@ async function refineData({
             priceTop, priceBot,
             stockEps, stockBps
         } = await getData({ price, amount, addEarn, addBollinger, num });
-        date = dates.slice(num);
+        date = dates?.slice(num);
         datasets = [{
-            data: priceAvg.slice(num),
+            data: priceAvg?.slice(num),
             label: `${num}일 이평`,
             fill: false,
             borderColor: colors[i],
@@ -101,7 +100,7 @@ async function refineData({
             borderWidth: 1.5,
             pointRadius: 0
         }, {
-            data: priceRaw.slice(num),
+            data: priceRaw?.slice(num),
             label: '종가',
             borderColor: 'gray',
             borderWidth: 1,
@@ -110,32 +109,32 @@ async function refineData({
         if (addEarn) {
             const def = { borderWidth: 2, pointRadius: 0 }
             datasets = [{
-                data: stockEps.slice(num),
+                data: stockEps?.slice(num),
                 label: "EPS",
-                borderColor: scss.red,
-                backgroundColor: scss.red,
+                borderColor: scss?.red,
+                backgroundColor: scss?.red,
                 ...def
             }, {
-                data: stockBps.slice(num),
+                data: stockBps?.slice(num),
                 label: "BPS",
-                borderColor: scss.blue,
-                backgroundColor: scss.blue,
+                borderColor: scss?.blue,
+                backgroundColor: scss?.blue,
                 ...def
             }, ...datasets];
         }
         if (addBollinger) {
             const def = { borderWidth: 1, pointRadius: 0 }
             datasets = [{
-                data: priceTop.slice(num),
+                data: priceTop?.slice(num),
                 label: "BB상단",
-                borderColor: scss.red,
-                backgroundColor: scss.red,
+                borderColor: scss?.red,
+                backgroundColor: scss?.red,
                 ...def
             }, {
-                data: priceBot.slice(num),
+                data: priceBot?.slice(num),
                 label: "BB하단",
-                borderColor: scss.blue,
-                backgroundColor: scss.blue,
+                borderColor: scss?.blue,
+                backgroundColor: scss?.blue,
                 ...def
             }, ...datasets]
         }
@@ -143,7 +142,7 @@ async function refineData({
     return { labels: date, datasets };
 }
 
-function PriceChart({
+function PriceLine({
     prices = [{}], metas = [{}],
     addEarn = true, addBollinger = false, N = 60,
     x = false, y = false, legend = false,
@@ -162,9 +161,13 @@ function PriceChart({
         refineData({
             prices, metas, addEarn, addBollinger, num,
         }).then(r => { setData(r); })
-    }, [metas])
+    }, [metas, addEarn, addBollinger, num])
     return (
         <div className={styles.wrap}>
+            <div className={styles.buttonGroup}>
+                <button>asdf</button>
+
+            </div>
             <div className={styles.chart}>
                 <Line
                     options={options}
@@ -176,4 +179,4 @@ function PriceChart({
     )
 }
 
-export default PriceChart;
+export default PriceLine;

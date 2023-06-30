@@ -7,7 +7,7 @@ import scss from '@/styles/variables.module.scss';
 import { Int, parseFix } from '@/module/ba';
 import { renderToStaticMarkup } from "react-dom/server"
 import { useEffect, useRef, useState } from 'react';
-import Help from '@/component/base/help';
+import Help from '#/base/Help';
 import '@/module/array';
 
 const defaultOptions = (stockEarn) => {

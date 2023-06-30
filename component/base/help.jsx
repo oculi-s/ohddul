@@ -1,5 +1,5 @@
 import styles from '@/styles/Base/Help.module.scss';
-import { innerText } from '@/component/_base';
+import { innerText } from '#/_base';
 import { useEffect, useRef, useState } from 'react';
 
 const setDirWidth = ({ ref, dir, setDir }) => {

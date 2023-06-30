@@ -28,7 +28,7 @@ const options = {
     }
 }
 
-const ShareChart = ({ stockShare: share, stockMeta, meta }) => {
+const ShareDonut = ({ stockShare: share, stockMeta, meta }) => {
     if (!share?.length) {
         return (
             <div style={{ textAlign: "center" }}>
@@ -54,7 +54,7 @@ const ShareChart = ({ stockShare: share, stockMeta, meta }) => {
         const data = ctx?.chart?.data;
         const sum = data?.datasets[0].data?.sum();
         var label = data?.labels[i];
-        console.log(label);
+        // console.log(label);
         if (meta.index[label]) {
             label = `<a href=/stock/${meta.index[label]}>${label}</a>`
         }
@@ -81,4 +81,4 @@ const ShareChart = ({ stockShare: share, stockMeta, meta }) => {
     )
 }
 
-export default ShareChart;
+export default ShareDonut;

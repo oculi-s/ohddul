@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "paths": {
+      "#/*": [
+        "./component/*"
+      ],
       "@/*": [
         "./*"
       ],
@@ -9,7 +12,7 @@
       ],
       "&/*": [
         "./public/stock/*"
-      ]
+      ],
     }
   }
 }
