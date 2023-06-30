@@ -1,8 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 /public/.update
-*meta/
-/public/stock/
+data/
 .env
 
 # dependencies
