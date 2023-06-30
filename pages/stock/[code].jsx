@@ -156,6 +156,6 @@ const Index = ({
     )
 }
 
-import container, { getServerSideProps } from "@/pages/container";
+import container, { getServerSideProps } from "@/container";
 export { getServerSideProps };
 export default container(Index);

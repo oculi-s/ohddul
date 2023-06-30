@@ -1,11 +1,11 @@
 import styles from '@/styles/Aside.module.scss'
 import Link from 'next/link'
-import User from '@/pages/_user'
+import User from '#/_user'
 import { useSession } from "next-auth/react"
 import { Button, TextField } from '@mui/material';
 import { signIn, signOut } from "next-auth/react";
 import { useState } from 'react';
-import { getRank } from '@/pages/_user';
+import { getRank } from '#/_user';
 import Search from '#/common/search';
 
 import { Per, Color, Num, Price } from '@/module/ba';

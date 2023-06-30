@@ -1,7 +1,7 @@
 import Market from '#/subIndex/MarketInfo';
 import Induty from '#/subIndex/IndutySummary';
 
-import container from "@/pages/container";
+import container from "@/container";
 import json from '@/module/json';
 import dir from '@/module/dir';
 

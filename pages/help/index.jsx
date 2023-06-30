@@ -71,5 +71,5 @@ const index = (props) => {
     </div>;
 }
 
-import container from "@/pages/container";
+import container from "@/container";
 export default container(index);

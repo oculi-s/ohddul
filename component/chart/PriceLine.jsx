@@ -198,38 +198,45 @@ function ButtonGroup({
     len, setLen, num, setNum,
     bollingerBtn, timeBtn
 }) {
-    return <div className={`${styles.buttonWrap} ${view ? styles.view : ''}`}>
-        <div>
-            <div className={`${styles.buttonGroup}`}>
-                {(timeBtn || bollingerBtn) && <div>
-                    <p><CheckBox
-                        name={'BB추가'}
-                        onChange={setBollinger}
-                        defaultChecked={isBollinger}
-                    /></p>
-                    <p><CheckBox
-                        name={'실적차트'}
-                        onChange={setEarn}
-                        defaultChecked={isEarn}
-                    /></p>
-                </div>}
-                {timeBtn && <RadioSelect
-                    title={'기간'}
-                    names={['6M', '1Y', '5Y']}
-                    values={[YEAR_LEN / 2, YEAR_LEN, YEAR_LEN * 5]}
-                    onChange={setLen}
-                    defaultValue={len}
-                />}
-                {bollingerBtn && <RadioSelect
-                    title={'이평'}
-                    names={['20', '60', '120']}
-                    values={[20, 60, 120]}
-                    onChange={setNum}
-                    defaultValue={num}
-                />}
+    if (!timeBtn && !bollingerBtn) return;
+    return <>
+        <div className={`${styles.buttonWrap} ${view ? styles.view : ''}`}>
+            <div>
+                <div className={`${styles.buttonGroup}`}>
+                    {(timeBtn || bollingerBtn) && <div>
+                        <p><CheckBox
+                            name={'BB추가'}
+                            onChange={setBollinger}
+                            defaultChecked={isBollinger}
+                        /></p>
+                        <p><CheckBox
+                            name={'실적차트'}
+                            onChange={setEarn}
+                            defaultChecked={isEarn}
+                        /></p>
+                    </div>}
+                    {timeBtn && <RadioSelect
+                        title={'기간'}
+                        names={['6M', '1Y', '5Y']}
+                        values={[YEAR_LEN / 2, YEAR_LEN, YEAR_LEN * 5]}
+                        onChange={setLen}
+                        defaultValue={len}
+                    />}
+                    {bollingerBtn && <RadioSelect
+                        title={'이평'}
+                        names={['20', '60', '120']}
+                        values={[20, 60, 120]}
+                        onChange={setNum}
+                        defaultValue={num}
+                    />}
+                </div>
             </div>
         </div>
-    </div>
+        <button
+            onClick={e => setView(e => !e)}
+            className={`fa fa-chevron-right ${styles.toggleBtn} ${view ? styles.view : ''}`}
+        />
+    </>
 }
 
 const YEAR_LEN = 252;
@@ -276,13 +283,7 @@ function PriceLine({
     return (<>
         <div className={styles.wrap}>
             <ButtonGroup {...props} />
-            <button
-                onClick={e => setView(e => !e)}
-                className={`fa fa-chevron-right 
-                ${styles.toggleBtn} 
-                ${view ? styles.view : ''}
-                `}
-            />
+
             <div className={styles.chart}>
                 <Line
                     options={options}

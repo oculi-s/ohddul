@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { getRank, getBg } from "@/pages/_user";
+import { getRank, getBg } from "#/_user";
 import styles from '@/styles/Profile.module.scss'
 import { useSession } from "next-auth/react";
 import LineChart from '#/chart/line';
@@ -197,7 +197,7 @@ const Index = ({
     )
 }
 
-import container, { getServerSideProps } from "@/pages/container";
+import container, { getServerSideProps } from "@/container";
 import { FavStar, PredBar } from "../../component/stockData/stockHead";
 import { useState } from "react";
 export { getServerSideProps };

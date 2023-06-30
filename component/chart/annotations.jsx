@@ -9,7 +9,6 @@ const maxPoint = ({ max, i, last, len }) => ({
     content: `${max}\n(${Per(max, last)})`,
     font: { size: 14, family: 'sans-serif' },
     position: {
-        // x: 'center',
         x: i * 2 <= len ? 'start' : 'end',
         y: 'center'
     },
@@ -26,7 +25,6 @@ const minPoint = ({ min, i, last, len }) => ({
     content: `${min}\n(${Per(min, last)})`,
     font: { size: 14, family: 'sans-serif' },
     position: {
-        // x: 'center',
         x: i * 2 <= len ? 'start' : 'end',
         y: 'center'
     },
