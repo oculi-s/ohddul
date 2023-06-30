@@ -11,6 +11,7 @@ import toggleOnPageChange from "#/toggle";
 import { useRouter } from "next/router";
 import { maxPoint, minPoint } from "./annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
+import merge from 'deepmerge';
 import '@/module/array'
 Chart.register(Annotation);
 
@@ -184,7 +185,7 @@ async function refineData({
                 }
             }
             options.scales = {
-                y: { min: min * 0.6, max: max * 1.1 }
+                y: { min: 0, max: max * 1.1 }
             };
         }
     }
@@ -270,7 +271,7 @@ function PriceLine({
             prices, metas, isEarn, isBollinger, num, minMax
         }).then(([data, option]) => {
             setData(data);
-            setOptions(options.deepMerge(option))
+            setOptions(merge(options, option))
         })
     }, [metas, isEarn, isBollinger, num, len])
     const props = {

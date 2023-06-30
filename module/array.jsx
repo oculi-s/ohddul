@@ -21,14 +21,21 @@ Math.randInt = () => {
     return parseInt(Math.random() * 1000);
 }
 
-Object.prototype.deepMerge = function (b) {
-    const merge = (a, b) => {
-        return Object.entries(b).reduce((o, [k, v]) => {
-            o[k] = v && typeof v === 'object'
-                ? merge(o[k] = o[k] || (Array.isArray(v) ? [] : {}), v)
-                : v;
-            return o;
-        }, a);
-    }
-    return [{}, this, b].reduce(merge);
-}
+
+/**
+ * React에서 Object에 prototype function을 만들면 안된다.
+ *
+ * 그러면 아래 오류 뜨게됨
+ * Error occurred prerendering page "/404". Read more: https://nextjs.org/docs/messages/prerender-error TypeError: e.replace is not a function
+ */
+// Object.prototype.deepdeep = function (b) {
+//     const merge = (a, b) => {
+//         return Object.entries(b).reduce((o, [k, v]) => {
+//             o[k] = v && typeof v === 'object'
+//                 ? merge(o[k] = o[k] || (Array.isArray(v) ? [] : {}), v)
+//                 : v;
+//             return o;
+//         }, a);
+//     }
+//     return [{}, this, b].reduce(merge);
+// }

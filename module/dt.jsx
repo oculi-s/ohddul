@@ -74,7 +74,7 @@ function prev(y) {
     y.day = (1 + y.now.day()) % 7;
     y.s = y.Y + y.M + y.D;
 }
-function now(m) { return moment(m); }
+function now(m = moment()) { return moment(m); }
 function num(m = moment()) { return moment(m).unix(); }
 /**
  * 시간 내림차순 정렬 (현재 -> 과거)

@@ -23,6 +23,7 @@
     "child_process": "^1.0.2",
     "crypto": "^1.0.1",
     "date-fns": "^2.30.0",
+    "deepmerge": "^4.3.1",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "fast-xml-parser": "^4.2.2",
