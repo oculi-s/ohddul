@@ -81,8 +81,8 @@ async function getData({
     if (minMax) {
         var mini = 0, maxi = 0, min = 2e9, max = -1;
         priceRaw?.forEach((e, i) => {
-            if (e < min) mini = i, min = e;
-            if (e > max) maxi = i, max = e;
+            if (e && e < min) mini = i, min = e;
+            if (e && e > max) maxi = i, max = e;
         })
         props = { ...props, mini, maxi, min, max };
     }
