@@ -32,10 +32,13 @@
     font-size: .8em;
     position: absolute;
     top: -90px;
-    width: 100%;
     background: $bgBright;
     padding: 5px;
     border-radius: 10px;
+    white-space: nowrap;
+
+    left: -20px;
+    width: calc(100% + 40px);
 
     p {
         text-align: center;

@@ -23,7 +23,7 @@ function EarnTable({ stockMeta, stockEarn }) {
         <th>자본</th>
         <th>매출</th>
         <th>이익</th>
-        <th>ROE<Help span="순이익/자본" /></th>
+        <th>ROE</th>
         <th>이익률</th>
     </tr>;
     const avgQuar = Array(5).map(() => false);

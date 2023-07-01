@@ -14,7 +14,7 @@ import { CheckBox, RadioSelect } from "#/base/InputSelector";
 import merge from 'deepmerge';
 import '@/module/array'
 import { hairline } from "./plugins";
-import { Fix } from "@/module/ba";
+import { Fix, parseFix } from "@/module/ba";
 Chart.register(Annotation);
 
 /**
@@ -55,24 +55,30 @@ const defaultOptions = {
 
 const plugins = [hairline, Annotation];
 
+/**
+ * 주의할 부분
+ * 
+ * priceRaw를 slice할 때 i+1-num 부터 i+1까지 해야함
+ * 이유는 start부터 end-1까지 데이터를 구하기 때문
+ */
 async function getData({
     price, amount, isEarn, isBollinger, num, isMinMax, percentMa
 }) {
     price = price?.sort(dt.lsort);
     const dates = price?.map(e => e.d);
     const priceRaw = price?.map(e => e.c);
-    const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - num, i)));
-    const priceTop = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), 2))
-    const priceBot = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), -2))
+    const priceAvg = dates?.map((e, i) => Math.avg(priceRaw?.slice(i + 1 - num, i + 1)));
+    const priceTop = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), 2))
+    const priceBot = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), -2))
+
     var props = { dates, priceRaw, priceAvg, priceTop, priceBot };
     var ymin = 2e9, ymax = -1;
 
     if (percentMa) {
-        const priceMa = priceRaw?.map((e, i) => {
-            if (!priceAvg[i]) return 0;
-            if (!priceTop[i]) return 0;
-            if (!priceBot[i]) return 0;
-            return (e - priceAvg[i]) / (priceTop[i] - priceBot[i]) * 100;
+        const priceMa = dates?.map((e, i) => {
+            // if (!priceTop[i]) return 50;
+            // if (!priceBot[i]) return 50;
+            return (priceRaw[i] - priceBot[i]) / (priceTop[i] - priceBot[i]) * 100;
         })
         props = { ...props, priceMa };
     }
@@ -120,7 +126,6 @@ async function refineData({
     const k = prices?.length;
     for await (let i of Array(k).keys()) {
         const price = prices[i];
-        // if (!price?.length) continue;
         const amount = metas[i]?.a;
         const last = price?.find(() => true);
         const {
@@ -217,35 +222,28 @@ async function refineData({
                 ...def
             }]
             suboptions.scales = {
-                y: { min: -100, max: 100, display: true }
+                y: { min: -20, max: 120, display: true }
             }
             suboptions.plugins = {
                 annotation: {
                     annotations: [{
                         type: 'line',
-                        yMin: 0,
-                        yMax: 0,
+                        yMin: 50, yMax: 50,
                         borderColor: scss.bgBrighter,
                         borderWidth: 1,
                     }, {
-                        type: 'line',
-                        yMin: 0,
-                        yMax: 0,
+                        type: 'box',
+                        yMin: 0, yMax: 100,
                         borderColor: scss.bgBrighter,
-                        borderWidth: 1,
-                    }, {
-                        type: 'line',
-                        yMin: 0,
-                        yMax: 0,
-                        borderColor: scss.bgBrighter,
+                        backgroundColor: scss.bgOpacity,
+                        borderDash: [5, 5],
                         borderWidth: 1,
                     }]
                 },
                 tooltip: {
                     callbacks: {
                         label: function (ctx, data) {
-                            console.log(ctx);
-                            return `${ctx?.dataset?.label} ${Fix(ctx?.raw)}%`;
+                            return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
                         },
                     }
                 }
@@ -341,7 +339,6 @@ function PriceLine({
     const [suboptions, setSubOptions] = useState(defaultOptions);
     prices = prices.map(price => price?.sort(dt.sort)?.slice(0, len));
 
-    console.log(isMinMax)
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [subData, setSubData] = useState({ labels: [], datasets: [] });
     useEffect(() => {
@@ -352,7 +349,6 @@ function PriceLine({
             setData(data);
             setSubData(sub);
             setOptions(merge(defaultOptions, option))
-            console.log(options);
             setSubOptions(merge(defaultOptions, suboption));
         })
     }, [metas, isEarn, isBollinger, isMinMax, num, len])

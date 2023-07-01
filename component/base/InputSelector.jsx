@@ -35,6 +35,7 @@ export function CheckBox({
     const key = Math.randInt();
     return <>
         <input
+            key={`inp${key}`}
             className={styles.input}
             id={`chk${key}`}
             type="checkbox"
@@ -42,6 +43,7 @@ export function CheckBox({
             defaultChecked={defaultChecked}
         />
         <label
+            key={`lab${key}`}
             htmlFor={`chk${key}`}
             className={styles.label}>
             {name}

@@ -6,6 +6,7 @@ $bgDark: #04111e;
 $bgMid: #0b1325;
 $bgBright: #10192C;
 $bgBrighter: #26395e;
+$bgOpacity: #29344b4b;
 
 $textColor: #aaa;
 $textBright: #e5e5e5;
@@ -23,6 +24,9 @@ $blueDark: #323764;
 $blueBright: #3a4be0;
 
 :export {
+    mobWidth: $mobWidth;
+
+    bgOpacity: $bgOpacity;
     bgDarker: $bgDarker;
     bgDark: $bgDark;
     bgMid: $bgMid;

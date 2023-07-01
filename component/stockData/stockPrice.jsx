@@ -1,15 +1,36 @@
 import styles from '@/styles/Stock/Stock.module.scss';
 import Help from "#/base/Help";
 import PriceLine from "#/chart/PriceLine";
-import '@/module/array';
-import { Color, Per } from '@/module/ba';
+import { Color, Div, Per } from '@/module/ba';
 import { bbHelp, maHelp } from './HelpDescription';
+import dt from '@/module/dt';
+import '@/module/array';
 
-const MaTable = ({ stockPrice }) => {
-    const last = stockPrice?.slice(-1)[0].c;
-    const avg20 = Math.avg(stockPrice?.slice(-20)?.map(e => e?.c));
-    const avg60 = Math.avg(stockPrice?.slice(-60)?.map(e => e?.c));
-    const avg120 = Math.avg(stockPrice?.slice(-120)?.map(e => e?.c));
+const BMT = (data, num) => {
+    data = data?.slice(0, num);
+    const b = Math.std(data, -2);
+    const m = Math.avg(data);
+    const t = Math.std(data, 2);
+    return [b, m, t];
+}
+
+function refineData(data) {
+    data = data?.map(e => e?.c);
+    const last = data.find(() => true);
+    const [bot20, avg20, top20] = BMT(data, 20);
+    const [bot60, avg60, top60] = BMT(data, 60);
+    const [bot120, avg120, top120] = BMT(data, 120);
+
+    return {
+        last,
+        bot20, avg20, top20,
+        bot60, avg60, top60,
+        bot120, avg120, top120
+    }
+}
+
+function MaTable({ stockPrice }) {
+    const { last, avg20, avg60, avg120 } = refineData(stockPrice);
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
@@ -21,37 +42,36 @@ const MaTable = ({ stockPrice }) => {
                 <td className={Color(avg120 - last)}>{Per(last, avg120)}</td>
             </tr>
         </tbody>
-    </table>
+    </table>;
 }
 
-const BBTable = ({ stockPrice }) => {
-    const avg60 = Math.avg(stockPrice?.slice(-60)?.map(e => e?.c));
+function BBTable({ stockPrice }) {
+    const { last,
+        bot20, top20,
+        bot60, top60,
+        bot120, top120
+    } = refineData(stockPrice);
+
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
-                <th rowSpan={2}>BB지표<Help {...bbHelp} /></th>
+                <th rowSpan={3}>BB지표<Help {...bbHelp} /></th>
                 <th colSpan={2}>20</th>
                 <th colSpan={2}>60</th>
                 <th colSpan={2}>120</th>
             </tr>
             <tr>
-                <th>%B</th>
-                <th>%BW</th>
-                <th>%B</th>
-                <th>%BW</th>
-                <th>%B</th>
-                <th>%BW</th>
+                <th>%B</th><th>%BW</th>
+                <th>%B</th><th>%BW</th>
+                <th>%B</th><th>%BW</th>
             </tr>
-            <tr><td></td></tr>
+            <tr>
+                <td>{Div(last - bot20, top20 - bot20, 1)}</td><td>{Div(top20 - bot20, last, 1)}</td>
+                <td>{Div(last - bot60, top60 - bot60, 1)}</td><td>{Div(top60 - bot60, last, 1)}</td>
+                <td>{Div(last - bot120, top120 - bot120, 1)}</td><td>{Div(top120 - bot120, last, 1)}</td>
+            </tr>
         </tbody>
-    </table>
-}
-
-const PriceTable = (props) => {
-    return <div>
-        <MaTable {...props} />
-        <BBTable {...props} />
-    </div>
+    </table>;
 }
 
 const PriceElement = (props) => {
@@ -66,7 +86,10 @@ const PriceElement = (props) => {
             <PriceLine {...chartProps} />
         </div>
         <h3>가격지표</h3>
-        <PriceTable {...props} />
+        <div>
+            <MaTable {...props} />
+            <BBTable {...props} />
+        </div>
     </>
 }
 

@@ -21,6 +21,9 @@ export const NumFix = (v = 0) => {
     return Num(v.slice(0, -2)) + v.slice(-2);
 }
 
+/**
+ * 단순히 float를 fix하는 함수, 앞에 +붙음 
+ */
 export const Fix = (f, n = 2) => {
     if (isNaN(f)) f = 0;
     return (f > 0 ? '+' : '') + f.toFixed(n);

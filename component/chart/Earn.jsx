@@ -5,8 +5,10 @@ import { hairline } from './plugins';
 import dt from '@/module/dt'
 import { useEffect, useState } from 'react';
 import scss from '@/styles/variables.module.scss';
+import { Int } from '@/module/ba';
+import merge from 'deepmerge';
 
-const options = {
+const defaultOptions = {
     plugins: {
         tooltip: {
             callbacks: {
@@ -21,17 +23,15 @@ const options = {
     interaction: { intersect: false, mode: 'index', },
     spanGaps: true,
     maintainAspectRatio: false,
-    scales: { x: {}, y: {} }
+    responsive: true,
+    scales: { x: { display: false }, y: {} },
 }
 
 const plugins = [hairline];
 
 function EarnChart({
     stockEarn: earn, stockMeta,
-    x = false, y = false,
 }) {
-    options.scales.x.display = x;
-    options.scales.y.display = y;
     if (!earn?.length) {
         return (
             <div style={{ textAlign: "center" }}>
@@ -51,6 +51,7 @@ function EarnChart({
     const profitData = earn.map(e => Math.round(e.profit / amount));
     const equityData = earn.map(e => Math.round(e.equity / amount));
 
+    const [options, setOptions] = useState(defaultOptions);
     const [equity, setEquity] = useState({ labels: [], datasets: [] });
     const [profit, setProfit] = useState({ labels: [], datasets: [] });
 
@@ -69,6 +70,11 @@ function EarnChart({
 
     useEffect(() => {
         console.log('earn 차트 렌더링중');
+        const ismob = window.innerWidth <= Int(scss.mobWidth);
+        const option = { scales: { y: {} } };
+        if (ismob) option.scales.y.display = false;
+        else option.scales.y.display = true;
+        setOptions(merge(defaultOptions, option));
         setEquity(refineData(equityData, '자본(BPS)'));
         setProfit(refineData(profitData, '이익(EPS)'));
     }, [earn])
