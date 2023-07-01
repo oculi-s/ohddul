@@ -7,6 +7,10 @@ Array.prototype.remove = function (v) {
     if (i > -1) this.splice(i, 1);
 }
 
+Array.prototype.unique = function () {
+    return this.filter((e, i) => this.indexOf(e) == i);
+}
+
 Math.avg = (d) => {
     return Math.round(d?.sum() / d?.length);
 }

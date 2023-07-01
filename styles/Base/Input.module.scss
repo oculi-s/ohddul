@@ -1,15 +1,10 @@
 @import '../variables.module.scss';
 
 .label {
-    margin: auto 3px;
     padding: 3px 5px;
     border-radius: 5px;
     display: inline-block;
     background: $bgDark;
-}
-
-.label:first-of-type {
-    margin-left: 0;
 }
 
 .input {
@@ -22,7 +17,6 @@
 
 .radioGroup {
     display: block;
-    margin: 3px;
     background: $bgDark;
     padding: 5px;
     border-radius: 5px;
@@ -30,5 +24,13 @@
     h4 {
         margin: 0;
         text-align: center;
+    }
+
+    .label {
+        margin: auto 3px;
+    }
+
+    .label:first-of-type {
+        margin-left: 0;
     }
 }

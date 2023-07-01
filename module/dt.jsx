@@ -11,6 +11,12 @@ function YEARTYPE(key) { return [key.slice(0, 4), TYPES[key.slice(4)]] };
 function parse(str = moment(), format = 'YYYY-MM-DD') {
     return moment(str).format(format);
 }
+function toQuar(m = moment()) {
+    const str = moment(m).format('YYYY-MM-DD');
+    const Y = str.slice(0, 4);
+    const Q = Object.keys(TYPES).indexOf(str.slice(4));
+    return `${Y} ${Q + 1}Q`;
+}
 /**
  * 현재가 장중인지 return 하는 함수
  * 장중이면 return 0
@@ -98,6 +104,6 @@ function hhmmss(m = moment()) {
 module.exports = {
     DAY, YEARS, EARNKEYS, YEARTYPE,
     parse,
-    market, update, toJson, toString,
+    market, update, toJson, toString, toQuar,
     prev, now, num, sort, lsort, min, hhmmss
 };

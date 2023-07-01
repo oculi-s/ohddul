@@ -3,6 +3,7 @@ import Help from "#/base/Help";
 import PriceLine from "#/chart/PriceLine";
 import '@/module/array';
 import { Color, Per } from '@/module/ba';
+import { bbHelp, maHelp } from './HelpDescription';
 
 const MaTable = ({ stockPrice }) => {
     const last = stockPrice?.slice(-1)[0].c;
@@ -12,17 +13,7 @@ const MaTable = ({ stockPrice }) => {
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
-                <th rowSpan={2}>이동평균 지표
-                    <Help
-                        title={'Moving Average 이동평균 (이평)'}
-                        span={`여러 일 간의 종가의 평균값을 낸 것입니다. 주로 60, 120일을 사용하며, 장단기 추세를 보는 데에 유리합니다. 이평보다 높으면 하락, 낮으면 상승 가능성이 높습니다.`}
-                        data={<>
-                            <tr><th>%20</th><td>(현재가 - 20일 이평) / 20일 이평</td></tr>
-                            <tr><th>%60</th><td>(현재가 - 60일 이평) / 60일 이평</td></tr>
-                            <tr><th>%120</th><td>(현재가 - 120일 이평) / 120일 이평</td></tr>
-                        </>}
-                    />
-                </th>
+                <th rowSpan={2}>이동평균 지표<Help {...maHelp} /></th>
                 <th>%20</th><th>%60</th><th>%120</th></tr>
             <tr>
                 <td className={Color(avg20 - last)}>{Per(last, avg20)}</td>
@@ -38,14 +29,18 @@ const BBTable = ({ stockPrice }) => {
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
-                <th rowSpan={2}>BB지표
-                    <Help
-                        title={'Bollinger Band, 볼린저밴드'}
-                        span={`이동평균을 이용한 밴드 지표`}
-                    />
-                </th>
-                <th>%B<Help span={''} /></th>
-                <th>%BW<Help span={''} /></th>
+                <th rowSpan={2}>BB지표<Help {...bbHelp} /></th>
+                <th colSpan={2}>20</th>
+                <th colSpan={2}>60</th>
+                <th colSpan={2}>120</th>
+            </tr>
+            <tr>
+                <th>%B</th>
+                <th>%BW</th>
+                <th>%B</th>
+                <th>%BW</th>
+                <th>%B</th>
+                <th>%BW</th>
             </tr>
             <tr><td></td></tr>
         </tbody>
@@ -61,7 +56,6 @@ const PriceTable = (props) => {
 
 const PriceElement = (props) => {
     const { stockPrice, stockMeta } = props;
-    // if (!stockPrice || !stockMeta) return;
     const chartProps = {
         prices: [stockPrice],
         metas: [stockMeta],

@@ -5,7 +5,7 @@ $bgDarker: #030d18;
 $bgDark: #04111e;
 $bgMid: #0b1325;
 $bgBright: #10192C;
-$bgBrighter: #19253d;
+$bgBrighter: #26395e;
 
 $textColor: #aaa;
 $textBright: #e5e5e5;
@@ -16,14 +16,18 @@ $borderColor: #21212d;
 $barColor: #313b53;
 
 $red: #e3665d;
+$redDark: #612d29;
 $redBright: #e33327;
 $blue: #727ddd;
+$blueDark: #323764;
 $blueBright: #3a4be0;
 
 :export {
+    bgDarker: $bgDarker;
     bgDark: $bgDark;
     bgMid: $bgMid;
     bgBright: $bgBright;
+    bgBrighter: $bgBrighter;
 
     textColor: $textColor;
     textBright: $textBright;
@@ -34,8 +38,11 @@ $blueBright: #3a4be0;
     barColor: $barColor;
 
     red: $red;
+    redDark: $redDark;
     redBright: $redBright;
     blue: $blue;
+    blueDark: $blueDark;
+    blueBright: $blueBright;
 }
 
 @mixin mobile {

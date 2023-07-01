@@ -13,6 +13,8 @@ import { maxPoint, minPoint } from "./annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
 import merge from 'deepmerge';
 import '@/module/array'
+import { hairline } from "./plugins";
+import { Fix } from "@/module/ba";
 Chart.register(Annotation);
 
 /**
@@ -51,54 +53,57 @@ const defaultOptions = {
     scales: { x: {}, y: {} }
 }
 
-const plugins = [{
-    afterDraw: chart => {
-        if (chart.tooltip?._active?.length) {
-            let x = chart.tooltip._active[0].element.x;
-            let yAxis = chart.scales.y;
-            let ctx = chart.ctx;
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(x, yAxis.top);
-            ctx.lineTo(x, yAxis.bottom);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = colors[0];
-            ctx.stroke();
-            ctx.restore();
-        }
-    }
-}, Annotation];
+const plugins = [hairline, Annotation];
 
 async function getData({
-    price, amount, isEarn, isBollinger, num, minMax
+    price, amount, isEarn, isBollinger, num, isMinMax, percentMa
 }) {
     price = price?.sort(dt.lsort);
     const dates = price?.map(e => e.d);
     const priceRaw = price?.map(e => e.c);
-    const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - num, i)))
-    let props = { dates, priceRaw, priceAvg };
+    const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - num, i)));
+    const priceTop = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), 2))
+    const priceBot = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), -2))
+    var props = { dates, priceRaw, priceAvg, priceTop, priceBot };
+    var ymin = 2e9, ymax = -1;
 
-    if (minMax) {
+    if (percentMa) {
+        const priceMa = priceRaw?.map((e, i) => {
+            if (!priceAvg[i]) return 0;
+            if (!priceTop[i]) return 0;
+            if (!priceBot[i]) return 0;
+            return (e - priceAvg[i]) / (priceTop[i] - priceBot[i]) * 100;
+        })
+        props = { ...props, priceMa };
+    }
+
+    if (isMinMax) {
         var mini = 0, maxi = 0, min = 2e9, max = -1;
         priceRaw?.forEach((e, i) => {
             if (e && e < min) mini = i, min = e;
             if (e && e > max) maxi = i, max = e;
+            if (!e) priceRaw[i] = priceRaw[i - 1]
         })
+        ymin = min, ymax = max;
         props = { ...props, mini, maxi, min, max };
     }
 
-    if (isBollinger) {
-        const priceTop = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), 2))
-        const priceBot = priceAvg?.map((e, i) => Math.std(priceRaw?.slice(i - num, i), -2))
-        props = { ...props, priceTop, priceBot };
-    }
-
     if (isEarn) {
-        const stockEps = price?.map(e => Math.round(e?.eps / amount));
-        const stockBps = price?.map(e => Math.round(e?.bps / amount));
+        const stockEps = price?.map(e => {
+            const v = Math.round(e?.eps / amount)
+            if (v && v < ymin) ymin = v;
+            if (v && v > ymax) ymax = v;
+            return v;
+        });
+        const stockBps = price?.map(e => {
+            const v = Math.round(e?.bps / amount)
+            if (v && v < ymin) ymin = v;
+            if (v && v > ymax) ymax = v;
+            return v;
+        });
         props = { ...props, stockEps, stockBps };
     }
-    return props;
+    return { ...props, ymin, ymax };
 }
 
 /**
@@ -108,27 +113,31 @@ async function getData({
  * 6개월 데이터 120이평에서 데이터가 너무 표시가 안돼서 slice를 2023.06.30 폐기
  */
 async function refineData({
-    prices, metas, isEarn, isBollinger, num, minMax
+    prices, metas, num, isEarn, isBollinger, isMinMax, percentMa
 }) {
-    let datasets = [], date, options = {};
+    let mainData = [], date, options = {};
+    let subData = [], suboptions = {};
     const k = prices?.length;
     for await (let i of Array(k).keys()) {
         const price = prices[i];
+        // if (!price?.length) continue;
         const amount = metas[i]?.a;
-        const last = price[0];
+        const last = price?.find(() => true);
         const {
             dates,
             priceRaw, priceAvg,
             priceTop, priceBot,
             stockEps, stockBps,
+            priceMa,
             min, mini, max, maxi,
+            ymin, ymax,
         } = await getData({
             price, amount,
             isEarn, isBollinger,
-            num, minMax
+            num, isMinMax, percentMa
         });
         date = dates//?.slice(num);
-        datasets = [...datasets, {
+        mainData = [...mainData, {
             data: priceRaw,//?.slice(num),
             label: '종가',
             borderColor: 'gray',
@@ -145,7 +154,7 @@ async function refineData({
         }];
         if (isEarn) {
             const def = { borderWidth: 2, pointRadius: 0 }
-            datasets = [...datasets, {
+            mainData = [...mainData, {
                 data: stockEps,//?.slice(num),
                 label: "EPS",
                 borderColor: scss?.red,
@@ -161,7 +170,7 @@ async function refineData({
         }
         if (isBollinger) {
             const def = { borderWidth: 1, pointRadius: 0 }
-            datasets = [...datasets, {
+            mainData = [...mainData, {
                 data: priceTop,//?.slice(num),
                 label: "BB상단",
                 borderColor: scss?.red,
@@ -175,76 +184,148 @@ async function refineData({
                 ...def
             }]
         }
-        if (minMax) {
+        if (isMinMax) {
             options.plugins = {
                 annotation: {
-                    annotations: {
-                        max: maxPoint({ i: maxi, max, last: last.c, len: price?.length }),
-                        min: minPoint({ i: mini, min, last: last.c, len: price?.length }),
-                    }
+                    annotations: [
+                        {
+                            type: 'line', yMin: max, yMax: max,
+                            borderColor: scss?.redDark,
+                            borderWidth: .5,
+                        }, {
+                            type: 'line',
+                            yMin: min, yMax: min,
+                            borderColor: scss?.blueDark,
+                            borderWidth: .5,
+                        },
+                        maxPoint({ i: maxi, max, last: last?.c, len: price?.length }),
+                        minPoint({ i: mini, min, last: last?.c, len: price?.length }),
+                    ]
                 }
             }
             options.scales = {
-                y: { min: 0, max: max * 1.1 }
+                y: { min: ymin * 0.9, max: ymax * 1.1 }
             };
         }
+        if (percentMa) {
+            const def = { borderWidth: 1, pointRadius: 0 }
+            subData = [...subData, {
+                data: priceMa,
+                label: '%B',
+                borderColor: scss?.bgBrighter,
+                backgroundColor: scss?.bgBrighter,
+                ...def
+            }]
+            suboptions.scales = {
+                y: { min: -100, max: 100, display: true }
+            }
+            suboptions.plugins = {
+                annotation: {
+                    annotations: [{
+                        type: 'line',
+                        yMin: 0,
+                        yMax: 0,
+                        borderColor: scss.bgBrighter,
+                        borderWidth: 1,
+                    }, {
+                        type: 'line',
+                        yMin: 0,
+                        yMax: 0,
+                        borderColor: scss.bgBrighter,
+                        borderWidth: 1,
+                    }, {
+                        type: 'line',
+                        yMin: 0,
+                        yMax: 0,
+                        borderColor: scss.bgBrighter,
+                        borderWidth: 1,
+                    }]
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (ctx, data) {
+                            console.log(ctx);
+                            return `${ctx?.dataset?.label} ${Fix(ctx?.raw)}%`;
+                        },
+                    }
+                }
+            }
+        }
     }
-    return [{ labels: date, datasets }, options];
+    return [
+        { labels: date, datasets: mainData },
+        { labels: date, datasets: subData },
+        options, suboptions
+    ];
 }
 
 function ButtonGroup({
-    view, setView,
     isBollinger, setBollinger,
     isEarn, setEarn,
+    isMinMax, setMinMax,
     len, setLen, num, setNum,
     bollingerBtn, timeBtn
 }) {
+    const router = useRouter();
+    const [view, setView] = useState(false);
+    toggleOnPageChange(router, setView);
     if (!timeBtn && !bollingerBtn) return;
     return <>
-        <div className={`${styles.buttonWrap} ${view ? styles.view : ''}`}>
-            <div>
-                <div className={`${styles.buttonGroup}`}>
-                    {(timeBtn || bollingerBtn) && <div>
-                        <p><CheckBox
-                            name={'BB추가'}
-                            onChange={setBollinger}
-                            defaultChecked={isBollinger}
-                        /></p>
-                        <p><CheckBox
-                            name={'실적차트'}
-                            onChange={setEarn}
-                            defaultChecked={isEarn}
-                        /></p>
-                    </div>}
-                    {timeBtn && <RadioSelect
-                        title={'기간'}
-                        names={['6M', '1Y', '5Y']}
-                        values={[YEAR_LEN / 2, YEAR_LEN, YEAR_LEN * 5]}
-                        onChange={setLen}
-                        defaultValue={len}
-                    />}
-                    {bollingerBtn && <RadioSelect
-                        title={'이평'}
-                        names={['20', '60', '120']}
-                        values={[20, 60, 120]}
-                        onChange={setNum}
-                        defaultValue={num}
-                    />}
-                </div>
+        <div className={`${styles.navWrap} ${view ? styles.view : ''}`}>
+            <div className={`${styles.nav}`}>
+                {(timeBtn || bollingerBtn) &&
+                    <>
+                        <div className={styles.checkGroup}>
+                            <p><CheckBox
+                                name={'BB추가'}
+                                onChange={setBollinger}
+                                defaultChecked={isBollinger}
+                            /></p>
+                            <p><CheckBox
+                                name={'실적차트'}
+                                onChange={setEarn}
+                                defaultChecked={isEarn}
+                            /></p>
+                        </div>
+                        <div className={styles.checkGroup}>
+                            <p><CheckBox
+                                name={'최대최소'}
+                                onChange={setMinMax}
+                                defaultChecked={isMinMax}
+                            /></p>
+                        </div>
+                    </>
+                }
+                {timeBtn && <RadioSelect
+                    title={'기간'}
+                    names={['6M', '1Y', '5Y']}
+                    values={[YEAR_LEN / 2, YEAR_LEN, YEAR_LEN * 5]}
+                    onChange={setLen}
+                    defaultValue={len}
+                />}
+                {bollingerBtn && <RadioSelect
+                    title={'이평'}
+                    names={['20', '60', '120']}
+                    values={[20, 60, 120]}
+                    onChange={setNum}
+                    defaultValue={num}
+                />}
             </div>
+            <button
+                onClick={e => setView(e => !e)}
+                className={`fa fa-chevron-down ${styles.toggleBtn} ${view ? styles.view : ''}`}
+            />
         </div>
-        <button
-            onClick={e => setView(e => !e)}
-            className={`fa fa-chevron-right ${styles.toggleBtn} ${view ? styles.view : ''}`}
-        />
     </>
 }
 
 const YEAR_LEN = 252;
 function PriceLine({
     prices = [{}], metas = [{}],
-    addEarn = true, addBollinger = false, N = 60, L = YEAR_LEN * 5,
-    bollingerBtn = true, timeBtn = true, minMax = true,
+    addEarn = true, addBollinger = false, minMax = true,
+    N = 60, L = YEAR_LEN * 5,
+    percentMa = true,
+    bollingerBtn = true, timeBtn = true,
     x = false, y = false, legend = false,
 }) {
     defaultOptions.plugins.legend.display = legend;
@@ -253,51 +334,54 @@ function PriceLine({
 
     const [num, setNum] = useState(N);
     const [len, setLen] = useState(L);
-    const [view, setView] = useState(false);
     const [isEarn, setEarn] = useState(addEarn);
+    const [isMinMax, setMinMax] = useState(minMax);
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
-    const router = useRouter();
+    const [suboptions, setSubOptions] = useState(defaultOptions);
     prices = prices.map(price => price?.sort(dt.sort)?.slice(0, len));
-    toggleOnPageChange(router, setView);
-    // toggleOnPageChange(router, setLen, 5 * 252);
 
-    // const []
+    console.log(isMinMax)
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [subData, setSubData] = useState({ labels: [], datasets: [] });
     useEffect(() => {
         console.log('price 차트 렌더링중');
         refineData({
-            prices, metas, isEarn, isBollinger, num, minMax
-        }).then(([data, option]) => {
+            prices, metas, num, isEarn, isBollinger, isMinMax, percentMa
+        }).then(([data, sub, option, suboption]) => {
             setData(data);
-            setOptions(merge(options, option))
+            setSubData(sub);
+            setOptions(merge(defaultOptions, option))
+            console.log(options);
+            setSubOptions(merge(defaultOptions, suboption));
         })
-    }, [metas, isEarn, isBollinger, num, len])
+    }, [metas, isEarn, isBollinger, isMinMax, num, len])
     const props = {
-        view, setView,
         isBollinger, setBollinger,
         isEarn, setEarn,
+        isMinMax, setMinMax,
         len, setLen, num, setNum,
         bollingerBtn, timeBtn
     }
     return (<>
         <div className={styles.wrap}>
             <ButtonGroup {...props} />
-
             <div className={styles.chart}>
                 <Line
                     options={options}
                     plugins={plugins}
                     data={data}
                 />
-                {/* 2023.06.30 %BB 서브차트 추가해야함 */}
-                {/* {isBollinger && <Line
-                    options={options}
-                    plugins={plugins}
-                    data={data}
-                />} */}
             </div>
+            {percentMa &&
+                <div className={`${styles.chart} ${styles.sub}`}>
+                    <Line
+                        options={suboptions}
+                        plugins={plugins}
+                        data={subData}
+                    />
+                </div>
+            }
         </div >
     </>)
 }

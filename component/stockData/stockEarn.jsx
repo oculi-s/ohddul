@@ -6,8 +6,9 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '#/base/Help';
+import '@/module/array';
 
-const EarnTable = ({ stockMeta, stockEarn }) => {
+function EarnTable({ stockMeta, stockEarn }) {
     const amount = stockMeta?.a;
     const [N, setN] = useState(5);
     const [view, setView] = useState(true);
@@ -24,16 +25,28 @@ const EarnTable = ({ stockMeta, stockEarn }) => {
         <th>이익</th>
         <th>ROE<Help span="순이익/자본" /></th>
         <th>이익률</th>
-    </tr>
-    const avg = Array(5).map(() => false);
+    </tr>;
+    const avgQuar = Array(5).map(() => false);
+    const avgYear = {};
+    stockEarn.forEach(({ date, profit, equity }) => {
+        const year = date.slice(0, 4);
+        if (!avgYear[year]) avgYear[year] = { profit: 0, equity, cnt: 0 };
+        avgYear[year].profit += profit;
+        avgYear[year].cnt++;
+    });
     const data = stockEarn.map((e, i) => {
         const { date, equity, revenue, profit } = e;
         const { Y, Q } = Quar(date);
-        if (!avg[Q]) avg[Q] = { Q, equity: 0, revenue: 0, profit: 0, cnt: 0 };
-        avg[Q].equity += equity;
-        avg[Q].revenue += revenue;
-        avg[Q].profit += profit;
-        avg[Q].cnt++;
+        if (!avgQuar[Q]) avgQuar[Q] = { Q, equity: 0, revenue: 0, profit: 0, cnt: 0 };
+        avgQuar[Q].equity += equity;
+        avgQuar[Q].revenue += revenue;
+        avgQuar[Q].profit += profit;
+        avgQuar[Q].cnt++;
+
+        const PR = Div(profit, revenue);
+        const ROE = avgYear[Y];
+        var isRoe = Q == 4;
+        if (ROE?.cnt < 4) isRoe = true;
         return <tr key={date} className={i >= N ? 'd' : ''}>
             <th>
                 <span className='mh'>{Y.slice(0, 2)}</span>
@@ -43,38 +56,65 @@ const EarnTable = ({ stockMeta, stockEarn }) => {
             <td>{Num(equity / amount)}</td>
             <td className={Color(revenue)}>{Num(revenue / amount)}</td>
             <td className={Color(profit)}>{Num(profit / amount)}</td>
-            <td className={Color(profit / equity)}>{Div(profit, equity)}</td>
+            {isRoe && <td
+                rowSpan={ROE?.cnt}
+                className={Color(ROE?.profit / ROE?.equity)}>
+                {Div(ROE?.profit, ROE?.equity)}
+            </td>}
             <td>
-                <span>{Div(profit, revenue)}</span>
-                <div className={styles.bar} style={{ width: Div(profit, revenue) }}></div>
+                <span>{PR}</span>
+                <div
+                    className={styles.bar}
+                    style={{ width: PR[0] == '-' ? '0' : PR }}
+                />
             </td>
-        </tr>
+        </tr>;
     });
     return <div>
-        <h3>분기별 평균실적<Help span='평균적으로 이익률이 일정하고, 매출과 이익이 일정한 회사가 안정적인 회사입니다.' /></h3>
+        <h3>분기별 평균실적
+            <Help
+                title={`분기별 평균 실적`}
+                span={`업황 (업종의 상황)에 따라 회사의 이익이 달라지는 경우가 있습니다.  회사 영업의 안정성을 나타내는 지표입니다.`}
+            />
+        </h3>
         <div>
             <table className={styles.earnTable}>
                 <thead>
                     <tr>
                         <th>분기</th>
-                        <th>이익률<Help span="순이익/매출" /></th>
-                        <th>매출<Help span="매출총합/주식 수" /></th>
-                        <th>이익<Help span="이익총합/주식 수" /></th>
+                        <th>이익률</th>
+                        <th>매출
+                            <Help
+                                title={`매출액`}
+                                span={`매출액은 일정 기간동안 회사의 장부에 적힌 판매금액을 말합니다. 보통 분기별로 계산하며, 편의상 오떨에서는 분기별 매출액을 주식수로 나누어 계산합니다.\n(분기별 매출) / (발행주식)`}
+                            />
+                        </th>
+                        <th>이익
+                            <Help
+                                title={`당기순이익`}
+                                span={`순이익은 일정 기간 동안 매출액에서 원가, 인건비 등의 비용을 제외하고, 세금 (법인세)를 내고 난 뒤 장부에 적힌 남은 돈을 말합니다. 오떨에서는 분기별 이익을 주식수로 나누어 계산합니다.\n(분기별 이익) / (발행주식)`}
+                            />
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {avg.map(e => {
+                    {avgQuar.map(e => {
                         if (!e) return;
                         const { Q, profit, revenue, cnt } = e;
+                        const PR = Div(profit, revenue);
                         return <tr key={Q}>
                             <th>{Q}Q</th>
                             <td>
-                                <span>{Div(profit, revenue)}</span>
-                                <div className={styles.bar} style={{ width: Div(profit, revenue) }}></div>
+                                <span>{PR}</span>
+                                <div
+                                    className={styles.bar}
+                                    style={{ width: PR[0] == '-' ? '0%' : PR }}
+                                >
+                                </div>
                             </td>
                             <td>{Num(revenue / cnt / amount)}</td>
                             <td>{Num(profit / cnt / amount)}</td>
-                        </tr>
+                        </tr>;
                     })}
                 </tbody>
             </table>
@@ -84,18 +124,15 @@ const EarnTable = ({ stockMeta, stockEarn }) => {
             <thead>{head}</thead>
             <tbody>
                 {data}
-                <tr onClick={() => {
-                    if (N + 5 < len) {
-                        setN(N + 5)
-                    } else {
-                        setView(false);
-                    }
-                }} className={`${view ? '' : 'd'} ${styles.more}`}>
+                {view && <tr onClick={() => {
+                    setN(N + 5);
+                    if (N + 5 >= len) { setView(false); }
+                }} className={styles.more}>
                     <th colSpan={6}>더보기</th>
-                </tr>
+                </tr>}
             </tbody>
         </table>
-    </div>
+    </div>;
 }
 
 const EarnElement = (props) => {

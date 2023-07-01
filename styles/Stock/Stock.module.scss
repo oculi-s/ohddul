@@ -11,11 +11,12 @@
 }
 
 .priceChart {
-    height: 300px;
+    height: 400px;
     background: $bgMid;
     padding: 20px;
     border-radius: 10px;
     box-sizing: border-box;
+    overflow-y: hidden;
 }
 
 .priceTable {

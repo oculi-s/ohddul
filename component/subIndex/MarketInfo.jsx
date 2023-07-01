@@ -28,6 +28,7 @@ const Kospi = ({ last, prev, count, kospi }) => {
                 bollingerBtn: false,
                 timeBtn: false,
                 minMax: false,
+                percentMa: false,
                 N: 60,
             }} />
         </div>
@@ -59,6 +60,7 @@ const Kosdaq = ({ last, prev, count, kosdaq }) => {
                 bollingerBtn: false,
                 timeBtn: false,
                 minMax: false,
+                percentMa: false,
                 N: 60,
             }} />
         </div>

@@ -1,28 +1,21 @@
 import 'chartjs-adapter-date-fns';
 import styles from '@/styles/Chart/Earn.module.scss';
-import Help from "#/base/Help";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
+import { hairline } from './plugins';
+import dt from '@/module/dt'
+import { useEffect, useState } from 'react';
+import scss from '@/styles/variables.module.scss';
 
-/**
- * 해야할 일 : tooltip YYYY-1Q와 같은식으로 custom
- */
 const options = {
     plugins: {
         tooltip: {
             callbacks: {
-                // title: function (tooltipItem, data) {
-                //     return dt.toString(tooltipItem[0]?.label);
-                // },
-                // label: function (tooltipItem, data) {
-                //     return data;
-                // },
-                // afterLabel: function (tooltipItem, data) {
-                //     let percent = 1;
-                //     return '(' + percent + '%)';
-                // }
+                title: function (ctx) {
+                    return dt.toQuar(ctx[0]?.label);
+                },
             },
         },
-        legend: {}
+        legend: { display: false }
     },
     animation: { duration: 300 },
     interaction: { intersect: false, mode: 'index', },
@@ -31,30 +24,12 @@ const options = {
     scales: { x: {}, y: {} }
 }
 
-
-const plugins = [{
-    afterDraw: chart => {
-        if (chart.tooltip?._active?.length) {
-            let x = chart.tooltip._active[0].element.x;
-            let yAxis = chart.scales.y;
-            let ctx = chart.ctx;
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(x, yAxis.top);
-            ctx.lineTo(x, yAxis.bottom);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "#3e95cd";
-            ctx.stroke();
-            ctx.restore();
-        }
-    }
-}];
+const plugins = [hairline];
 
 function EarnChart({
     stockEarn: earn, stockMeta,
-    x = false, y = false, legend = false,
+    x = false, y = false,
 }) {
-    options.plugins.legend.display = legend;
     options.scales.x.display = x;
     options.scales.y.display = y;
     if (!earn?.length) {
@@ -76,48 +51,43 @@ function EarnChart({
     const profitData = earn.map(e => Math.round(e.profit / amount));
     const equityData = earn.map(e => Math.round(e.equity / amount));
 
+    const [equity, setEquity] = useState({ labels: [], datasets: [] });
+    const [profit, setProfit] = useState({ labels: [], datasets: [] });
 
-    const data = (option) => {
+    const refineData = (data, label) => {
         return {
             labels,
             datasets: [{
-                ...option,
-                borderColor: "#3e95cd",
-                backgroundColor: "#7bb6dd",
-                borderWidth: 2,
+                data, label,
+                borderColor: data.map(e => e > 0 ? scss.red : scss.blue),
+                backgroundColor: data.map(e => e > 0 ? scss.red : scss.blue),
+                borderWidth: 0,
                 pointRadius: 1
             }]
         }
     }
 
-    const props = {
-        des: ' 도움말', data: <>
-            <tr><th>BPS</th><td>(분기별 자본금) / (발행 주식)</td></tr>
-            <tr><th>EPS</th><td>(당기순이익) / (발행 주식)</td></tr>
-        </>
-    }
+    useEffect(() => {
+        console.log('earn 차트 렌더링중');
+        setEquity(refineData(equityData, '자본(BPS)'));
+        setProfit(refineData(profitData, '이익(EPS)'));
+    }, [earn])
+
     return (
-        <div>
-            <Help {...props} />
-            <div className={styles.wrap}>
-                <div className={styles.chart}>
-                    <Line
-                        plugins={plugins}
-                        options={options}
-                        data={data({
-                            data: equityData, label: '순자산(bps)',
-                        })}
-                    />
-                </div>
-                <div className={styles.chart}>
-                    <Line
-                        plugins={plugins}
-                        options={options}
-                        data={data({
-                            data: profitData, label: '이익(eps)',
-                        })}
-                    />
-                </div>
+        <div className={styles.wrap}>
+            <div className={styles.chart}>
+                <Bar
+                    plugins={plugins}
+                    options={options}
+                    data={equity}
+                />
+            </div>
+            <div className={styles.chart}>
+                <Bar
+                    plugins={plugins}
+                    options={options}
+                    data={profit}
+                />
             </div>
         </div>
     )

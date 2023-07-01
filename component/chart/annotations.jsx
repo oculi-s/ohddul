@@ -14,7 +14,7 @@ const maxPoint = ({ max, i, last, len }) => ({
     },
     xValue: i,
     yValue: max,
-    yAdjust: -16,
+    yAdjust: 5,
 });
 
 const minPoint = ({ min, i, last, len }) => ({
@@ -22,6 +22,7 @@ const minPoint = ({ min, i, last, len }) => ({
     color: scss.blue,
     backgroundColor: scss.bgBright,
     borderRadius: 10,
+    style: { opacity: .5 },
     content: `${min}\n(${Per(min, last)})`,
     font: { size: 14, family: 'sans-serif' },
     position: {
@@ -30,7 +31,7 @@ const minPoint = ({ min, i, last, len }) => ({
     },
     xValue: i,
     yValue: min,
-    yAdjust: 10,
+    yAdjust: -5,
 });
 
 module.exports = { maxPoint, minPoint };

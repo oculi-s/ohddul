@@ -8,8 +8,7 @@
 
     .chart {
         width: 100%;
-        height: 100%;
-        border-radius: 10px;
+        height: 75%;
         text-align: center;
         display: flex;
         align-items: center;
@@ -17,14 +16,67 @@
         flex-wrap: wrap;
         z-index: 2;
         position: relative;
+        padding-bottom: 10px;
+    }
+
+    .sub {
+        height: 25%;
+        border-top: 2px solid $borderColor;
+        padding-bottom: 0;
+        padding-top: 10px;
     }
 }
 
-.toggleBtn {
-    z-index: 4;
+
+.navWrap {
+    font-size: .8em;
     position: absolute;
-    left: -10px;
-    top: 8px;
+    top: -90px;
+    width: 100%;
+    background: $bgBright;
+    padding: 5px;
+    border-radius: 10px;
+
+    p {
+        text-align: center;
+        margin-bottom: 3px;
+    }
+
+    transition: top .3s;
+
+    .nav {
+        display: flex;
+        height: 65px;
+
+        >div {
+            margin: auto 3px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    }
+
+    .checkGroup {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        background: $bgDark;
+    }
+
+
+    z-index: 4;
+}
+
+.navWrap.view {
+    top: -20px;
+    transition: top .3s;
+}
+
+.toggleBtn {
+    padding: 0;
+    z-index: 4;
+    height: 20px;
+    width: 100%;
+    position: relative;
     transform-origin: 50% 50%;
     transition: all .3s;
 }
@@ -32,48 +84,4 @@
 .toggleBtn.view {
     transform: rotate(180deg);
     transition: all .3s;
-}
-
-.buttonWrap {
-    width: 600px;
-    height: 300px;
-    font-size: .8em;
-    overflow-x: hidden;
-    position: absolute;
-    left: -15px;
-    top: -15px;
-
-    >div {
-        width: 100%;
-        overflow-x: hidden;
-    }
-
-    p {
-        text-align: center;
-        margin-bottom: 3px;
-    }
-
-    .buttonGroup {
-        display: flex;
-        padding: 5px;
-        padding-left: 30px;
-        border-radius: 10px;
-        position: absolute;
-        top: 0;
-        left: -400px;
-        transition: left .3s !important;
-        background: $bgBright;
-        z-index: 3;
-    }
-}
-
-.buttonWrap.view {
-    >div {
-        overflow-x: visible;
-    }
-
-    .buttonGroup {
-        left: 0;
-        transition: left .3s !important;
-    }
 }
