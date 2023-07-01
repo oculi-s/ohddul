@@ -1,3 +1,5 @@
+import scss from '@/styles/variables.module.scss';
+
 export const hairline = {
     afterDraw: chart => {
         if (chart.tooltip?._active?.length) {
@@ -9,7 +11,7 @@ export const hairline = {
             ctx.moveTo(x, yAxis.top);
             ctx.lineTo(x, yAxis.bottom);
             ctx.lineWidth = 1;
-            ctx.strokeStyle = "#3e95cd";
+            ctx.strokeStyle = scss.bgBrighter;
             ctx.stroke();
             ctx.restore();
         }

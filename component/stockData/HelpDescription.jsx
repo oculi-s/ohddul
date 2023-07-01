@@ -6,8 +6,8 @@ export const bpsHelp = {
     </>,
     data: <>
         <tr><th>계산식</th><td>(최근 분기 자본) / (발행주식)</td></tr>
-        <tr><th className="red">상승</th><td>BPS &gt; 주가</td></tr>
-        <tr><th className="blue">하락</th><td>BPS &lt; 주가</td></tr>
+        <tr><th className="red">상승</th><td>BPS가 주가보다 클 때</td></tr>
+        <tr><th className="blue">하락</th><td>주가가 BPS보다 클 때</td></tr>
     </>
 }
 
@@ -18,8 +18,8 @@ export const epsHelp = {
     </>,
     data: <>
         <tr><th>계산식</th><td>(초기자본 + 누적이익) / (발행주식)</td></tr>
-        <tr><th className="red">상승</th><td>EPS &gt; 주가</td></tr>
-        <tr><th className="blue">하락</th><td>EPS &lt; 주가</td></tr>
+        <tr><th className="red">상승</th><td>EPS가 주가보다 클 때</td></tr>
+        <tr><th className="blue">하락</th><td>주가가 EPS보다 클 때</td></tr>
     </>
 }
 
@@ -47,12 +47,37 @@ export const maHelp = {
     </>,
     data: <>
         <tr><th>계산식</th><td>(현재가 - 이평) / 이평 (%)</td></tr>
-        <tr><th className="red">상승</th><td>현재가 &lt; 이평 (이평%가 음수)</td></tr>
-        <tr><th className="blue">하락</th><td>현재가 &gt; 이평 (이평%가 양수)</td></tr>
+        <tr>
+            <th className="red">상승</th>
+            <td>현재가가 이평보다 작을 때<br />(이평%가 음수일 때)</td>
+        </tr>
+        <tr>
+            <th className="blue">하락</th>
+            <td>현재가가 이평보다 클 때<br />(이평%가 양수일 때)</td>
+        </tr>
     </>
 }
 
 export const bbHelp = {
     title: 'Bollinger Band, 볼린저밴드',
     span: `이동평균을 이용한 밴드 지표`
+}
+
+export const revenueHelp = {
+    title: `매출액`,
+    span: <>
+        <p>매출액은 일정 기간동안 회사의 장부에 적힌 판매금액을 말합니다. 보통 분기별로 계산하며, 편의상 오떨에서는 분기별 매출액을 주식수로 나누어 계산합니다.</p>
+        <p>계산식 = (분기별 매출) / (발행주식)</p>
+    </>
+}
+
+export const profitHelp = {
+    title: `당기순이익`,
+    span: <>
+        <p>순이익은 일정 기간 동안 매출액에서 원가, 인건비 등의 비용을 제외하고, 세금 (법인세)를 내고 난 뒤 장부에 적힌 남은 돈을 말합니다.</p>
+        <p>오떨에서는 분기별 이익을 주식수로 나누어 계산합니다.</p>
+        <p>계산식 = (분기별 이익) / (발행주식)</p>
+    </>
+
+
 }

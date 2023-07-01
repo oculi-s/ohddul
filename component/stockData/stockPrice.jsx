@@ -3,34 +3,11 @@ import Help from "#/base/Help";
 import PriceLine from "#/chart/PriceLine";
 import { Color, Div, Per } from '@/module/ba';
 import { bbHelp, maHelp } from './HelpDescription';
-import dt from '@/module/dt';
+import { getMaData } from '@/module/editData/priceAvg';
 import '@/module/array';
 
-const BMT = (data, num) => {
-    data = data?.slice(0, num);
-    const b = Math.std(data, -2);
-    const m = Math.avg(data);
-    const t = Math.std(data, 2);
-    return [b, m, t];
-}
-
-function refineData(data) {
-    data = data?.map(e => e?.c);
-    const last = data.find(() => true);
-    const [bot20, avg20, top20] = BMT(data, 20);
-    const [bot60, avg60, top60] = BMT(data, 60);
-    const [bot120, avg120, top120] = BMT(data, 120);
-
-    return {
-        last,
-        bot20, avg20, top20,
-        bot60, avg60, top60,
-        bot120, avg120, top120
-    }
-}
-
 function MaTable({ stockPrice }) {
-    const { last, avg20, avg60, avg120 } = refineData(stockPrice);
+    const { last, avg20, avg60, avg120 } = getMaData(stockPrice);
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
@@ -50,7 +27,7 @@ function BBTable({ stockPrice }) {
         bot20, top20,
         bot60, top60,
         bot120, top120
-    } = refineData(stockPrice);
+    } = getMaData(stockPrice);
 
     return <table className={styles.priceTable}>
         <tbody>

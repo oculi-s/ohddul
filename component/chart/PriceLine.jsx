@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import Annotation from "chartjs-plugin-annotation";
@@ -9,12 +9,12 @@ import colors from "@/module/colors";
 import scss from '@/styles/variables.module.scss';
 import toggleOnPageChange from "#/toggle";
 import { useRouter } from "next/router";
-import { maxPoint, minPoint } from "./annotations";
+import { maxPoint, minPoint } from "@/module/chart/annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
 import merge from 'deepmerge';
+import { hairline } from "@/module/chart/plugins";
+import { parseFix } from "@/module/ba";
 import '@/module/array'
-import { hairline } from "./plugins";
-import { Fix, parseFix } from "@/module/ba";
 Chart.register(Annotation);
 
 /**
@@ -360,7 +360,7 @@ function PriceLine({
         bollingerBtn, timeBtn
     }
     return (<>
-        <div className={styles.wrap}>
+        <div className={`${styles.wrap} ${percentMa && styles.withSub}`}>
             <ButtonGroup {...props} />
             <div className={styles.chart}>
                 <Line

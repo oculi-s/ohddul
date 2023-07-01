@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import { Button, TextField } from "@mui/material";
+// import { Button, TextField } from "@mui/material";
 import styles from "@/styles/Create.module.scss"
 
 const SignUp = async e => {
@@ -35,7 +35,7 @@ const Index = ({ userMeta, userData }) => {
             <form className={styles.create} onSubmit={submit}>
                 <div>
 
-                    <TextField
+                    {/* <TextField
                         name='id'
                         label="ID"
                         variant="filled"
@@ -53,9 +53,9 @@ const Index = ({ userMeta, userData }) => {
                         autoComplete="current-password"
                         name='pwCheck'
                         variant="filled"
-                    />
+                    /> */}
                 </div>
-                <Button type='submit'>회원가입</Button>
+                {/* <Button type='submit'>회원가입</Button> */}
             </form>
         </>
     }

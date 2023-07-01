@@ -78,7 +78,7 @@ function toTable(json) {
     return <tbody dangerouslySetInnerHTML={{ __html: r }}></tbody>;
 }
 
-module.exports = {
+export default {
     read, xml, write, remove,
     queue, toggle, up, toTable,
 };

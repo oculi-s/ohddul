@@ -2,7 +2,7 @@ import styles from '@/styles/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/_user'
 import { useSession } from "next-auth/react"
-import { Button, TextField } from '@mui/material';
+// import { Button, TextField } from '@mui/material';
 import { signIn, signOut } from "next-auth/react";
 import { useState } from 'react';
 import { getRank } from '#/_user';
@@ -47,7 +47,7 @@ const Info = ({ userMeta }) => {
             <Wrap>
                 <User userMeta={userMeta}></User>
                 <form onSubmit={SignOut}>
-                    <Button type='submit'>로그아웃</Button>
+                    {/* <Button type='submit'>로그아웃</Button> */}
                 </form>
             </Wrap>
         )
@@ -58,7 +58,7 @@ const Info = ({ userMeta }) => {
                 let res = await SignIn(e);
                 if (!res.ok) setValid(true);
             }}>
-                <TextField
+                {/* <TextField
                     name='id'
                     label="ID"
                     variant="filled"
@@ -74,9 +74,9 @@ const Info = ({ userMeta }) => {
                     helperText={helper}
                     sx={{ p: 0 }}
                 />
-                <Button type='submit'>로그인</Button>
+                <Button type='submit'>로그인</Button> */}
             </form>
-            <Button href="/create">회원가입</Button>
+            {/* <Button href="/create">회원가입</Button> */}
         </Wrap>
     )
 }

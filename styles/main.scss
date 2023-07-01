@@ -122,6 +122,8 @@ body {
     border-color: var(--border-color);
     box-sizing: border-box;
     font-family: sans-serif;
+    outline: none;
+    stroke-width: 0;
 }
 
 img {

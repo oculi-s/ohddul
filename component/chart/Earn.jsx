@@ -1,7 +1,7 @@
 import 'chartjs-adapter-date-fns';
 import styles from '@/styles/Chart/Earn.module.scss';
 import { Bar } from "react-chartjs-2";
-import { hairline } from './plugins';
+import { hairline } from '../../module/chart/plugins';
 import dt from '@/module/dt'
 import { useEffect, useState } from 'react';
 import scss from '@/styles/variables.module.scss';

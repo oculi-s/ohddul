@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+// import { CircularProgress } from '@mui/material';
 import styles from '@/styles/Base/Index.module.scss';
 // import Game2048 from '#/game/2048.jsx';
 
@@ -13,7 +13,7 @@ const Temp = ({ children }) => {
 export const Loading = (props) => {
     const Wrap = props?.Wrap || Temp;
     return <Wrap>
-        <CircularProgress />
+        {/* <CircularProgress /> */}
     </Wrap>
 }
 

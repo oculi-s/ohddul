@@ -8,7 +8,7 @@
 
     .chart {
         width: 100%;
-        height: 75%;
+        height: 100%;
         text-align: center;
         display: flex;
         align-items: center;
@@ -16,17 +16,22 @@
         flex-wrap: wrap;
         z-index: 2;
         position: relative;
+    }
+}
+
+.wrap.withSub {
+    .chart {
+        height: 75%;
         padding-bottom: 10px;
     }
 
     .sub {
-        height: 25%;
         border-top: 2px solid $borderColor;
-        padding-bottom: 0;
+        height: 25%;
         padding-top: 10px;
+        padding-bottom: 0;
     }
 }
-
 
 .navWrap {
     font-size: .8em;

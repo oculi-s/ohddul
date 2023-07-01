@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '#/base/Help';
 import '@/module/array';
+import { profitHelp, revenueHelp } from './HelpDescription';
 
 function EarnTable({ stockMeta, stockEarn }) {
     const amount = stockMeta?.a;
@@ -83,18 +84,8 @@ function EarnTable({ stockMeta, stockEarn }) {
                     <tr>
                         <th>분기</th>
                         <th>이익률</th>
-                        <th>매출
-                            <Help
-                                title={`매출액`}
-                                span={`매출액은 일정 기간동안 회사의 장부에 적힌 판매금액을 말합니다. 보통 분기별로 계산하며, 편의상 오떨에서는 분기별 매출액을 주식수로 나누어 계산합니다.\n(분기별 매출) / (발행주식)`}
-                            />
-                        </th>
-                        <th>이익
-                            <Help
-                                title={`당기순이익`}
-                                span={`순이익은 일정 기간 동안 매출액에서 원가, 인건비 등의 비용을 제외하고, 세금 (법인세)를 내고 난 뒤 장부에 적힌 남은 돈을 말합니다. 오떨에서는 분기별 이익을 주식수로 나누어 계산합니다.\n(분기별 이익) / (발행주식)`}
-                            />
-                        </th>
+                        <th>매출<Help {...revenueHelp} /></th>
+                        <th>이익<Help {...profitHelp} /></th>
                     </tr>
                 </thead>
                 <tbody>

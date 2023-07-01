@@ -18,32 +18,54 @@
     justify-content: space-around;
     flex-wrap: nowrap;
 
-    .fa {
-        margin: auto 3px;
-        display: flex;
-    }
-
-    .percent {
-        font-size: .8em;
-        margin: auto 2px;
-    }
-
-    .chart {
-        margin-top: 10px;
-        height: 200px;
-        padding: 10px;
-    }
-
     .wrap {
         width: 49%;
         display: flex;
         flex-direction: column;
 
-        >*:not(.chart) {
+        .title,
+        .updown {
             display: flex;
             justify-content: center;
             margin: 0;
         }
+
+        .fa {
+            margin: auto 3px;
+        }
+
+        .percent {
+            font-size: .8em;
+            margin: auto 2px;
+        }
+
+        table {
+            text-align: center;
+            width: min-content;
+            margin: 0;
+            margin-left: auto;
+
+            tr>* {
+                padding: 2px;
+                font-size: .8em;
+                background: none;
+                border: none;
+            }
+        }
+    }
+
+    .chart {
+        margin-top: 10px;
+        height: 180px;
+        padding: 10px;
+    }
+}
+
+.groupArea {
+    background: $bgMid;
+
+    .chart {
+        height: 400px;
     }
 }
 
@@ -52,16 +74,6 @@
     padding: 5px;
     background: $bgBright;
 }
-
-
-// .inline {
-//     display: flex;
-//     justify-content: space-around;
-
-//     >* {
-//         width: 49%;
-//     }
-// }
 
 @include mobile {
     .area {
@@ -78,6 +90,7 @@
     .chartArea {
         .chart {
             height: 100px;
+            padding: 5px;
         }
     }
 

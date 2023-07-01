@@ -1,4 +1,5 @@
 import Market from '#/subIndex/MarketInfo';
+import Group from '#/subIndex/GroupTree'
 import Induty from '#/subIndex/IndutySummary';
 
 import container from "@/container";
@@ -42,7 +43,7 @@ const index = function ({
     return (
         <div>
             <Market {...props} />
-            {/* <Group {...props} /> */}
+            <Group {...props} />
             <Induty {...props} />
         </div>
     )
