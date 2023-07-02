@@ -8,7 +8,7 @@ export function RadioSelect({
     return <>
         <div className={styles.radioGroup}>
             <h4>{title}</h4>
-            {names.map((name, i) => <>
+            {names.map((name, i) => <span key={i}>
                 <input
                     type="radio"
                     name={`radio${key}`}
@@ -24,7 +24,7 @@ export function RadioSelect({
                 >
                     {name}
                 </label>
-            </>)}
+            </span>)}
         </div>
     </>
 }

@@ -56,16 +56,18 @@ function EarnChart({
         }
     }
 
-    useEffect(() => {
-        console.log('earn 차트 렌더링중');
-        const ismob = window.innerWidth <= Int(scss.mobWidth);
-        const option = { scales: { y: {} } };
-        if (ismob) option.scales.y.display = false;
-        else option.scales.y.display = true;
-        setOptions(merge(defaultOptions, option));
-        setEquity(refineData(equityData, '자본(BPS)'));
-        setProfit(refineData(profitData, '이익(EPS)'));
-    }, [earn])
+    if (earn.length) {
+        useEffect(() => {
+            console.log('earn 차트 렌더링중');
+            const ismob = window.innerWidth <= Int(scss.mobWidth);
+            const option = { scales: { y: {} } };
+            if (ismob) option.scales.y.display = false;
+            else option.scales.y.display = true;
+            setOptions(merge(defaultOptions, option));
+            setEquity(refineData(equityData, '자본(BPS)'));
+            setProfit(refineData(profitData, '이익(EPS)'));
+        }, [earn])
+    }
 
     const NULL = <p>API에서 제공된<br />실적 데이터가 없습니다.</p>;
     return (

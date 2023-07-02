@@ -8,7 +8,7 @@ const Fold = ({ head, body, name, router, folded = true }) => {
     return (
         <>
             <div className={styles.title}>
-                <p>{name}</p>
+                <div className={styles.name}>{name}</div>
                 <div className={styles.btn}
                     onClick={e => { setView(!view) }}
                 >

@@ -39,7 +39,7 @@ export async function getServerSideProps(ctx) {
 		const N = 252 * 5;
 		// stockPage
 		if (code) {
-			const stockPrice = json.read(dir.stock.price(code));
+			const stockPrice = json.read(dir.stock.priceClose(code));
 			stockPrice.data = stockPrice.data.slice(0, N);
 			const stockShare = json.read(dir.stock.share(code));
 			const stockPredict = json.read(dir.stock.pred(code));

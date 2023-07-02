@@ -24,9 +24,9 @@ function MaTable({ stockPrice }) {
 
 function BBTable({ stockPrice }) {
     const { last,
-        bot20, top20,
-        bot60, top60,
-        bot120, top120
+        bot20, avg20, top20,
+        bot60, avg60, top60,
+        bot120, avg120, top120
     } = getMaData(stockPrice);
 
     return <table className={styles.priceTable}>
@@ -43,9 +43,9 @@ function BBTable({ stockPrice }) {
                 <th>%B</th><th>%BW</th>
             </tr>
             <tr>
-                <td>{Div(last - bot20, top20 - bot20, 1)}</td><td>{Div(top20 - bot20, last, 1)}</td>
-                <td>{Div(last - bot60, top60 - bot60, 1)}</td><td>{Div(top60 - bot60, last, 1)}</td>
-                <td>{Div(last - bot120, top120 - bot120, 1)}</td><td>{Div(top120 - bot120, last, 1)}</td>
+                <td>{Div(last - bot20, top20 - bot20, 1)}</td><td>{Div(top20 - bot20, avg20, 1)}</td>
+                <td>{Div(last - bot60, top60 - bot60, 1)}</td><td>{Div(top60 - bot60, avg60, 1)}</td>
+                <td>{Div(last - bot120, top120 - bot120, 1)}</td><td>{Div(top120 - bot120, avg120, 1)}</td>
             </tr>
         </tbody>
     </table>;

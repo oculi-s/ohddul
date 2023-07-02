@@ -1,6 +1,6 @@
 import Market from '#/subIndex/MarketInfo';
 import Group from '#/subIndex/GroupTree'
-import Induty from '#/subIndex/IndutySummary';
+import Induty from '#/subIndex/IndutyTree';
 
 import container from "@/container";
 import json from '@/module/json';
@@ -16,9 +16,9 @@ export const getServerSideProps = () => {
     const index = json.read(dir.stock.induty);
     const induty = json.read(dir.stock.dart.induty);
 
-    const market = json.read(dir.stock.market, { kospi: [], kosdaq: [] });
-    market.kospi = market.kospi?.slice(0, N);
-    market.kosdaq = market.kosdaq?.slice(0, N);
+    const market = json.read(dir.stock.marketClose, { kospi: [], kosdaq: [] });
+    market.kospi = market?.kospi?.slice(0, N);
+    market.kosdaq = market?.kosdaq?.slice(0, N);
     const props = {
         userMeta,
         price, meta, group, index, induty,

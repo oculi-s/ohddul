@@ -61,7 +61,7 @@ const refindData = ({ group, meta, price, withStock, N }) => {
         })
 }
 
-const TotalTreeMap = ({ group, meta, price }) => {
+const TotalGroupTree = ({ group, meta, price }) => {
     meta = meta?.data;
     const [withStock, setStock] = useState(true);
     const [data, setData] = useState([]);
@@ -94,4 +94,4 @@ const TotalTreeMap = ({ group, meta, price }) => {
     );
 };
 
-export default TotalTreeMap;
+export default TotalGroupTree;
