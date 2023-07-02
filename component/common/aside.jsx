@@ -1,10 +1,10 @@
 import styles from '@/styles/Common/Aside.module.scss'
 import Link from 'next/link'
-import User from '#/_user'
+import User from '#/User'
 import { useSession } from "next-auth/react"
 import { signIn, signOut } from "next-auth/react";
 import { useState } from 'react';
-import { getRank } from '#/_user';
+import { getRank } from '#/User';
 import Search from '#/common/search';
 
 import { Per, Color, Num } from '@/module/ba';
@@ -30,36 +30,42 @@ const SignOut = async (e) => {
     console.log(res);
 }
 
-const Wrap = ({ children }) => {
-    return (
-        <div className={`${styles.box} ${styles.user}`}>
-            {children}
-        </div>
-    )
-}
 function UserInfo({ userMeta }) {
     const { status } = useSession();
     const [valid, setValid] = useState(false);
-    const helper = valid ? "잘못된 ID/비밀번호입니다." : "";
+    let data;
     if (status == "authenticated") {
-        return <Wrap>
+        data = <>
             <User userMeta={userMeta}></User>
-            <form onSubmit={SignOut}>
-                <button type='submit'>로그아웃</button>
+            <form
+                className={styles.logout}
+                onSubmit={SignOut}
+            >
+                <div className={styles.submit}>
+                    <button type='submit'>로그아웃</button>
+                </div>
             </form>
-        </Wrap>;
+        </>
+    } else {
+        data = <>
+            <form
+                className={styles.login}
+                onSubmit={async (e) => {
+                    let res = await SignIn(e);
+                    if (!res.ok) setValid(true);
+                }}>
+                <input name='id' placeholder='ID' />
+                <input name='pw' placeholder="비밀번호" type="password" />
+                <div className={styles.submit}>
+                    <Link href="/create">회원가입</Link>
+                    <button type='submit'>로그인</button>
+                </div>
+            </form>
+        </>
     }
-    return <Wrap>
-        <form onSubmit={async (e) => {
-            let res = await SignIn(e);
-            if (!res.ok) setValid(true);
-        }}>
-            <input name='id' label="ID" />
-            <input name='pw' label="비밀번호" type="password" />
-            <button type='submit'>로그인</button>
-        </form>
-        <Link href="/create">회원가입</Link>
-    </Wrap>;
+    return <div className={`${styles.box} ${styles.user}`}>
+        {data}
+    </div>
 }
 
 const N = 8;

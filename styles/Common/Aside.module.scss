@@ -36,11 +36,18 @@
 }
 
 .user {
-    width: 100%;
+    button {
+        padding: 8px;
+    }
 
-    form * {
-        color: var(--text-color);
-        border-color: var(--border-color) !important;
+    .login {
+        input {
+            width: 100%;
+            margin-bottom: 5px;
+            padding: 10px;
+            background: $bgMid;
+            border-radius: 8px;
+        }
     }
 
     >form {
@@ -48,12 +55,15 @@
         text-align: center;
     }
 
-    button {
-        background: var(--bg-body);
-        color: var(--text-color);
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
+    .submit {
+        // width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+
+        button {
+            background: $bgDark;
+        }
     }
 
 }
@@ -91,6 +101,10 @@
 
             >div {
                 position: relative !important;
+            }
+
+            form {
+                background: $bgBright;
             }
 
             form>button {

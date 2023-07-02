@@ -1,6 +1,5 @@
 import Market from '#/subIndex/MarketInfo';
-import Group from '#/subIndex/GroupTree'
-import Induty from '#/subIndex/IndutyTree';
+import GroupInduty from '#/subIndex/GroupInduty'
 
 import container from "@/container";
 import json from '@/module/json';
@@ -43,8 +42,7 @@ const index = function ({
     return (
         <div>
             <Market {...props} />
-            <Group {...props} />
-            <Induty {...props} />
+            <GroupInduty {...props} />
         </div>
     )
 }

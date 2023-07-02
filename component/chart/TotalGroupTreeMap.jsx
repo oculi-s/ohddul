@@ -26,7 +26,7 @@ const stockElement = ({
             height: `${y1 - y0}%`,
             backgroundColor: groupColors[name] || colors[0],
 
-            filter: `brightness(${Math.pow(k, .05)})`,
+            filter: `brightness(${.8 * Math.pow(k, .05)})`,
             fontSize: `${Math.pow(t, .3) * 60}px`
         }}
     >

@@ -1,6 +1,6 @@
 import styles from '@/styles/Stock/Stock.module.scss';
 import Link from 'next/link';
-import { getRank } from '#/_user';
+import { getRank } from '#/User';
 import { Fix, Num } from '@/module/ba';
 import dt from '@/module/dt';
 

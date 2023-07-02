@@ -28,7 +28,7 @@ const valueChange = ({ e, setView, setResult, meta, group, userMeta }) => {
 
     for (let [code, gname] of Object.entries(group?.index || {})) {
         gname = gname.toLowerCase();
-        let name = meta?.data[code]?.name;
+        let name = meta?.data[code]?.n;
         if (reg.test(gname))
             res.group.push({ code, name, gname });
 

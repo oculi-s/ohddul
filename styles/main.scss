@@ -161,6 +161,12 @@ input:focus {
     display: none;
 }
 
+.bold,
+.bold * {
+    color: $textBright;
+    font-weight: bold;
+}
+
 .red,
 .red * {
     color: var(--red) !important;

@@ -11,7 +11,7 @@ const nameDict = {
 
 const ShareTable = ({ meta, stockShare, stockMeta }) => {
     if (!stockShare) return;
-    const amount = stockMeta?.amount;
+    const amount = stockMeta?.a;
     const total = amount;
     let res = 0;
     const data = stockShare?.map(e => {

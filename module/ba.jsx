@@ -34,8 +34,8 @@ export const parseFix = (f, n = 2) => {
     return parseFloat(f.toFixed(n));
 }
 
-export const Color = (v = 0) => {
-    return v == 0 ? '' : v > 0 ? 'red' : 'blue';
+export const Color = (v = 0, d = 0) => {
+    return v == d ? '' : v > d ? 'red' : 'blue';
 }
 
 export const Price = (v = 0) => {

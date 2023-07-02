@@ -22,12 +22,19 @@ function MaTable({ stockPrice }) {
     </table>;
 }
 
+/**
+ * %B 상승기준은 20%미만, 하락 기준은 80%이상
+ * BW 변동성 기준은 5%
+ */
 function BBTable({ stockPrice }) {
     const { last,
-        bot20, avg20, top20,
-        bot60, avg60, top60,
-        bot120, avg120, top120
+        bot20, avg20, top20, pb20, bw20,
+        bot60, avg60, top60, pb60, bw60,
+        bot120, avg120, top120, pb120, bw120,
     } = getMaData(stockPrice);
+
+    const pbColor = pb => pb < .2 ? 'red' : pb > .8 ? 'blue' : '';
+    const bwClass = bw => bw < 0.05 ? 'bold' : '';
 
     return <table className={styles.priceTable}>
         <tbody>
@@ -43,9 +50,12 @@ function BBTable({ stockPrice }) {
                 <th>%B</th><th>%BW</th>
             </tr>
             <tr>
-                <td>{Div(last - bot20, top20 - bot20, 1)}</td><td>{Div(top20 - bot20, avg20, 1)}</td>
-                <td>{Div(last - bot60, top60 - bot60, 1)}</td><td>{Div(top60 - bot60, avg60, 1)}</td>
-                <td>{Div(last - bot120, top120 - bot120, 1)}</td><td>{Div(top120 - bot120, avg120, 1)}</td>
+                <td className={pbColor(pb20)}>{Div(pb20, 1, 1)}</td>
+                <td className={bwClass(bw20)}>{Div(bw20, 1, 1)}</td>
+                <td className={pbColor(pb60)}>{Div(pb60, 1, 1)}</td>
+                <td className={bwClass(bw60)}>{Div(bw60, 1, 1)}</td>
+                <td className={pbColor(pb120)}>{Div(pb120, 1, 1)}</td>
+                <td className={bwClass(bw120)}>{Div(bw120, 1, 1)}</td>
             </tr>
         </tbody>
     </table>;

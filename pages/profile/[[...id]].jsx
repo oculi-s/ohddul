@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { getRank, getBg } from "#/_user";
+import { getRank, getBg } from "#/User";
 import styles from '@/styles/Profile.module.scss'
 import { useSession } from "next-auth/react";
 import LineChart from '#/chart/line';
