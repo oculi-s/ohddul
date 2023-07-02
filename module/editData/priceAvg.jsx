@@ -10,7 +10,7 @@ const BMT = (price, num) => {
 
 export function getMaData(price) {
     price = price?.map(e => e?.c);
-    const last = price.find(() => true);
+    const last = price?.find(() => true);
     const [bot20, avg20, top20] = BMT(price, 20);
     const [bot60, avg60, top60] = BMT(price, 60);
     const [bot120, avg120, top120] = BMT(price, 120);

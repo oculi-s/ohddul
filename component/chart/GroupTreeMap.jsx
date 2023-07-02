@@ -2,18 +2,19 @@ import squarify from 'squarify'
 import styles from '@/styles/Chart/Tree.module.scss'
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
+import scss from '@/styles/variables.module.scss';
 import Link from 'next/link';
-import { Div } from '@/module/ba';
+import { Div, Int, Price } from '@/module/ba';
 import '@/module/array';
+import { useEffect, useState } from 'react';
 
 const stockElement = ({
-    meta, code, first, gname, total, price,
+    meta, code, first, name, total, price, value,
     x0, y0, x1, y1
 }) => {
-    const mkt = meta[code].a * price[code].c;
-    const t = mkt / total;
-    const k = mkt / (meta[first].a * price[first].c);
-    const inner = mkt / total * 100 > 0.05;
+    const t = value / total;
+    const k = value / first;
+    const inner = value / total * 100 > 0.05;
 
     return <div
         key={code}
@@ -23,54 +24,52 @@ const stockElement = ({
             top: `${y0}%`,
             width: `${x1 - x0}%`,
             height: `${y1 - y0}%`,
-            backgroundColor: groupColors[gname] || colors[0],
+            backgroundColor: groupColors[name] || colors[0],
+
             filter: `brightness(${Math.pow(k, .05)})`,
             fontSize: `${Math.pow(t, .3) * 60}px`
         }}
     >
         {inner && <div className={styles.info}>
-            <Link href={`/stock/${code}`}>{meta[code].n}</Link>
-            <p className={styles.percent}>({Div(mkt, total, 1)})</p>
+            <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
+            <p className={styles.percent}>({Price(value)}, {Div(value, total, 1)})</p>
         </div>}
     </div>
 }
 
-const Treemap = ({ group, meta, price }) => {
+const refindData = ({ group, meta, price }) => {
+    const { name, child } = group;
+    let children = child
+        ?.filter(e => meta[e].a && price[e].c)
+        ?.sort((b, a) => meta[a].a * price[a].c - meta[b].a * price[b].c);
+    children = children?.map(code => ({
+        code, name,
+        first: meta[children[0]].a * price[children[0]].c,
+        value: meta[code].a * price[code].c
+    }));
+    return children;
+}
+
+const GroupTreeMap = ({ group, meta, price, code }) => {
+    group = group?.data[code];
+    if (!group?.price) return;
     meta = meta?.data;
-    const all = price;
-    const data = Object.values(group.data)
-        ?.sort((b, a) => a.price - b.price)
-        ?.slice(0, 20)
-        ?.map(({ name, price, child }) => {
-            child = child
-                ?.filter(e => meta[e].a && all[e].c)
-                ?.sort((b, a) => meta[a].a * all[a].c - meta[b].a * all[b].c);
-            return {
-                name,
-                value: price,
-                children: child
-                    ?.map(code => ({
-                        code,
-                        first: child[0],
-                        gname: name,
-                        value: meta[code].a * all[code].c
-                    })),
-            }
-        })
-
-    const total = Object.keys(meta)
-        ?.filter(e => meta[e]?.a && price[e]?.c)
-        ?.map(e => meta[e]?.a * price[e]?.c).sum();
-
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        setData(refindData({ group, meta, price }));
+    }, [])
+    const total = group.price;
     const box = { x0: 0, y0: 0, x1: 100, y1: 100 };
     const props = { group, meta, price, total };
     return (
-        <div className={styles.wrap}>
-            {squarify(data, box)?.map(node =>
-                stockElement({ ...node, ...props }))
-            }
-        </div>
+        <>
+            <div className={styles.wrap}>
+                {squarify(data, box)?.map(node =>
+                    stockElement({ ...node, ...props }))
+                }
+            </div>
+        </>
     );
 };
 
-export default Treemap;
+export default GroupTreeMap;

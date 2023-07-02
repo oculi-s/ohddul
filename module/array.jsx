@@ -17,8 +17,8 @@ Math.avg = (d) => {
 
 Math.std = (d, k) => {
     let mean = Math.avg(d);
-    let diff = d.map(e => (e - mean) * (e - mean)).sum();
-    return Math.round(mean + k * Math.sqrt(diff / d.length));
+    let diff = d?.map(e => (e - mean) * (e - mean)).sum();
+    return Math.round(mean + k * Math.sqrt(diff / d?.length));
 }
 
 Math.randInt = () => {

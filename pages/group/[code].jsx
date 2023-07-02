@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Price } from "@/module/ba";
 import GroupFold from "#/stockFold/GroupFold";
+import GroupTreeMap from '#/chart/GroupTreeMap';
+import ToggleTab from '#/base/ToggleTab';
 
 const MetaTable = ({ group, meta, price, code }) => {
     meta = meta?.data;
@@ -40,11 +42,25 @@ const Index = ({ meta, price, group, predict }) => {
     const props = {
         meta, code, price, group, predict, router,
     };
+    const names = ['오약정보', '상세정보']
+    const datas = [
+        <div key={0} className={styles.area}>
+            <h3>그룹사 주가 요약정보</h3>
+            <GroupTreeMap {...props} />
+        </div>,
+        <div key={1}>
+            <h3>그룹사 상세정보</h3>
+        </div>
+    ]
     return <>
         <div>
             <h2>{code}그룹</h2>
             <GroupFold {...props} />
             <MetaTable {...props} />
+        </div>
+        <hr />
+        <div style={{ height: 300 }}>
+            <ToggleTab names={names} datas={datas} />
         </div>
     </>
 }

@@ -1,7 +1,6 @@
 @import '../variables.module.scss';
 
 .title {
-    padding-top: 5px;
     border: 1px solid $borderColor;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -10,6 +9,10 @@
     text-align: center;
     background: var(--th-color);
     overflow-y: clip !important;
+
+    >p {
+        padding: 5px;
+    }
 
     h3 * {
         color: $textBright;
@@ -26,8 +29,7 @@
     }
 }
 
-.title::after {
-    content: "[펼치기 / 접기]";
+.btn {
     width: 100%;
     display: block;
     margin-top: 5px;
@@ -71,7 +73,7 @@
 
 }
 
-.view+.content {
+.content.view {
     max-height: 10000px !important;
     transition: max-height .3s ease-in !important;
 }

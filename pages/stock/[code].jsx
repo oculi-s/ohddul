@@ -46,7 +46,7 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn = [] }) => {
                             </span>)
                         </span>
                     </td>
-                </tr>}
+                </tr> || ''}
                 {BPS && <tr>
                     <th>BPS<Help {...bpsHelp} /></th>
                     <td>{Num(BPS)}&nbsp;
@@ -56,15 +56,15 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn = [] }) => {
                             </span>)
                         </span>
                     </td>
-                </tr>}
+                </tr> || ''}
                 {ROE && <tr>
                     <th>ROE<Help {...roeHelp} /></th>
                     <td>{ROE}</td>
-                </tr>}
+                </tr> || ''}
                 {revenueSum && profitSum && <tr>
                     <th>이익률<Help {...prHelp} /></th>
                     <td>{Div(profitSum, revenueSum)}</td>
-                </tr>}
+                </tr> || ''}
                 <tr><th>총 예측 수</th><td>{cnt}</td></tr>
                 <tr><th>정답률</th><td>{Fix(cnt, 1)}%</td></tr>
             </tbody></table>

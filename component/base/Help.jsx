@@ -23,7 +23,7 @@ const Help = ({ data, span, title }) => {
     if (!innerText(inner)) return <></>;
     useEffect(() => {
         setDirWidth({ ref, dir, setDir })
-    })
+    }, [data])
     const innerData = <span className={`${styles.help} ${styles[dir]}`}
         onMouseDown={() => { setDirWidth({ ref, dir, setDir }) }}>
         <span className='fa fa-question-circle'></span>

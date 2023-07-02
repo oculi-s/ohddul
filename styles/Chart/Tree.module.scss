@@ -13,11 +13,13 @@
         overflow: hidden;
         white-space: nowrap;
         border: 1px solid $bgDarker;
+        padding: 3px;
 
         // font-size: 10vw;
         .info {
             text-align: center;
             position: relative;
+            width: 100%;
             top: 50%;
             transform: translateY(-50%);
             text-overflow: ellipsis;
@@ -29,7 +31,7 @@
             }
 
             .percent {
-                font-size: .8em;
+                font-size: .7em;
             }
         }
     }

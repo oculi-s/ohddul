@@ -7,11 +7,15 @@ const Fold = ({ head, body, name, router, folded = true }) => {
     toggleOnPageChange(router, setView);
     return (
         <>
-            <div
-                className={`${styles.title} ${view ? styles.view : ''}`}
-                onClick={e => { setView(!view) }}
-            >{name}</div>
-            <div className={styles.content}>
+            <div className={styles.title}>
+                <p>{name}</p>
+                <div className={styles.btn}
+                    onClick={e => { setView(!view) }}
+                >
+                    [펼치기 / 접기]
+                </div>
+            </div>
+            <div className={`${styles.content} ${view ? styles.view : ''}`}>
                 <table>
                     <thead>{head}</thead>
                     {body?.type == 'tbody' ?
