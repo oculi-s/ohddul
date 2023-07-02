@@ -1,6 +1,6 @@
 import styles from '@/styles/Stock/Stock.module.scss';
 import toggleOnPageChange from '#/toggle';
-import EarnChart from '#/chart/Earn';
+import EarnChart from '#/chart/EarnBar';
 import dt from '@/module/dt';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

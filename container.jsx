@@ -12,7 +12,7 @@ import { priceDivide } from '@/module/editData/priceDivide';
 
 import '@/module/array';
 
-export const getServerSideProps = async (ctx) => {
+export async function getServerSideProps(ctx) {
 	let userMeta = {}, price = [], meta = {}, group = {}, predict = {};
 	let index = {}, induty = {};
 	let props = {
@@ -41,14 +41,14 @@ export const getServerSideProps = async (ctx) => {
 		if (code) {
 			const stockPrice = json.read(dir.stock.price(code));
 			stockPrice.data = stockPrice.data.slice(0, N);
+			const stockShare = json.read(dir.stock.share(code));
+			const stockPredict = json.read(dir.stock.pred(code));
 			await priceDivide(stockPrice);
 			const stockEarn = json.read(dir.stock.earn(code));
 			stockEarn.data = stockEarn.data.filter(e => e.data);
 			await editQuar(stockEarn);
 			await earnStack(stockEarn);
 			await earnonPrice({ stockPrice, stockEarn });
-			const stockShare = json.read(dir.stock.share(code));
-			const stockPredict = json.read(dir.stock.pred(code));
 			props = { ...props, stockPrice, stockEarn, stockShare, stockPredict };
 		}
 
@@ -73,8 +73,8 @@ export const getServerSideProps = async (ctx) => {
 		console.log(e);
 	}
 
-	return { props }
-};
+	return { props };
+}
 
 const HEAD = () => {
 	return (

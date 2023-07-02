@@ -72,10 +72,11 @@ export const earnStack = async (earn) => {
  * 
  */
 export const earnonPrice = async ({ stockPrice, stockEarn }) => {
-    stockEarn = stockEarn.data;
+    stockEarn = stockEarn?.data;
     stockPrice.data?.sort(dt.lsort);
     stockEarn?.sort(dt.lsort);
-    for await (const i of Array(stockEarn?.length - 1).keys()) {
+    const len = Math.max(0, stockEarn?.length - 1);
+    for await (const i of Array(len).keys()) {
         const prev = stockEarn[i];
         const curr = stockEarn[i + 1];
 

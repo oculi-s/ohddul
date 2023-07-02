@@ -83,7 +83,7 @@ const Index = ({
     const { data: session } = useSession();
     const uid = session?.user?.uid;
     const router = useRouter();
-    let { code } = router.query;
+    let code = router.query?.code;
     if (!meta?.data) return;
     if (!parseInt(code)) code = meta.index[code];
     if (!code) return;
@@ -131,7 +131,7 @@ const Index = ({
         <>
             <StockHead {...props} />
             <hr />
-            <GroupFold {...props} />
+            <GroupFold {...props} group={group?.data[group?.index[code]]} />
             <IndutyFold {...props} />
             <MetaTable {...props} />
             <hr />

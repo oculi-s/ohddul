@@ -3,18 +3,22 @@ import Image from 'next/image';
 import groupImg from '@/public/group/Default';
 import { Num, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
+import { useSession } from 'next-auth/react';
+import FavStar from '#/base/FavStar';
 
+/**
+ * 데이터로 전체 group데이터를 가져올게 아니고
+ * 데이터를 원하는 그룹의 데이터만 입력
+ */
 const GroupFold = ({
-    meta, code, price, group, predict, router,
-    folded
+    meta, price, group, predict, router,
+    folded, userFavs
 }) => {
-    if (!group?.index) return <></>;
-    const gname = group?.index[code] || code;
-    if (!gname) return <></>;
-    const imgName = gname.replace("&", "").replace("-", "");
     meta = meta?.data;
-    group = group?.data[gname];
     if (!group) return <></>;
+    const { status } = useSession();
+    const gname = group.name;
+    const imgName = gname.replace("&", "").replace("-", "");
     const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
     const priceSum = Object.values(priceDict).reduce((a, b) => a + b, 0)
     const name = <>
@@ -37,10 +41,11 @@ const GroupFold = ({
         .filter(code => meta[code])
         .sort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
         .map((code) => {
-            let cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
+            const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
             return (
                 <tr key={code}>
                     <th>
+                        {status == 'authenticated' && <FavStar {...{ code, userFavs }} />}
                         <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                     </th>
                     <td>{Num(price[code]?.c)}</td>

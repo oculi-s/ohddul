@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Div, Int } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
-import { CheckBox } from '#/base/InputSelector';
 
 const stockElement = ({
     meta, code, first, name, total, price, value,
@@ -31,7 +30,7 @@ const stockElement = ({
             fontSize: `${Math.pow(t, .3) * 60}px`
         }}
     >
-        {inner && <div className={styles.info}>
+        {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
             {code ?
                 <Link href={`/stock/${code}`}>{meta[code]?.n}</Link> :
                 <Link href={`/group/${name}`}>{name}</Link>
@@ -68,7 +67,7 @@ const TotalTreeMap = ({ group, meta, price }) => {
     const [data, setData] = useState([]);
     const [N, setN] = useState(20);
     useEffect(() => {
-        console.log('!')
+        console.log('treemap 차트 렌더링중')
         setData(refindData({ group, meta, price, withStock, N }));
         if (window.innerWidth < Int(scss.mobWidth)) {
             setN(8);
@@ -85,8 +84,8 @@ const TotalTreeMap = ({ group, meta, price }) => {
     const props = { group, meta, price, total };
     return (
         <>
-            <CheckBox defaultChecked={withStock} onChange={setStock} name={'종목별'} />
-            <div className={styles.wrap}>
+            {/* <CheckBox defaultChecked={withStock} onChange={setStock} name={'종목별'} /> */}
+            <div className={styles.wrap} onClick={e => setStock(c => !c)}>
                 {squarify(data, box)?.map(node =>
                     stockElement({ ...node, ...props }))
                 }

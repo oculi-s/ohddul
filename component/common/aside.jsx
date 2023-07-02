@@ -1,14 +1,13 @@
-import styles from '@/styles/Aside.module.scss'
+import styles from '@/styles/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/_user'
 import { useSession } from "next-auth/react"
-// import { Button, TextField } from '@mui/material';
 import { signIn, signOut } from "next-auth/react";
 import { useState } from 'react';
 import { getRank } from '#/_user';
 import Search from '#/common/search';
 
-import { Per, Color, Num, Price } from '@/module/ba';
+import { Per, Color, Num } from '@/module/ba';
 import dt from '@/module/dt';
 import { Loading } from '#/_base';
 
@@ -38,52 +37,34 @@ const Wrap = ({ children }) => {
         </div>
     )
 }
-const Info = ({ userMeta }) => {
+function UserInfo({ userMeta }) {
     const { status } = useSession();
     const [valid, setValid] = useState(false);
     const helper = valid ? "잘못된 ID/비밀번호입니다." : "";
     if (status == "authenticated") {
-        return (
-            <Wrap>
-                <User userMeta={userMeta}></User>
-                <form onSubmit={SignOut}>
-                    {/* <Button type='submit'>로그아웃</Button> */}
-                </form>
-            </Wrap>
-        )
-    }
-    return (
-        <Wrap>
-            <form onSubmit={async (e) => {
-                let res = await SignIn(e);
-                if (!res.ok) setValid(true);
-            }}>
-                {/* <TextField
-                    name='id'
-                    label="ID"
-                    variant="filled"
-                    sx={{ p: 0 }}
-                />
-                <TextField
-                    label="비밀번호"
-                    type="password"
-                    autoComplete="current-password"
-                    name='pw'
-                    variant="filled"
-                    error={valid}
-                    helperText={helper}
-                    sx={{ p: 0 }}
-                />
-                <Button type='submit'>로그인</Button> */}
+        return <Wrap>
+            <User userMeta={userMeta}></User>
+            <form onSubmit={SignOut}>
+                <button type='submit'>로그아웃</button>
             </form>
-            {/* <Button href="/create">회원가입</Button> */}
-        </Wrap>
-    )
+        </Wrap>;
+    }
+    return <Wrap>
+        <form onSubmit={async (e) => {
+            let res = await SignIn(e);
+            if (!res.ok) setValid(true);
+        }}>
+            <input name='id' label="ID" />
+            <input name='pw' label="비밀번호" type="password" />
+            <button type='submit'>로그인</button>
+        </form>
+        <Link href="/create">회원가입</Link>
+    </Wrap>;
 }
 
 const N = 8;
-const PriceTable = ({ meta, price, sortBy, N }) => {
-    if (!meta || !price) return <Loading />
+function PriceTable({ meta, price, sortBy, N }) {
+    if (!meta || !price) return <Loading />;
     const body = Object.keys(meta)
         .filter(e => price[e]?.c && meta[e]?.a)
         .sort(sortBy)
@@ -99,19 +80,19 @@ const PriceTable = ({ meta, price, sortBy, N }) => {
                 </th>
                 <td align='right'>{Num(c)}</td>
                 <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
-            </tr>
+            </tr>;
         });
-    return <table><tbody>{body}</tbody></table>
+    return <table><tbody>{body}</tbody></table>;
 }
 
-const MarketSumList = ({ price, meta }) => {
+function MarketSumList({ price, meta }) {
     meta = meta?.data;
     if (!price || !meta) return <Loading />;
     const sortBy = (b, a) => {
         const pa = price[a];
         const pb = price[b];
         return (pa?.c * meta[a]?.a) - (pb?.c * meta[b]?.a);
-    }
+    };
     return (
         <div className={styles.box}>
             <Link href="/stock/sum">
@@ -121,17 +102,17 @@ const MarketSumList = ({ price, meta }) => {
             <PriceTable {...{ price, meta, N, sortBy }} />
             <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
-    )
+    );
 }
 
-const UpList = ({ price, meta }) => {
+function UpList({ price, meta }) {
     meta = meta?.data;
     if (!price || !meta) return <Loading />;
     const sortBy = (b, a) => {
         const pa = price[a];
         const pb = price[b];
         return (pa?.c - pa?.p) * pb?.p - pa?.p * (pb?.c - pb?.p);
-    }
+    };
     return (
         <div className={styles.box}>
             <Link href="/stock/up">
@@ -141,16 +122,16 @@ const UpList = ({ price, meta }) => {
             <PriceTable {...{ price, meta, N, sortBy }} />
             <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
-    )
+    );
 }
-const DownList = ({ price, meta }) => {
+function DownList({ price, meta }) {
     meta = meta?.data;
     if (!price || !meta) return <Loading />;
     const sortBy = (a, b) => {
         const pa = price[a];
         const pb = price[b];
         return (pa?.c - pa?.p) * pb?.p - pa?.p * (pb?.c - pb?.p);
-    }
+    };
     return (
         <div className={styles.box}>
             <Link href="/stock/down">
@@ -160,9 +141,10 @@ const DownList = ({ price, meta }) => {
             <PriceTable {...{ price, meta, N, sortBy }} />
             <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
-    )
+    );
 }
-const Rank = ({ userMeta }) => {
+
+function Rank({ userMeta }) {
     if (!userMeta) {
         return (<>로딩중입니다...</>);
     };
@@ -179,27 +161,27 @@ const Rank = ({ userMeta }) => {
                         </Link>
                     </th>
                     <td>{rank}</td>
-                    <td>{ }</td>
+                    <td></td>
                 </tr>
-            )
+            );
         });
     return (
         <div className={styles.box}>
             <span className={styles.rank}>명예의 전당</span>
             <table><tbody>{data}</tbody></table>
         </div>
-    )
+    );
 }
 
-const Total = () => {
+function Total() {
     return (
         <div className={styles.box}>
             <span className={styles.rank}>예측 상위</span>
         </div>
-    )
+    );
 }
 
-export default function Index({
+export default function Aside({
     price, meta, group,
     userMeta,
     mobAside, setAsideShow
@@ -213,7 +195,7 @@ export default function Index({
                 <div className={styles.search}>
                     <Search {...props} className={styles.search} />
                 </div>
-                <Info {...props} />
+                <UserInfo {...props} />
                 {/* <Rank {...props} /> */}
                 <MarketSumList {...props} />
                 <UpList {...props} />

@@ -7,5 +7,6 @@ export default function GroupTree(props) {
         <div className={styles.chart}>
             <TotalTreeMap {...props} />
         </div>
+        <p className='des'>클릭하시면 종목/그룹이 전환됩니다.</p>
     </div>
 }

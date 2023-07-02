@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { find, create } from '@/module/auth/user';
-import { hashSync, compareSync } from 'bcrypt'
+import { hashSync, compareSync } from 'bcryptjs'
 import { randomUUID } from 'crypto';
 
 const errorMsg = {

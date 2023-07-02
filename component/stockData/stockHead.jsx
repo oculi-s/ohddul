@@ -9,29 +9,7 @@ import { useRouter } from 'next/router';
 import { Color, Per } from '@/module/ba';
 import dir from '@/module/dir';
 import dt from '@/module/dt';
-
-const toggleFav = async ({ favs, setFavs, code, uid }) => {
-    if (!uid) {
-        alert("로그인 후 이용해주세요");
-        return;
-    }
-    setFavs(!favs);
-    await json.toggle({
-        url: dir.user.fav(uid),
-        data: code
-    });
-}
-
-export const FavStar = ({ favs, setFavs, code, uid }) => {
-    return <span className={`${favs ? 'yellow' : ''}`}
-        style={{ paddingRight: '5px', fontSize: "1.2em", cursor: "pointer" }}
-    >
-        <span
-            className={`fa fa-star${favs ? '' : '-o'}`}
-            onClick={e => { toggleFav({ favs, setFavs, code, uid }) }}
-        />
-    </span>
-}
+import FavStar from '#/base/FavStar';
 
 const Bid = (price) => {
     return price < 2000 ? 1 : price < 20000 ? 10 : 100;
@@ -305,12 +283,10 @@ const StockHead = ({
 }) => {
     const predTime = userPred?.queue?.find(e => e.code == code)?.date;
     const { status } = useSession();
-    const orig = userFavs?.find(e => e == code);
     const type = stockMeta?.t;
 
     const [bar, setBar] = useState(true);
     const [view, setView] = useState(0);
-    const [favs, setFavs] = useState(orig);
     const [time, setTime] = useState(predTime);
     const [opacity, setOpacity] = useState(1);
 
@@ -318,7 +294,6 @@ const StockHead = ({
     toggleOnPageChange(router, setBar, true);
     toggleOnPageChange(router, setOpacity, 1);
     toggleOnPageChange(router, setView, 0);
-    toggleOnPageChange(router, setFavs, orig);
     toggleOnPageChange(router, setTime, predTime);
 
     const props = {
@@ -329,7 +304,7 @@ const StockHead = ({
     if (!name) return <></>;
     return <>
         <div className={styles.head}>
-            <FavStar {...{ favs, setFavs, code, uid }} />
+            <FavStar {...{ code, userFavs }} />
             <h2>
                 <Link href={'/stock/' + code}>
                     {name}

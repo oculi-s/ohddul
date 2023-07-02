@@ -2,14 +2,13 @@ import squarify from 'squarify'
 import styles from '@/styles/Chart/Tree.module.scss'
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
-import scss from '@/styles/variables.module.scss';
 import Link from 'next/link';
-import { Div, Int, Price } from '@/module/ba';
+import { Div, Price } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
 
 const stockElement = ({
-    meta, code, first, name, total, price, value,
+    meta, code, first, name, total, value,
     x0, y0, x1, y1
 }) => {
     const t = value / total;
@@ -50,8 +49,7 @@ const refindData = ({ group, meta, price }) => {
     return children;
 }
 
-const GroupTreeMap = ({ group, meta, price, code }) => {
-    group = group?.data[code];
+const GroupTreeMap = ({ group, meta, price }) => {
     if (!group?.price) return;
     meta = meta?.data;
     const [data, setData] = useState([]);

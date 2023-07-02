@@ -1,6 +1,8 @@
 @import '../variables.module.scss';
 
 .wrap {
+    display: flex;
+    justify-content: space-around;
     margin: 5px 0;
 
     .chart {
@@ -8,15 +10,11 @@
         padding: 20px;
         border-radius: 10px;
         background: $bgBright;
-    }
-}
-
-.wrap {
-    display: flex;
-    justify-content: space-around;
-
-    .chart {
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
     }
 
     .chart:first-child {

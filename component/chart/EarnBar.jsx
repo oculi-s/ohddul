@@ -32,18 +32,6 @@ const plugins = [hairline];
 function EarnChart({
     stockEarn: earn, stockMeta,
 }) {
-    if (!earn?.length) {
-        return (
-            <div style={{ textAlign: "center" }}>
-                <div className={styles.wrap}>
-                    <p>openDart에서 제공된<br />실적 데이터가 없습니다.</p>
-                </div>
-                <div className={styles.wrap}>
-                    <p>openDart에서 제공된<br />실적 데이터가 없습니다.</p>
-                </div>
-            </div>
-        )
-    }
     const amount = stockMeta?.a || 1;
     earn = earn || [];
     earn = earn.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -79,21 +67,22 @@ function EarnChart({
         setProfit(refineData(profitData, '이익(EPS)'));
     }, [earn])
 
+    const NULL = <p>API에서 제공된<br />실적 데이터가 없습니다.</p>;
     return (
         <div className={styles.wrap}>
             <div className={styles.chart}>
-                <Bar
+                {earn.length ? <Bar
                     plugins={plugins}
                     options={options}
                     data={equity}
-                />
+                /> : NULL}
             </div>
             <div className={styles.chart}>
-                <Bar
+                {earn.length ? <Bar
                     plugins={plugins}
                     options={options}
                     data={profit}
-                />
+                /> : NULL}
             </div>
         </div>
     )

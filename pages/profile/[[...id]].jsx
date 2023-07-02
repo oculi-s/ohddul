@@ -8,6 +8,10 @@ import { Num, Fix, Per, Color } from '@/module/ba'
 import dt from "@/module/dt";
 import ToggleTab from "#/base/ToggleTab";
 
+import { PredBar } from "#/stockData/stockHead";
+import { useState } from "react";
+import FavStar from "#/base/FavStar";
+
 const Curtain = ({ rank }) => (
     <div
         className={styles.curtain}
@@ -78,9 +82,7 @@ const PredTable = ({ userPred, meta, price }) => {
         return (
             <tr key={`pred${i}`}>
                 <th>
-                    <Link href={`/stock/${code}`}>
-                        {name}
-                    </Link>
+                    <Link href={`/stock/${code}`}>{name}</Link>
                 </th>
                 <td>
                     <span className={`fa fa-chevron-${change > 0 ? 'up red' : 'down blue'}`} />
@@ -107,7 +109,7 @@ const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
         return <>
             <tr>
                 <th>
-                    {mine && <FavStar {...{ code, uid, setFavs, favs }} />}
+                    {mine && <FavStar {...{ code, userFavs }} />}
                     <Link href={`/stock/${code}`}>{name}</Link>
                 </th>
                 <td>{close}</td>
@@ -123,11 +125,10 @@ const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
             </tr>
         </>
     }
-    const body = userFavs?.map(code => {
-        return <tbody key={code}>
+    const body = userFavs?.map(code =>
+        <tbody key={code}>
             <Rows {...{ code }} />
-        </tbody>
-    })
+        </tbody>)
     return <table>
         <thead>{head}</thead>
         {body}
@@ -198,7 +199,5 @@ const Index = ({
 }
 
 import container, { getServerSideProps } from "@/container";
-import { FavStar, PredBar } from "../../component/stockData/stockHead";
-import { useState } from "react";
 export { getServerSideProps };
 export default container(Index);

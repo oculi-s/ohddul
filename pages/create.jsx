@@ -1,8 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-// import { Button, TextField } from "@mui/material";
-import styles from "@/styles/Create.module.scss"
+import styles from "@/styles/Common/Create.module.scss"
 
 const SignUp = async e => {
     e.preventDefault();
@@ -55,7 +54,7 @@ const Index = ({ userMeta, userData }) => {
                         variant="filled"
                     /> */}
                 </div>
-                {/* <Button type='submit'>회원가입</Button> */}
+                <button type='submit'>회원가입</button>
             </form>
         </>
     }

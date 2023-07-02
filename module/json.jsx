@@ -40,22 +40,22 @@ function remove(url) {
 
 function queue(url, elem, last = false) {
     url = encode(url);
-    const data = json.read(url, { data: [], queue: [] });
+    const data = read(url, { data: [], queue: [] });
     elem.date = dt.num();
     data?.queue.push(elem);
-    return json.write(url, data, last);
+    return write(url, data, last);
 }
 
 function toggle(url, elem) {
     url = encode(url);
-    const data = json.read(url, []);
+    const data = read(url, []);
     const i = data.indexOf(elem);
     if (i != -1) {
         data.splice(i, 1);
     } else {
         data.push(elem);
     }
-    return json.write(url, data);
+    return write(url, data);
 }
 
 function up(url, def) {
@@ -63,11 +63,11 @@ function up(url, def) {
     const { code, key } = def;
     const init = {};
     init[code] = {};
-    const data = json.read(url, init);
+    const data = read(url, init);
     data[code] = data[code] || {};
     if (data[code][key]) data[code][key]++;
     else data[code][key] = 1;
-    return json.write(url, data);
+    return write(url, data);
 }
 
 function toTable(json) {

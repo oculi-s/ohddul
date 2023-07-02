@@ -11,11 +11,6 @@ const options = {
     maintainAspectRatio: false,
     animation: { duration: 300 },
     plugins: {
-        // tooltip: {
-        //     formatter: function (value, ctx) {
-
-        //     }
-        // },
         datalabels: {
             useHTML: true,
             color: '#fff',
@@ -55,10 +50,6 @@ const ShareDonut = ({ stockShare: share, stockMeta, meta }) => {
         const data = ctx?.chart?.data;
         const sum = data?.datasets[0].data?.sum();
         var label = data?.labels[i];
-        // console.log(label);
-        if (meta.index[label]) {
-            label = `<a href=/stock/${meta.index[label]}>${label}</a>`
-        }
         return `${label}\n${Div(value, sum, 1)}`;
     };
 
