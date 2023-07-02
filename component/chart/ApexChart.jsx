@@ -28,21 +28,13 @@ function refineData({ group, price, meta }) {
     return series;
 }
 
-
 const defaultOptions = {
     grid: {
-        padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-        },
+        padding: { top: 0, right: 0, bottom: 0, left: 0 },
     },
     legend: {
         show: true,
-        style: {
-            color: scss.textBright
-        }
+        // style: { color: scss.textBright }
     },
     chart: {
         type: 'treemap',

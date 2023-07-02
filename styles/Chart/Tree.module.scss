@@ -1,0 +1,36 @@
+@import '../variables.module.scss';
+
+.wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 10rem;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .stock {
+        position: absolute;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 1px solid $bgDarker;
+
+        // font-size: 10vw;
+        .info {
+            text-align: center;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            a {
+                color: $textBright;
+                font-weight: bold;
+            }
+
+            .percent {
+                font-size: .8em;
+            }
+        }
+    }
+}

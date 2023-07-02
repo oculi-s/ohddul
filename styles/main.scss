@@ -94,6 +94,10 @@ div:has(>.highcharts-container) {
     }
 }
 
+.apexcharts-inner {
+    transform: translate(0, 10px);
+}
+
 h1,
 h2,
 h3,
