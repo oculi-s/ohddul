@@ -5,6 +5,7 @@ import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
 import dt from '@/module/dt';
 import StockHead from '#/stockData/stockHead';
 import ToggleTab from '#/base/ToggleTab';
+import { Last } from '#/base/base';
 import Help from '#/base/Help';
 import '@/module/array';
 
@@ -139,6 +140,5 @@ const Index = ({
 }
 
 import container, { getServerSideProps } from "@/container";
-import { Last } from '#/base/base';
 export { getServerSideProps };
 export default container(Index);
