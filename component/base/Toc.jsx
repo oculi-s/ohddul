@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from '$/Base/Toc.module.scss';
+import scss from '$/variables.module.scss';
+import { Int } from "@/module/ba";
 
 const refineData = (headings) => {
     const nest = [];
@@ -52,6 +54,11 @@ const Headings = ({ headings, selected, click }) => {
     </ol>
 };
 
+/**
+ * document의 scroll 높이를 가져오는 과정에서 nav Height와 6을 더하는 이유
+ * 
+ * header의 scroll-margin-top이 navHeight+5px이기 때문
+ */
 const ToC = ({ tabIndex }) => {
     const [nestedHeadings, setHeading] = useState([]);
     const [selected, setSelected] = useState(0);
@@ -76,8 +83,8 @@ const ToC = ({ tabIndex }) => {
 
         setHeading(refineData(headings));
         window.addEventListener('scroll', () => {
-            const top = -document?.body?.getBoundingClientRect()?.top;
-            const at = headings?.find(e => e?.offsetTop > top)
+            const top = -document?.body?.getBoundingClientRect()?.top + Int(scss?.navHeight) + 6;
+            const at = headings?.find(e => e?.offsetTop >= top)
             const i = headings?.findIndex(e => e == at) - 1;
             if (i == -1) setSelected(0);
             else if (i >= 0) setSelected(i);

@@ -5,7 +5,7 @@ import { Big } from "@/module/ba";
 const Index = ({ meta, price, induty, index, predict }) => {
     const router = useRouter();
     const { code } = router.query;
-    const name = index?.index[Big(code)];
+    const name = index?.data[Big(code)]?.n;
     const props = {
         meta, code, price, induty, index, predict, router,
         folded: true,
@@ -15,7 +15,7 @@ const Index = ({ meta, price, induty, index, predict }) => {
             <h2>{name}</h2>
             <hr />
             <IndutyFold {...props} />
-        </div>
+        </div >
     </>
 }
 

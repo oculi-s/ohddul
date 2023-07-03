@@ -8,13 +8,13 @@ export const priceDivide = async (price) => {
     if (!len) return;
     for await (let i of Array(len).keys()) {
         if (i == 0) continue;
-        if (!price.data[i]?.close) continue;
-        if (!price.data[i - 1]?.close) continue;
-        const p = price.data[i]?.close / price.data[i - 1]?.close;
+        if (!price.data[i]?.c) continue;
+        if (!price.data[i - 1]?.c) continue;
+        const p = price.data[i]?.c / price.data[i - 1]?.c;
         if (i > 0 && (p < 0.7 || 1.3 < p)) {
             const newPrice = price?.data?.slice(i)
                 .map(e => {
-                    return { ...e, close: e?.close / p };
+                    return { ...e, c: e?.c / p };
                 });
             price?.data?.splice(i, newPrice.length, ...newPrice);
         }

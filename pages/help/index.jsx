@@ -7,10 +7,11 @@ import ToC from '#/base/Toc';
 import { getSession } from 'next-auth/react';
 import dir from '@/module/dir';
 
-import BaseInfo from '#/helpArticle/BaseInfo';
+import ToggleTab from '#/base/ToggleTab';
+import DataInfo from '#/helpArticle/DataInfo';
 import PredHowto from '#/helpArticle/PredHowto';
 import BoardRules from '#/helpArticle/BoardRules';
-import ToggleTab from '#/base/ToggleTab';
+import Scoring from '#/helpArticle/Scoring';
 
 export const getServerSideProps = async (ctx) => {
     const userInfo = (await getSession(ctx))?.user;
@@ -54,18 +55,20 @@ export const getServerSideProps = async (ctx) => {
 
 const Index = (props) => {
     const [tabIndex, setTabIndex] = useState(0);
-    const names = ['기본정보', '예측방법', '차트보는법', '커뮤니티규칙'];
+    props = { ...props, setTabIndex };
+    const names = ['기본정보', '예측방법', '점수산정', '차트보는법', '커뮤니티규칙'];
     const datas = [
         <div key={0}>
-            <BaseInfo {...props} />
+            <DataInfo {...props} />
         </div>,
         <div key={1}>
             <PredHowto {...props} />
         </div>,
         <div key={2}>
-            {/* <ChartHowto {...props} /> */}
+            <Scoring {...props} />
         </div>,
         <div key={3}>
+            {/* <ChartHowto {...props} /> */}
             <BoardRules {...props} />
         </div>
     ]

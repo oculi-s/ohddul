@@ -9,7 +9,7 @@ const InfoBlock1 = ({
     earnNull, earnCount, shareNull
 }) => {
     const count = Object.keys(meta).length
-    const priceCount = Object.keys(meta).filter(e => price[e]).length;
+    const priceCount = Object.keys(meta).filter(e => price[e]?.c).length;
     const YEARS = dt.YEARS;
     const len = YEARS.length;
     return <div className={styles.box}>
@@ -78,7 +78,8 @@ const InfoBlock1 = ({
 }
 
 const InfoBlock2 = ({ meta, price }) => {
-    const priceNull = Object.keys(meta).filter(e => !price[e]);
+    const priceNull = Object.keys(meta).filter(e => !price[e]?.c);
+    console.log(Object.values(price).map(e => e.c).filter(e => !e).length)
     const SPAC = priceNull.filter(e => meta[e]?.n?.includes('스팩'));
     const notSPAC = priceNull.filter(e => !meta[e]?.n?.includes('스팩'));
     return <div className={styles.box}>
@@ -101,7 +102,7 @@ const InfoBlock2 = ({ meta, price }) => {
     </div>
 }
 
-const BaseInfo = (props) => {
+const DataInfo = (props) => {
     const meta = props?.meta?.data;
     if (!meta) return <></>;
     props = { ...props, meta };
@@ -111,4 +112,4 @@ const BaseInfo = (props) => {
     </div>
 };
 
-export default BaseInfo;
+export default DataInfo;

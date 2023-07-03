@@ -31,18 +31,8 @@
     --td-color: #161824;
 }
 
-.highcharts-text-outline {
-    fill: none !important;
-    stroke: none !important;
-}
-
-.highcharts-container {
-    width: 100% !important;
-}
-
-div:has(>.highcharts-container) {
-    height: 100% !important;
-    width: 100% !important;
+.katex-html {
+    display: none;
 }
 
 @include mobtab {
@@ -80,6 +70,9 @@ div:has(>.highcharts-container) {
     }
 
     main {
+        margin: auto;
+        display: table;
+
         tr {
             >* {
                 padding: 5px 10px;
@@ -227,11 +220,7 @@ button {
 
 main {
     text-align: left;
-    display: inline-block;
-    margin: auto;
-    display: table;
     margin-top: var(--top);
-    // margin-left: calc(var(--nav-margin) + $navWidth);
     width: var(--main-width);
     padding-bottom: 800px;
     max-width: 900px;

@@ -19,14 +19,15 @@ const IndutyFold = ({
     index = index?.data;
     meta = meta?.data;
     if (!induty) return <></>;
-    const stockInduty = Big(induty[code] || code);
-    const data = index[stockInduty];
+    const indutyCode = Big(induty[code] || code);
+    const indutyNum = indutyCode?.slice(1);
+    const data = index[indutyCode];
     if (!data) return <></>;
     const dict = {};
-    const stock = Object.keys(induty).filter(e => induty[e] == induty[code]);
+    const stock = Object.keys(induty).filter(e => induty[e] == indutyNum);
     const total = stock.map(e => meta[e]?.a * price[e]?.c || 0).sum();
     const name = <>
-        <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${code}`}>{data?.n}</Link></h3>
+        <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${indutyNum}`}>{data?.n}</Link></h3>
         <p>{data?.c} 종목 시총 : ({Price(total)})</p>
     </>
     const body = json.toTable(dict);
