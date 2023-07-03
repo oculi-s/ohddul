@@ -10,6 +10,7 @@ if (process.platform == 'linux') {
 const adict = {
     "@": o,
     "$": path.join(o, "public"),
+    "#": path.join(o, "data", "pred"),
     "&": path.join(o, "data", "stock"),
     "_": path.join(o, "data", "meta"),
 }

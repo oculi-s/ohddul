@@ -1,5 +1,5 @@
 import GroupTreeMap from '#/chart/GroupTreeMap';
-import styles from '@/styles/Group/Group.module.scss';
+import styles from '$/Group/Group.module.scss';
 
 function PriceElement(props) {
     return <>

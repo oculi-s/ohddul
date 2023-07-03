@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import styles from '@/styles/Stock/Stock.module.scss';
-import { Num, Fix, Price, Color, Quar, Per, Div } from '@/module/ba';
+import styles from '$/Stock/Stock.module.scss';
+import { Num, Fix, Price, Color, Per, Div } from '@/module/ba';
 import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
 import dt from '@/module/dt';
 import StockHead from '#/stockData/stockHead';
@@ -19,18 +18,22 @@ import PredElement from '#/stockData/PredTable';
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
- * ROE는 제공하지 않음. 대부분 5% 이내로 의미 없음
 */
-const MetaTable = ({ stockMeta, stockPredict, last, stockEarn = [] }) => {
+const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
+    stockEarn = stockEarn?.data?.sort(dt.lsort);
+    stockPrice = stockPrice?.data?.sort(dt.lsort);
+    const last = stockPrice?.slice(-1)[0];
+
     const lastPrice = last?.c;
     const amount = stockMeta?.a;
     const total = amount * lastPrice;
-    const cnt = stockPredict?.data?.length || 0 + stockPredict?.queue?.length || 0;
     const EPS = (last?.eps || 0) / amount;
     const BPS = (last?.bps || 0) / amount;
     const ROE = Div(stockEarn?.slice(0, 4)?.map(e => e?.profit).sum(), stockEarn[0]?.equity);
     const revenueSum = Object.values(stockEarn)?.map(e => e?.revenue)?.sum();
     const profitSum = Object.values(stockEarn)?.map(e => e?.profit)?.sum();
+
+    const cnt = stockPredict?.data?.length || 0 + stockPredict?.queue?.length || 0;
 
     return (
         <div className={`${styles.meta} clear`}>
@@ -66,7 +69,7 @@ const MetaTable = ({ stockMeta, stockPredict, last, stockEarn = [] }) => {
                     <td>{Div(profitSum, revenueSum)}</td>
                 </tr> || ''}
                 <tr><th>총 예측 수</th><td>{cnt}</td></tr>
-                <tr><th>정답률</th><td>{Fix(cnt, 1)}%</td></tr>
+                <tr><th>정답률</th><td>{Fix(0, 1)}%</td></tr>
             </tbody></table>
         </div >
     )
@@ -80,8 +83,6 @@ const Index = ({
     stockPrice, stockEarn, stockShare,
     stockPredict,
 }) => {
-    const { data: session } = useSession();
-    const uid = session?.user?.uid;
     const router = useRouter();
     let code = router.query?.code;
     if (!meta?.data) return;
@@ -95,16 +96,11 @@ const Index = ({
             </>
         )
     }
-    const name = stockMeta?.n;
-    stockPrice = stockPrice?.data?.sort(dt.lsort);
-    stockEarn = stockEarn?.data?.sort(dt.lsort);
-    stockShare = stockShare?.data;
-    const last = stockPrice?.slice(-1)[0];
     const props = {
-        code, name, last, router,
+        code, router,
         meta, group, price, index, induty,
         predict,
-        uid, userMeta, userFavs, userPred,
+        userMeta, userFavs, userPred,
         stockMeta, stockEarn, stockPrice, stockShare,
         stockPredict,
     };
@@ -114,14 +110,15 @@ const Index = ({
         datas: [
             <div key={0}>
                 <PriceElement {...props} />
+                <Last data={stockPrice} />
             </div>,
             <div key={1}>
                 <EarnElement {...props} />
-                <p className='des'>* 마지막 업데이트 : {dt.toString(stockEarn?.last)}</p>
+                <Last data={stockEarn} />
             </div>,
             <div key={2}>
                 <ShareElement {...props} />
-                <p className='des'>* 마지막 업데이트 : {dt.toString(stockShare?.last)}</p>
+                <Last data={stockShare} />
             </div>,
             <div key={3}>
                 <PredElement {...props} />
@@ -142,5 +139,6 @@ const Index = ({
 }
 
 import container, { getServerSideProps } from "@/container";
+import { Last } from '#/base/base';
 export { getServerSideProps };
 export default container(Index);

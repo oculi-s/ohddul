@@ -1,4 +1,4 @@
-import styles from '@/styles/Rank.module.scss'
+import styles from '$/Rank.module.scss'
 
 const index = () => {
     return (

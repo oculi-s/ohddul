@@ -106,13 +106,13 @@ export default function Container(Component) {
 		};
 		return (
 			<>
-				<HEAD></HEAD>
-				<Nav {...props}></Nav>
-				<Aside {...props}></Aside>
+				<HEAD />
+				<Nav {...props} />
+				<Aside {...props} />
 				<main>
 					<Component {...props} />
 				</main>
-				<Footer></Footer>
+				<Footer />
 			</>
 		);
 	};

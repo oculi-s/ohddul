@@ -1,9 +1,9 @@
-import styles from '@/styles/Chart/Earn.module.scss';
+import styles from '$/Chart/Earn.module.scss';
 import colors from '@/module/colors';
 import dt from '@/module/dt';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import { Int, parseFix } from '@/module/ba';
 import { renderToStaticMarkup } from "react-dom/server"
 import { useEffect, useRef, useState } from 'react';

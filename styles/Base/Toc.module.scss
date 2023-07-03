@@ -1,0 +1,94 @@
+@import '../variables.module.scss';
+
+
+.toc {
+    >.list {
+        counter-reset: toc-h3;
+    }
+
+    >.list>li>.list {
+        counter-reset: toc-h4;
+    }
+
+    .list>li::before {
+        counter-increment: toc-h3;
+        content: counter(toc-h3) ".";
+        padding-right: 3px;
+    }
+
+    .list>li>.list>li::before {
+        counter-increment: toc-h4;
+        content: counter(toc-h3) "." counter(toc-h4);
+        padding-right: 3px;
+    }
+}
+
+.wrap {
+    position: fixed;
+    top: var(--top);
+    left: var(--nav-margin);
+    width: $navWidth;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.toc {
+
+    ul,
+    li {
+        list-style-type: none;
+    }
+
+    position: relative;
+
+    .list {
+        overflow: hidden;
+        margin: 0;
+        padding-left: 10px;
+
+        >li {
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        li:last-child {
+            margin-bottom: 0;
+        }
+
+        span {
+            cursor: pointer;
+            color: $textColor;
+            text-decoration: none;
+            height: 100%;
+        }
+
+        span::before {
+            content: ' ';
+            display: inline-block;
+            height: inherit;
+            left: 0;
+            margin-top: -1px;
+            position: absolute;
+            width: 2px;
+            background: $borderColor;
+        }
+    }
+
+    .active>span,
+    .active::before {
+        font-weight: bold;
+        color: $textBright !important;
+    }
+
+    .active {
+        >span::before {
+            background: $textBright;
+        }
+    }
+}
+
+@include mobtab {
+    .toc {
+        display: none;
+    }
+}

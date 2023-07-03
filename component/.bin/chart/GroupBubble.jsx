@@ -1,5 +1,5 @@
 import '@/module/array';
-import styles from '@/styles/Index.module.scss';
+import styles from '$/Index.module.scss';
 import ToggleTab from '#/base/ToggleTab';
 import { useState } from 'react';
 import GroupDoughnutChart from '#/chart/GroupDoughnut';

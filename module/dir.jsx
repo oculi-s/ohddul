@@ -17,7 +17,7 @@ export const stock = {
     priceClose: code => encode(`&/${code}/priceClose.json`),
     earn: code => encode(`&/${code}/earn.json`),
     share: code => encode(`&/${code}/share.json`),
-    pred: code => encode(`&/${code}/predict.json`),
+    pred: code => encode(`#/${code}.json`),
     dart: {
         induty: encode('_/induty.json'),
         xml: encode('_/CORPCODE.xml'),
@@ -27,9 +27,9 @@ export const stock = {
 
 export const user = {
     admin: encode('@/module/auth/user.json'),
-    meta: encode(`$/user/meta.json`),
-    fav: uid => encode(`$/user/${uid}/favorites.json`),
-    pred: uid => encode(`$/user/${uid}/predict.json`),
+    meta: encode(`@/data/user/meta.json`),
+    fav: uid => encode(`@/data/user/${uid}/fav.json`),
+    pred: uid => encode(`@/data/user/${uid}/pred.json`),
 }
 
 export default { stock, user };

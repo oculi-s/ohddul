@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import styles from "@/styles/Common/Create.module.scss"
+import styles from "$/Common/Create.module.scss"
 
 const SignUp = async e => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 import toggleOnPageChange from '#/toggle';
-import styles from '@/styles/Base/Fold.module.scss';
+import styles from '$/Base/Fold.module.scss';
 import { useState } from 'react';
 
 const Fold = ({ head, body, name, router, folded = true }) => {

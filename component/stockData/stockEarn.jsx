@@ -1,4 +1,4 @@
-import styles from '@/styles/Stock/Stock.module.scss';
+import styles from '$/Stock/Stock.module.scss';
 import toggleOnPageChange from '#/toggle';
 import EarnChart from '#/chart/EarnBar';
 import dt from '@/module/dt';
@@ -10,13 +10,15 @@ import '@/module/array';
 import { profitHelp, revenueHelp } from './HelpDescription';
 
 function EarnTable({ stockMeta, stockEarn }) {
+    stockEarn = stockEarn?.data;
+    if (!stockEarn.length) return;
+
     const amount = stockMeta?.a;
     const [N, setN] = useState(5);
     const [view, setView] = useState(true);
     const router = useRouter();
     toggleOnPageChange(router, setN, 5);
     toggleOnPageChange(router, setView, true);
-    if (!stockEarn) return;
     const len = stockEarn.length;
     stockEarn = stockEarn.sort(dt.sort);
     const head = <tr>

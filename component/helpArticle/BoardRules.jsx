@@ -1,4 +1,4 @@
-import styles from '@/styles/Help.module.scss';
+import styles from '$/Help.module.scss';
 
 const BoardRules = () => {
     return <div>

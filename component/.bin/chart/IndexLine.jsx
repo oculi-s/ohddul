@@ -1,9 +1,9 @@
 import colors from '@/module/colors';
 import dt from '@/module/dt';
-import styles from '@/styles/Index.module.scss';
+import styles from '$/Index.module.scss';
 import Highcharts, { color } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import '@/module/array';
 import { parseFix } from '@/module/ba';
 import { renderToStaticMarkup } from "react-dom/server"

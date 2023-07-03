@@ -1,4 +1,4 @@
-import styles from '@/styles/Stock/Stock.module.scss';
+import styles from '$/Stock/Stock.module.scss';
 import Link from 'next/link';
 import { getRank } from '#/User';
 import { Fix, Num } from '@/module/ba';

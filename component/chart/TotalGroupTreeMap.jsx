@@ -1,8 +1,8 @@
 import squarify from 'squarify'
-import styles from '@/styles/Chart/Tree.module.scss'
+import styles from '$/Chart/Tree.module.scss'
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import Link from 'next/link';
 import { Div, Int } from '@/module/ba';
 import '@/module/array';

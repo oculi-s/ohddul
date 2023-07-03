@@ -3,6 +3,7 @@ require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 const pad = (v) => String(v).padStart(2, '0');
 
+const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 const TYPES = { '-03-31': 3, '-06-30': 2, '-09-30': 4, '-12-31': 1 };
 const DAY = 1000 * 60 * 60 * 24;
 const YEARS = Array.from(Array(10).keys(), x => toJson().Y - x).sort().filter(e => e > 2014);
@@ -91,10 +92,16 @@ function sort(a, b) { return moment(b.d || b.date) - moment(a.d || a.date); }
  */
 function lsort(b, a) { return moment(b.d || b.date) - moment(a.d || a.date); }
 function min(...arr) { return moment(Math.min(...arr.map(e => moment(e)))); }
-function toString(m = moment(), props = { time: 0 }) {
-    m = moment(m);
-    if (!props.time) return m.format('YYYY-MM-DD');
-    return m.format('YYYY-MM-DD HH:mm:ss');
+function toString(m, props = { time: 0, day: 0 }) {
+    const { time, day } = props;
+    m = moment(m || moment());
+    const sdate = m.format('YYYY-MM-DD');
+    const stime = m.format('HH:mm:ss');
+    const sday = DAYS[m.day()];
+    if (!time && !day) return sdate;
+    else if (time && !day) return `${sdate} ${stime}`;
+    else if (!time && day) return `${sdate}(${sday})`;
+    else return `${sdate}(${sday}) ${stime}`
 }
 function hhmmss(m = moment()) {
     m = moment.duration(m);

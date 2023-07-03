@@ -1,9 +1,9 @@
-import styles from '@/styles/Common/Aside.module.scss'
+import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
 import { useSession } from "next-auth/react"
 import { signIn, signOut } from "next-auth/react";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getRank } from '#/User';
 import Search from '#/common/search';
 
@@ -106,7 +106,6 @@ function MarketSumList({ price, meta }) {
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
             <PriceTable {...{ price, meta, N, sortBy }} />
-            <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
     );
 }
@@ -126,7 +125,6 @@ function UpList({ price, meta }) {
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
             <PriceTable {...{ price, meta, N, sortBy }} />
-            <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
     );
 }
@@ -145,7 +143,6 @@ function DownList({ price, meta }) {
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
             <PriceTable {...{ price, meta, N, sortBy }} />
-            <p className='des'>기준일 : {dt.parse(price?.last)}</p>
         </div>
     );
 }
@@ -193,6 +190,13 @@ export default function Aside({
     mobAside, setAsideShow
 }) {
     const [view, setView] = useState(false);
+    useEffect(() => {
+        if (mobAside) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [mobAside]);
     const props = { meta, userMeta, price, group, setAsideShow, view, setView };
     if (!meta) return;
     return (
@@ -202,7 +206,6 @@ export default function Aside({
                     <Search {...props} className={styles.search} />
                 </div>
                 <UserInfo {...props} />
-                {/* <Rank {...props} /> */}
                 <MarketSumList {...props} />
                 <UpList {...props} />
                 <DownList {...props} />

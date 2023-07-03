@@ -2,7 +2,7 @@ import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import { ko } from 'date-fns/locale';
 import dt from "@/module/dt";
-import styles from '@/styles/Chart/LIne.module.scss';
+import styles from '$/Chart/LIne.module.scss';
 import { Line } from "react-chartjs-2";
 
 const plugins = [{

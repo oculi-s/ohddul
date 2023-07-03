@@ -18,8 +18,7 @@ async function toggleFav({ favs, setFavs, code, uid }) {
 }
 
 export default function FavStar({ code, userFavs }) {
-    const { status, data: session } = useSession();
-    if (status != 'authenticated') return;
+    const { data: session } = useSession();
     const orig = userFavs?.find(e => e == code);
     const [favs, setFavs] = useState(orig);
     const router = useRouter();

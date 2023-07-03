@@ -2,23 +2,24 @@
 
 .aside {
     position: absolute;
-    width: var(--nav-width);
+    width: $navWidth;
     right: var(--nav-margin);
     top: var(--top);
+    overflow: auto;
 
     // >div {
     // }
 }
 
 .box {
-    border: 1px solid var(--border-color);
+    border: 1px solid $borderColor;
     border-radius: 10px;
     padding: 10px;
-    color: var(--text-color);
+    color: $textColor;
     position: relative;
     min-height: 150px;
     margin-bottom: 10px;
-    background: var(--bg-main);
+    background: $bgDark;
     font-size: .9em;
 
     >span {
@@ -88,7 +89,7 @@
     .aside {
         position: fixed;
         top: 0;
-        right: calc(-1 * var(--nav-width) - 50px);
+        right: calc(-1 * $navWidth - 50px);
         z-index: 30;
         background: var(--bg-body);
         transition: right .3s;
@@ -141,5 +142,4 @@
     .box {
         min-height: 130px;
     }
-
 }

@@ -1,10 +1,10 @@
 import 'chartjs-adapter-date-fns';
-import styles from '@/styles/Chart/Earn.module.scss';
+import styles from '$/Chart/Earn.module.scss';
 import { Bar } from "react-chartjs-2";
 import { hairline } from '../../module/chart/plugins';
 import dt from '@/module/dt'
 import { useEffect, useState } from 'react';
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import { Int } from '@/module/ba';
 import merge from 'deepmerge';
 
@@ -29,15 +29,13 @@ const defaultOptions = {
 
 const plugins = [hairline];
 
-function EarnChart({
-    stockEarn: earn, stockMeta,
-}) {
+function EarnChart({ stockEarn, stockMeta, }) {
     const amount = stockMeta?.a || 1;
-    earn = earn || [];
-    earn = earn.sort((a, b) => new Date(a.date) - new Date(b.date));
-    const labels = earn.map(e => e.date);
-    const profitData = earn.map(e => Math.round(e.profit / amount));
-    const equityData = earn.map(e => Math.round(e.equity / amount));
+    stockEarn = stockEarn?.data || [];
+    stockEarn = stockEarn.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const labels = stockEarn.map(e => e.date);
+    const profitData = stockEarn.map(e => Math.round(e.profit / amount));
+    const equityData = stockEarn.map(e => Math.round(e.equity / amount));
 
     const [options, setOptions] = useState(defaultOptions);
     const [equity, setEquity] = useState({ labels: [], datasets: [] });
@@ -56,7 +54,7 @@ function EarnChart({
         }
     }
 
-    if (earn.length) {
+    if (stockEarn.length) {
         useEffect(() => {
             console.log('earn 차트 렌더링중');
             const ismob = window.innerWidth <= Int(scss.mobWidth);
@@ -66,21 +64,21 @@ function EarnChart({
             setOptions(merge(defaultOptions, option));
             setEquity(refineData(equityData, '자본(BPS)'));
             setProfit(refineData(profitData, '이익(EPS)'));
-        }, [earn])
+        }, [stockEarn])
     }
 
     const NULL = <p>API에서 제공된<br />실적 데이터가 없습니다.</p>;
     return (
         <div className={styles.wrap}>
             <div className={styles.chart}>
-                {earn.length ? <Bar
+                {stockEarn.length ? <Bar
                     plugins={plugins}
                     options={options}
                     data={equity}
                 /> : NULL}
             </div>
             <div className={styles.chart}>
-                {earn.length ? <Bar
+                {stockEarn.length ? <Bar
                     plugins={plugins}
                     options={options}
                     data={profit}

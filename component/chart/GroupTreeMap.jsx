@@ -1,5 +1,5 @@
 import squarify from 'squarify'
-import styles from '@/styles/Chart/Tree.module.scss'
+import styles from '$/Chart/Tree.module.scss'
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 import Link from 'next/link';

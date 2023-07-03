@@ -11,7 +11,6 @@
     --rank-platinum: #4aebba;
     --rank-diamond: #4a9deb;
     --rank-master: #eb4a4a;
-    --nav-width: 250px;
 }
 
 // input:-webkit-autofill,
@@ -76,12 +75,11 @@ div:has(>.highcharts-container) {
 @include desktop {
     :root {
         --main-width: 700px;
-        --nav-margin: calc((100% - var(--main-width) - var(--nav-width) - 40px) / 2);
+        --nav-margin: calc((100% - var(--main-width) - 2 * #{$navWidth} - 40px) / 2);
         --top: 100px;
     }
 
     main {
-
         tr {
             >* {
                 padding: 5px 10px;
@@ -102,6 +100,7 @@ h1,
 h2,
 h3,
 h4 {
+    scroll-margin-top: calc($navHeight + 5px);
     color: $textBright;
 
     * {
@@ -229,8 +228,10 @@ button {
 main {
     text-align: left;
     display: inline-block;
+    margin: auto;
+    display: table;
     margin-top: var(--top);
-    margin-left: var(--nav-margin);
+    // margin-left: calc(var(--nav-margin) + $navWidth);
     width: var(--main-width);
     padding-bottom: 800px;
     max-width: 900px;

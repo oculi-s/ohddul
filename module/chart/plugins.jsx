@@ -1,4 +1,4 @@
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 
 export const hairline = {
     afterDraw: chart => {

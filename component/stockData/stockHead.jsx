@@ -1,4 +1,4 @@
-import styles from '@/styles/Stock/StockHead.module.scss';
+import styles from '$/Stock/StockHead.module.scss';
 import { json } from '@/pages/api/xhr';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -179,7 +179,7 @@ export const PredBar = ({
     setBar, setOpacity,
     testing = false, help = true, defaultType = 0
 }) => {
-    const origin = last?.close || 0;
+    const origin = last?.c || 0;
     const [change, setChange] = useState(0);
     const [type, setType] = useState(defaultType);
     const [date, setDate] = useState(1);
@@ -277,10 +277,11 @@ const Open = ({ time, view, setView }) => {
 }
 
 const StockHead = ({
-    name, code, last,
-    uid, userFavs, userPred,
+    code, last,
+    userFavs, userPred,
     stockMeta,
 }) => {
+    const name = stockMeta?.n;
     const predTime = userPred?.queue?.find(e => e.code == code)?.date;
     const { status } = useSession();
     const type = stockMeta?.t;

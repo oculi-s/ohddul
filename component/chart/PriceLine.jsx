@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import Annotation from "chartjs-plugin-annotation";
-import styles from '@/styles/Chart/Price.module.scss';
+import styles from '$/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
 import colors from "@/module/colors";
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import toggleOnPageChange from "#/toggle";
 import { useRouter } from "next/router";
 import { maxPoint, minPoint } from "@/module/chart/annotations";

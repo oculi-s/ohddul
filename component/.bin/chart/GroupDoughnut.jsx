@@ -1,5 +1,5 @@
 import '@/module/array';
-import styles from '@/styles/Chart/Share.module.scss';
+import styles from '$/Chart/Share.module.scss';
 import colors from '@/module/colors';
 import { Div, Fix, Price } from '@/module/ba';
 import { Doughnut } from 'react-chartjs-2';

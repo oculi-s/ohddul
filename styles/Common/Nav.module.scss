@@ -3,9 +3,10 @@
 .nav {
     position: fixed;
     width: 100%;
+    top: 0;
     background: var(--bg-main);
     border-bottom: 1px solid var(--border-color);
-    height: 60px;
+    height: $navHeight;
     padding: 10px;
     z-index: 10;
     text-align: left;

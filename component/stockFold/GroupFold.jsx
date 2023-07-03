@@ -16,7 +16,6 @@ const GroupFold = ({
 }) => {
     meta = meta?.data;
     if (!group) return <></>;
-    const { status } = useSession();
     const gname = group.name;
     const imgName = gname.replace("&", "").replace("-", "");
     const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
@@ -45,7 +44,7 @@ const GroupFold = ({
             return (
                 <tr key={code}>
                     <th>
-                        {status == 'authenticated' && <FavStar {...{ code, userFavs }} />}
+                        <FavStar {...{ code, userFavs }} />
                         <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                     </th>
                     <td>{Num(price[code]?.c)}</td>

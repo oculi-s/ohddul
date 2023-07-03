@@ -1,4 +1,4 @@
-import styles from '@/styles/Index.module.scss';
+import styles from '$/Index.module.scss';
 import { Per, Color, Num, Div } from '@/module/ba';
 import dt from '@/module/dt';
 import PriceLine from '#/chart/PriceLine';

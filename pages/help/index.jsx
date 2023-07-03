@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
+import styles from '$/Help.module.scss';
+
 import json from '@/module/json';
 import dt from '@/module/dt';
-import styles from '@/styles/Help.module.scss';
+import ToC from '#/base/Toc';
 import { getSession } from 'next-auth/react';
 import dir from '@/module/dir';
 
@@ -48,10 +51,10 @@ export const getServerSideProps = async (ctx) => {
     return { props };
 }
 
-const index = (props) => {
-    const names = [
-        '기본정보', '예측과 랭크', '커뮤니티규칙'
-    ];
+
+const Index = (props) => {
+    const [tabIndex, setTabIndex] = useState(0);
+    const names = ['기본정보', '예측방법', '차트보는법', '커뮤니티규칙'];
     const datas = [
         <div key={0}>
             <BaseInfo {...props} />
@@ -60,16 +63,22 @@ const index = (props) => {
             <PredHowto {...props} />
         </div>,
         <div key={2}>
+            {/* <ChartHowto {...props} /> */}
+        </div>,
+        <div key={3}>
             <BoardRules {...props} />
         </div>
     ]
-    return <div className={styles.docs}>
-        <span className={styles.title}>
-            예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
-        </span>
-        <ToggleTab {...{ names, datas }} />
-    </div>;
+    return <>
+        <ToC tabIndex={tabIndex} />
+        <div className={styles.docs}>
+            <span className={styles.title}>
+                예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
+            </span>
+            <ToggleTab {...{ names, datas, tabIndex, setTabIndex }} />
+        </div>
+    </>
 }
 
 import container from "@/container";
-export default container(index);
+export default container(Index);

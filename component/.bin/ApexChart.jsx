@@ -5,7 +5,7 @@ import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 import merge from 'deepmerge';
 import { Div, Price } from '@/module/ba';
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import '@/module/array';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });

@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import styles from '@/styles/temp.module.scss';
+import styles from '$/temp.module.scss';
 import { Div } from '@/module/ba';
 
 const data = [

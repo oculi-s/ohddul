@@ -1,5 +1,4 @@
-// import { CircularProgress } from '@mui/material';
-import styles from '@/styles/Base/Index.module.scss';
+import styles from '$/Base/Index.module.scss';
 // import Game2048 from '#/game/2048.jsx';
 
 const Temp = ({ children }) => {

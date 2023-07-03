@@ -1,14 +1,14 @@
-import styles from '@/styles/User.module.scss'
+import styles from '$/User.module.scss'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 
-import bgIron from '$/rank/iron.png'
-import bgBronze from '$/rank/10.png'
-import bgSilver from '$/rank/100.png'
-import bgGold from '$/rank/500.png'
-import bgPlatinum from '$/rank/1000.png'
-import bgDiamond from '$/rank/10000.png'
-import bgMaster from '$/rank/50000.png'
+import bgIron from '@/public/rank/iron.png'
+import bgBronze from '@/public/rank/10.png'
+import bgSilver from '@/public/rank/100.png'
+import bgGold from '@/public/rank/500.png'
+import bgPlatinum from '@/public/rank/1000.png'
+import bgDiamond from '@/public/rank/10000.png'
+import bgMaster from '@/public/rank/50000.png'
 
 export const getBg = rank => {
     return rank.includes('bronze') ? (bgBronze

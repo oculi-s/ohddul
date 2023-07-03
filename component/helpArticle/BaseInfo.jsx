@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dt from '@/module/dt';
 import Help from '#/base/Help';
-import styles from '@/styles/Help.module.scss';
+import styles from '$/Help.module.scss';
 import { Div } from '@/module/ba';
 
 const InfoBlock1 = ({
@@ -39,7 +39,8 @@ const InfoBlock1 = ({
                 </td>
             </tr>
         </tbody></table>
-        모든 가격 정보는 <span className="red">전일 종가</span>를 기준으로 제공됩니다.
+        모든 가격 정보는 장 마감 이전에는 <span className="red">전일 종가</span>를 기준으로 제공됩니다.
+        업데이트는 <span className="red">장 마감 이후 30분 이내로</span> 진행되며 업데이트 이후에는 당일 종가가 제공됩니다.
         <h4>실적데이터 상세</h4>
         실적은 별도재무제표 기준이며, 10년치 데이터가 다음과 같이 제공됩니다.
         외부에서 제공되지 않는 2014년 데이터와 아직 발표되지 않은 실적 정보는 확인하실 수 없습니다.
@@ -71,9 +72,8 @@ const InfoBlock1 = ({
                 })}
             </tbody></table>
         </div>
-        <h4>업데이트</h4>
-        <p>데이터 업데이트는 매일 자정부터 30분 이내로 이루어집니다.</p>
-        <p>데이터는 <Link href='https://opendart.fss.or.kr' target='blank'>openDart</Link>와 <Link href='https://data.go.kr' target='blank'>공공데이터포털</Link>을 이용합니다.</p>
+        <h4>데이터 출처</h4>
+        <p>데이터는 <Link href='https://opendart.fss.or.kr' target='blank'>openDart</Link>와 <Link href='https://data.go.kr' target='blank'>공공데이터포털</Link>, <Link href="https://apiportal.koreainvestment.com/">KIS developers</Link>를 이용합니다.</p>
     </div>
 }
 

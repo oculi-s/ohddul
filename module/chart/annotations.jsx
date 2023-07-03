@@ -1,5 +1,5 @@
 import { Div, Per } from '@/module/ba';
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 
 export function maxPoint({ max, i, last, len }) {
     return ({

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import { ko } from 'date-fns/locale';
-import styles from '@/styles/Chart/Price.module.scss';
+import styles from '$/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
 import colors from "@/module/colors";

@@ -1,9 +1,10 @@
-import styles from '@/styles/Stock/Stock.module.scss';
+import styles from '$/Stock/Stock.module.scss';
 import Help from "#/base/Help";
 import PriceLine from "#/chart/PriceLine";
 import { Color, Div, Per } from '@/module/ba';
 import { bbHelp, maHelp } from './HelpDescription';
 import { getMaData } from '@/module/editData/priceAvg';
+import dt from '@/module/dt';
 import '@/module/array';
 
 function MaTable({ stockPrice }) {
@@ -61,8 +62,8 @@ function BBTable({ stockPrice }) {
     </table>;
 }
 
-const PriceElement = (props) => {
-    const { stockPrice, stockMeta } = props;
+const PriceElement = ({ stockPrice, stockMeta }) => {
+    stockPrice = stockPrice?.data?.sort(dt.lsort);
     const chartProps = {
         prices: [stockPrice],
         metas: [stockMeta],
@@ -74,8 +75,8 @@ const PriceElement = (props) => {
         </div>
         <h3>가격지표</h3>
         <div>
-            <MaTable {...props} />
-            <BBTable {...props} />
+            <MaTable stockPrice={stockPrice} />
+            <BBTable stockPrice={stockPrice} />
         </div>
     </>
 }

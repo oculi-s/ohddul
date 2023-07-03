@@ -1,5 +1,8 @@
 $midWidth: 950px;
 $mobWidth: 450px;
+$mainWidth: 700px;
+$navWidth: 250px;
+$navHeight: 60px;
 
 $bgDarker: #030d18;
 $bgDark: #04111e;
@@ -25,6 +28,7 @@ $blueBright: #3a4be0;
 
 :export {
     mobWidth: $mobWidth;
+    navHeight: $navHeight;
 
     bgOpacity: $bgOpacity;
     bgDarker: $bgDarker;

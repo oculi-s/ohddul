@@ -1,4 +1,4 @@
-import styles from '@/styles/Stock/Stock.module.scss';
+import styles from '$/Stock/Stock.module.scss';
 import ShareDonut from "#/chart/ShareDonut";
 import { Div } from "@/module/ba";
 import Help from '#/base/Help';
@@ -10,6 +10,7 @@ const nameDict = {
 }
 
 const ShareTable = ({ meta, stockShare, stockMeta }) => {
+    stockShare = stockShare?.data;
     if (!stockShare) return;
     const amount = stockMeta?.a;
     const total = amount;

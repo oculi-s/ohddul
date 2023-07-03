@@ -1,4 +1,4 @@
-import styles from '@/styles/Base/Help.module.scss';
+import styles from '$/Base/Help.module.scss';
 import { innerText } from '#/_base';
 import { useEffect, useRef, useState } from 'react';
 

@@ -1,7 +1,7 @@
 import squarify from 'squarify'
-import styles from '@/styles/Chart/Tree.module.scss'
+import styles from '$/Chart/Tree.module.scss'
 import colors from '@/module/colors';
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import Link from 'next/link';
 import { Div, Int } from '@/module/ba';
 import '@/module/array';
@@ -53,7 +53,7 @@ const refindData = ({ induty, index, meta, price, withStock, N }) => {
                 price: child?.map(e => meta[e]?.a * price[e]?.c).sum()
             }
         });
-    console.log(data.find(e => e.child.includes('005930')))
+
     const all = price;
     return data
         ?.sort((b, a) => a.price - b.price)

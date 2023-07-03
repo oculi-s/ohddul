@@ -1,10 +1,10 @@
 import '@/module/array';
-import styles from '@/styles/Chart/Share.module.scss';
+import styles from '$/Chart/Share.module.scss';
 import colors from '@/module/colors';
 import { Div, Fix } from '@/module/ba';
 import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 
 const options = {
     spanGaps: true,
@@ -24,8 +24,9 @@ const options = {
     }
 }
 
-const ShareDonut = ({ stockShare: share, stockMeta, meta }) => {
-    if (!share?.length) {
+const ShareDonut = ({ stockShare, stockMeta }) => {
+    stockShare = stockShare?.data;
+    if (!stockShare?.length) {
         return (
             <div style={{ textAlign: "center" }}>
                 <div className={styles.wrap}>
@@ -35,13 +36,13 @@ const ShareDonut = ({ stockShare: share, stockMeta, meta }) => {
         )
     }
     const amount = stockMeta?.a;
-    let res = amount - share.map(e => e.amount).sum();
+    let res = amount - stockShare.map(e => e.amount).sum();
     res = Math.max(0, res);
-    const shareData = share.map(e => e.amount);
-    shareData.push(res);
-    // const shareData = share.map(e => Fix(e.amount / amount * 100, 1));
-    // shareData.push(Fix(res / amount * 100, 1));
-    const labels = share.map(e => e.name);
+    // const shareData = share.map(e => e.amount);
+    // shareData.push(res);
+    const shareData = stockShare.map(e => Fix(e.amount / amount * 100, 1));
+    shareData.push(Fix(res / amount * 100, 1));
+    const labels = stockShare.map(e => e.name);
     labels.push('데이터없음');
     colors[shareData.length - 1] = scss.bgDark;
 

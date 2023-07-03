@@ -1,4 +1,4 @@
-import styles from '@/styles/Base/Input.module.scss';
+import styles from '$/Base/Input.module.scss';
 import '@/module/array';
 
 export function RadioSelect({

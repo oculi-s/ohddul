@@ -7,10 +7,10 @@
 
 import colors from '@/module/colors';
 import dt from '@/module/dt';
-import styles from '@/styles/Chart/Price.module.scss';
+import styles from '$/Chart/Price.module.scss';
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
-import scss from '@/styles/variables.module.scss';
+import scss from '$/variables.module.scss';
 import '@/module/array';
 import { parseFix } from '@/module/ba';
 import { renderToStaticMarkup } from "react-dom/server"

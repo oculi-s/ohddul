@@ -1,4 +1,4 @@
-import styles from '@/styles/Group/Group.module.scss'
+import styles from '$/Group/Group.module.scss'
 import { useRouter } from "next/router";
 import Link from "next/link";
 import GroupFold from "#/stockFold/GroupFold";
