@@ -32,7 +32,7 @@ const stockElement = ({
         {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
             {code ?
                 <Link href={`/stock/${code}`}>{meta[code]?.n}</Link> :
-                <Link href={`/induty/${name}`}>{index?.index[name]}</Link>
+                <Link href={`/induty/${name}`}>{index[name]?.n}</Link>
             }
             <p className={styles.percent}>({Div(value, total, 1)})</p>
         </div>}
@@ -41,10 +41,9 @@ const stockElement = ({
 
 const refindData = ({ induty, index, meta, price, withStock, N }) => {
     const len = 3;
-    const data = Object.keys(index?.index)
+    const data = Object.keys(index)
         ?.filter(e => e.length == len)
         ?.map(code => {
-            // console.log(code);
             const child = Object.keys(induty)
                 ?.filter(e => induty[e].slice(0, len - 1) == code.slice(1))
                 ?.filter(e => meta[e]?.a && price[e]?.c)
@@ -79,6 +78,7 @@ const refindData = ({ induty, index, meta, price, withStock, N }) => {
 const TotalIndutyTree = ({ induty, index, meta, price }) => {
     meta = meta?.data;
     induty = induty?.data;
+    index = index?.data;
     const [withStock, setStock] = useState(true);
     const [data, setData] = useState([]);
     const [N, setN] = useState(10);
