@@ -49,7 +49,7 @@ const refindData = ({ group, meta, price, withStock, N }) => {
             let children = undefined;
             if (withStock) {
                 children = child
-                    ?.filter(e => meta[e].a && all[e].c)
+                    ?.filter(e => meta[e]?.a && all[e]?.c)
                     ?.sort((b, a) => meta[a].a * all[a].c - meta[b].a * all[b].c);
                 children = children?.map(code => ({
                     code, name,

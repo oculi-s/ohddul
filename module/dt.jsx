@@ -1,4 +1,5 @@
 const moment = require('moment');
+moment.suppressDeprecationWarnings = true;
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 const pad = (v) => String(v).padStart(2, '0');
@@ -82,7 +83,7 @@ function prev(y) {
     y.s = y.Y + y.M + y.D;
 }
 function now(m = moment()) { return moment(m); }
-function num(m = moment()) { return moment(m).unix(); }
+function num(m = moment()) { return moment(m).valueOf(); }
 /**
  * 시간 내림차순 정렬 (현재 -> 과거)
  */
