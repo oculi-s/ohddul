@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "restart": "next build; sudo pm2 restart ohddul"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",
