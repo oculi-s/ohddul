@@ -12,7 +12,7 @@ import FavStar from '#/base/FavStar';
  */
 const GroupFold = ({
     meta, price, group, predict, router,
-    folded, userFavs
+    userFavs, folded
 }) => {
     meta = meta?.data;
     if (!group) return <></>;
