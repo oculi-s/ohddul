@@ -37,12 +37,7 @@ export async function getServerSideProps(ctx) {
         priority, lastmod,
     }));
 
-    console.log(induties)
-
     const fields = [...defaultFields, ...stocks, ...induties, ...groups];
-    // const data = ();
-    // console.log(data);
-    // const props = { data };
     return getServerSideSitemapLegacy(ctx, fields);
 }
 
