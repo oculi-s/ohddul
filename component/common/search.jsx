@@ -22,28 +22,28 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
     const reg = new RegExp(`${q}|${inko?.en2ko(q)}|${inko?.ko2en(q)}`);
     const res = { stock: [], user: [], group: [] };
     for (let [name, code] of Object.entries(meta?.index || {})) {
-        name = name.toLowerCase();
-        if (reg.test(name))
-            res.stock.push({ code, name });
+        name = name?.toLowerCase();
+        if (reg?.test(name))
+            res?.stock?.push({ code, name });
         else if (code?.includes(q))
-            res.stock.push({ code, name });
-        if (res.stock.length >= 10) break;
+            res?.stock?.push({ code, name });
+        if (res?.stock?.length >= 10) break;
     }
 
     for (let [code, gname] of Object.entries(group?.index || {})) {
-        gname = gname.toLowerCase();
+        gname = gname?.toLowerCase();
         let name = meta?.data[code]?.n;
-        if (reg.test(gname))
-            res.group.push({ code, name, gname });
+        if (reg?.test(gname))
+            res?.group?.push({ code, name, gname });
 
-        if (res.group.length >= 10) break;
+        if (res?.group?.length >= 10) break;
     }
 
     for (let { id, rank } of Object.values(userMeta || {})) {
-        let idl = id.toLowerCase();
-        if (reg.test(idl))
-            res.user.push({ id, rank });
-        if (res.user.length >= 20) break;
+        let idl = id?.toLowerCase();
+        if (reg?.test(idl))
+            res?.user?.push({ id, rank });
+        if (res?.user?.length >= 20) break;
     }
     setResult(res);
 }
@@ -145,8 +145,8 @@ function Search(props) {
             href={`/stock/${e.code}`}
             className={styles.element}
         >
-            <span>{e.code}</span>
-            <span>{e.name?.toUpperCase()}</span>
+            <span>{e?.code}</span>
+            <span>{e?.name?.toUpperCase()}</span>
         </Link>);
 
     const GroupResult = () => result.group
