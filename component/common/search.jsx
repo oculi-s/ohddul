@@ -48,10 +48,9 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
     setResult(res);
 }
 
-function elementKeydown({ e, i, stockRef, userRef, tabIndex, inputRef }) {
+function elementKeydown({ e, i, stockRef, userRef, tabIndex, inputRef, setView }) {
     if (e.key == 'ArrowDown') {
         e.preventDefault();
-        // if ()
         stockRef?.current[i + 1]?.focus();
     } else if (e.key == 'ArrowUp') {
         e.preventDefault();
@@ -64,6 +63,10 @@ function elementKeydown({ e, i, stockRef, userRef, tabIndex, inputRef }) {
         }
     } else if (e.key == 'ArrowLeft' || e.key == 'ArrowRight') {
         e.preventDefault();
+    } else if (e.key == 'Enter') {
+        inputRef.current.value = '';
+        if (setView) setView(false);
+        e.target.click();
     }
 }
 
@@ -102,7 +105,7 @@ function resKeydown({ e, setTabIndex, tabIndex, inputRef }) {
     }
 }
 
-function moveQuery({ e, meta, userMeta, router, setAsideShow, result }) {
+function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result }) {
     e.preventDefault();
     const q = e.target?.q?.value?.toLowerCase();
     const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.name?.toLowerCase() == q);
@@ -125,6 +128,7 @@ function moveQuery({ e, meta, userMeta, router, setAsideShow, result }) {
     }
     e.target.q.value = '';
     if (setAsideShow) setAsideShow(false);
+    if (setView) setView(false);
 }
 
 function Search(props) {
