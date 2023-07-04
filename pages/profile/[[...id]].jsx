@@ -194,7 +194,8 @@ const Index = ({
             <>{id} : 존재하지 않는 사용자입니다.</>
         );
     }
-    const score = userMeta[uid].rank;
+    meta = meta.data;
+    const score = userMeta[uid]?.rank;
     const [rank, nextRank] = getRank(score);
     const prevScore = Math.floor(score / 100) * 100;
     const forNext = (score - prevScore);
