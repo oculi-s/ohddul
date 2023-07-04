@@ -32,6 +32,40 @@ const SignIn = async (e, setUser, setError, setOn) => {
     return res;
 }
 
+function Login({ setUser }) {
+    return <>
+        <User />
+        <form
+            className={styles.logout}
+            onSubmit={e => { SignOut(e, setUser) }}
+        >
+            <div className={styles.submit}>
+                <button type='submit'>로그아웃</button>
+            </div>
+        </form>
+    </>
+}
+
+function Logout({ setUser }) {
+    const [on, setOn] = useState(0);
+    const [error, setError] = useState(0);
+    return <>
+        <form
+            className={styles.login}
+            onSubmit={async (e) => {
+                await SignIn(e, setUser, setError, setOn);
+            }}>
+            <input name='id' placeholder='ID' />
+            <input name='pw' placeholder="비밀번호" type="password" />
+            <SignError code={error} on={on} />
+            <div className={styles.submit}>
+                <Link href="/create">회원가입</Link>
+                <button type='submit'>로그인</button>
+            </div>
+        </form>
+    </>
+}
+
 const SignOut = async (e, setUser) => {
     e.preventDefault();
     await signOut({ redirect: false });
@@ -40,40 +74,10 @@ const SignOut = async (e, setUser) => {
 
 function UserInfo({ setUser }) {
     const { status } = useSession();
-    const [on, setOn] = useState(0);
-    const [error, setError] = useState(0);
-    let data;
-    if (status == "authenticated") {
-        data = <>
-            <User />
-            <form
-                className={styles.logout}
-                onSubmit={e => { SignOut(e, setUser) }}
-            >
-                <div className={styles.submit}>
-                    <button type='submit'>로그아웃</button>
-                </div>
-            </form>
-        </>
-    } else {
-        data = <>
-            <form
-                className={styles.login}
-                onSubmit={async (e) => {
-                    await SignIn(e, setUser, setError, setOn);
-                }}>
-                <input name='id' placeholder='ID' />
-                <input name='pw' placeholder="비밀번호" type="password" />
-                <SignError code={error} on={on} />
-                <div className={styles.submit}>
-                    <Link href="/create">회원가입</Link>
-                    <button type='submit'>로그인</button>
-                </div>
-            </form>
-        </>
-    }
     return <div className={`${styles.box} ${styles.user}`}>
-        {data}
+        {status == 'authenticated' ?
+            <Login setUser={setUser} /> :
+            <Logout setUser={setUser} />}
     </div>
 }
 
