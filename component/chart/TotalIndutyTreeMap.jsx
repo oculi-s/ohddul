@@ -32,7 +32,7 @@ const stockElement = ({
         {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
             {code ?
                 <Link href={`/stock/${code}`}>{meta[code]?.n}</Link> :
-                <Link href={`/induty/${name}`}>{index[name]?.n}</Link>
+                <Link href={`/induty/${name.slice(1)}`}>{index[name]?.n}</Link>
             }
             <p className={styles.percent}>({Div(value, total, 1)})</p>
         </div>}

@@ -51,7 +51,7 @@ const refindData = ({ group, meta, price }) => {
 
 const GroupTreeMap = ({ group, meta, price }) => {
     if (!group?.price) return;
-    meta = meta?.data;
+    meta = meta?.data || meta;
     const [data, setData] = useState([]);
     useEffect(() => {
         setData(refindData({ group, meta, price }));

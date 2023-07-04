@@ -5,7 +5,8 @@
     width: $navWidth;
     right: var(--nav-margin);
     top: var(--top);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: visible;
 }
 
 .box {

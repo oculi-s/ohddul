@@ -14,19 +14,21 @@ import dir from '@/module/dir';
 import json from '@/module/json';
 import { getSession } from 'next-auth/react';
 import container from "@/container/light";
+import { CrawlUser } from '@/module/prop/props';
 
 /**
  * 그룹 정보를 보여주는 페이지
  * 
  * 데이터 줄이기 
  * meta : 350 --> 221 (-129kb)
+ * meta.index 삭제 : 114 -> 44.1 (-69.9kb)
  * price : 221 --> 148 (-73kb)
  * induty : 277 --> 238 (-39kb)
  */
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
     const aside = json.read(dir.stock.light.aside);
-    const group = json.read(dir.stock.group).data[code];
+    const group = json.read(dir.stock.group).data[code] || {};
 
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
@@ -35,24 +37,24 @@ export async function getServerSideProps(ctx) {
     const predict = json.read(dir.stock.predAll);
     const userMeta = json.read(dir.user.meta);
 
+    const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
     const index = json.read(dir.stock.induty);
     const induty = json.read(dir.stock.dart.induty);
-    const meta = json.read(dir.stock.meta);
 
+    const meta = Filter(Meta);
     const price = Filter(Price);
     induty.data = Filter(induty.data);
-    meta.data = Filter(meta.data);
     const earn = group?.child?.map(code => {
         const data = json.read(dir.stock.earn(code)).data.filter(e => e.data);
         const equity = data.map(e => e?.equity).sum();
         const revenue = data.map(e => e?.revenue).sum();
         const profit = data.map(e => e?.profit).sum();
         return { code, equity, revenue, profit };
-    })
+    }) || []
     const share = group?.child?.map(e =>
         [e, json.read(dir.stock.share(e)).data]
-    )
+    ) || []
     let props = {
         code, aside,
         group, index, induty,
@@ -60,22 +62,15 @@ export async function getServerSideProps(ctx) {
         predict,
         meta, price, earn, share
     };
-
-    const session = (await getSession(ctx));
-    if (session?.user) {
-        const uid = session?.uid;
-        const User = {};
-        User.pred = json.read(dir.user.pred(uid), { queue: [], data: [] });
-        User.favs = json.read(dir.user.favs(uid), []);
-        props = { ...props, User };
-    }
+    await CrawlUser(ctx, props);
     return { props }
 }
 
 const MetaTable = ({
     group, meta, price, code, earn
 }) => {
-    meta = meta?.data;
+    group.light = true;
+    meta.light = true;
     if (!group) return;
     const groupAsset = group?.asset;
 
@@ -88,8 +83,8 @@ const MetaTable = ({
     const groupPrice = group?.child
         ?.map(e => ({ code: e, c: meta[e]?.a * price[e]?.c }))
         ?.sort((b, a) => a.c - b.c);
-    const groupClose = groupPrice?.map(e => e?.c).sum() / group.child.map(e => meta[e]?.a).sum();
-    const first = groupPrice[0];
+    const groupClose = groupPrice?.map(e => e?.c).sum() / group?.child?.map(e => meta[e]?.a).sum();
+    const first = groupPrice?.find(e => true);
 
     const amount = group?.child?.map(e => meta[e]?.a)?.sum();
     const BPS = groupEarn.equity / amount;
@@ -113,6 +108,7 @@ const MetaTable = ({
 
 const Index = (props) => {
     const router = useRouter();
+    if (!props.group) return;
     const { code } = router.query;
     props = { ...props, router, code };
     const names = ['요약정보', '실적정보', '출자정보']

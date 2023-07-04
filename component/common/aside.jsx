@@ -17,7 +17,7 @@ const SignIn = async (e, setUser, setError, setOn) => {
         id, pw, redirect: false
     })
     if (res.ok) {
-        const user = (await getSession()).user;
+        const user = (await getSession())?.user;
         const pred = user?.pred || [];
         const favs = user?.favs || [];
         setUser({ pred, favs });
@@ -159,12 +159,14 @@ function Total() {
     );
 }
 
-export default function Aside({
-    price, meta, group, aside,
-    userMeta, setUser,
-    mobAside, setAsideShow
-}) {
+export default function Aside(props) {
     const [view, setView] = useState(false);
+    const mobAside = props?.mobAside;
+    const setAsideShow = props?.setAsideShow;
+    props = {
+        ...props,
+        view, setView, mobAside, setAsideShow
+    }
     useEffect(() => {
         if (mobAside) {
             document.body.style.overflow = 'hidden';
@@ -172,12 +174,6 @@ export default function Aside({
             document.body.style.overflow = 'unset';
         }
     }, [mobAside]);
-    const props = {
-        setUser, aside,
-        meta, userMeta,
-        price, group,
-        setAsideShow, view, setView
-    };
     return (
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>

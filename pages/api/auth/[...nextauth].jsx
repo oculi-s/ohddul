@@ -53,7 +53,7 @@ const providers = [
             const admin = user?.admin;
             const uid = user?.uid;
             const meta = json.read(dir.user.meta)[uid];
-            const pred = json.read(dir.user.pred(uid)).queue;
+            const pred = json.read(dir.user.pred(uid), { queue: [] })?.queue;
             const favs = json.read(dir.user.favs(uid));
             return { id, uid, admin, meta, pred, favs };
         }
@@ -83,13 +83,14 @@ const providers = [
  * 대신 userMeta등의 사용을 줄이기 위해 session에 rank, pred, favs를 초기에 담아 보냄
  */
 const callbacks = {
-    async jwt({ token, user, trigger, session }) {
+    jwt({ token, user, trigger, session }) {
         if (!user) return token;
-        return Promise.resolve({ user });
+        token.user = user;
+        return token;
     },
-    async session({ session, token }) {
+    session({ session, token }) {
         session.user = token?.user;
-        return Promise.resolve(session);
+        return session;
     }
 }
 

@@ -11,6 +11,7 @@ import { editQuar, earnStack, earnonPrice } from '@/module/editData/earnStack';
 import { priceDivide } from '@/module/editData/priceDivide';
 
 import '@/module/array';
+import { CrawlUser } from '@/module/prop/props';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -32,16 +33,9 @@ export async function getServerSideProps(ctx) {
 		index, induty, user
 	};
 
-	const session = await getSession(ctx);
-	if (session?.user) {
-		const uid = session?.user?.uid;
-		user.favs = json.read(dir.user.favs(uid));
-		user.pred = json.read(dir.user.pred(uid)).queue;
-		console.log(user.favs.length);
-		props = { ...props, user };
-	}
-
 	try {
+		await CrawlUser(ctx, props);
+
 		aside = json.read(dir.stock.light.aside);
 		meta = json.read(dir.stock.meta);
 		group = json.read(dir.stock.group);
@@ -60,6 +54,9 @@ export async function getServerSideProps(ctx) {
 		if (!parseInt(code)) code = meta.index[code];
 		const N = 252 * 5;
 		// stockPage
+		/**
+		 * 2023.07.04 여기서 실행하는 함수들을 데이터로 저장하는 과정이 필요함
+		 */
 		if (code) {
 			const stockPrice = json.read(dir.stock.light.price(code));
 			stockPrice.data = stockPrice.data.slice(0, N);

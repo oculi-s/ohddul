@@ -14,6 +14,7 @@ import json from "@/module/json";
 import { PredBar } from "#/stockData/stockHead";
 import FavStar from "#/base/FavStar";
 import Container from "@/container/light";
+import { Curtain } from "#/profile/base";
 
 /**
  * asdf
@@ -36,12 +37,6 @@ export const getServerSideProps = (ctx) => {
     return { props };
 }
 
-const Curtain = ({ rank }) => (
-    <div
-        className={styles.curtain}
-        style={{ background: `linear-gradient(180deg, var(--rank-${rank.slice(0, -1)}), transparent)` }}
-    />
-)
 
 const Header = ({ rank, num, bg, id }) => (
     <h1 className={styles.id}>
@@ -100,21 +95,20 @@ const Graph = ({ id, rank, forNext }) => {
     )
 }
 
-const PredTable = ({ pred, meta, price }) => {
+const PredTable = ({ pred }) => {
+    console.log(pred);
     const queueTable = pred?.map((e, i) => {
-        const { code, change, date } = e;
-        const name = meta[code]?.n;
-        const lastPrice = price[code]?.c;
-        const target = lastPrice + change;
+        const { code, change, date, n, c } = e;
+        const target = c + change;
         return (
             <tr key={`pred${i}`}>
                 <th>
-                    <Link href={`/stock/${code}`}>{name}</Link>
+                    <Link href={`/stock/${code}`}>{n}</Link>
                 </th>
                 <td>
                     <span className={`fa fa-chevron-${change > 0 ? 'up red' : 'down blue'}`} />
                 </td>
-                <td>{Num(target)} ({Fix(change / lastPrice * 100)}%)</td>
+                <td>{Num(target)} ({Fix(change / c * 100)}%)</td>
                 <td>{dt.toString(date, { time: 1 })}</td>
             </tr>
         );
@@ -165,7 +159,7 @@ const FavTable = ({ meta, price, mine, User, setUser }) => {
 }
 
 const Index = ({
-    aside, userMeta,
+    aside, userMeta, pred,
     User, setUser,
 }) => {
     // console.log(User);
@@ -203,6 +197,7 @@ const Index = ({
 
     const props = {
         User, setUser,
+        pred,
         score, id, rank, nextRank, prevScore, forNext, num, bg, mine,
     };
     const tabContents = {
@@ -214,7 +209,7 @@ const Index = ({
             </div>,
             <div key={1}>
                 <h3>대기중인 예측</h3>
-                {/* <PredTable {...{ user, meta, price, User, setUser }} /> */}
+                <PredTable {...props} />
             </div>,
             <div key={2}>
                 <h3>관심 종목</h3>

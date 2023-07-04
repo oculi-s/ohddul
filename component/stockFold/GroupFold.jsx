@@ -14,10 +14,11 @@ const GroupFold = ({
     meta, price, group, predict, router,
     folded, User, setUser
 }) => {
-    meta = meta?.data;
-    if (!group) return <></>;
-    const gname = group.name;
-    const imgName = gname.replace("&", "").replace("-", "");
+    meta = meta?.data || meta;
+    if (!group) return;
+    const gname = group?.name;
+    if (!gname) return;
+    const imgName = gname?.replace("&", "").replace("-", "");
     const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
     const priceSum = Object.values(priceDict).reduce((a, b) => a + b, 0)
     const name = <>

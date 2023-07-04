@@ -14,6 +14,5 @@ const Index = () => {
     )
 }
 
-import container, { getServerSideProps } from "@/container/heavy";
-export { getServerSideProps };
+import container from "@/container/light";
 export default container(Index);

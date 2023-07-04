@@ -1,6 +1,12 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
+export function getServerSideProps(ctx) {
+    const aside = json.read(dir.stock.light.aside);
+    const props = { aside };
+    return { props };
+}
+
 const Header = ({ router }) => (
     <h1>검색어 : {router.query?.q}</h1>
 )
@@ -15,6 +21,5 @@ const Index = () => {
     )
 }
 
-import container, { getServerSideProps } from "@/container/heavy";
-export { getServerSideProps };
+import container from "@/container/light";
 export default container(Index);

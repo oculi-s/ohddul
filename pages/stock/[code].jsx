@@ -5,7 +5,7 @@ import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
 import dt from '@/module/dt';
 import StockHead from '#/stockData/stockHead';
 import ToggleTab from '#/base/ToggleTab';
-import { Last } from '#/base/base';
+import { LastUpdate } from '#/base/base';
 import Help from '#/base/Help';
 import '@/module/array';
 
@@ -76,9 +76,8 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
     )
 }
 
-
 const Index = ({
-    User, setUser,
+    User, setUser, setAsideShow,
     meta, group, price, index, induty,
     predict,
     userMeta,
@@ -87,16 +86,15 @@ const Index = ({
 }) => {
     const router = useRouter();
     let code = router.query?.code;
-    if (!meta?.data) return;
     if (!parseInt(code)) code = meta.index[code];
+    useEffect(() => {
+        setAsideShow(false);
+    }, [code, setAsideShow])
+    if (!meta?.data) return;
     if (!code) return;
     const stockMeta = meta?.data[code];
     if (!stockMeta) {
-        return (
-            <>
-                <div>종목 정보가 없습니다.</div>
-            </>
-        )
+        return <div>종목 정보가 없습니다.</div>
     }
     const props = {
         User, setUser,
@@ -113,15 +111,15 @@ const Index = ({
         datas: [
             <div key={0}>
                 <PriceElement {...props} />
-                <Last data={stockPrice} />
+                <LastUpdate data={stockPrice} />
             </div>,
             <div key={1}>
                 <EarnElement {...props} />
-                <Last data={stockEarn} />
+                <LastUpdate data={stockEarn} />
             </div>,
             <div key={2}>
                 <ShareElement {...props} />
-                <Last data={stockShare} />
+                <LastUpdate data={stockShare} />
             </div>,
             <div key={3}>
                 <PredElement {...props} />
@@ -141,7 +139,7 @@ const Index = ({
     )
 }
 
-import container, { getServerSideProps } from "@/container/heavy";
-import { useSession } from 'next-auth/react';
+import container, { getServerSideProps } from "@/container/stock";
+import { useEffect } from 'react';
 export { getServerSideProps };
 export default container(Index);

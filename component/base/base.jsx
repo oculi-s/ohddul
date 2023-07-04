@@ -1,9 +1,14 @@
 import dt from '@/module/dt';
 import styles from '$/Base/base.module.scss'
 
-export function Last({ data }) {
+export function LastUpdate({ data }) {
     let last = data?.last;
     return <p className="des">* 마지막 업데이트 : {dt.toString(last, { time: 1, day: 1 })}</p>
+}
+
+export function LastData({ data }) {
+    let last = (data?.last || data?.data || data || [])?.find(e => true)?.d;
+    return <p className="des">* 기준일 : {dt.toString(last, { time: 1, day: 1 })}</p>
 }
 
 export function SignError({ on, code }) {

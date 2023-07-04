@@ -6,6 +6,15 @@ import { signIn } from "next-auth/react";
 import { SignError } from "#/base/base";
 import { Int } from "@/module/ba";
 
+import json from "@/module/json";
+import dir from "@/module/dir";
+
+export function getServerSideProps(ctx) {
+    const aside = json.read(dir.stock.light.aside);
+    const props = { aside };
+    return { props };
+}
+
 const SignUp = async (e, setUser, setError, setOn) => {
     e.preventDefault();
     const id = e.target.id.value;
@@ -75,6 +84,5 @@ const Index = ({ setUser }) => {
     }
 }
 
-import container, { getServerSideProps } from "@/container/heavy";
-export { getServerSideProps };
+import container from "@/container/light";
 export default container(Index);

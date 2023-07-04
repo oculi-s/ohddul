@@ -10,7 +10,7 @@ function Index({ data, last, prev, count, name }) {
     prev = prev[name];
     return <div className={styles.wrap}>
         <h3 className={styles.title}>
-            코스피&nbsp;
+            {name == 'kospi' ? '코스피' : '코스닥'}&nbsp;
             <span>{Num(last)}</span>&nbsp;
             <span className={Color(last - prev)}>
                 ({Per(last, prev)})
@@ -66,12 +66,13 @@ const Market = ({ market, price, meta }) => {
         }
     }
     const props = { last, prev, count };
-    return (
+    return (<>
         <div className={`${styles.area} ${styles.chartArea}`}>
             <Index {...props} data={kospi} name={'kospi'} />
             <Index {...props} data={kosdaq} name={'kosdaq'} />
         </div>
-    )
+        {/* <p className='des'>{kospi[0]?.d}</p> */}
+    </>)
 }
 
 export default Market;

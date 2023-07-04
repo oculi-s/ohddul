@@ -15,17 +15,17 @@ const IndutyFold = ({
     meta, code, price, induty, index, router,
     folded = true, User, setUser,
 }) => {
-    induty = induty?.data;
-    index = index?.data;
-    meta = meta?.data;
-    if (!induty) return <></>;
+    induty = induty?.data || induty;
+    index = index?.data || index;
+    meta = meta?.data || meta;
+    if (!induty) return;
     const indutyCode = Big(induty[code] || code);
     const parCode = indutyCode?.slice(0, -1);
     const indutyNum = indutyCode?.slice(1);
-    const data = index[indutyCode];
-    if (!data) return <></>;
+    const data = index[indutyCode] || index;
+    if (!data) return;
     const child = Object.keys(index)?.filter(e => e.slice(0, -1) == indutyCode);
-    const stock = Object.keys(induty).filter(e => induty[e] == indutyNum)
+    const stock = Object.keys(meta).filter(e => induty[e] == indutyNum)
         ?.filter(e => meta[e]?.a && price[e]?.c)
         ?.sort((b, a) => meta[a]?.a * price[a]?.c - meta[b]?.a * price[b]?.c);
     const len = child?.length + stock?.length + 2;

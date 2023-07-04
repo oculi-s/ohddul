@@ -2,7 +2,7 @@ import styles from '$/Index.module.scss';
 import TotalGroupTree from '#/chart/TotalGroupTreeMap';
 import TotalIndutyTree from '#/chart/TotalIndutyTreeMap';
 import ToggleTab from '#/base/ToggleTab';
-import { Last } from '#/base/base';
+import { LastData, LastUpdate } from '#/base/base';
 
 export default function GroupInduty(props) {
     return <div className={`${styles.area} ${styles.groupArea}`}>
@@ -19,6 +19,6 @@ export default function GroupInduty(props) {
             ]}
         />
         <p className='des'>클릭하시면 종목/전체가 전환됩니다.</p>
-        <Last data={props?.price} />
+        <LastUpdate data={props?.price} />
     </div>
 }

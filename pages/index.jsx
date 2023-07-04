@@ -37,10 +37,7 @@ const Column = () => {
     </>
 }
 
-const index = function ({
-    group, induty, index, market, price, meta
-}) {
-    const props = { group, meta, induty, market, index, price };
+const index = function (props) {
     return (
         <div>
             <Market {...props} />
