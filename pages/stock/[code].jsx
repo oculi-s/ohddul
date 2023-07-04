@@ -78,9 +78,10 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
 
 
 const Index = ({
+    User, setUser,
     meta, group, price, index, induty,
     predict,
-    userMeta, userFavs, userPred,
+    userMeta,
     stockPrice, stockEarn, stockShare,
     stockPredict,
 }) => {
@@ -98,10 +99,11 @@ const Index = ({
         )
     }
     const props = {
+        User, setUser,
         code, router,
         meta, group, price, index, induty,
         predict,
-        userMeta, userFavs, userPred,
+        userMeta,
         stockMeta, stockEarn, stockPrice, stockShare,
         stockPredict,
     };
@@ -139,6 +141,7 @@ const Index = ({
     )
 }
 
-import container, { getServerSideProps } from "@/container";
+import container, { getServerSideProps } from "@/container/heavy";
+import { useSession } from 'next-auth/react';
 export { getServerSideProps };
 export default container(Index);

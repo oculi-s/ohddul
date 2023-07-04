@@ -16,25 +16,24 @@ function PredBlock1() {
     </div>;
 }
 
-function PredBlock2({ price, setTabIndex }) {
-    const code = '005930';
-    const name = '삼성전자';
-    console.log(price[code])
+function PredBlock2({ aside, setTabIndex }) {
+    const first = aside?.sum[0];
+    const code = first?.code;
+    const name = first?.n;
+    const last = first?.c;
     return <div className={styles.box}>
         <h3>예측바 테스트하기</h3>
-        아래는 <Link href='/stock/005930'>삼성전자</Link>의 테스트용 예측바입니다.
+        아래는 <Link href={`/stock/${code}`}>{name}</Link>의 테스트용 예측바입니다.
         <div className={styles.predBarWrap}>
             <PredBar {...{
-                name,
-                code, last: price[code], testing: true, help: false
+                name, code, last, testing: true, help: false
             }} />
         </div>
         <p>오/떨 맞추기를 선택하시면 각각 오름과 떨어짐을, 가격 맞추기를 선택하시면 목표 가격을 맞추실 수 있습니다.</p>
         <h4>오/떨 맞추기</h4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
-                name,
-                code, last: price[code], testing: true,
+                name, code, last, testing: true,
                 defaultType: 1, help: false
             }} />
         </div>
@@ -43,8 +42,7 @@ function PredBlock2({ price, setTabIndex }) {
         <h4>가격 맞추기</h4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
-                name,
-                code, last: price[code], testing: true,
+                name, code, last, testing: true,
                 defaultType: 2, help: false
             }} />
         </div>
@@ -54,7 +52,6 @@ function PredBlock2({ price, setTabIndex }) {
 }
 
 function PredHowto(props) {
-    if (!props.meta) return <></>;
     return <div>
         <PredBlock1 {...props} />
         <PredBlock2 {...props} />

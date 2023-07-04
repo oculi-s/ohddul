@@ -1,28 +1,41 @@
-import { useSession } from "next-auth/react";
+import styles from "$/Common/Create.module.scss"
+import { getSession, useSession } from "next-auth/react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import styles from "$/Common/Create.module.scss"
+import { SignError } from "#/base/base";
+import { Int } from "@/module/ba";
 
-const SignUp = async e => {
+const SignUp = async (e, setUser, setError, setOn) => {
     e.preventDefault();
     const id = e.target.id.value;
     const pw = e.target.pw.value;
     const pwCheck = e.target.pwCheck.value;
-    const res = await signIn("my-credential", {
+    const res = await signIn("ohddul", {
         id, pw, pwCheck, isCreate: true,
         redirect: false
     })
+    if (res.ok) {
+        const user = (await getSession()).user;
+        const pred = user?.pred || [];
+        const favs = user?.favs || [];
+        setUser({ pred, favs });
+        setError(0);
+    } else {
+        setError(Int(res.error));
+        setOn(1);
+        setTimeout(() => {
+            setOn(0);
+        }, 1000);
+    }
     return res;
 }
 
-const submit = async e => {
-    let res = await SignUp(e);
-    console.log(res);
-}
-
-const Index = ({ userMeta, userData }) => {
+const Index = ({ setUser }) => {
+    const [on, setOn] = useState(0);
+    const [error, setError] = useState(0);
     const router = useRouter();
-    let { status } = useSession();
+    const { status } = useSession();
     if (status == 'loading') {
         return (
             <>로딩중입니다...</>
@@ -31,35 +44,37 @@ const Index = ({ userMeta, userData }) => {
         router.push('/profile');
     } else {
         return <>
-            <form className={styles.create} onSubmit={submit}>
+            <form className={styles.create} onSubmit={async e => {
+                await SignUp(e, setUser, setError, setOn);
+            }}>
                 <div>
-
-                    {/* <TextField
+                    <input
                         name='id'
                         label="ID"
                         variant="filled"
                     />
-                    <TextField
+                    <input
                         label="비밀번호"
                         type="password"
                         autoComplete="current-password"
                         name='pw'
                         variant="filled"
                     />
-                    <TextField
+                    <input
                         label="비밀번호확인"
                         type="password"
                         autoComplete="current-password"
                         name='pwCheck'
                         variant="filled"
-                    /> */}
+                    />
                 </div>
+                <SignError code={error} on={on} />
                 <button type='submit'>회원가입</button>
             </form>
         </>
     }
 }
 
-import container, { getServerSideProps } from "@/container";
+import container, { getServerSideProps } from "@/container/heavy";
 export { getServerSideProps };
 export default container(Index);

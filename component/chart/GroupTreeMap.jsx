@@ -39,7 +39,7 @@ const stockElement = ({
 const refindData = ({ group, meta, price }) => {
     const { name, child } = group;
     let children = child
-        ?.filter(e => meta[e].a && price[e].c)
+        ?.filter(e => meta[e]?.a && price[e]?.c)
         ?.sort((b, a) => meta[a].a * price[a].c - meta[b].a * price[b].c);
     children = children?.map(code => ({
         code, name,

@@ -3,6 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import dt from './dt';
 import { XMLParser } from 'fast-xml-parser/src/fxp';
+import dir from './dir';
+
+const defDict = {}
+defDict[dir.stock.light.aside] = { sum: [], up: [], down: [] };
+defDict[dir.stock.light.count] = { cnt: 0, earn: {}, none: {} };
+defDict[dir.stock.meta] = { data: {}, index: {} };
+defDict[dir.stock.all] = {};
 
 function read(url, def = { data: [], last: 0 }) {
     if (!fs.existsSync(url)) return def;
@@ -19,7 +26,7 @@ async function xml(url, def = { data: [], last: dt.num() }) {
     if (fs.existsSync(url)) {
         return await parser.parse(fs.readFileSync(url));
     } else {
-        return def;
+        return def[url] || def;
     }
 }
 
@@ -29,7 +36,8 @@ function write(url, data, last = true) {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     if (typeof (data) == 'object' && last) data.last = dt.num();
     data = JSON.stringify(data, null, null);
-    return fs.writeFileSync(url, data);
+    fs.writeFileSync(url, data)
+    return data;
 }
 
 function remove(url) {
@@ -46,6 +54,9 @@ function queue(url, elem, last = false) {
     return write(url, data, last);
 }
 
+/**
+ * array json을 읽어오고 
+ */
 function toggle(url, elem) {
     url = encode(url);
     const data = read(url, []);
@@ -70,71 +81,7 @@ function up(url, def) {
     return write(url, data);
 }
 
-function toTable(json) {
-    if (typeof (json) == 'string') {
-        json = JSON.parse(json);
-    }
-    let r = '<tr>' + data(json, 0, depth(json)) + '</tr>';
-    return <tbody dangerouslySetInnerHTML={{ __html: r }}></tbody>;
-}
-
 export default {
     read, xml, write, remove,
-    queue, toggle, up, toTable,
+    queue, toggle, up,
 };
-
-function child(dict) {
-    var v = 0;
-    Object.keys(dict).forEach(key => {
-        let value = dict[key];
-        if (typeof (value) == 'object') {
-            if (Object.keys(dict[key]).length) {
-                v += child(dict[key]);
-            } else {
-                v += 1;
-            }
-        } else if (typeof (value) != 'undefined') {
-            v += 1;
-        }
-    })
-    return v;
-}
-
-function depth(dict) {
-    // 밑으로 자식이 몇단계까지 있는지
-    var v = 0;
-    for (let key of Object.keys(dict)) {
-        const value = dict[key];
-        if (typeof (value) == 'object') {
-            if (Object.keys(value)?.length) {
-                v = Math.max(depth(value) + 1, v);
-            }
-        }
-    }
-    return v;
-}
-
-function data(dict, cur, max) {
-    const d = max - cur;
-    return Object.keys(dict).map(key => {
-        if (key.trim().length) {
-            const value = dict[key];
-            const isth = value?.isth;
-            const cs = value?.cs;
-            delete value?.isth;
-            delete value?.cs;
-            if (typeof (value) == 'string') {
-                return `<td>${key}</td>${value}</tr>`;
-            } else if (Object.keys(value).length) {
-                let c = child(value);
-                let row = c ? ` rowspan=${c} ` : '';
-                let col = depth(value) == 0 ? ` colspan=${d} ` : '';
-                return `<th${col}${row}>${key}</th>${data(value, cur + 1, max)}</tr>`;
-            } else {
-                let col = cs ? ` colspan=${cs}` : "";
-                return isth ? `<th${col}>${key}</th></tr>` :
-                    `<td${col}>${key}</td></tr>`;
-            }
-        }
-    }).join('');
-}

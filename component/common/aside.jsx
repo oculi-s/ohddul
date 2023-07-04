@@ -1,45 +1,54 @@
 import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
-import { useSession } from "next-auth/react"
-import { signIn, signOut } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import { getRank } from '#/User';
 import Search from '#/common/search';
 
-import { Per, Color, Num } from '@/module/ba';
-import dt from '@/module/dt';
-import { Loading } from '#/_base';
+import { Per, Color, Num, Int } from '@/module/ba';
+import { SignError } from '#/base/base';
 
-const SignIn = async (e) => {
+const SignIn = async (e, setUser, setError, setOn) => {
     e.preventDefault();
     const id = e.target.id.value;
     const pw = e.target.pw.value;
-    const res = await signIn("my-credential", {
+    const res = await signIn("ohddul", {
         id, pw, redirect: false
     })
-    console.log(res);
+    if (res.ok) {
+        const user = (await getSession()).user;
+        const pred = user?.pred || [];
+        const favs = user?.favs || [];
+        setUser({ pred, favs });
+        setError(0);
+    } else {
+        setError(Int(res.error));
+        setOn(1);
+        setTimeout(() => {
+            setOn(0);
+        }, 1000);
+    }
     return res;
 }
 
-const SignOut = async (e) => {
+const SignOut = async (e, setUser) => {
     e.preventDefault();
-    const res = await signOut('my-credential', {
-        redirect: false
-    });
-    console.log(res);
+    await signOut({ redirect: false });
+    setUser({ pred: [], favs: [] });
 }
 
-function UserInfo({ userMeta }) {
+function UserInfo({ setUser }) {
     const { status } = useSession();
-    const [valid, setValid] = useState(false);
+    const [on, setOn] = useState(0);
+    const [error, setError] = useState(0);
     let data;
     if (status == "authenticated") {
         data = <>
-            <User userMeta={userMeta}></User>
+            <User />
             <form
                 className={styles.logout}
-                onSubmit={SignOut}
+                onSubmit={e => { SignOut(e, setUser) }}
             >
                 <div className={styles.submit}>
                     <button type='submit'>로그아웃</button>
@@ -51,11 +60,11 @@ function UserInfo({ userMeta }) {
             <form
                 className={styles.login}
                 onSubmit={async (e) => {
-                    let res = await SignIn(e);
-                    if (!res.ok) setValid(true);
+                    await SignIn(e, setUser, setError, setOn);
                 }}>
                 <input name='id' placeholder='ID' />
                 <input name='pw' placeholder="비밀번호" type="password" />
+                <SignError code={error} on={on} />
                 <div className={styles.submit}>
                     <Link href="/create">회원가입</Link>
                     <button type='submit'>로그인</button>
@@ -69,82 +78,44 @@ function UserInfo({ userMeta }) {
 }
 
 const N = 8;
-function PriceTable({ meta, price, sortBy, N }) {
-    if (!meta || !price) return <Loading />;
-    const body = Object.keys(meta)
-        .filter(e => price[e]?.c && meta[e]?.a)
-        .sort(sortBy)
-        .slice(0, N)
-        .map(code => {
-            const c = price[code]?.c;
-            const p = price[code]?.p;
-            return <tr key={code}>
-                <th>
-                    <Link href={`/stock/${code}`}>
-                        {meta[code]?.n}
-                    </Link>
-                </th>
-                <td align='right'>{Num(c)}</td>
-                <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
-            </tr>;
-        });
+function AsideTable({ data }) {
+    const body = data?.map(e => {
+        const { code, n, c, p } = e;
+        return <tr key={code}>
+            <th>
+                <Link href={`/stock/${code}`}>{n}</Link>
+            </th>
+            <td align='right'>{Num(c)}</td>
+            <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
+        </tr>
+    })
     return <table><tbody>{body}</tbody></table>;
 }
 
-function MarketSumList({ price, meta }) {
-    meta = meta?.data;
-    if (!price || !meta) return <Loading />;
-    const sortBy = (b, a) => {
-        const pa = price[a];
-        const pb = price[b];
-        return (pa?.c * meta[a]?.a) - (pb?.c * meta[b]?.a);
-    };
-    return (
+function StockList({ aside }) {
+    return <>
         <div className={styles.box}>
             <Link href="/stock/sum">
                 <span className={styles.sum}>시가총액 순위</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <PriceTable {...{ price, meta, N, sortBy }} />
+            <AsideTable data={aside?.sum} />
         </div>
-    );
-}
-
-function UpList({ price, meta }) {
-    meta = meta?.data;
-    if (!price || !meta) return <Loading />;
-    const sortBy = (b, a) => {
-        const pa = price[a];
-        const pb = price[b];
-        return (pa?.c - pa?.p) * pb?.p - pa?.p * (pb?.c - pb?.p);
-    };
-    return (
         <div className={styles.box}>
             <Link href="/stock/up">
                 <span className={styles.up}>오른종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <PriceTable {...{ price, meta, N, sortBy }} />
+            <AsideTable data={aside?.up} />
         </div>
-    );
-}
-function DownList({ price, meta }) {
-    meta = meta?.data;
-    if (!price || !meta) return <Loading />;
-    const sortBy = (a, b) => {
-        const pa = price[a];
-        const pb = price[b];
-        return (pa?.c - pa?.p) * pb?.p - pa?.p * (pb?.c - pb?.p);
-    };
-    return (
         <div className={styles.box}>
             <Link href="/stock/down">
                 <span className={styles.down}>떨어진종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <PriceTable {...{ price, meta, N, sortBy }} />
+            <AsideTable data={aside?.down} />
         </div>
-    );
+    </>
 }
 
 function Rank({ userMeta }) {
@@ -185,8 +156,8 @@ function Total() {
 }
 
 export default function Aside({
-    price, meta, group,
-    userMeta,
+    price, meta, group, aside,
+    userMeta, setUser,
     mobAside, setAsideShow
 }) {
     const [view, setView] = useState(false);
@@ -197,8 +168,12 @@ export default function Aside({
             document.body.style.overflow = 'unset';
         }
     }, [mobAside]);
-    const props = { meta, userMeta, price, group, setAsideShow, view, setView };
-    if (!meta) return;
+    const props = {
+        setUser, aside,
+        meta, userMeta,
+        price, group,
+        setAsideShow, view, setView
+    };
     return (
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>
@@ -206,9 +181,7 @@ export default function Aside({
                     <Search {...props} className={styles.search} />
                 </div>
                 <UserInfo {...props} />
-                <MarketSumList {...props} />
-                <UpList {...props} />
-                <DownList {...props} />
+                <StockList {...props} />
             </aside>
             <div className={styles.shadow}
                 onClick={e => { setAsideShow(false); setView(false); }}

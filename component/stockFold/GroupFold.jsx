@@ -12,7 +12,7 @@ import FavStar from '#/base/FavStar';
  */
 const GroupFold = ({
     meta, price, group, predict, router,
-    userFavs, folded
+    folded, User, setUser
 }) => {
     meta = meta?.data;
     if (!group) return <></>;
@@ -44,7 +44,7 @@ const GroupFold = ({
             return (
                 <tr key={code}>
                     <th>
-                        <FavStar {...{ code, userFavs }} />
+                        <FavStar {...{ code, User, setUser }} />
                         <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                     </th>
                     <td>{Num(price[code]?.c)}</td>

@@ -5,37 +5,35 @@ import styles from '$/Help.module.scss';
 import { Div } from '@/module/ba';
 
 const InfoBlock1 = ({
-    meta, price,
-    earnNull, earnCount, shareNull
+    cnt, earn, none
 }) => {
-    const count = Object.keys(meta).length
-    const priceCount = Object.keys(meta).filter(e => price[e]?.c).length;
     const YEARS = dt.YEARS;
     const len = YEARS.length;
+    const price = none?.SPAC?.length + none?.notSPAC?.length;
     return <div className={styles.box}>
         <h3>데이터 정보</h3>
         <h4>제공데이터</h4>
-        전체 {count}개의 종목에 대한 정보가 제공되고 예측이 가능합니다.
+        전체 {cnt}개의 종목에 대한 정보가 제공되고 예측이 가능합니다.
         <table><tbody>
             <tr>
                 <th>가격</th>
                 <td>
-                    <span className='red'>{priceCount}</span>
-                    ({Div(priceCount, count)}) 개 종목의 가격정보가 제공됩니다.
+                    <span className='red'>{cnt - price}</span>
+                    ({Div(cnt - price, cnt)}) 개 종목의 가격정보가 제공됩니다.
                 </td>
             </tr>
             <tr>
                 <th>실적</th>
                 <td>
-                    <span className='red'>{count - earnNull.length}</span>
-                    ({Div(count - earnNull.length, count)}) 개 종목의 실적정보가 제공됩니다.
+                    <span className='red'>{cnt - none?.earn?.length}</span>
+                    ({Div(cnt - none?.earn?.length, cnt)}) 개 종목의 실적정보가 제공됩니다.
                 </td>
             </tr>
             <tr>
                 <th>지분</th>
                 <td>
-                    <span className='red'>{count - shareNull.length}</span>
-                    ({Div(count - shareNull.length, count)}) 개 종목의 지분정보가 제공됩니다.
+                    <span className='red'>{cnt - none?.share?.length}</span>
+                    ({Div(cnt - none?.share?.length, cnt)}) 개 종목의 지분정보가 제공됩니다.
                 </td>
             </tr>
         </tbody></table>
@@ -47,12 +45,12 @@ const InfoBlock1 = ({
         <div className={styles.inline}>
             <table><tbody>
                 {YEARS.slice(0, len / 2).map(year => {
-                    const yearCount = earnCount[year];
+                    const yearCount = earn[year];
                     return <tr key={year}><th>{year}</th>
                         {yearCount.map((c, i) => (
                             <td key={`${year}_${i}`}>
-                                <span>{i + 1}Q <span className={styles.per}>({Div(c, count)})</span></span>
-                                <div className={styles.bar} style={{ width: Div(c, count) }}></div>
+                                <span>{i + 1}Q <span className={styles.per}>({Div(c, cnt)})</span></span>
+                                <div className={styles.bar} style={{ width: Div(c, cnt) }}></div>
                             </td>
                         ))}
                     </tr>
@@ -60,12 +58,12 @@ const InfoBlock1 = ({
             </tbody></table>
             <table><tbody>
                 {YEARS.slice(len / 2).map(year => {
-                    const yearCount = earnCount[year];
+                    const yearCount = earn[year];
                     return <tr key={year}><th>{year}</th>
                         {yearCount.map((c, i) => (
                             <td key={`${year}_${i}`}>
-                                <span>{i + 1}Q <span className={styles.per}>({Div(c, count)})</span></span>
-                                <div className={styles.bar} style={{ width: Div(c, count) }}></div>
+                                <span>{i + 1}Q <span className={styles.per}>({Div(c, cnt)})</span></span>
+                                <div className={styles.bar} style={{ width: Div(c, cnt) }}></div>
                             </td>
                         ))}
                     </tr>
@@ -77,13 +75,11 @@ const InfoBlock1 = ({
     </div>
 }
 
-const InfoBlock2 = ({ meta, price }) => {
-    const priceNull = Object.keys(meta).filter(e => !price[e]?.c);
-    console.log(Object.values(price).map(e => e.c).filter(e => !e).length)
-    const SPAC = priceNull.filter(e => meta[e]?.n?.includes('스팩'));
-    const notSPAC = priceNull.filter(e => !meta[e]?.n?.includes('스팩'));
+const InfoBlock2 = ({ none }) => {
+    const SPAC = none?.SPAC;
+    const notSPAC = none?.notSPAC;
     return <div className={styles.box}>
-        <h3>가격정보가 제공되지 않은 종목 ({priceNull.length}개)</h3>
+        <h3>가격정보가 제공되지 않은 종목 ({SPAC?.length + notSPAC?.length}개)</h3>
         <h4>합병이 예정된 스팩주
             <Help
                 title={'기업인수목적회사'}
@@ -92,20 +88,17 @@ const InfoBlock2 = ({ meta, price }) => {
                     회사의 지분을 매입한 뒤 사명을 변경하는 방식으로
                     우회상장하는 목적으로 설립된 회사
                 </>} /> ({SPAC.length}개)</h4>
-        {SPAC.map(code =>
-            <span key={code}><Link href={`/stock/${code}`}>{meta[code].n}</Link>, </span>
+        {SPAC.map(([code, name]) =>
+            <span key={code}><Link href={`/stock/${code}`}>{name}</Link>, </span>
         )}
         < h4 > 거래불가({notSPAC.length}개)</h4>
-        {notSPAC.map(code =>
-            <span key={code}><Link href={`/stock/${code}`}>{meta[code].n}</Link>, </span>
+        {notSPAC.map(([code, name]) =>
+            <span key={code}><Link href={`/stock/${code}`}>{name}</Link>, </span>
         )}
     </div>
 }
 
 const DataInfo = (props) => {
-    const meta = props?.meta?.data;
-    if (!meta) return <></>;
-    props = { ...props, meta };
     return <div>
         <InfoBlock1 {...props} />
         <InfoBlock2 {...props} />

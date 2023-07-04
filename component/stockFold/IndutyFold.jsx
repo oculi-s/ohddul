@@ -13,7 +13,7 @@ import styles from '$/Base/Fold.module.scss';
  */
 const IndutyFold = ({
     meta, code, price, induty, index, router,
-    userFavs, folded = true
+    folded = true, User, setUser,
 }) => {
     induty = induty?.data;
     index = index?.data;
@@ -40,7 +40,7 @@ const IndutyFold = ({
         <p className={styles.cnt}>({index[e]?.c}개)</p>
     </>
 
-    const body = <table className={styles.induty}><tbody>
+    const body = <>
         <tr>
             {index[parCode] && <th rowSpan={len}><Induty e={parCode} /></th>}
             <th rowSpan={len}><Induty e={indutyCode} /></th>
@@ -51,17 +51,17 @@ const IndutyFold = ({
             </tr>
         )}
         <tr><th>종목</th><th>전일종가</th><th>시총</th></tr>
-        {stock.map(code => {
-            return <tr key={code}>
+        {stock.map(code =>
+            <tr key={code}>
                 <td>
-                    <FavStar {...{ code, userFavs }} />
+                    <FavStar {...{ code, User, setUser }} />
                     <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                 </td>
                 <td>{Num(price[code]?.c)}</td>
                 <td>{Price(price[code]?.c * meta[code]?.a)}</td>
             </tr>
-        })}
-    </tbody></table>;
+        )}
+    </>
     const props = { router, name, body, folded };
     return <Fold {...props} />
 }

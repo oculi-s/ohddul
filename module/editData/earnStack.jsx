@@ -99,5 +99,4 @@ export const earnonPrice = async ({ stockPrice, stockEarn }) => {
             }
         }
     };
-    // console.log(stockPrice?.data[0])
 };

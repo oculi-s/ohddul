@@ -7,62 +7,82 @@ import Help from '#/base/Help';
 
 import { priceHelp } from '#/group/HelpDescription';
 import PriceElement from '#/group/groupPrice';
-import { bpsHelp, epsHelp } from '#/stockData/HelpDescription';
+import { bpsHelp } from '#/stockData/HelpDescription';
 
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
+import { getSession } from 'next-auth/react';
+import container from "@/container/light";
 
+/**
+ * 그룹 정보를 보여주는 페이지
+ * 
+ * 데이터 줄이기 
+ * meta : 350 --> 221 (-129kb)
+ * price : 221 --> 148 (-73kb)
+ * induty : 277 --> 238 (-39kb)
+ */
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
+    const aside = json.read(dir.stock.light.aside);
     const group = json.read(dir.stock.group).data[code];
 
-    const meta = json.read(dir.stock.meta, { data: {}, index: {} });
-    const price = json.read(dir.stock.all);
+    const Filter = (data) => {
+        return Object.fromEntries(Object.entries(data)
+            ?.filter(([k, v]) => group?.child?.includes(k)))
+    }
     const predict = json.read(dir.stock.predAll);
     const userMeta = json.read(dir.user.meta);
+
+    const Price = json.read(dir.stock.all);
     const index = json.read(dir.stock.induty);
     const induty = json.read(dir.stock.dart.induty);
+    const meta = json.read(dir.stock.meta);
 
-    const groupEarn = group?.child?.map(code => {
+    const price = Filter(Price);
+    induty.data = Filter(induty.data);
+    meta.data = Filter(meta.data);
+    const earn = group?.child?.map(code => {
         const data = json.read(dir.stock.earn(code)).data.filter(e => e.data);
         const equity = data.map(e => e?.equity).sum();
         const revenue = data.map(e => e?.revenue).sum();
         const profit = data.map(e => e?.profit).sum();
         return { code, equity, revenue, profit };
     })
-    const groupShare = group?.child?.map(e =>
+    const share = group?.child?.map(e =>
         [e, json.read(dir.stock.share(e)).data]
     )
     let props = {
-        code,
-        price, meta, group, index, induty,
+        code, aside,
+        group, index, induty,
         userMeta,
         predict,
-        groupEarn, groupShare
+        meta, price, earn, share
     };
 
-    let userInfo = (await getSession(ctx))?.user;
-    if (userInfo) {
-        const { uid } = userInfo;
-        const userPred = json.read(dir.user.pred(uid), { queue: [], data: [] });
-        const userFavs = json.read(dir.user.fav(uid), []);
-        props = { ...props, userPred, userFavs };
+    const session = (await getSession(ctx));
+    if (session?.user) {
+        const uid = session?.uid;
+        const User = {};
+        User.pred = json.read(dir.user.pred(uid), { queue: [], data: [] });
+        User.favs = json.read(dir.user.favs(uid), []);
+        props = { ...props, User };
     }
     return { props }
 }
 
 const MetaTable = ({
-    group, meta, price, code, groupEarn
+    group, meta, price, code, earn
 }) => {
     meta = meta?.data;
     if (!group) return;
     const groupAsset = group?.asset;
 
-    const earn = {
-        equity: groupEarn?.map(e => e?.equity)?.sum(),
-        revenue: groupEarn?.map(e => e?.revenue)?.sum(),
-        profit: groupEarn?.map(e => e?.profit)?.sum()
+    const groupEarn = {
+        equity: earn?.map(e => e?.equity)?.sum(),
+        revenue: earn?.map(e => e?.revenue)?.sum(),
+        profit: earn?.map(e => e?.profit)?.sum()
     }
     const priceTotal = group?.price;
     const groupPrice = group?.child
@@ -72,8 +92,7 @@ const MetaTable = ({
     const first = groupPrice[0];
 
     const amount = group?.child?.map(e => meta[e]?.a)?.sum();
-    console.log(amount);
-    const BPS = earn.equity / amount;
+    const BPS = groupEarn.equity / amount;
     return <div className={styles.meta}>
         <table><tbody>
             <tr><th>시가총액</th><td>{Price(priceTotal)}</td></tr>
@@ -119,6 +138,4 @@ const Index = (props) => {
     </>
 }
 
-import container from "@/container";
-import { getSession } from 'next-auth/react';
 export default container(Index);

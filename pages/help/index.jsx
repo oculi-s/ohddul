@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from '$/Help.module.scss';
 
 import json from '@/module/json';
 import dt from '@/module/dt';
 import ToC from '#/base/Toc';
-import { getSession } from 'next-auth/react';
 import dir from '@/module/dir';
 
 import ToggleTab from '#/base/ToggleTab';
@@ -13,41 +12,22 @@ import PredHowto from '#/helpArticle/PredHowto';
 import BoardRules from '#/helpArticle/BoardRules';
 import Scoring from '#/helpArticle/Scoring';
 
+import Container from '@/container/light';
+
+/**
+ * priceNull을 구할 때 서버에서 데이터를 전부 읽고 진행할지 고민인데
+ * 그럴 필요 없음. 어차피 데이터가 제공되기는 하니까
+ * 
+ * 1. meta 서버로 넘기지 않음. SPAC과 notSPAC에서만 사용하는데 이걸 만들어서 넘겨줌 --> 데이터 92kb로 절약
+ * 문제는 불러오는데에 시간이 너무 오래걸린다는 것. 업데이트 서버에서 미리 저장해두어야 함.
+ * 2. 그래서 count 파일 따로 만듬. 데이터 1.94kb로 절약 시간도 매우 빠르게 개선
+ */
 export const getServerSideProps = async (ctx) => {
-    const userInfo = (await getSession(ctx))?.user;
-    const uid = userInfo?.uid || false;
-    const userMeta = json.read(dir.user.meta);
     const now = dt.num();
-    const price = json.read(dir.stock.all, {});
-    const meta = json.read(dir.stock.meta);
-    const earnCount = {};
-    const earnDatas = Object.fromEntries(Object.keys(meta.data)
-        .map(code => [code, json.read(dir.stock.earn(code), { data: [] })]));
-    const shareDatas = Object.fromEntries(Object.keys(meta.data)
-        .map(code => [code, json.read(dir.stock.share(code), { data: [] })]));
-    const types = { 3: '-03-31', 2: '-06-30', 4: '-09-30', 1: '-12-31' };
-    for await (let year of dt.YEARS) {
-        earnCount[year] = [0, 0, 0, 0];
-        for await (let type of '1423') {
-            const key = `${year}${types[type]}`;
-            const i = dt.toJson(key).M / 3 - 1;
-            earnCount[year][i] = Object.values(earnDatas)
-                .filter(e => e.data?.length)
-                .filter(e =>
-                    e.data?.find(c => (c.date == key) && c.data)
-                ).length;
-        }
-    }
-    const earnNull = Object.entries(earnDatas)
-        .filter(([k, v]) => !v.data?.length)
-        .map(e => e[0]);
-    const shareNull = Object.entries(shareDatas)
-        .filter(([k, v]) => !v.data?.length)
-        .map(e => e[0]);
+    const aside = json.read(dir.stock.light.aside);
+    const count = json.read(dir.stock.light.count);
     const props = {
-        now, price, meta,
-        uid, userMeta,
-        earnCount, shareNull, earnNull
+        now, aside, ...count
     };
     return { props };
 }
@@ -65,7 +45,7 @@ const Index = (props) => {
             <PredHowto {...props} />
         </div>,
         <div key={2}>
-            <Scoring {...props} />
+            <Scoring />
         </div>,
         <div key={3}>
             {/* <ChartHowto {...props} /> */}
@@ -83,5 +63,4 @@ const Index = (props) => {
     </>
 }
 
-import container from "@/container";
-export default container(Index);
+export default Container(Index);

@@ -1,8 +1,7 @@
 import styles from '$/Stock/StockHead.module.scss';
 import { json } from '@/pages/api/xhr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import Help from '#/base/Help';
 import toggleOnPageChange from '#/toggle';
 import { useRouter } from 'next/router';
@@ -10,12 +9,14 @@ import { Color, Per } from '@/module/ba';
 import dir from '@/module/dir';
 import dt from '@/module/dt';
 import FavStar from '#/base/FavStar';
+import { useSession } from 'next-auth/react';
 
 const Bid = (price) => {
     return price < 2000 ? 1 : price < 20000 ? 10 : 100;
 }
 
 const submit = async ({
+    User, setUser,
     code, name, again,
     ohddul, change, uid, origin, date,
     testing,
@@ -58,6 +59,8 @@ const submit = async ({
         url: dir.stock.predAll,
         data: { code, key: 'queue' }
     })
+    User?.pred?.push({ code, change, ohddul, origin, date: dt.num() });
+    setUser({ ...User });
     setAgain(true);
     setOpacity(0);
     setTimeout(() => setBar(false), 500);
@@ -174,22 +177,27 @@ const PriceForm = ({
  * testing이 true이면 실제 데이터로 저장되지 않음
  */
 export const PredBar = ({
+    User, setUser,
     name, code, last,
     setView, setCnt, setTime,
     setBar, setOpacity,
     testing = false, help = true, defaultType = 0
 }) => {
-    const origin = last?.c || 0;
+    console.log(User);
+
+    const { data: session } = useSession();
+    const origin = last?.c || last || 0;
     const [change, setChange] = useState(0);
     const [type, setType] = useState(defaultType);
     const [date, setDate] = useState(1);
     const [again, setAgain] = useState(false); // 중복제출 방지
-    const { data: session } = useSession();
-    const uid = session?.user?.uid;
+    const user = session?.user;
+    const uid = user?.uid;
     const router = useRouter();
 
     toggleOnPageChange(router, setChange, 0);
     const submitProps = {
+        User, setUser,
         again, setAgain,
         code, name, testing,
         change, origin,
@@ -277,27 +285,33 @@ const Open = ({ time, view, setView }) => {
 }
 
 const StockHead = ({
+    User, setUser,
     code, last,
-    userFavs, userPred,
-    stockMeta,
+    stockMeta
 }) => {
-    const name = stockMeta?.n;
-    const predTime = userPred?.queue?.find(e => e.code == code)?.date;
     const { status } = useSession();
+
+    const name = stockMeta?.n;
     const type = stockMeta?.t;
 
+    const predTime = User?.pred
+        ?.find(e => e.code == code)?.date;
     const [bar, setBar] = useState(true);
-    const [view, setView] = useState(0);
-    const [time, setTime] = useState(predTime);
+    const [view, setView] = useState(predTime);
+    const [time, setTime] = useState();
     const [opacity, setOpacity] = useState(1);
 
-    const router = useRouter();
-    toggleOnPageChange(router, setBar, true);
-    toggleOnPageChange(router, setOpacity, 1);
-    toggleOnPageChange(router, setView, 0);
-    toggleOnPageChange(router, setTime, predTime);
+    useEffect(() => {
+        const predTime = User?.pred
+            ?.find(e => e.code == code)?.date;
+        setBar(true);
+        setOpacity(1);
+        setView(0);
+        setTime(predTime);
+    }, [code, User, status]);
 
     const props = {
+        User, setUser,
         name, code, last,
         setView, setTime,
         setBar, setOpacity
@@ -305,7 +319,7 @@ const StockHead = ({
     if (!name) return <></>;
     return <>
         <div className={styles.head}>
-            <FavStar {...{ code, userFavs }} />
+            <FavStar {...props} />
             <h2>
                 <Link href={'/stock/' + code}>
                     {name}

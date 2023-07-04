@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 function ScoringBlock1() {
     return <div className={styles.box}>
+        오떨에서는 유저별로 고유점수를 부여하며, 유저의 고유점수는 각 채점의 단위점수로 구성됩니다.
         <h3>채점과 단위점수</h3>
         <p>모든 예측의 채점은 <span className='red'>데이터 업데이트 이후</span> 30분 이내로 이루어집니다. 오후 5시 이내에 모든 채점이 끝납니다.</p>
         <h4>오/떨 예측</h4>
@@ -61,7 +62,6 @@ function ScoringBlock2() {
 }
 
 function Scoring(props) {
-    if (!props.meta) return <></>;
     return <div className={styles.scoring}>
         <ScoringBlock1 {...props} />
         <ScoringBlock2 {...props} />

@@ -1,6 +1,5 @@
 import styles from '$/User.module.scss'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 
 import bgIron from '@/public/rank/iron.png'
 import bgBronze from '@/public/rank/10.png'
@@ -9,6 +8,7 @@ import bgGold from '@/public/rank/500.png'
 import bgPlatinum from '@/public/rank/1000.png'
 import bgDiamond from '@/public/rank/10000.png'
 import bgMaster from '@/public/rank/50000.png'
+import { useSession } from 'next-auth/react'
 
 export const getBg = rank => {
     return rank.includes('bronze') ? (bgBronze
@@ -38,17 +38,24 @@ export const getRank = rank => {
     return ['master1', 'master1'];
 }
 
-export default function Index({ userMeta }) {
+/**
+ * 유저정보 박스, 완전히 독립적으로 실행되도록 해야함.
+ * 
+ * 그러려면 session에 meta를 담아 보내야 한다.
+ * 2023.07.04 수정 완료
+ */
+export default function User() {
     const { data: session, status } = useSession();
     if (status == 'loading' || status == 'unauthenticated') {
         return (
             <>로딩중입니다...</>
         )
     }
-    const { id, uid } = session.user;
-    const score = userMeta[uid]?.rank;
+    const user = session?.user;
+    const id = user?.id;
+    const score = user?.meta?.rank;
     const [curRank, nextRank] = getRank(score);
-    let rankName = curRank[0].toUpperCase() + curRank.slice(-1);
+    let rankName = curRank[0]?.toUpperCase() + curRank?.slice(-1);
     if (curRank == 'unranked0') rankName = "IRON";
     return (
         <div className={styles.user}>

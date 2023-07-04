@@ -8,9 +8,33 @@ import { Num, Fix, Per, Color } from '@/module/ba'
 import dt from "@/module/dt";
 import ToggleTab from "#/base/ToggleTab";
 
+import dir from "@/module/dir";
+import json from "@/module/json";
+
 import { PredBar } from "#/stockData/stockHead";
-import { useState } from "react";
 import FavStar from "#/base/FavStar";
+import Container from "@/container/light";
+
+/**
+ * asdf
+ */
+export const getServerSideProps = (ctx) => {
+    const aside = json.read(dir.stock.light.aside);
+    const userMeta = json.read(dir.user.meta);
+    const id = ctx.query?.id;
+    let props = { aside, userMeta };
+    // console.log(ctx.query?.id);
+
+    if (id) {
+        const uid = Object.keys(userMeta).find(k => userMeta[k].id == id);
+        const pred = json.read(dir.user.pred(uid), { queue: [], data: [] });
+        const favs = json.read(dir.user.favs(uid), []);
+        props = { ...props, pred, favs };
+    } else {
+
+    }
+    return { props };
+}
 
 const Curtain = ({ rank }) => (
     <div
@@ -31,9 +55,9 @@ const Header = ({ rank, num, bg, id }) => (
 )
 
 const Profile = (props) => {
-    const { rank, score, userPred } = props;
-    let queue = userPred?.queue;
-    let data = userPred?.data;
+    const { rank, score, user } = props;
+    const queue = user?.pred?.queue;
+    let data = user?.pred?.data;
     let ts = score;
     data = data
         ?.sort(dt.sort)
@@ -58,8 +82,11 @@ const Profile = (props) => {
     )
 }
 
-const Graph = ({ id, rank, forNext, userPred }) => {
-    const props = { horLine: rank, data: userPred?.data, name: id };
+const Graph = ({ id, rank, forNext }) => {
+    const { data: session } = useSession();
+    const user = session?.user;
+
+    const props = { horLine: rank, data: user?.pred?.data, name: id };
     return (
         <>
             <div className={styles.bar}>
@@ -73,8 +100,8 @@ const Graph = ({ id, rank, forNext, userPred }) => {
     )
 }
 
-const PredTable = ({ userPred, meta, price }) => {
-    const queueTable = userPred?.queue?.map((e, i) => {
+const PredTable = ({ pred, meta, price }) => {
+    const queueTable = pred?.map((e, i) => {
         const { code, change, date } = e;
         const name = meta[code]?.n;
         const lastPrice = price[code]?.c;
@@ -95,7 +122,10 @@ const PredTable = ({ userPred, meta, price }) => {
     return <table><tbody>{queueTable}</tbody></table>;
 }
 
-const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
+const FavTable = ({ meta, price, mine, User, setUser }) => {
+    const { data: session } = useSession();
+    const user = session?.user;
+
     const head = <tr>
         <th>종목</th>
         <th>가격</th>
@@ -105,11 +135,10 @@ const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
         const name = meta[code]?.n;
         const close = price[code]?.c;
         const prev = price[code]?.p;
-        const [favs, setFavs] = useState(true);
         return <>
             <tr>
                 <th>
-                    {mine && <FavStar {...{ code, userFavs }} />}
+                    {mine && <FavStar {...{ code, User, setUser }} />}
                     <Link href={`/stock/${code}`}>{name}</Link>
                 </th>
                 <td>{close}</td>
@@ -125,7 +154,7 @@ const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
             </tr>
         </>
     }
-    const body = userFavs?.map(code =>
+    const body = user?.favs?.map(code =>
         <tbody key={code}>
             <Rows {...{ code }} />
         </tbody>)
@@ -136,20 +165,25 @@ const FavTable = ({ userFavs, userPred, meta, price, uid, mine }) => {
 }
 
 const Index = ({
-    meta, price,
-    userMeta, userPred, userFavs,
+    aside, userMeta,
+    User, setUser,
 }) => {
+    // console.log(User);
     const { data: session, status } = useSession();
+    const user = session?.user;
+
     const router = useRouter()
     var mine = false;
-    var { id } = router.query;
+    var id = router.query?.id;
     if (!id && status == 'unauthenticated') {
         return (
             <>로그인을 진행해주세요</>
         )
     }
+    var uid;
     if (!id) {
-        var { id, uid } = session?.user;
+        id = user?.id;
+        uid = user?.uid;
         mine = true;
     } else {
         id = id[0];
@@ -160,7 +194,6 @@ const Index = ({
             <>{id} : 존재하지 않는 사용자입니다.</>
         );
     }
-    meta = meta.data;
     const score = userMeta[uid].rank;
     const [rank, nextRank] = getRank(score);
     const prevScore = Math.floor(score / 100) * 100;
@@ -169,8 +202,8 @@ const Index = ({
     const bg = getBg(rank);
 
     const props = {
+        User, setUser,
         score, id, rank, nextRank, prevScore, forNext, num, bg, mine,
-        userPred
     };
     const tabContents = {
         names: ["랭크변화", mine ? "내 예측" : "예측", "관심종목"],
@@ -181,11 +214,11 @@ const Index = ({
             </div>,
             <div key={1}>
                 <h3>대기중인 예측</h3>
-                <PredTable {...{ userPred, meta, price }} />
+                {/* <PredTable {...{ user, meta, price, User, setUser }} /> */}
             </div>,
             <div key={2}>
                 <h3>관심 종목</h3>
-                <FavTable {...{ userFavs, meta, price, uid, userPred, mine }} />
+                {/* <FavTable {...props} /> */}
             </div>
         ]
     }
@@ -198,6 +231,4 @@ const Index = ({
     )
 }
 
-import container, { getServerSideProps } from "@/container";
-export { getServerSideProps };
-export default container(Index);
+export default Container(Index);

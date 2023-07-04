@@ -10,14 +10,18 @@ export const stock = {
     group: encode('_/group.json'),
     all: encode('_/price.json'),
     market: encode('_/market.json'),
-    marketClose: encode('_/marketClose.json'),
     induty: encode('_/index.json'),
     predAll: encode('_/predict.json'),
     price: code => encode(`&/${code}/price.json`),
-    priceClose: code => encode(`&/${code}/priceClose.json`),
     earn: code => encode(`&/${code}/earn.json`),
     share: code => encode(`&/${code}/share.json`),
     pred: code => encode(`#/${code}.json`),
+    light: {
+        aside: encode('_/light/aside.json'),
+        market: encode('_/light/market.json'),
+        price: code => encode(`&/${code}/priceClose.json`),
+        count: encode('_/light/count.json'),
+    },
     dart: {
         induty: encode('_/induty.json'),
         xml: encode('_/CORPCODE.xml'),
@@ -28,7 +32,7 @@ export const stock = {
 export const user = {
     admin: encode('@/module/auth/user.json'),
     meta: encode(`@/data/user/meta.json`),
-    fav: uid => encode(`@/data/user/${uid}/fav.json`),
+    favs: uid => encode(`@/data/user/${uid}/fav.json`),
     pred: uid => encode(`@/data/user/${uid}/pred.json`),
 }
 

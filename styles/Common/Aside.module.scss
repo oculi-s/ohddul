@@ -6,20 +6,16 @@
     right: var(--nav-margin);
     top: var(--top);
     overflow: auto;
-
-    // >div {
-    // }
 }
 
 .box {
-    border: 1px solid $borderColor;
     border-radius: 10px;
     padding: 10px;
     color: $textColor;
     position: relative;
     min-height: 150px;
     margin-bottom: 10px;
-    background: $bgDark;
+    background: $bgMid;
     font-size: .9em;
 
     >span {
@@ -37,6 +33,10 @@
 }
 
 .user {
+    display: flex;
+    flex-direction: column;
+
+
     button {
         padding: 8px;
     }
@@ -46,14 +46,23 @@
             width: 100%;
             margin-bottom: 5px;
             padding: 10px;
-            background: $bgMid;
+            background: $bgBright;
             border-radius: 8px;
         }
     }
 
-    >form {
-        padding-top: 5px;
+    .login {
+        height: 100%;
+        margin: auto;
+    }
+
+    .logout {
         text-align: center;
+        margin-top: auto;
+
+        .submit {
+            justify-content: flex-end;
+        }
     }
 
     .submit {
@@ -66,7 +75,6 @@
             background: $bgDark;
         }
     }
-
 }
 
 .up::before {

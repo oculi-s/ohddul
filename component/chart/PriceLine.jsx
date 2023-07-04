@@ -351,7 +351,7 @@ function PriceLine({
             setOptions(merge(defaultOptions, option))
             setSubOptions(merge(defaultOptions, suboption));
         })
-    }, [metas, isEarn, isBollinger, isMinMax, num, len])
+    }, [isEarn, isBollinger, isMinMax, num, len])
     const props = {
         isBollinger, setBollinger,
         isEarn, setEarn,
