@@ -49,6 +49,11 @@
     table {
         width: 100%;
 
+        .stock {
+            white-space: nowrap;
+            max-width: 40vw;
+        }
+
         thead {
             text-align: center;
         }

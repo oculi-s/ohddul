@@ -55,7 +55,7 @@ const IndutyFold = ({
         </tr>
         {stock.map(code =>
             <tr key={code}>
-                <th>
+                <th className={styles.stock}>
                     <FavStar {...{ code, User, setUser }} />
                     <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                 </th>

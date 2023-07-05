@@ -44,7 +44,7 @@ const GroupFold = ({
             const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
             return (
                 <tr key={code}>
-                    <th>
+                    <th className={styles.stock}>
                         <FavStar {...{ code, User, setUser }} />
                         <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
                     </th>
