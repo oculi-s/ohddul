@@ -3,7 +3,7 @@ import { getSession, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import { SignError } from "#/base/base";
+import { Loading, SignError } from "#/base/base";
 import { Int } from "@/module/ba";
 
 import json from "@/module/json";
@@ -45,10 +45,9 @@ const Index = ({ setUser }) => {
     const [error, setError] = useState(0);
     const router = useRouter();
     const { status } = useSession();
+    return <>준비중입니다.</>
     if (status == 'loading') {
-        return (
-            <>로딩중입니다...</>
-        )
+        return <Loading />
     } else if (status == 'authenticated') {
         router.push('/profile');
     } else {

@@ -15,7 +15,7 @@ import IndutyFold from '#/stockFold/IndutyFold';
 import PriceElement from '#/stockData/stockPrice';
 import EarnElement from '#/stockData/stockEarn';
 import ShareElement from '#/stockData/stockShare';
-import PredElement from '#/stockData/PredTable';
+import PredElement from '#/stockData/stockPred';
 
 import Container from '@/container/light';
 

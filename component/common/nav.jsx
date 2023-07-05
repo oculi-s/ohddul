@@ -4,11 +4,9 @@ import Link from 'next/link';
 export default function Nav({ mobAside, setAsideShow }) {
     return <nav className={styles.nav}>
         <div className={styles.buttonList}>
-            <Link href="/" className={styles.button}>Home</Link>
-            {/* <Link href="/rank" className={styles.button}>랭킹</Link> */}
-            <Link href="/help" className={styles.button}>도움말</Link>
-            <Link href="/idea" className={styles.button}>의견게시판</Link>
-            {/* <Button href="/community">커뮤니티</Button> */}
+            <div className={styles.button}><Link href="/">Home</Link></div>
+            <div className={styles.button}><Link href="/help">도움말</Link></div>
+            <div className={styles.button}><Link href="/idea">의견게시판</Link></div>
         </div>
         <button
             className={`${styles.menuOpen} fa fa-bars`}

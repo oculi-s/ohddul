@@ -3,12 +3,12 @@ import styles from '$/Base/base.module.scss'
 import { useState } from "react"
 
 export function LastUpdate({ data }) {
-    let last = data?.last;
+    let last = data?.last || 0;
     return <p className="des">* 마지막 업데이트 : {dt.toString(last, { time: 1, day: 1 })}</p>
 }
 
 export function LastData({ data }) {
-    let last = (data?.last || data?.data || data || [])?.find(e => true)?.d;
+    let last = (data?.last || data?.data || data || [])?.find(e => true)?.d || 0;
     return <p className="des">* 기준일 : {dt.toString(last, { time: 1, day: 1 })}</p>
 }
 

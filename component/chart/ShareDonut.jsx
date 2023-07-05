@@ -91,7 +91,7 @@ const ShareDonut = ({ stockShare, stockMeta }) => {
                 options={options}
                 plugins={[ChartDataLabels]}
             /> :
-                <p>openDart에서 제공된<br />지분 데이터가 없습니다.</p>
+                <p>API에서 제공된<br />지분 데이터가 없습니다.</p>
             }
         </div>
     )
