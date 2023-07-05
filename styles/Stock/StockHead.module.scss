@@ -74,10 +74,6 @@
     transition: opacity .5s ease-in !important;
 }
 
-// .type2 {
-//     .help {}
-// }
-
 .predForm {
     display: flex;
     width: 93%;
@@ -130,8 +126,6 @@
 .head {
     display: flex;
     align-items: baseline;
-    padding-bottom: 10px;
-    margin-top: 2em;
     margin-left: 10px;
 
     .market::before {
@@ -177,9 +171,6 @@
 
     h2 {
         display: inline-block;
-        margin-right: 10px;
-        margin-bottom: 0;
-        margin-top: 0;
 
         * {
             color: $textBright

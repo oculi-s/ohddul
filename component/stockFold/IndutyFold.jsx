@@ -15,8 +15,6 @@ const IndutyFold = ({
     meta, code, price, induty, index, router,
     folded = true, User, setUser,
 }) => {
-    induty = induty?.data || induty;
-    index = index?.data || index;
     meta = meta?.data || meta;
     if (!induty) return;
     const indutyCode = Big(induty[code] || code);
@@ -42,21 +40,25 @@ const IndutyFold = ({
 
     const body = <>
         <tr>
-            {index[parCode] && <th rowSpan={len}><Induty e={parCode} /></th>}
-            <th rowSpan={len}><Induty e={indutyCode} /></th>
+            {index[parCode] && <th rowSpan={len} align='center'><Induty e={parCode} /></th>}
+            <th rowSpan={len} align='center'><Induty e={indutyCode} /></th>
         </tr>
         {child.map(e =>
             <tr key={e}>
-                <th colSpan={3}><Induty e={e} /></th>
+                <th colSpan={3} align='center'><Induty e={e} /></th>
             </tr>
         )}
-        <tr><th>종목</th><th>전일종가</th><th>시총</th></tr>
+        <tr>
+            <th align='center'>종목</th>
+            <th align='center'>전일종가</th>
+            <th align='center'>시총</th>
+        </tr>
         {stock.map(code =>
             <tr key={code}>
-                <td>
+                <th>
                     <FavStar {...{ code, User, setUser }} />
                     <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
-                </td>
+                </th>
                 <td>{Num(price[code]?.c)}</td>
                 <td>{Price(price[code]?.c * meta[code]?.a)}</td>
             </tr>

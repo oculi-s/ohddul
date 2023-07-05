@@ -11,7 +11,7 @@ import 농협 from './농협.svg';
 import 신세계 from './신세계.svg';
 import KT from './KT.svg';
 import CJ from './CJ.svg';
-import 한진 from './한진.svg';
+import 한진 from './Hanjin.svg';
 import 카카오 from './카카오.svg';
 import LS from './LS.svg';
 import 두산 from './두산.svg';
@@ -24,7 +24,7 @@ import 네이버 from './네이버.svg';
 import 미래에셋 from './미래에셋.svg';
 import SOil from './S-OIL.svg';
 import 금호아시아나 from './금호아시아나.svg';
-import 하림 from './하림.svg';
+import 하림 from './Halim.svg';
 import 영풍 from './영풍.svg';
 import HDC from './HDC.svg';
 import SM from './SM.svg';
@@ -58,8 +58,8 @@ import 대방건설 from './대방건설.svg';
 import 중앙 from './중앙.svg';
 import 두나무 from './두나무.svg';
 import 에코프로 from './에코프로.svg';
-import 애경 from './애경.svg';
-import 한국지엠 from './한국지엠.svg';
+import 애경 from './AK.svg';
+import 한국지엠 from './GM.svg';
 import 동국제강 from './동국제강.svg';
 import MDM from './MDM.svg';
 import 삼양 from './삼양.svg';
@@ -71,9 +71,9 @@ import 신영 from './신영.svg';
 import DN from './DN.svg';
 import OK금융그룹 from './OK금융그룹.svg';
 import IS from './IS.svg';
-import 하이트진로 from './하이트진로.svg';
+import 하이트진로 from './Jinro.svg';
 import 한솔 from './한솔.svg';
-import 유진 from './유진.svg';
+import 유진 from './Eugene.svg';
 import 농심 from './농심.svg';
 import 삼표 from './삼표.svg';
 import 반도 from './반도.svg';
@@ -85,8 +85,8 @@ const groupImg = {
     삼성, SK, 현대차, LG, POSCO, 롯데, 한화,
     GS, HD현대, 농협, 신세계, KT, CJ, 한진,
     카카오, LS, 두산, DL, HMM, 중흥건설, 현대백화점,
-    부영, 네이버, 미래에셋, SOil, 금호아시아나, 하림,
-    영풍, HDC, SM, 효성, 셀트리온, 호반건설, KTG,
+    부영, 네이버, 미래에셋, 금호아시아나, 하림,
+    영풍, HDC, SM, 효성, 셀트리온, 호반건설,
     KCC, 장금상선, OCI, 코오롱, 태영, 넷마블, 세아, 넥슨, LX,
     쿠팡, 이랜드, 한국타이어, DB, 삼천리, 금호석유화학,
     태광, 교보생명보험, 동원, KG, HL, 아모레퍼시픽,
@@ -97,5 +97,10 @@ const groupImg = {
     다우키움,
     // 대우조선해양,
 };
+groupImg["KT&G"] = KTG;
+groupImg["S-Oil"] = SOil;
 
-export default groupImg;
+export default function GroupImg({ name }) {
+    if (!groupImg[name]) return;
+    return <div>{groupImg[name]({ width: '100%' })}</div>
+};

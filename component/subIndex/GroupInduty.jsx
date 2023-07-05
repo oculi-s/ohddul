@@ -3,6 +3,8 @@ import TotalGroupTree from '#/chart/TotalGroupTreeMap';
 import TotalIndutyTree from '#/chart/TotalIndutyTreeMap';
 import ToggleTab from '#/base/ToggleTab';
 import { LastData, LastUpdate } from '#/base/base';
+import Icon from '@/public/icon'
+import { useState } from 'react';
 
 export default function GroupInduty(props) {
     return <div className={`${styles.area} ${styles.groupArea}`}>

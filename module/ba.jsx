@@ -82,3 +82,8 @@ export const Quar = (date) => {
     res.s = `${Y} ${qdict[M]}Q`
     return res;
 }
+
+export const H2R = (hex, alpha = 1) => {
+    const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
+    return `rgba(${r},${g},${b},${alpha})`;
+};

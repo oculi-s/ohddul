@@ -1,3 +1,4 @@
+import styles from '$/Group/Induty.module.scss';
 import { useRouter } from "next/router";
 import IndutyFold from "#/stockFold/IndutyFold";
 import { Big } from "@/module/ba";
@@ -5,7 +6,6 @@ import Container from "@/container/light";
 
 import json from '@/module/json';
 import dir from '@/module/dir';
-import { getSession } from "next-auth/react";
 import { CrawlUser } from "@/module/prop/props";
 import { filterIndex } from "@/module/filter/filter";
 
@@ -36,14 +36,14 @@ const Index = ({ meta, price, induty, index, predict, User, setUser }) => {
     console.log(index);
     const router = useRouter();
     const { code } = router.query;
-    const name = index?.data[Big(code)]?.n;
+    const name = index[Big(code)]?.n;
     const props = {
         meta, code, price, induty, index, predict, router,
         User, setUser, folded: true,
     };
     return <>
         <div>
-            <h2>{name}</h2>
+            <h2 className={styles.title}>{name}</h2>
             <hr />
             <IndutyFold {...props} />
         </div >

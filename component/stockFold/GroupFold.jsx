@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import groupImg from '@/public/group/Default';
+import GroupImg from '@/public/group/Default';
 import { Num, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
 import { useSession } from 'next-auth/react';
@@ -18,12 +18,13 @@ const GroupFold = ({
     if (!group) return;
     const gname = group?.name;
     if (!gname) return;
-    const imgName = gname?.replace("&", "").replace("-", "");
+    console.log(GroupImg({ name: gname }))
     const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
     const priceSum = Object.values(priceDict).reduce((a, b) => a + b, 0)
     const name = <>
         <Link href={`/group/${gname}`}>
-            <Image src={groupImg[imgName]} alt={`${gname}로고`} />
+            <GroupImg name={gname} />
+            {/* <Image src={groupImg[imgName]} alt={`${gname}그룹 로고`} /> */}
         </Link>
         <p>{gname}그룹 자산 : ({Price(group.equity * 10)}, {group.rank}위) 시총 : ({Price(priceSum)})</p>
     </>

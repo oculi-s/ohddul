@@ -3,7 +3,7 @@ import styles from '$/Chart/Tree.module.scss'
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 import Link from 'next/link';
-import { Div, Price } from '@/module/ba';
+import { Div, H2R, Price } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
 
@@ -14,6 +14,8 @@ const stockElement = ({
     const t = value / total;
     const k = value / first;
     const inner = value / total * 100 > 0.05;
+    const br = Math.pow(k, .05);
+    const color = H2R(groupColors[name] || colors[0], br)
 
     return <div
         key={code}
@@ -23,9 +25,7 @@ const stockElement = ({
             top: `${y0}%`,
             width: `${x1 - x0}%`,
             height: `${y1 - y0}%`,
-            backgroundColor: groupColors[name] || colors[0],
-
-            filter: `brightness(${Math.pow(k, .05)})`,
+            backgroundColor: color,
             fontSize: `${Math.pow(t, .3) * 60}px`
         }}
     >

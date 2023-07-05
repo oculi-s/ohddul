@@ -13,7 +13,6 @@ import BoardRules from '#/helpArticle/BoardRules';
 import Scoring from '#/helpArticle/Scoring';
 
 import Container from '@/container/light';
-import { CrawlUser } from '@/module/prop/props';
 
 /**
  * priceNull을 구할 때 서버에서 데이터를 전부 읽고 진행할지 고민인데
@@ -30,7 +29,6 @@ export const getServerSideProps = async (ctx) => {
     const props = {
         now, aside, ...count
     };
-    await CrawlUser(ctx, props);
     return { props };
 }
 

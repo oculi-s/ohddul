@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import json from '@/module/json';
+import dir from '@/module/dir';
 
 export function getServerSideProps(ctx) {
     const aside = json.read(dir.stock.light.aside);

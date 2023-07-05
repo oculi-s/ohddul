@@ -3,7 +3,6 @@ import dir from '@/module/dir';
 
 import '@/module/array';
 import { CrawlUser } from '@/module/prop/props';
-import { Big } from '@/module/ba';
 import { filterIndex } from '@/module/filter/filter';
 
 /**
@@ -26,6 +25,7 @@ import { filterIndex } from '@/module/filter/filter';
  * * price : 222 --> 150 (-72kb)
  */
 export async function getServerSideProps(ctx) {
+	const meta = json.read(dir.stock.meta);
 	let code = ctx.query?.code;
 	if (!parseInt(code)) code = meta.index[code];
 	let props = {}
@@ -47,7 +47,7 @@ export async function getServerSideProps(ctx) {
 	const gname = Group?.index[code];
 	const iname = Induty[code];
 	const index = await filterIndex(Index, iname);
-	const group = Group.data[gname];
+	const group = Group.data[gname] || false;
 
 	const Filter = (data) => {
 		return Object.fromEntries(Object.entries(data)
@@ -60,11 +60,9 @@ export async function getServerSideProps(ctx) {
 	}
 
 	const induty = Filter(Induty);
-	const meta = json.read(dir.stock.meta);
 	meta.data = Filter(meta.data);
 	const Price = json.read(dir.stock.all);
 	const price = Filter(Price);
-
 	const predict = json.read(dir.stock.predAll);
 	const userMeta = json.read(dir.user.meta);
 	props = {

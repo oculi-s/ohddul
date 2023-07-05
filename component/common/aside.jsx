@@ -177,11 +177,13 @@ export default function Aside(props) {
     return (
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>
-                <div className={styles.search}>
-                    <Search {...props} className={styles.search} />
+                <div className={styles.wrap}>
+                    <div className={styles.search}>
+                        <Search {...props} className={styles.search} />
+                    </div>
+                    <UserInfo {...props} />
+                    <StockList {...props} />
                 </div>
-                <UserInfo {...props} />
-                <StockList {...props} />
             </aside>
             <div className={styles.shadow}
                 onClick={e => { setAsideShow(false); setView(false); }}

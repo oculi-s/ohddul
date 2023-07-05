@@ -67,6 +67,8 @@ function elementKeydown({ e, i, stockRef, userRef, tabIndex, inputRef, setView }
         inputRef.current.value = '';
         if (setView) setView(false);
         e.target.click();
+    } else if (e.key == 'Escape') {
+        if (setView) setView(false);
     }
 }
 
@@ -110,6 +112,7 @@ function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result })
     const q = e.target?.q?.value?.toLowerCase();
     const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.name?.toLowerCase() == q);
     const resUser = Object.values(userMeta).find(e => e.id == q);
+    console.log(result);
     if (resStock) {
         router.push(`/stock/${resStock[0]}`);
     } else if (resUser) {
@@ -118,7 +121,7 @@ function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result })
         let res = result.stock[0].code;
         router.push(`/stock/${res}`);
     } else if (result.group.length) {
-        let res = result.group[0].id;
+        let res = result.group[0].code;
         router.push(`/stock/${res}`);
     } else if (result.user.length) {
         let res = result.user[0].id;
@@ -138,7 +141,7 @@ function Search(props) {
         ...props,
         result, setResult, tabIndex, setTabIndex
     };
-    const { inputRef, userRef, stockRef, view } = props || {}
+    const { inputRef, userRef, stockRef, view, setView } = props || {}
     const N = result?.stock?.length;
 
     const StockResult = () => result.stock
@@ -220,6 +223,7 @@ function Search(props) {
             >
                 <ToggleTab {...{ names, datas, tabIndex, setTabIndex }} />
             </div>
+            <div className={`${styles.shadow} ${view ? '' : styles.d}`} onClick={e => setView(false)}></div>
         </div>
     );
 }
@@ -233,18 +237,9 @@ export default function Index(props) {
          * meta와 userMeta의 lazyloading
          */
         async function lazyLoad() {
-            if (!meta?.data || !meta?.index || meta?.light) {
-                console.log('meta lazyload')
-                setMeta(await json.read({ url: dir.stock.meta }));
-            }
-            if (!group?.data || group?.light) {
-                console.log('group lazyload')
-                setGroup(await json.read({ url: dir.stock.group }));
-            }
-            if (!userMeta) {
-                console.log('user meta lazyload')
-                setUserMeta(await json.read({ url: dir.user.meta }));
-            }
+            setMeta(await json.read({ url: dir.stock.meta }));
+            setGroup(await json.read({ url: dir.stock.group }));
+            setUserMeta(await json.read({ url: dir.user.meta }));
         }
         lazyLoad();
     }, [])

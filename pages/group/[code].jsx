@@ -12,7 +12,6 @@ import { bpsHelp } from '#/stockData/HelpDescription';
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
-import { getSession } from 'next-auth/react';
 import container from "@/container/light";
 import { CrawlUser } from '@/module/prop/props';
 

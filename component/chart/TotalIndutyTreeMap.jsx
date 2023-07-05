@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Div, Int } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
+import Icon from '@/public/icon';
 
 const stockElement = ({
     meta, code, first, name, total, index, value,
@@ -82,6 +83,7 @@ const TotalIndutyTree = ({ induty, index, meta, price }) => {
     const [withStock, setStock] = useState(true);
     const [data, setData] = useState([]);
     const [N, setN] = useState(10);
+    const [fixed, setFixed] = useState(false);
 
     useEffect(() => {
         console.log('treemap 차트 렌더링중')
@@ -101,11 +103,15 @@ const TotalIndutyTree = ({ induty, index, meta, price }) => {
     const props = { index, meta, price, total };
     return (
         <>
-            <div className={styles.wrap} onClick={e => setStock(c => !c)}>
+            <div
+                className={`${styles.wrap} ${fixed ? styles.fixed : ''}`}
+                onClick={e => setStock(c => !c)}
+            >
                 {squarify(data, box)?.map(node =>
                     stockElement({ ...node, ...props }))
                 }
             </div>
+            <i onClick={e => setFixed(!fixed)}><Icon name='FullScreen' /></i>
         </>
     );
 };
