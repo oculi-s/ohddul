@@ -23,7 +23,6 @@ const stockElement = ({
         H2R(groupColors[name] || colors[0], br) :
         H2R(groupColors[name], .5)
 
-    // console.log(<GroupImg name={name} />)
     return <div
         key={code || name}
         className={styles.stock}

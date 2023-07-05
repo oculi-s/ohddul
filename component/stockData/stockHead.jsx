@@ -183,8 +183,6 @@ export const PredBar = ({
     setBar, setOpacity,
     testing = false, help = true, defaultType = 0
 }) => {
-    console.log(User);
-
     const { data: session } = useSession();
     const origin = last?.c || last || 0;
     const [change, setChange] = useState(0);

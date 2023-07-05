@@ -83,7 +83,7 @@ export const Quar = (date) => {
     return res;
 }
 
-export const H2R = (hex, alpha = 1) => {
-    const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
+export const H2R = (hex = "#000000", alpha = 1) => {
+    const [r, g, b] = hex?.match(/\w\w/g)?.map(x => parseInt(x, 16));
     return `rgba(${r},${g},${b},${alpha})`;
 };

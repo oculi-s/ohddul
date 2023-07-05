@@ -96,7 +96,6 @@ const Graph = ({ id, rank, forNext }) => {
 }
 
 const PredTable = ({ pred }) => {
-    console.log(pred);
     const queueTable = pred?.map((e, i) => {
         const { code, change, date, n, c } = e;
         const target = c + change;

@@ -19,7 +19,8 @@ const groupColors = {
     KT: '#ed1b23',
     영풍: '#f4bd2c',
     CJ: '#ff9700',
-    크래프톤: '#30303A'
+    크래프톤: '#30303A',
+    HMM: '#c70125'
 };
 
 export default groupColors;

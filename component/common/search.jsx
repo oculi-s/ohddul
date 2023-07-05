@@ -112,7 +112,6 @@ function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result })
     const q = e.target?.q?.value?.toLowerCase();
     const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.name?.toLowerCase() == q);
     const resUser = Object.values(userMeta).find(e => e.id == q);
-    console.log(result);
     if (resStock) {
         router.push(`/stock/${resStock[0]}`);
     } else if (resUser) {

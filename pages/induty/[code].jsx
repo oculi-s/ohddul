@@ -33,7 +33,6 @@ export async function getServerSideProps(ctx) {
 }
 
 const Index = ({ meta, price, induty, index, predict, User, setUser }) => {
-    console.log(index);
     const router = useRouter();
     const { code } = router.query;
     const name = index[Big(code)]?.n;

@@ -18,7 +18,6 @@ const GroupFold = ({
     if (!group) return;
     const gname = group?.name;
     if (!gname) return;
-    console.log(GroupImg({ name: gname }))
     const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
     const priceSum = Object.values(priceDict).reduce((a, b) => a + b, 0)
     const name = <>
