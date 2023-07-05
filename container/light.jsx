@@ -3,12 +3,15 @@ import HEAD from "#/common/Head";
 import Aside from "#/common/aside";
 import Footer from "#/common/footer";
 import Nav from "#/common/nav";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Container(Component) {
     return function Index(props) {
         const [mobAside, setAsideShow] = useState(false);
         const [User, setUser] = useState();
+        useEffect(() => {
+            setUser(props?.user);
+        }, [])
         if (props?.status == 'loading') return Loading();
         props = {
             User, setUser,
@@ -17,7 +20,7 @@ export default function Container(Component) {
         };
         return (
             <>
-                <HEAD />
+                <HEAD {...props} />
                 <Nav {...props} />
                 <Aside {...props} />
                 <main>

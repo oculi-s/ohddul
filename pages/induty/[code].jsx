@@ -7,6 +7,7 @@ import json from '@/module/json';
 import dir from '@/module/dir';
 import { getSession } from "next-auth/react";
 import { CrawlUser } from "@/module/prop/props";
+import { filterIndex } from "@/module/filter/filter";
 
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
@@ -14,17 +15,12 @@ export async function getServerSideProps(ctx) {
     const Index = json.read(dir.stock.induty).data;
     const Induty = json.read(dir.stock.dart.induty).data;
 
-    const b = Big(code);
-    const index = { data: {} };
-    Object.keys(Index).forEach(e => {
-        if (e == b) index.data[e] = Index[e];
-        if (e.slice(0, -1) == b) index.data[e] = Index[e];
-        if (e == b.slice(0, -1)) index.data[e] = Index[e];
-    })
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) => Induty[k] == code))
     }
+
+    const index = await filterIndex(Index, code);
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
     const meta = Filter(Meta);

@@ -1,9 +1,9 @@
 import Head from 'next/head'
 
-export default function HEAD() {
+export default function HEAD({ title }) {
     return (
         <Head>
-            <title>오르고 떨어지고, 오떨</title>
+            <title>{title || `오르고 떨어지고, 오떨`}</title>
             <meta name="description" content="예측으로 얘기하자! 오르고 떨어지고, 오떨" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"></meta>
             <link rel="icon" href="/favicon.ico" />

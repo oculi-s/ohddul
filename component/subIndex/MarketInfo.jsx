@@ -2,7 +2,7 @@ import styles from '$/Index.module.scss';
 import { Per, Color, Num, Div } from '@/module/ba';
 import dt from '@/module/dt';
 import PriceLine from '#/chart/PriceLine';
-import { getMaData } from '@/module/editData/priceAvg';
+import { getMaData } from '@/module/filter/priceAvg';
 
 function Index({ data, last, prev, count, name }) {
     const { avg60, top60, bot60 } = getMaData(data);

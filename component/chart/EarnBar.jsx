@@ -29,7 +29,7 @@ const defaultOptions = {
 
 const plugins = [hairline];
 
-function EarnChart({ stockEarn, stockMeta, }) {
+function EarnChart({ stockEarn, stockMeta }) {
     const amount = stockMeta?.a || 1;
     stockEarn = stockEarn?.data || [];
     stockEarn = stockEarn.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -54,8 +54,8 @@ function EarnChart({ stockEarn, stockMeta, }) {
         }
     }
 
-    if (stockEarn.length) {
-        useEffect(() => {
+    useEffect(() => {
+        if (stockEarn?.length) {
             console.log('earn 차트 렌더링중');
             const ismob = window.innerWidth <= Int(scss.mobWidth);
             const option = { scales: { y: {} } };
@@ -64,8 +64,8 @@ function EarnChart({ stockEarn, stockMeta, }) {
             setOptions(merge(defaultOptions, option));
             setEquity(refineData(equityData, '자본(BPS)'));
             setProfit(refineData(profitData, '이익(EPS)'));
-        }, [stockEarn])
-    }
+        }
+    }, [stockEarn])
 
     const NULL = <p>API에서 제공된<br />실적 데이터가 없습니다.</p>;
     return (

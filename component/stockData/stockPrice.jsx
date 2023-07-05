@@ -3,7 +3,7 @@ import Help from "#/base/Help";
 import PriceLine from "#/chart/PriceLine";
 import { Color, Div, Per } from '@/module/ba';
 import { bbHelp, maHelp } from './HelpDescription';
-import { getMaData } from '@/module/editData/priceAvg';
+import { getMaData } from '@/module/filter/priceAvg';
 import dt from '@/module/dt';
 import '@/module/array';
 

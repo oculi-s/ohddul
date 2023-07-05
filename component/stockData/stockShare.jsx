@@ -3,33 +3,53 @@ import ShareDonut from "#/chart/ShareDonut";
 import { Div } from "@/module/ba";
 import Help from '#/base/Help';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-const nameDict = {
+export const NameDict = {
     "J.P.MORGANSECURITIESPLC": "J.P.모건",
-    "TheCapitalGroupCompanies,Inc.": "Capital그룹"
+    "TheCapitalGroupCompanies,Inc.": "Capital그룹",
+    "현대자동차": "현대차",
+    "국민연금공단": "국민연금",
+    "BlackRockFundAdvisors": "BlackRock",
+    "MacquarieInvestmentManagementBusinessTrust": "Macquarie 자산운용",
+    "CreditSuisseGroupAG": "CreditSuiss",
+    "MORGANSTANLEY&COINTLPLC": "MorganStanley",
+    "국민은행": "KB금융",
+    "JPMorganAssetManagement(AsiaPacific)Limited": "J.P.모건",
+    "미래에셋자산운용": "미래에셋증권",
+    "한국투자증권": "한국금융지주",
+    "KB자산운용": "KB금융"
 }
 
 const ShareTable = ({ meta, stockShare, stockMeta }) => {
     stockShare = stockShare?.data;
     if (!stockShare) return;
-    const amount = stockMeta?.a;
-    const total = amount;
-    let res = 0;
-    const data = stockShare?.map(e => {
-        const { name, amount, date } = e;
-        res += amount;
-        const code = meta?.index[name];
-        let data = name;
-        if (code) {
-            data = <Link href={`/stock/${code}`}>{name}</Link>;
-        } else if (nameDict[name]) {
-            data = nameDict[name];
+    const [data, setData] = useState();
+    const [foot, setFoot] = useState();
+    useEffect(() => {
+        if (stockShare?.length) {
+            const amount = stockMeta?.a;
+            const total = amount;
+            let res = 0;
+            if (stockShare?.length) {
+                const data = stockShare?.map(e => {
+                    let { name, amount, date } = e;
+                    res += amount;
+                    if (NameDict[name]) name = NameDict[name];
+                    const code = meta?.index[name];
+                    if (code) {
+                        name = <Link href={`/stock/${code}`}>{name}</Link>;
+                    }
+                    return <tr key={name}>
+                        <th>{name}</th><td>{Div(amount, total, 1)}</td>
+                        <td className={styles.date}>{date}</td>
+                    </tr>
+                });
+                setData(data);
+                setFoot(Div(res, amount));
+            }
         }
-        return <tr key={name}>
-            <th>{data}</th><td>{Div(amount, total, 1)}</td>
-            <td className={styles.date}>{date}</td>
-        </tr>
-    });
+    }, [stockShare])
     return <div className={styles.shareTable}>
         <table>
             <thead>
@@ -43,8 +63,13 @@ const ShareTable = ({ meta, stockShare, stockMeta }) => {
             </tbody>
             <tfoot>
                 <tr>
-                    <th>전체<Help span={'전체 주식발행량 대비 비율\n100%에 맞지 않는 경우 임직원의 보유주식 혹은 공시 기간에 따른 오차입니다.'} /></th>
-                    <th>{Div(res, amount)}</th>
+                    <th>전체
+                        <Help
+                            title={'전체 주식발행량 대비 비율'}
+                            span={'100%에 맞지 않는 경우 임직원의 보유주식 혹은 공시 기간에 따른 오차입니다.'}
+                        />
+                    </th>
+                    <th>{foot}</th>
                     <th>-</th>
                 </tr>
             </tfoot>

@@ -96,13 +96,13 @@ async function getData({
 
     if (isEarn) {
         const stockEps = price?.map(e => {
-            const v = Math.round(e?.eps / amount)
+            const v = e?.eps
             if (v && v < ymin) ymin = v;
             if (v && v > ymax) ymax = v;
             return v;
         });
         const stockBps = price?.map(e => {
-            const v = Math.round(e?.bps / amount)
+            const v = e?.bps
             if (v && v < ymin) ymin = v;
             if (v && v > ymax) ymax = v;
             return v;

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '$/Stock/Stock.module.scss';
 import { Num, Fix, Price, Color, Per, Div } from '@/module/ba';
@@ -16,6 +17,8 @@ import EarnElement from '#/stockData/stockEarn';
 import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/PredTable';
 
+import Container from '@/container/light';
+
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
@@ -28,8 +31,8 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
     const lastPrice = last?.c;
     const amount = stockMeta?.a;
     const total = amount * lastPrice;
-    const EPS = (last?.eps || 0) / amount;
-    const BPS = (last?.bps || 0) / amount;
+    const EPS = (last?.eps || 0);
+    const BPS = (last?.bps || 0);
     const ROE = Div(stockEarn?.slice(0, 4)?.map(e => e?.profit).sum(), stockEarn[0]?.equity);
     const revenueSum = Object.values(stockEarn)?.map(e => e?.revenue)?.sum();
     const profitSum = Object.values(stockEarn)?.map(e => e?.profit)?.sum();
@@ -130,7 +133,7 @@ const Index = ({
         <>
             <StockHead {...props} />
             <hr />
-            <GroupFold {...props} group={group?.data[group?.index[code]]} />
+            <GroupFold {...props} />
             <IndutyFold {...props} />
             <MetaTable {...props} />
             <hr />
@@ -139,7 +142,6 @@ const Index = ({
     )
 }
 
-import container, { getServerSideProps } from "@/container/stock";
-import { useEffect } from 'react';
+import { getServerSideProps } from "@/container/stock";
 export { getServerSideProps };
-export default container(Index);
+export default Container(Index);

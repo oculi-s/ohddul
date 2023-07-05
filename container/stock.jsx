@@ -1,17 +1,10 @@
 import json from '@/module/json';
-import HEAD from '#/common/Head';
-import Nav from '#/common/nav'
-import Aside from '#/common/aside'
-import Footer from '#/common/footer'
 import dir from '@/module/dir';
-import { getSession } from 'next-auth/react';
-import { Loading } from '#/_base';
-import { useState } from 'react';
-import { editQuar, earnStack, earnonPrice } from '@/module/editData/earnStack';
-import { priceDivide } from '@/module/editData/priceDivide';
 
 import '@/module/array';
 import { CrawlUser } from '@/module/prop/props';
+import { Big } from '@/module/ba';
+import { filterIndex } from '@/module/filter/filter';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -24,83 +17,64 @@ import { CrawlUser } from '@/module/prop/props';
  * useSession을 통해 사용 가능
  * {@link './pages/api/auth/[...nextauth].jsx'}
  */
+/**
+ * Filter를 통해 사이즈 줄이기
+ * * 줄이기 전 405kb
+ * * group : 405 --> 389 (-16kb)
+ * * meta : 389 --> 262 (-127kb)
+ * * induty : 262 --> 222 (-40kb)
+ * * price : 222 --> 150 (-72kb)
+ */
 export async function getServerSideProps(ctx) {
-	let userMeta = {};
-	let aside = {}, price = [], meta = {}, group = {}, predict = {};
-	let index = {}, induty = {}, user = { pred: [], favs: [] };
-	let props = {
-		userMeta, price, meta, group, predict,
-		index, induty, user
-	};
+	let code = ctx.query?.code;
+	if (!parseInt(code)) code = meta.index[code];
+	let props = {}
 
-	try {
-		await CrawlUser(ctx, props);
-
-		aside = json.read(dir.stock.light.aside);
-		meta = json.read(dir.stock.meta);
-		group = json.read(dir.stock.group);
-		price = json.read(dir.stock.all);
-		predict = json.read(dir.stock.predAll);
-		userMeta = json.read(dir.user.meta);
-		index = json.read(dir.stock.induty);
-		induty = json.read(dir.stock.dart.induty);
-		props = {
-			userMeta, aside,
-			price, meta, group, index, induty,
-			predict, user,
-		};
-
-		let code = ctx.query?.code;
-		if (!parseInt(code)) code = meta.index[code];
-		const N = 252 * 5;
-		// stockPage
-		/**
-		 * 2023.07.04 여기서 실행하는 함수들을 데이터로 저장하는 과정이 필요함
-		 */
-		if (code) {
-			const stockPrice = json.read(dir.stock.light.price(code));
-			stockPrice.data = stockPrice.data.slice(0, N);
-			const stockShare = json.read(dir.stock.share(code));
-			const stockPredict = json.read(dir.stock.pred(code));
-			await priceDivide(stockPrice);
-			const stockEarn = json.read(dir.stock.earn(code));
-			stockEarn.data = stockEarn.data.filter(e => e.data);
-			await editQuar(stockEarn);
-			await earnStack(stockEarn);
-			await earnonPrice({ stockPrice, stockEarn });
-			props = { ...props, stockPrice, stockEarn, stockShare, stockPredict };
-		}
-	} catch (e) {
-		console.log(e);
+	// stockPage
+	if (code) {
+		const stockPrice = json.read(dir.stock.light.price(code));
+		const stockEarn = json.read(dir.stock.light.earn(code));
+		const stockShare = json.read(dir.stock.share(code));
+		const stockPredict = json.read(dir.stock.pred(code));
+		props = { ...props, stockPrice, stockEarn, stockShare, stockPredict };
 	}
 
-	return { props };
-}
+	const aside = json.read(dir.stock.light.aside);
+	const Group = json.read(dir.stock.group);
+	const Index = json.read(dir.stock.induty).data;
+	const Induty = json.read(dir.stock.dart.induty).data;
 
-export default function Container(Component) {
-	return function Index(props) {
-		const [mobAside, setAsideShow] = useState(false);
-		const [User, setUser] = useState();
-		if (!User) {
-			setUser(props?.user);
-		}
+	const gname = Group?.index[code];
+	const iname = Induty[code];
+	const index = await filterIndex(Index, iname);
+	const group = Group.data[gname];
 
-		if (props?.status == 'loading') return Loading();
-		props = {
-			...props,
-			mobAside, setAsideShow,
-			User, setUser,
-		};
-		return (
-			<>
-				<HEAD />
-				<Nav {...props} />
-				<Aside {...props} />
-				<main>
-					<Component {...props} />
-				</main>
-				<Footer />
-			</>
-		);
+	const Filter = (data) => {
+		return Object.fromEntries(Object.entries(data)
+			?.filter(([k, v]) => {
+				if (k == code) return 1;
+				if (Induty[k] == iname) return 1;
+				if (Group?.index[k] == gname) return 1;
+				return 0;
+			}))
+	}
+
+	const induty = Filter(Induty);
+	const meta = json.read(dir.stock.meta);
+	meta.data = Filter(meta.data);
+	const Price = json.read(dir.stock.all);
+	const price = Filter(Price);
+
+	const predict = json.read(dir.stock.predAll);
+	const userMeta = json.read(dir.user.meta);
+	props = {
+		...props,
+		userMeta, aside,
+		price, meta, group, index, induty,
+		predict,
 	};
+
+
+	await CrawlUser(ctx, props);
+	return { props };
 }

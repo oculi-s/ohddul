@@ -20,6 +20,7 @@ export const stock = {
         aside: encode('_/light/aside.json'),
         market: encode('_/light/market.json'),
         price: code => encode(`&/${code}/priceClose.json`),
+        earn: code => encode(`&/${code}/earnFixed.json`),
         count: encode('_/light/count.json'),
     },
     dart: {

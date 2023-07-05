@@ -1,4 +1,4 @@
-import styles from '$/Search.module.scss'
+import styles from '$/Common/Search.module.scss'
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import ToggleTab from '#/base/ToggleTab';
