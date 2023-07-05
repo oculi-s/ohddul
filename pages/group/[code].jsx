@@ -54,7 +54,10 @@ export async function getServerSideProps(ctx) {
     const share = group?.child?.map(e =>
         [e, json.read(dir.stock.share(e)).data]
     ) || []
+
+    const title = group?.name ? `${group?.name}그룹 : 오떨` : null;
     let props = {
+        title,
         code, aside,
         group, index, induty,
         userMeta,

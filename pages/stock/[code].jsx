@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '$/Stock/Stock.module.scss';
 import { Num, Fix, Price, Color, Per, Div } from '@/module/ba';
@@ -80,29 +80,36 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
 }
 
 const Index = ({
-    User, setUser, setAsideShow,
+    user,
+    setAsideShow,
     meta, group, price, index, induty,
     predict,
     userMeta,
     stockPrice, stockEarn, stockShare,
     stockPredict,
 }) => {
+    const [User, setUser] = useState();
     const router = useRouter();
     let code = router.query?.code;
+
     if (!parseInt(code)) code = meta.index[code];
     useEffect(() => {
         setAsideShow(false);
     }, [code, setAsideShow])
+    useEffect(() => {
+        if (!User) setUser(user);
+    }, [])
     if (!meta?.data) return;
     if (!code) return;
     const stockMeta = meta?.data[code];
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>
     }
+    const last = price[code] || stockPrice?.data[0];
     const props = {
         User, setUser,
         code, router,
-        meta, group, price, index, induty,
+        meta, group, price, index, induty, last,
         predict,
         userMeta,
         stockMeta, stockEarn, stockPrice, stockShare,

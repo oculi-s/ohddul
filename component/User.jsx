@@ -32,7 +32,7 @@ export const getRank = rank => {
     ]
     for (let [i, e] of rlist.entries()) {
         if (rank <= 1000 + i * 100) {
-            return [e, rlist[i + 1]];
+            return [e.slice(0, -1), e.slice(-1), rlist[i + 1]];
         }
     }
     return ['master1', 'master1'];
@@ -53,16 +53,16 @@ export default function User() {
     }
     const user = session?.user;
     const id = user?.id;
-    const score = user?.meta?.rank;
-    const [curRank, nextRank] = getRank(score);
-    let rankName = curRank[0]?.toUpperCase() + curRank?.slice(-1);
-    if (curRank == 'unranked0') rankName = "IRON";
+    const rank = user?.meta?.rank;
+    const [color, num, next] = getRank(rank);
+    let rankName = color[0]?.toUpperCase() + num;
+    if (color == 'unranked') rankName = "IRON";
     return (
         <div className={styles.user}>
             <Link href='/profile'>
                 <div className={styles.id}>{id}</div>
                 <div className={styles.rank}>
-                    <span className={curRank.slice(0, -1)}>{score}</span>
+                    <span className={color}>{rank}</span>
                     &nbsp;{rankName}
                 </div>
             </Link>

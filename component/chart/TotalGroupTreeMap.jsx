@@ -12,7 +12,7 @@ import GroupImg from '@/public/group/Default';
 import Icon from '@/public/icon';
 
 const stockElement = ({
-    meta, code, first, name, total, price, value,
+    meta, code, first, name, total, value,
     x0, y0, x1, y1
 }) => {
     const t = value / total;
@@ -68,7 +68,6 @@ const refindData = ({ group, meta, price, withStock, N }) => {
             return { name, value: price, children }
         })
 }
-
 
 const TotalGroupTree = ({ group, meta, price }) => {
     meta = meta?.data;

@@ -7,10 +7,6 @@ import { useEffect, useState } from "react";
 export default function Container(Component) {
     return function Index(props) {
         const [mobAside, setAsideShow] = useState(false);
-        const [User, setUser] = useState();
-        useEffect(() => {
-            setUser(props?.user);
-        }, [])
         props = {
             User, setUser,
             mobAside, setAsideShow,

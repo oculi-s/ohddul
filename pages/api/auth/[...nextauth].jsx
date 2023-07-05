@@ -53,9 +53,9 @@ const providers = [
             const admin = user?.admin;
             const uid = user?.uid;
             const meta = json.read(dir.user.meta)[uid];
-            const pred = json.read(dir.user.pred(uid), { queue: [] })?.queue;
+            const queue = json.read(dir.user.pred(uid), { queue: [] })?.queue;
             const favs = json.read(dir.user.favs(uid));
-            return { id, uid, admin, meta, pred, favs };
+            return { id, uid, admin, meta, queue, favs };
         }
     }),
     // KakaoProvider({

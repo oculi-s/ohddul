@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import { getRank, getBg } from "#/User";
-import styles from '$/Profile.module.scss'
-import { useSession } from "next-auth/react";
+import styles from '$/Profile/Index.module.scss'
+import { getSession, useSession } from "next-auth/react";
 import LineChart from '#/chart/line';
 import Link from "next/link";
 import { Num, Fix, Per, Color } from '@/module/ba'
@@ -14,70 +13,56 @@ import json from "@/module/json";
 import { PredBar } from "#/stockData/stockHead";
 import FavStar from "#/base/FavStar";
 import Container from "@/container/light";
-import { Curtain } from "#/profile/base";
+import { Curtain, Profile } from "#/profile/Header";
+import { CrawlUser } from "@/module/prop/props";
+import { useEffect } from "react";
 
 /**
  * asdf
  */
-export const getServerSideProps = (ctx) => {
+export async function getServerSideProps(ctx) {
     const aside = json.read(dir.stock.light.aside);
     const userMeta = json.read(dir.user.meta);
-    const id = ctx.query?.id;
+
+    const qid = ctx.query?.id;
     let props = { aside, userMeta };
-    // console.log(ctx.query?.id);
+    const session = await getSession(ctx);
 
-    if (id) {
-        const uid = Object.keys(userMeta).find(k => userMeta[k].id == id);
-        const pred = json.read(dir.user.pred(uid), { queue: [], data: [] });
-        const favs = json.read(dir.user.favs(uid), []);
-        props = { ...props, pred, favs };
-    } else {
-
+    let uid = false, id = false, rank = false, queue = [], favs = [];
+    if (qid) {
+        uid = Object.keys(userMeta).find(k => userMeta[k].id == qid);
+        id = userMeta[uid]?.id;
+        rank = userMeta[uid]?.rank;
+        queue = json.read(dir.user.pred(uid), { queue: [], data: [] }).queue;
+        favs = json.read(dir.user.favs(uid), []);
+    } else if (session?.user) {
+        uid = session?.user?.uid;
+        id = session?.user?.meta?.id;
+        rank = session?.user?.meta?.rank;
+        queue = json.read(dir.user.pred(uid)).queue;
+        favs = json.read(dir.user.favs(uid));
+        const user = { favs, queue };
+        props = { ...props, user };
     }
+    const Meta = json.read(dir.stock.meta).data;
+    const Price = json.read(dir.stock.all);
+
+    const Filter = (data) => {
+        return Object.fromEntries(Object.entries(data)
+            ?.filter(([k, v]) =>
+                favs?.includes(k)
+                || queue?.find(e => e.code == k)))
+    }
+    const meta = Filter(Meta);
+    const price = Filter(Price);
+    const title = `${id}님의 프로필 : 오떨`
+    props = { ...props, id, uid, queue, favs, rank, meta, price, title };
     return { props };
 }
 
-
-const Header = ({ rank, num, bg, id }) => (
-    <h1 className={styles.id}>
-        <span
-            className={rank.slice(0, -1)}
-            ranknum={num}
-            style={{ backgroundImage: `url(${bg.src})` }}>
-        </span>
-        {id}
-    </h1>
-)
-
-const Profile = (props) => {
-    const { rank, score, user } = props;
-    const queue = user?.pred?.queue;
-    let data = user?.pred?.data;
-    let ts = score;
-    data = data
-        ?.sort(dt.sort)
-        ?.map(e => {
-            e.value = ts;
-            ts -= e.change;
-            return e;
-        });
-    return (
-        <div className={styles.profile}>
-            <Curtain {...props} />
-            <Header {...props} />
-            <div className={rank.slice(0, -1)}>
-                <b>{rank[0].toUpperCase() + rank.slice(-1)} {score}</b>
-            </div>
-            <span>
-                <p>{data?.length || 0}개 예측완료 {queue?.length || 0}개 대기중</p>
-                <p>오/떨 적중 (N/N) 회 (30 %)</p>
-                가입일, 최종 접속시간
-            </span>
-        </div >
-    )
-}
-
-const Graph = ({ id, rank, forNext }) => {
+const Graph = ({ id, rank }) => {
+    const prev = Math.floor(rank / 100) * 100;
+    const forNext = (rank - prev);
     const { data: session } = useSession();
     const user = session?.user;
 
@@ -95,30 +80,25 @@ const Graph = ({ id, rank, forNext }) => {
     )
 }
 
-const PredTable = ({ pred }) => {
+const PredTable = ({ pred, meta, price }) => {
+    const names = ['오떨예측', '가격예측']
     const queueTable = pred?.map((e, i) => {
-        const { code, change, date, n, c } = e;
-        const target = c + change;
-        return (
-            <tr key={`pred${i}`}>
-                <th>
-                    <Link href={`/stock/${code}`}>{n}</Link>
-                </th>
-                <td>
-                    <span className={`fa fa-chevron-${change > 0 ? 'up red' : 'down blue'}`} />
-                </td>
-                <td>{Num(target)} ({Fix(change / c * 100)}%)</td>
-                <td>{dt.toString(date, { time: 1 })}</td>
-            </tr>
-        );
+        const { code, change, date } = e;
+        const target = price[code]?.c + change;
+        return <tr key={`pred${i}`}>
+            <th><Link href={`/stock/${code}`}>{meta[code]?.n}</Link></th>
+            <td>
+                <span className={`fa fa-chevron-${change > 0 ? 'up red' : 'down blue'}`} />
+            </td>
+            <td>{Num(target)} ({Fix(change / price[code]?.c * 100)}%)</td>
+            <td>{dt.toString(date, { time: 1 })}</td>
+        </tr>
     });
+    return <ToggleTab names={names} />
     return <table><tbody>{queueTable}</tbody></table>;
 }
 
-const FavTable = ({ meta, price, mine, User, setUser }) => {
-    const { data: session } = useSession();
-    const user = session?.user;
-
+const FavTable = ({ meta, price, pred, favs, mine, User, setUser }) => {
     const head = <tr>
         <th>종목</th>
         <th>가격</th>
@@ -137,67 +117,62 @@ const FavTable = ({ meta, price, mine, User, setUser }) => {
                 <td>{close}</td>
                 <td className={Color(close - prev)}>{Per(close, prev)}</td>
             </tr>
-            <tr>
+            {mine && <tr>
                 <th colSpan={3}>
                     <PredBar {...{
                         code, last: price[code], name,
                         help: false, testing: true
                     }} />
                 </th>
-            </tr>
+            </tr>}
         </>
     }
-    const body = user?.favs?.map(code =>
+    const body = favs?.map(code =>
         <tbody key={code}>
             <Rows {...{ code }} />
         </tbody>)
-    return <table>
-        <thead>{head}</thead>
-        {body}
-    </table>
+    return <>
+        <table>
+            <thead>{head}</thead>
+            {body}
+        </table>
+        {!mine && <p className="des">관심종목에 종목을 추가하면 <Link href={'/profile'}>내 프로필</Link>에서 예측바를 통해 바로 예측을 진행할 수 있습니다.</p>}
+    </>
 }
 
 const Index = ({
-    aside, userMeta, pred,
+    id, uid, rank, pred, favs,
+    meta, price,
     User, setUser,
 }) => {
     // console.log(User);
+    const router = useRouter()
     const { data: session, status } = useSession();
     const user = session?.user;
+    const qid = router.query?.id;
 
-    const router = useRouter()
-    var mine = false;
-    var id = router.query?.id;
-    if (!id && status == 'unauthenticated') {
-        return (
-            <>로그인을 진행해주세요</>
-        )
+    useEffect(() => {
+        if (!qid) {
+            if (!uid) uid = user?.uid;
+            if (!rank) rank = user?.rank;
+            if (!pred) pred = user?.pred;
+            if (!favs) favs = user?.favs;
+            console.log(uid, id, rank, user);
+        }
+    }, [session])
+
+    const mine = user?.uid == uid;
+    if (!qid && status == 'unauthenticated') {
+        return <>로그인을 진행해주세요</>
+    } else if (!uid) {
+        return <>{qid} : 존재하지 않는 사용자입니다.</>;
     }
-    var uid;
-    if (!id) {
-        id = user?.id;
-        uid = user?.uid;
-        mine = true;
-    } else {
-        id = id[0];
-        var uid = Object.keys(userMeta).find(k => userMeta[k].id == id);
-    }
-    if (!uid) {
-        return (
-            <>{id} : 존재하지 않는 사용자입니다.</>
-        );
-    }
-    const score = userMeta[uid]?.rank;
-    const [rank, nextRank] = getRank(score);
-    const prevScore = Math.floor(score / 100) * 100;
-    const forNext = (score - prevScore);
-    const num = rank.slice(-1);
-    const bg = getBg(rank);
 
     const props = {
         User, setUser,
-        pred,
-        score, id, rank, nextRank, prevScore, forNext, num, bg, mine,
+        pred, favs,
+        id, uid, rank, mine,
+        meta, price,
     };
     const tabContents = {
         names: ["랭크변화", mine ? "내 예측" : "예측", "관심종목"],
@@ -212,12 +187,13 @@ const Index = ({
             </div>,
             <div key={2}>
                 <h3>관심 종목</h3>
-                {/* <FavTable {...props} /> */}
+                <FavTable {...props} />
             </div>
         ]
     }
     return (
         <>
+            <Curtain {...props} />
             <Profile {...props} />
             <hr />
             <ToggleTab {...tabContents} />

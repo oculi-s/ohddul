@@ -27,7 +27,8 @@ export async function getServerSideProps(ctx) {
     const price = Filter(Price);
     const induty = Filter(Induty);
 
-    let props = { aside, meta, index, price, induty };
+    const title = index[Big(code)] ? `${index[Big(code)]?.n} : 오떨` : null;
+    let props = { aside, meta, index, price, induty, title };
     await CrawlUser(ctx, props);
     return { props };
 }

@@ -11,7 +11,7 @@ export function RadioSelect({
             {names.map((name, i) => <span key={i}>
                 <input
                     type="radio"
-                    name={`radio${key}`}
+                    name={`radio${title}`}
                     id={`radio${name}`}
                     value={values[i]}
                     onChange={e => onChange && onChange(values[i])}
@@ -37,14 +37,14 @@ export function CheckBox({
         <input
             key={`inp${key}`}
             className={styles.input}
-            id={`chk${key}`}
+            id={`chk${name}`}
             type="checkbox"
             onChange={e => onChange && onChange(e => !e)}
             defaultChecked={defaultChecked}
         />
         <label
             key={`lab${key}`}
-            htmlFor={`chk${key}`}
+            htmlFor={`chk${name}`}
             className={styles.label}>
             {name}
         </label>

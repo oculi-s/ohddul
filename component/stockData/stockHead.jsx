@@ -10,6 +10,7 @@ import dir from '@/module/dir';
 import dt from '@/module/dt';
 import FavStar from '#/base/FavStar';
 import { useSession } from 'next-auth/react';
+import { Loading } from '#/base/base';
 
 const Bid = (price) => {
     return price < 2000 ? 1 : price < 20000 ? 10 : 100;
@@ -59,7 +60,7 @@ const submit = async ({
         url: dir.stock.predAll,
         data: { code, key: 'queue' }
     })
-    User?.pred?.push({ code, change, ohddul, origin, date: dt.num() });
+    User?.queue?.push({ code, change, ohddul, origin, date: dt.num() });
     setUser({ ...User });
     setAgain(true);
     setOpacity(0);
@@ -191,9 +192,7 @@ export const PredBar = ({
     const [again, setAgain] = useState(false); // 중복제출 방지
     const user = session?.user;
     const uid = user?.uid;
-    const router = useRouter();
 
-    toggleOnPageChange(router, setChange, 0);
     const submitProps = {
         User, setUser,
         again, setAgain,
@@ -203,6 +202,10 @@ export const PredBar = ({
         setView, setCnt, setChange, setDate,
         setBar, setOpacity
     };
+    useEffect(() => {
+        setChange(0);
+    }, [code])
+
 
     if (type == 0) {
         return <div className={styles.type}>
@@ -261,52 +264,50 @@ export const PredBar = ({
     )
 }
 
-const Open = ({ time, view, setView }) => {
-    const { status } = useSession();
-    if (status != 'authenticated') return <></>;
-    if (time && dt.toString(time) == dt.toString())
-        return (
-            <span className={styles.open}>
-                <span className='des'>
-                    예측완료 : {dt.toString(time, { time: 1 })}
-                </span>
-            </span>
-        )
+const Open = ({ time, view, setView, status }) => {
+    if (dt.pred(time))
+        return <span className={styles.open}>
+            {status == 'loading' ? <Loading />
+                : <button
+                    className={`fa fa-chevron-down ${view ? styles.up : ''}`}
+                    onClick={e => { setView(!view) }}
+                >
+                    &nbsp;오떨 맞추기
+                </button>}
+        </span>
     return <span className={styles.open}>
-        <button
-            className={`fa fa-chevron-down ${view ? styles.up : ''}`}
-            onClick={e => { setView(!view) }}
-        >
-            &nbsp;오떨 맞추기
-        </button>
+        {status == 'loading' ? <Loading />
+            : <span className='des'>
+                예측완료 : {dt.toString(time, { time: 1 })}
+            </span>}
     </span>
 }
 
 const StockHead = ({
-    User, setUser,
-    code, last,
+    code, last, User, setUser,
     stockMeta
 }) => {
     const { status } = useSession();
+    console.log(User);
 
     const name = stockMeta?.n;
     const type = stockMeta?.t;
+    const [bar, setBar] = useState(0);
+    const [view, setView] = useState(0);
+    const [time, setTime] = useState(1e13);
+    const [opacity, setOpacity] = useState(0);
 
-    const predTime = User?.pred
-        ?.find(e => e.code == code)?.date;
-    const [bar, setBar] = useState(true);
-    const [view, setView] = useState(predTime);
-    const [time, setTime] = useState();
-    const [opacity, setOpacity] = useState(1);
-
+    User?.queue?.sort(dt.sort);
     useEffect(() => {
-        const predTime = User?.pred
+        const predTime = User?.queue
             ?.find(e => e.code == code)?.date;
-        setBar(true);
-        setOpacity(1);
+        const can = dt.pred(predTime);
+        setBar(can);
         setView(0);
         setTime(predTime);
-    }, [code, User, status]);
+        setOpacity(1);
+        console.log('rerendering');
+    }, [User?.queue, code]);
 
     const props = {
         User, setUser,
@@ -319,28 +320,22 @@ const StockHead = ({
         <div className={styles.head}>
             <FavStar {...props} />
             <h2>
-                <Link href={'/stock/' + code}>
-                    {name}
-                </Link>
+                <Link href={'/stock/' + code}>{name}</Link>
                 <span
                     className={`${styles.market} ${styles[type == "K" ? 'k' : 'q']}`}
                     title={type == "K" ? "코스피(유가증권)" : "코스닥"}
                 ></span>
             </h2>
-            <Open {...{ code, time, view, setView }} />
+            {status == 'authenticated' && <Open {...{ time, view, setView, status }} />}
         </div>
-        {
-            status == 'authenticated' &&
+        {status == 'authenticated' &&
             <div className={`${styles.slide} ${view ? styles.view : ''}`}>
                 <div>
                     <div style={{ opacity }} className={styles.fade}>
-                        {bar &&
-                            <PredBar {...props} />
-                        }
+                        {bar && <PredBar {...props} />}
                     </div>
                 </div>
-            </div>
-        }
+            </div>}
     </>
 }
 

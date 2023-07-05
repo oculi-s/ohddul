@@ -38,3 +38,9 @@ export function Collapse({ title, children }) {
         </div></div>
     </div>
 }
+
+export const Loading = (props) => {
+    return <div className={styles.spinner}>
+        <div />
+    </div>
+}

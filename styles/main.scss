@@ -43,6 +43,8 @@
     }
 
     main {
+        width: 100%;
+        max-width: 100%;
         padding: 10px;
 
         tr {
@@ -64,14 +66,12 @@
 
 @include desktop {
     :root {
-        --main-width: 700px;
-        --nav-margin: calc((100% - var(--main-width) - 2 * #{$navWidth} - 40px) / 2);
+        --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
         --top: 100px;
     }
 
     main {
-        margin: auto;
-        display: table;
+        width: $mainWidth;
 
         tr {
             >* {
@@ -231,11 +231,12 @@ button {
 }
 
 main {
+    margin: auto;
+    display: table;
     text-align: left;
     margin-top: var(--top);
-    width: var(--main-width);
+    max-width: $mainWidth;
     padding-bottom: 800px;
-    max-width: 900px;
     margin-bottom: 50px;
     position: relative;
 }

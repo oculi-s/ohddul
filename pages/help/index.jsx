@@ -26,8 +26,9 @@ export const getServerSideProps = async (ctx) => {
     const now = dt.num();
     const aside = json.read(dir.stock.light.aside);
     const count = json.read(dir.stock.light.count);
+    const title = "오떨 사용방법";
     const props = {
-        now, aside, ...count
+        now, aside, title, ...count
     };
     return { props };
 }

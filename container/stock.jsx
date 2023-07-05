@@ -65,8 +65,11 @@ export async function getServerSideProps(ctx) {
 	const price = Filter(Price);
 	const predict = json.read(dir.stock.predAll);
 	const userMeta = json.read(dir.user.meta);
+
+	const title = meta.data[code] ? `${meta.data[code]?.n} : 오떨` : null;
 	props = {
 		...props,
+		title,
 		userMeta, aside,
 		price, meta, group, index, induty,
 		predict,

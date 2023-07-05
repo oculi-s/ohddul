@@ -2,12 +2,12 @@ import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { getRank } from '#/User';
 import Search from '#/common/search';
 
 import { Per, Color, Num, Int } from '@/module/ba';
-import { SignError } from '#/base/base';
+import { Loading, SignError } from '#/base/base';
 
 const SignIn = async (e, setUser, setError, setOn) => {
     e.preventDefault();
@@ -18,9 +18,9 @@ const SignIn = async (e, setUser, setError, setOn) => {
     })
     if (res.ok) {
         const user = (await getSession())?.user;
-        const pred = user?.pred || [];
+        const queue = user?.queue || [];
         const favs = user?.favs || [];
-        setUser({ pred, favs });
+        setUser({ queue, favs });
         setError(0);
     } else {
         setError(Int(res.error));
@@ -32,7 +32,13 @@ const SignIn = async (e, setUser, setError, setOn) => {
     return res;
 }
 
-function Login({ setUser }) {
+const SignOut = async (e, setUser) => {
+    e.preventDefault();
+    await signOut({ redirect: false });
+    setUser({ queue: [], favs: [] });
+}
+
+function LogOut({ setUser }) {
     return <>
         <User />
         <form
@@ -46,7 +52,7 @@ function Login({ setUser }) {
     </>
 }
 
-function Logout({ setUser }) {
+function LogIn({ setUser }) {
     const [on, setOn] = useState(0);
     const [error, setError] = useState(0);
     return <>
@@ -66,18 +72,13 @@ function Logout({ setUser }) {
     </>
 }
 
-const SignOut = async (e, setUser) => {
-    e.preventDefault();
-    await signOut({ redirect: false });
-    setUser({ pred: [], favs: [] });
-}
-
 function UserInfo({ setUser }) {
     const { status } = useSession();
     return <div className={`${styles.box} ${styles.user}`}>
-        {status == 'authenticated' ?
-            <Login setUser={setUser} /> :
-            <Logout setUser={setUser} />}
+        {status == 'loading' ? <Loading /> :
+            status == 'authenticated' ?
+                <LogOut setUser={setUser} /> :
+                <LogIn setUser={setUser} />}
     </div>
 }
 

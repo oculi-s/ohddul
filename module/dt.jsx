@@ -62,6 +62,24 @@ function update(dict) {
     else if (mkt == -1) m.set({ date: m.date() - 1 });
     return last < m;
 }
+
+/**
+ * 유저가 마지막으로 예측한 시간을 보고 예측가능한지 확인하는 함수
+ * 
+ * 장전을 기준으로 장 시작 이후에 예측이 있다면 예측 불가 아니면 가능
+ * * 00:00-08:59 자정부터 장 전이라면 마지막 예측이 전날 9시 이전이어야 함.
+ * * 09:00-23:59 장중부터 자정이라면 마지막 예측이 당일 9시 이전이어야 함.
+ */
+function pred(last = 0) {
+    last = moment(last);
+    const m = moment();
+    const mkt = market();
+    m.set({ hour: 8, minute: 59, second: 0 })
+    if (mkt == -1) {
+        m.set({ date: m.date() - 1 });
+    }
+    return last < m;
+}
 function toJson(m = moment()) {
     m = moment(m);
     let Y, M, D;
@@ -111,7 +129,7 @@ function hhmmss(m = moment()) {
 
 module.exports = {
     DAY, YEARS, EARNKEYS, YEARTYPE,
-    parse,
+    parse, pred,
     market, update, toJson, toString, toQuar,
     prev, now, num, sort, lsort, min, hhmmss
 };

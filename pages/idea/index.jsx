@@ -1,3 +1,3 @@
 export default function Index() {
-    return <></>
+    return <>준비중입니다.</>
 }

@@ -56,18 +56,21 @@
 
 .slide {
     overflow-y: hidden;
+
+    >* {
+        transition: margin-top .3s ease-in;
+    }
 }
 
 .slide:not(.view) {
     >* {
-        margin-top: -100px !important;
+        margin-top: -70px !important;
         // transition: margin-top .3s ease-out;
     }
 }
 
 .slide.view>* {
     margin-top: 0;
-    transition: margin-top .3s ease-in;
 }
 
 .fade {
@@ -127,6 +130,7 @@
     display: flex;
     align-items: baseline;
     margin-left: 10px;
+    flex-wrap: wrap;
 
     .market::before {
         border: 1px solid var(--border-color);
@@ -156,6 +160,7 @@
         margin-left: auto;
         align-self: baseline;
         font-size: 1em;
+        white-space: nowrap;
 
         button:before {
             transform-origin: 50% 50%;
@@ -171,6 +176,7 @@
 
     h2 {
         display: inline-block;
+        white-space: nowrap;
 
         * {
             color: $textBright
