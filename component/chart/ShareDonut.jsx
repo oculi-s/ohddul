@@ -57,47 +57,42 @@ const options = {
 const ShareDonut = ({ stockShare, stockMeta }) => {
     stockShare = stockShare?.data;
     const [data, setData] = useState({ labels: [], datasets: [] });
-    if (!stockShare?.length) {
-        return (
-            <div style={{ textAlign: "center" }}>
-                <div className={styles.wrap}>
-                    <p>openDart에서 제공된<br />지분 데이터가 없습니다.</p>
-                </div>
-            </div>
-        )
-    }
 
     useEffect(() => {
-        console.log('share 차트 렌더링중');
-        const amount = stockMeta?.a;
-        let res = amount - stockShare.map(e => e.amount).sum();
-        res = Math.max(0, res);
-        const shareData = stockShare.map(e => parseFix(e.amount / amount * 100, 1));
-        const labels = stockShare.map(e => e.name);
-        if (res > 1) {
-            shareData.push(parseFix(res / amount * 100, 1));
-            labels.push('데이터없음');
+        if (stockShare?.length) {
+            console.log('share 차트 렌더링중');
+            const amount = stockMeta?.a;
+            let res = amount - stockShare.map(e => e.amount).sum();
+            res = Math.max(0, res);
+            const shareData = stockShare.map(e => parseFix(e.amount / amount * 100, 1));
+            const labels = stockShare.map(e => e.name);
+            if (res > 1) {
+                shareData.push(parseFix(res / amount * 100, 1));
+                labels.push('데이터없음');
+            }
+            const len = shareData.length;
+            const backgroundColor = [...colors.slice(0, len - 1), scss.bgDark];
+            const data = {
+                labels,
+                datasets: [{
+                    data: shareData,
+                    backgroundColor,
+                    borderWidth: 0
+                }]
+            };
+            setData(data);
         }
-        const backgroundColor = colors;
-        backgroundColor[shareData.length - 1] = scss.bgDark;
-        const data = {
-            labels,
-            datasets: [{
-                data: shareData,
-                backgroundColor,
-                borderWidth: 0
-            }]
-        };
-        setData(data);
     }, [stockShare]);
 
     return (
         <div className={styles.wrap}>
-            <Doughnut
+            {stockShare?.length ? <Doughnut
                 data={data}
                 options={options}
                 plugins={[ChartDataLabels]}
-            />
+            /> :
+                <p>openDart에서 제공된<br />지분 데이터가 없습니다.</p>
+            }
         </div>
     )
 }

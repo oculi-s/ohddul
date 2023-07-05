@@ -5,6 +5,7 @@ import { Num, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
 import { useSession } from 'next-auth/react';
 import FavStar from '#/base/FavStar';
+import styles from '$/Base/Fold.module.scss'
 
 /**
  * 데이터로 전체 group데이터를 가져올게 아니고

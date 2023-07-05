@@ -1,5 +1,6 @@
 import dt from '@/module/dt';
 import styles from '$/Base/base.module.scss'
+import { useState } from "react"
 
 export function LastUpdate({ data }) {
     let last = data?.last;
@@ -24,4 +25,16 @@ export function SignError({ on, code }) {
     return <p className={`red ${styles.error}`} style={{ opacity: on }}>
         {msg[code]}
     </p>;
+}
+
+export function Collapse({ title, children }) {
+    const [open, setOpen] = useState(false);
+    return <div className={`${styles.collapse} ${open ? styles.open : ''}`}>
+        <button onClick={e => setOpen(!open)}>
+            {title || '펼쳐보기'} <span className='fa fa-chevron-right'></span>
+        </button>
+        <div><div>
+            {children}
+        </div></div>
+    </div>
 }

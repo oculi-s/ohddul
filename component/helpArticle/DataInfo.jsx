@@ -3,13 +3,13 @@ import dt from '@/module/dt';
 import Help from '#/base/Help';
 import styles from '$/Help.module.scss';
 import { Div } from '@/module/ba';
+import { Collapse } from "#/base/base";
 
 const InfoBlock1 = ({
     cnt, earn, none
 }) => {
     const YEARS = dt.YEARS;
     const len = YEARS.length;
-    const price = none?.SPAC?.length + none?.notSPAC?.length;
     return <div className={styles.box}>
         <h3>데이터 정보</h3>
         <h4>제공데이터</h4>
@@ -18,8 +18,8 @@ const InfoBlock1 = ({
             <tr>
                 <th>가격</th>
                 <td>
-                    <span className='red'>{cnt - price}</span>
-                    ({Div(cnt - price, cnt)}) 개 종목의 가격정보가 제공됩니다.
+                    <span className='red'>{cnt - none?.price?.length}</span>
+                    ({Div(cnt - none?.price?.length, cnt)}) 개 종목의 가격정보가 제공됩니다.
                 </td>
             </tr>
             <tr>
@@ -75,11 +75,13 @@ const InfoBlock1 = ({
     </div>
 }
 
+const Stock = ([code, name]) => <span key={code}><Link href={`/stock/${code}`}>{name}</Link>, </span>;
+
 const InfoBlock2 = ({ none }) => {
-    const SPAC = none?.SPAC;
-    const notSPAC = none?.notSPAC;
+    const SPAC = none?.price?.filter(e => e[1]?.includes('스팩'));
+    const notSPAC = none?.price?.filter(e => !e[1]?.includes('스팩'));
     return <div className={styles.box}>
-        <h3>가격정보가 제공되지 않은 종목 ({SPAC?.length + notSPAC?.length}개)</h3>
+        <h3>가격정보가 제공되지 않은 종목 ({none?.price?.length}개)</h3>
         <h4>합병이 예정된 스팩주
             <Help
                 title={'기업인수목적회사'}
@@ -87,21 +89,47 @@ const InfoBlock2 = ({ none }) => {
                     2000억의 시총을 가지고 비상장 회사를 물색하여
                     회사의 지분을 매입한 뒤 사명을 변경하는 방식으로
                     우회상장하는 목적으로 설립된 회사
-                </>} /> ({SPAC.length}개)</h4>
-        {SPAC.map(([code, name]) =>
-            <span key={code}><Link href={`/stock/${code}`}>{name}</Link>, </span>
-        )}
-        < h4 > 거래불가({notSPAC.length}개)</h4>
-        {notSPAC.map(([code, name]) =>
-            <span key={code}><Link href={`/stock/${code}`}>{name}</Link>, </span>
-        )}
+                </>} /> ({SPAC?.length}개)</h4>
+        {SPAC?.map(Stock)}
+        <h4>거래불가({notSPAC?.length}개)</h4>
+        {notSPAC?.map(Stock)}
     </div>
+}
+
+const InfoBlock3 = ({ none }) => {
+    const finRegex = new RegExp('투자|금융|자산|인베스트|증권|생명|신탁|리츠|맥쿼리|보험|뱅크|화재|은행|카드|벤처|해상|IB|ANKOR|패러랠|케이|캐피탈|창투|맵스|코리안|종금|신한|스퀘어');
+    const SPAC = none?.earn?.filter(e => e[1]?.includes('스팩'));
+    const notSPAC = none?.earn?.filter(e => !e[1]?.includes('스팩'));
+    const finance = notSPAC?.filter(e => finRegex.test(e[1]));
+    const notFinance = notSPAC?.filter(e => !finRegex.test(e[1]));
+    const share = none?.share;
+    return <>
+        <div className={styles.box}>
+            <h3>실적 정보가 제공되지 않은 종목<Help
+                title={'실적이 제공되지 않는 경우'}
+                span={<>
+                    asdf
+                </>}
+            />  ({none?.earn?.length}개)</h3>
+            <h4>스팩주 ({SPAC?.length}개)</h4>
+            <Collapse>{SPAC?.map(Stock)}</Collapse>
+            <h4>신규 상장주 ({notFinance?.length}개)</h4>
+            <Collapse>{notFinance?.map(Stock)}</Collapse>
+            <h4>기타 금융주 ({finance?.length}개)</h4>
+            <Collapse>{finance?.map(Stock)}</Collapse>
+        </div>
+        <div className={styles.box}>
+            <h3>지분 정보가 제공되지 않은 종목 ({share?.length}개)</h3>
+            <Collapse>{share?.map(Stock)}</Collapse>
+        </div>
+    </>
 }
 
 const DataInfo = (props) => {
     return <div>
         <InfoBlock1 {...props} />
         <InfoBlock2 {...props} />
+        <InfoBlock3 {...props} />
     </div>
 };
 
