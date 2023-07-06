@@ -262,22 +262,24 @@ export const PredBar = ({
     )
 }
 
-const Open = ({ time, view, setView, status }) => {
-    if (dt.pred(time))
-        return <span className={styles.open}>
-            {status == 'loading' ? <Loading small={true} />
-                : <button
-                    className={`fa fa-chevron-down ${view ? styles.up : ''}`}
-                    onClick={e => { setView(!view) }}
-                >
-                    &nbsp;오떨 맞추기
-                </button>}
-        </span>
+const Open = ({ time, view, setView }) => {
+    const { data: session, status } = useSession();
     return <span className={styles.open}>
-        {status == 'loading' ? <Loading small={true} />
-            : <span className='des'>
-                예측완료 : {dt.toString(time, { time: 1 })}
-            </span>}
+        {status == 'loading'
+            ? <Loading small={true} />
+            : status == 'unauthenticated'
+                ? ''
+                : dt.pred(time)
+                    ? <button
+                        className={`fa fa-chevron-down ${view ? styles.up : ''}`}
+                        onClick={e => { setView(!view) }}
+                    >
+                        &nbsp;오떨 맞추기
+                    </button>
+                    : <span className='des'>
+                        예측완료 : {dt.toString(time, { time: 1 })}
+                    </span>
+        }
     </span>
 }
 
@@ -308,6 +310,7 @@ const StockHead = ({
     //     console.log('rerendering');
     // }, [User?.queue, code]);
 
+    console.log(status);
     const props = {
         User, setUser,
         name, code, last,
@@ -325,7 +328,7 @@ const StockHead = ({
                     title={type == "K" ? "코스피(유가증권)" : "코스닥"}
                 ></span>
             </h2>
-            <Open {...{ time, view, setView, status }} />
+            <Open {...{ time, view, setView }} />
         </div>
         {status == 'authenticated' &&
             <div className={`${styles.slide} ${view ? styles.view : ''}`}>

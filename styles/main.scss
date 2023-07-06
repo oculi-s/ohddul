@@ -83,8 +83,15 @@
     }
 }
 
-.apexcharts-inner {
-    transform: translate(0, 10px);
+main {
+    margin: auto;
+    display: block;
+    text-align: left;
+    margin-top: var(--top);
+    width: var(--main-width);
+    padding-bottom: 800px;
+    margin-bottom: 50px;
+    position: relative;
 }
 
 h1,
@@ -226,17 +233,6 @@ input {
 button {
     background: none;
     border: none;
-}
-
-main {
-    margin: auto;
-    display: table;
-    text-align: left;
-    margin-top: var(--top);
-    width: var(--main-width);
-    padding-bottom: 800px;
-    margin-bottom: 50px;
-    position: relative;
 }
 
 table {

@@ -1,3 +1,4 @@
+import { getPageSize } from "#/base/base";
 import HEAD from "#/common/Head";
 import Aside from "#/common/aside";
 import Footer from "#/common/footer";
@@ -16,6 +17,7 @@ export default function Container(Component) {
             mobAside, setAsideShow,
             ...props,
         };
+        useEffect(() => { getPageSize(); }, [])
         return (
             <>
                 <HEAD {...props} />

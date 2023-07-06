@@ -1,20 +1,26 @@
 import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import { getRank } from '#/User';
 import Search from '#/common/search';
 
 import { Per, Color, Num, Int } from '@/module/ba';
-import { Loading, SignError } from '#/base/base';
+import { SignError } from '#/base/base';
 
+/**
+ * 2023.07.06 useSession을 predbar에서 사용하면서
+ * 
+ * login, out에서는 redirect=true를 사용하는 것으로 변경
+ * aside에 띄울 세션 정보는 serverside에서 getSession을 통해 받아오는 것으로 결정
+ */
 const SignIn = async (e, setUser, setError, setOn) => {
     e.preventDefault();
     const id = e.target.id.value;
     const pw = e.target.pw.value;
     const res = await signIn("ohddul", {
-        id, pw, redirect: false
+        id, pw, redirect: true
     })
     if (res.ok) {
         const user = (await getSession())?.user;
@@ -34,7 +40,7 @@ const SignIn = async (e, setUser, setError, setOn) => {
 
 const SignOut = async (e, setUser) => {
     e.preventDefault();
-    await signOut({ redirect: false });
+    await signOut({ redirect: true });
     setUser({ queue: [], favs: [] });
 }
 

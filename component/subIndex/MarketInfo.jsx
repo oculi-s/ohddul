@@ -45,26 +45,12 @@ function Index({ data, last, prev, count, name }) {
     </div>
 }
 
-const Market = ({ market, price, meta }) => {
-    meta = meta?.data;
+const Market = ({ market, count }) => {
     if (!market) return;
     const kospi = market?.kospi?.sort(dt.sort);
     const kosdaq = market?.kosdaq?.sort(dt.sort);
     const last = { kospi: kospi[0]?.c, kosdaq: kosdaq[0]?.c };
     const prev = { kospi: kospi[1]?.c, kosdaq: kosdaq[1]?.c };
-    const kospiList = Object.keys(meta).filter(e => meta[e]?.t == "K");
-    const kosdaqList = Object.keys(meta).filter(e => meta[e]?.t != "K");
-    const count = {
-        all: { kospi: kospiList.length, kosdaq: kosdaqList.length },
-        up: {
-            kospi: kospiList.map(e => price[e]).filter(e => e?.c > e?.p).length,
-            kosdaq: kosdaqList.map(e => price[e]).filter(e => e?.c > e?.p).length,
-        },
-        down: {
-            kospi: kospiList.map(e => price[e]).filter(e => e?.c < e?.p).length,
-            kosdaq: kosdaqList.map(e => price[e]).filter(e => e?.c < e?.p).length,
-        }
-    }
     const props = { last, prev, count };
     return (<>
         <div className={`${styles.area} ${styles.chartArea}`}>

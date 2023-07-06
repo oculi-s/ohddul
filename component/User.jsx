@@ -45,8 +45,6 @@ export const getRank = rank => {
  * 2023.07.04 수정 완료
  */
 export default function User({ user }) {
-    // const { data: session } = useSession();
-    // const user = session?.user;
     const id = user?.id;
     const rank = user?.meta?.rank;
     const [color, num, next] = getRank(rank);

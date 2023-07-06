@@ -1,8 +1,9 @@
+import { getPageSize } from "#/base/base";
 import HEAD from "#/common/Head";
 import Aside from "#/common/aside";
 import Footer from "#/common/footer";
 import Nav from "#/common/nav";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Container(Component) {
     return function Index(props) {
@@ -11,6 +12,7 @@ export default function Container(Component) {
             mobAside, setAsideShow,
             ...props,
         };
+        useEffect(() => { getPageSize(); }, [])
         return (
             <>
                 <HEAD {...props} />

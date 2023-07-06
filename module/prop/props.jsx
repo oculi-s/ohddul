@@ -4,6 +4,7 @@ import dir from "../dir";
 
 export async function CrawlUser(ctx, props) {
     const session = await getSession(ctx);
+    props.session = session;
     if (session?.user) {
         const user = {};
         const uid = session?.user?.uid;

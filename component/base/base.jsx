@@ -44,3 +44,11 @@ export const Loading = ({ small }) => {
         <div />
     </div>
 }
+
+export function getPageSize() {
+    const data = document.getElementById("__NEXT_DATA__").text;
+    const len = (new TextEncoder().encode(data)).length;
+    if (len > 1024 * 1024) console.log((len / 1024 / 1024).toFixed(1) + ' MB');
+    else if (len > 1024) console.log((len / 1024).toFixed(1) + ' KB');
+    else console.log(len + ' B');
+}

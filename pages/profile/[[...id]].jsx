@@ -25,8 +25,8 @@ export async function getServerSideProps(ctx) {
     const userMeta = json.read(dir.user.meta);
 
     const qid = ctx.query?.id;
-    let props = { aside, userMeta };
     const session = await getSession(ctx);
+    let props = { aside, userMeta, session };
 
     let uid = false, id = false, rank = false, queue = [], favs = [];
     if (qid) {

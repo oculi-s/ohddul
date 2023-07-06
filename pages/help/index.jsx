@@ -13,6 +13,7 @@ import BoardRules from '#/helpArticle/BoardRules';
 import Scoring from '#/helpArticle/Scoring';
 
 import Container from '@/container/light';
+import { getSession } from 'next-auth/react';
 
 /**
  * priceNull을 구할 때 서버에서 데이터를 전부 읽고 진행할지 고민인데
@@ -27,8 +28,9 @@ export const getServerSideProps = async (ctx) => {
     const aside = json.read(dir.stock.light.aside);
     const count = json.read(dir.stock.light.count);
     const title = "오떨 사용방법";
+    const session = await getSession(ctx);
     const props = {
-        now, aside, title, ...count
+        now, aside, title, session, ...count
     };
     return { props };
 }
