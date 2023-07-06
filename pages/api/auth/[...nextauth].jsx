@@ -3,7 +3,7 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { find, create } from '@/module/auth/user';
 import { hashSync, compareSync } from 'bcryptjs'
-import { randomUUID } from 'crypto';
+import { nanoid } from 'nanoid';
 import dir from '@/module/dir';
 import json from '@/module/json';
 
@@ -39,7 +39,7 @@ const providers = [
                 } else if (pw != pwCheck) {
                     throw new Error(status.pwdiff);
                 } else {
-                    let uid = randomUUID();
+                    let uid = nanoid(11);
                     pw = hashSync(pw, 5);
                     create({ id, pw, uid });
                 }

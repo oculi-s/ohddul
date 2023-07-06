@@ -4,13 +4,12 @@
     position: fixed;
     width: 100%;
     top: 0;
-    background: $bgMidBright;
+    background: $bgMid;
     border-bottom: 1px solid $borderColor;
-    height: $navHeight;
+    height: var(--nav-height);
     padding: 10px;
     z-index: 10;
     text-align: left;
-
 
     .inner {
         margin: auto;
@@ -21,7 +20,8 @@
     }
 
     .buttonList {
-        display: inline-block;
+        display: flex;
+        align-items: center;
         height: 100%;
 
         .button {
@@ -32,28 +32,39 @@
             border-radius: 5px;
 
             a {
-                border-right: 1px solid var(--border-color);
+                border-right: 1px solid $borderColor;
                 font-size: 1em;
                 text-decoration: none;
                 color: $textColor;
                 padding: 5px 20px;
+                font-weight: bold;
             }
         }
 
+        .home {
+            height: 100%;
+            display: inline-flex;
+            padding: 0;
+            margin-right: 10px;
+            width: 32px;
+            height: 32px;
+
+            a {
+                height: fit-content;
+            }
+        }
+
+        .button:first-of-type {
+            border-left: 1px solid $borderColor;
+        }
+
         .button:hover {
-            background: $bgDark;
+            background: $bgDarker;
         }
     }
 
     >* {
         vertical-align: -webkit-baseline-middle;
-    }
-
-    a {
-        font-weight: bold;
-        padding-left: 20px;
-        padding-right: 20px;
-        font-size: 1em;
     }
 }
 
@@ -63,7 +74,6 @@
 
 @include mobtab {
     .nav {
-        height: fit-content;
         padding-bottom: 0;
 
         .inner {

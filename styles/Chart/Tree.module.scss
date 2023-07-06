@@ -2,9 +2,9 @@
 
 .wrap.fixed {
     position: fixed;
-    top: $navHeight;
+    top: var(--nav-height);
     left: 0;
-    height: calc(100% - $navHeight);
+    height: calc(100% - var(--nav-height));
     z-index: 15;
 }
 

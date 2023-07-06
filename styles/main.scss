@@ -42,7 +42,7 @@ h1,
 h2,
 h3,
 h4 {
-    scroll-margin-top: calc($navHeight + 5px);
+    scroll-margin-top: calc(var(--nav-height) + 5px);
     color: $textBright;
 
     * {
@@ -69,8 +69,8 @@ body {
 }
 
 * {
-    color: var(--text-color);
-    border-color: var(--border-color);
+    color: $textColor;
+    border-color: $borderColor;
     box-sizing: border-box;
     font-family: sans-serif;
     outline: none;
@@ -122,12 +122,12 @@ input:focus {
 
 .red,
 .red * {
-    color: var(--red) !important;
+    color: $red !important;
 }
 
 .blue,
 .blue * {
-    color: var(--blue) !important;
+    color: $blue !important;
 }
 
 .yellow,
@@ -142,7 +142,7 @@ input:focus {
 }
 
 hr {
-    border: 1px solid var(--border-color);
+    border: 1px solid $borderColor;
     clear: both;
 }
 
@@ -187,7 +187,7 @@ table {
 
 tr {
     >* {
-        border: 1px solid var(--border-color);
+        border: 1px solid $borderColor;
         padding: 2px 3px;
         word-break: keep-all;
     }
@@ -244,10 +244,14 @@ footer {
 }
 
 
+// navHeight가 필요한 이유? 
+// grouptree를 fixed로 했을 때 문제가 생김
+// curtain에도 문제 생김
 @include mobtab {
     :root {
         --main-width: 100%;
         --nav-margin: 0;
+        --nav-height: 80px;
         --top: 100px;
     }
 
@@ -273,6 +277,7 @@ footer {
 @include desktop {
     :root {
         --main-width: #{$mainWidth};
+        --nav-height: 60px;
         --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
         --top: 100px;
     }
