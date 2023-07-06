@@ -3,10 +3,13 @@ import Link from 'next/link';
 import Search from '#/common/search';
 import { useState } from 'react';
 import Image from 'next/image';
+import toggleOnPageChange from '#/toggle';
+import { useRouter } from 'next/router';
 
 export default function Nav(props) {
     const [view, setView] = useState(false);
     const setAsideShow = props?.setAsideShow;
+    toggleOnPageChange(useRouter(), setView);
     return <nav className={styles.nav}>
         <div className={styles.inner}>
             <div className={styles.buttonList}>

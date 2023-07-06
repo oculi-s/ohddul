@@ -55,7 +55,9 @@
         }
 
         .button:first-of-type {
-            border-left: 1px solid $borderColor;
+            a {
+                border-left: 1px solid $borderColor;
+            }
         }
 
         .button:hover {

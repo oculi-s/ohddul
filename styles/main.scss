@@ -44,7 +44,7 @@
     }
 
     body {
-        font-size: 14.5px;
+        font-size: 14px;
     }
 
     .mh {
@@ -57,7 +57,7 @@
         --main-width: #{$mainWidth};
         --nav-height: 60px;
         --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
-        --top: 100px;
+        --top: 110px;
     }
 
     main {
@@ -99,7 +99,7 @@ h4 {
 }
 
 h2 {
-    margin-top: 2em;
+    margin-top: 0;
     margin-bottom: 0;
     padding-bottom: 10px;
 }
