@@ -1,4 +1,4 @@
-@import 'variables.module.scss';
+@import '../variables.module.scss';
 
 .docs {
     counter-reset: h3;
@@ -20,6 +20,7 @@
         }
     }
 }
+
 
 .box {
     background: $bgMid;
@@ -86,6 +87,18 @@
         z-index: 1;
     }
 
+}
+
+.predImage {
+    img:first-child {
+        width: 100%;
+        height: auto;
+    }
+
+    img:last-child {
+        width: 100%;
+        height: auto;
+    }
 }
 
 .predBarWrap {

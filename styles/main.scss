@@ -23,6 +23,54 @@
     --td-color: #161824;
 }
 
+
+// navHeight가 필요한 이유? 
+// grouptree를 fixed로 했을 때 문제가 생김
+// curtain에도 문제 생김
+@include mobtab {
+    :root {
+        --main-width: 100%;
+        --nav-margin: 0;
+        --nav-height: 80px;
+        --top: 100px;
+    }
+
+    main {
+        padding: 10px;
+
+        tr>* {
+            padding: 5px 8px;
+        }
+    }
+
+    body {
+        font-size: 14.5px;
+    }
+
+    .mh {
+        display: none;
+    }
+}
+
+@include desktop {
+    :root {
+        --main-width: #{$mainWidth};
+        --nav-height: 60px;
+        --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
+        --top: 100px;
+    }
+
+    main {
+        tr>* {
+            padding: 5px 10px;
+        }
+    }
+
+    body {
+        font-size: 16px;
+    }
+}
+
 .katex-html {
     display: none;
 }
@@ -241,57 +289,4 @@ footer {
 .master,
 .master * {
     color: var(--rank-master) !important;
-}
-
-
-// navHeight가 필요한 이유? 
-// grouptree를 fixed로 했을 때 문제가 생김
-// curtain에도 문제 생김
-@include mobtab {
-    :root {
-        --main-width: 100%;
-        --nav-margin: 0;
-        --nav-height: 80px;
-        --top: 100px;
-    }
-
-    main {
-        padding: 10px;
-
-        tr {
-            >* {
-                padding: 5px 8px;
-            }
-        }
-    }
-
-    body {
-        font-size: 14.5px;
-    }
-
-    .mh {
-        display: none;
-    }
-}
-
-@include desktop {
-    :root {
-        --main-width: #{$mainWidth};
-        --nav-height: 60px;
-        --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
-        --top: 100px;
-    }
-
-    main {
-
-        tr {
-            >* {
-                padding: 5px 10px;
-            }
-        }
-    }
-
-    body {
-        font-size: 16px;
-    }
 }

@@ -1,0 +1,11 @@
+@import '../variables.module.scss';
+
+.copy {
+    cursor: pointer;
+    color: $textColor;
+    transition: color .3s;
+}
+
+.copy:hover {
+    color: $textBright;
+}

@@ -62,6 +62,7 @@
     }
 }
 
+// 두번클릭 방지로 transition 해제
 .slide:not(.view) {
     >* {
         margin-top: -75px !important;
@@ -133,7 +134,7 @@
     flex-wrap: wrap;
 
     .market::before {
-        border: 1px solid var(--border-color);
+        border: 1px solid $borderColor;
         border-radius: 5px;
         width: 20px;
         height: 20px;
@@ -152,7 +153,7 @@
 
     .market.q::before {
         content: "코";
-        background: var(--red);
+        background: $red;
         color: black;
     }
 

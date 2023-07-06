@@ -215,13 +215,13 @@ export const PredBar = ({
                 e.preventDefault();
                 submit({ ...submitProps, ohddul: 1 })
             }} className={styles.up}>
-                오른다
+                오른다 <span className='mh'>(F9)</span>
             </button>
             <button onClick={e => {
                 e.preventDefault();
                 submit({ ...submitProps, ohddul: 0 })
             }} className={styles.down}>
-                떨어진다
+                떨어진다 <span className='mh'>(F10)</span>
             </button>
         </div>
     }

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import styles from '$/Help.module.scss';
+import { useEffect, useState } from 'react';
+import styles from '$/Help/Help.module.scss';
 
 import json from '@/module/json';
 import dt from '@/module/dt';
@@ -9,10 +9,10 @@ import dir from '@/module/dir';
 import ToggleTab from '#/base/ToggleTab';
 import DataInfo from '#/helpArticle/DataInfo';
 import PredHowto from '#/helpArticle/PredHowto';
-import BoardRules from '#/helpArticle/BoardRules';
 import Scoring from '#/helpArticle/Scoring';
 
 import { getSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 /**
  * priceNull을 구할 때 서버에서 데이터를 전부 읽고 진행할지 고민인데
@@ -35,9 +35,16 @@ export const getServerSideProps = async (ctx) => {
 }
 
 function Help(props) {
-    const [tabIndex, setTabIndex] = useState(0);
+    const router = useRouter();
+    const [tabIndex, setTabIndex] = useState(router?.query?.p);
+    useEffect(() => {
+        console.log(router?.query?.p)
+        if (router?.query?.p) {
+            history.replaceState(null, null, location.href?.split('?')[0]);
+        }
+    }, [])
     props = { ...props, setTabIndex };
-    const names = ['기본정보', '예측방법', '점수산정', '차트보는법', '커뮤니티규칙'];
+    const names = ['기본정보', '예측방법', '점수산정']//, '차트보는법', '커뮤니티규칙'];
     const datas = [
         <div key={0}>
             <DataInfo {...props} />
@@ -50,7 +57,7 @@ function Help(props) {
         </div>,
         <div key={3}>
             {/* <ChartHowto {...props} /> */}
-            <BoardRules {...props} />
+            {/* <BoardRules {...props} /> */}
         </div>
     ];
     return <>

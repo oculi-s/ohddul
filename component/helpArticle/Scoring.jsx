@@ -1,4 +1,4 @@
-import styles from '$/Help.module.scss';
+import styles from '$/Help/Help.module.scss';
 import { InlineMath as IM, BlockMath as BM } from 'react-katex';
 import Link from 'next/link';
 import { Collapse } from '#/base/base';

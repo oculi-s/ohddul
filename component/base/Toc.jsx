@@ -3,7 +3,7 @@ import styles from '$/Base/Toc.module.scss';
 import scss from '$/variables.module.scss';
 import { Int } from "@/module/ba";
 
-const refineData = (headings) => {
+function refineData(headings) {
     const nest = [];
 
     headings.forEach((h, i) => {
@@ -24,11 +24,11 @@ const refineData = (headings) => {
         }
     });
     return nest;
-};
+}
 
-const Headings = ({ headings, selected, click }) => {
+function Headings({ headings, selected, click }) {
     var i = 0;
-    return <ol className={styles.list} >
+    return <ol className={styles.list}>
         {headings.map(h => (
             <li
                 key={h.id}
@@ -51,8 +51,8 @@ const Headings = ({ headings, selected, click }) => {
                 )}
             </li>
         ))}
-    </ol>
-};
+    </ol>;
+}
 
 /**
  * document의 scroll 높이를 가져오는 과정에서 nav Height와 6을 더하는 이유
@@ -63,7 +63,7 @@ const ToC = ({ tabIndex }) => {
     const [nestedHeadings, setHeading] = useState([]);
     const [selected, setSelected] = useState(0);
 
-    const onclick = e => {
+    function onclick(e) {
         e.preventDefault();
         const id = e?.target?.closest('li')?.getAttribute('attr-id');
         document?.getElementById(id)?.scrollIntoView({
@@ -80,8 +80,16 @@ const ToC = ({ tabIndex }) => {
         const headings = $('main')
             ?.$$('h2, h3, h4, h5')
             ?.filter(e => !e.closest('.d') && !e.closest('dialog'));
-
+        console.log('TOC rendering');
         setHeading(refineData(headings));
+        const hash = location?.hash;
+        if (hash) {
+            setTimeout(() => {
+                const id = decodeURI(hash.replace('#', ''));
+                headings?.find(e => e.id == id)?.scrollIntoView()
+                history.replaceState(null, null, ' ');
+            }, 300);
+        }
         window.addEventListener('scroll', () => {
             const top = -document?.body?.getBoundingClientRect()?.top + Int(scss?.navHeight) + 6;
             const at = headings?.find(e => e?.offsetTop >= top)
@@ -90,7 +98,7 @@ const ToC = ({ tabIndex }) => {
             else if (i >= 0) setSelected(i);
             else setSelected(headings.length - 1);
         });
-    }, [tabIndex, selected])
+    }, [tabIndex])
 
     return <div className={styles.wrap}>
         <div className={styles.toc}>
