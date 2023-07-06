@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init-start": "next build; sudo pm2 start --name ohddul \"npm run start\"",
-    "rebuild": "next build; sudo pm2 restart ohddul"
+    "init-start": "sudo pm2 start --name ohddul \"npm run start\"",
+    "restart": "sudo pm2 delete ohddul; npm run init-start;",
+    "rebuild": "next build; npm run restart;"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",
