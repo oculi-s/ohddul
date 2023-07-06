@@ -4,15 +4,23 @@
     position: fixed;
     width: 100%;
     top: 0;
-    background: var(--bg-main);
-    border-bottom: 1px solid var(--border-color);
+    background: $bgMidBright;
+    border-bottom: 1px solid $borderColor;
     height: $navHeight;
     padding: 10px;
     z-index: 10;
     text-align: left;
 
+
+    .inner {
+        margin: auto;
+        margin: 0 var(--nav-margin);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .buttonList {
-        margin-left: var(--nav-margin);
         display: inline-block;
         height: 100%;
 
@@ -49,25 +57,32 @@
     }
 }
 
-.menuOpen {
+.mobileBtn {
     display: none;
-    height: 100%;
 }
 
 @include mobtab {
     .nav {
-        .buttonList {
-            a {
-                padding: 5px 15px;
-            }
+        height: fit-content;
+        padding-bottom: 0;
+
+        .inner {
+            flex-wrap: wrap;
         }
 
-        // top: 0;
+        .buttonList {
+
+            .button {
+                a {
+                    padding: 5px 10px;
+                }
+            }
+        }
     }
 
-    .menuOpen {
-        display: block;
-        float: right;
+    .mobileBtn {
+        display: inline-block;
+        white-space: nowrap;
     }
 
     .search {

@@ -14,10 +14,10 @@ const inko = new Inko();
 function makeResult({ e, setView, setResult, meta, group, userMeta }) {
     let q = e.target?.value;
     if (!q) {
-        setView(false);
+        if (setView) setView(false);
         return;
     }
-    setView(true);
+    if (setView) setView(true);
     q = q?.toLowerCase();
     const reg = new RegExp(`${q}|${inko?.en2ko(q)}|${inko?.ko2en(q)}`);
     const res = { stock: [], user: [], group: [] };
@@ -51,7 +51,19 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
 function elementKeydown({ e, i, stockRef, userRef, tabIndex, inputRef, setView }) {
     if (e.key == 'ArrowDown') {
         e.preventDefault();
-        stockRef?.current[i + 1]?.focus();
+        if (tabIndex) {
+            if (i < userRef?.current?.length - 1) {
+                userRef?.current[i + 1]?.focus();
+            } else {
+                inputRef?.current?.focus();
+            }
+        } else {
+            if (i < stockRef?.current?.length - 1) {
+                stockRef?.current[i + 1]?.focus();
+            } else {
+                inputRef?.current?.focus();
+            }
+        }
     } else if (e.key == 'ArrowUp') {
         e.preventDefault();
         if (i == 0) {
@@ -83,6 +95,11 @@ function inputKeydown({ e, tabIndex, setView, setTabIndex, stockRef, userRef }) 
         }
     } else if (e.key == 'ArrowUp') {
         e.preventDefault();
+        if (tabIndex) {
+            userRef?.current.slice(-1)[0]?.focus();
+        } else {
+            stockRef?.current.slice(-1)[0]?.focus();
+        }
     } else if (e.key == 'Escape') {
         e.preventDefault();
         setView(false);
@@ -133,8 +150,9 @@ function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result })
     if (setView) setView(false);
 }
 
-function Search(props) {
-    const [result, setResult] = useState({ stock: [], user: [], group: [] });
+function Index(props) {
+    const def = props?.aside?.sum?.map(({ code, n }) => ({ code, name: n }));
+    const [result, setResult] = useState({ stock: def });
     const [tabIndex, setTabIndex] = useState(0);
     props = {
         ...props,
@@ -143,7 +161,7 @@ function Search(props) {
     const { inputRef, userRef, stockRef, view, setView } = props || {}
     const N = result?.stock?.length;
 
-    const StockResult = () => result.stock
+    const StockResult = () => result?.stock
         ?.map((e, i) => <Link
             key={`stock${e.code}`}
             onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
@@ -155,7 +173,7 @@ function Search(props) {
             <span>{e?.name?.toUpperCase()}</span>
         </Link>);
 
-    const GroupResult = () => result.group
+    const GroupResult = () => result?.group
         ?.sort((a, b) => a?.gname?.localeCompare(b?.gname))
         .map((e, i) => <Link
             key={`group${e.code}`}
@@ -168,7 +186,7 @@ function Search(props) {
             <span>{e?.name}</span>
         </Link>);
 
-    const UserResult = () => result.user
+    const UserResult = () => result?.user
         ?.map((e, i) => <Link
             key={e.id}
             onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
@@ -191,20 +209,23 @@ function Search(props) {
                 종목
             </p>
             <StockResult />
-            <p className={styles.title}>
-                <span className='fa fa-chevron-right' />
-                그룹
-            </p>
-            <GroupResult />
+            {result?.group?.length && <>
+                <p className={styles.title}>
+                    <span className='fa fa-chevron-right' />
+                    그룹
+                </p>
+                <GroupResult />
+            </>}
         </div>,
         <div key={1}>
             <UserResult />
         </div>
     ];
     return (
-        <div className={styles.search}>
+        <div className={`${styles.search}`}>
             <form onSubmit={e => moveQuery({ e, ...props })}>
                 <input
+                    onClick={e => { setView(true) }}
                     onInput={e => { makeResult({ e, ...props }); }}
                     onKeyDown={e => { inputKeydown({ e, ...props }); }}
                     placeholder='종목/유저 검색 (ctrl+F)'
@@ -227,10 +248,10 @@ function Search(props) {
     );
 }
 
-export default function Index(props) {
-    const [meta, setMeta] = useState(props?.meta);
-    const [group, setGroup] = useState(props?.group);
-    const [userMeta, setUserMeta] = useState(props?.userMeta);
+export default function Search(props) {
+    const [meta, setMeta] = useState();
+    const [group, setGroup] = useState();
+    const [userMeta, setUserMeta] = useState();
     useEffect(() => {
         /**
          * meta와 userMeta의 lazyloading
@@ -249,19 +270,24 @@ export default function Index(props) {
     const inputRef = useRef();
 
     const router = useRouter();
-    props = { ...props, meta, group, userMeta, router, stockRef, userRef, inputRef };
+    props = {
+        ...props,
+        meta, group, userMeta,
+        router,
+        stockRef, userRef, inputRef
+    };
 
     useEffect(() => {
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && e.key == 'f') {
                 e.preventDefault();
                 if (window.innerWidth < Int(scss.midWidth)) {
-                    if (setAsideShow) setAsideShow(true);
+                    if (setAsideShow) setAsideShow(false);
                 }
                 inputRef?.current?.focus();
             }
         });
     })
 
-    return <Search {...props} />
+    return <Index {...props} />
 }

@@ -78,3 +78,10 @@
         opacity: .8;
     }
 }
+
+@include mobtab {
+    .wrap.fixed+i {
+        top: 17px;
+        right: 40px;
+    }
+}

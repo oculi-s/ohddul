@@ -47,3 +47,9 @@
         border-radius: 50%;
     }
 }
+
+@include mobtab {
+    .profile {
+        padding: 20px 10px;
+    }
+}

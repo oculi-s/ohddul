@@ -4,7 +4,6 @@ import User from '#/User'
 import { getSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import { getRank } from '#/User';
-import Search from '#/common/search';
 
 import { Per, Color, Num, Int } from '@/module/ba';
 import { SignError } from '#/base/base';
@@ -22,13 +21,14 @@ const SignIn = async (e, setUser, setError, setOn) => {
     const res = await signIn("ohddul", {
         id, pw, redirect: true
     })
-    if (res.ok) {
-        const user = (await getSession())?.user;
-        const queue = user?.queue || [];
-        const favs = user?.favs || [];
-        setUser({ queue, favs });
-        setError(0);
-    } else {
+    // if (res.ok) {
+    // const user = (await getSession())?.user;
+    // const queue = user?.queue || [];
+    // const favs = user?.favs || [];
+    // setUser({ queue, favs });
+    // setError(0);
+    // } else {
+    if (!res.ok) {
         setError(Int(res.error));
         setOn(1);
         setTimeout(() => {
@@ -79,15 +79,10 @@ function LogIn({ setUser }) {
 }
 
 function UserInfo({ setUser, session }) {
-    // const { status } = useSession();
     return <div className={`${styles.box} ${styles.user}`}>
         {session?.user ?
             <LogOut setUser={setUser} user={session?.user} /> :
             <LogIn setUser={setUser} />}
-        {/* {status == 'loading' ? <Loading /> :
-            status == 'authenticated' ?
-                <LogOut setUser={setUser} /> :
-                <LogIn setUser={setUser} />} */}
     </div>
 }
 
@@ -170,12 +165,11 @@ function Total() {
 }
 
 export default function Aside(props) {
-    const [view, setView] = useState(false);
     const mobAside = props?.mobAside;
     const setAsideShow = props?.setAsideShow;
     props = {
         ...props,
-        view, setView, mobAside, setAsideShow
+        mobAside, setAsideShow
     }
     useEffect(() => {
         if (mobAside) {
@@ -188,18 +182,15 @@ export default function Aside(props) {
         <>
             <aside className={`${styles.aside} ${(mobAside ? styles.show : '')}`}>
                 <div className={styles.wrap}>
-                    <div className={styles.search}>
-                        <Search {...props} className={styles.search} />
-                    </div>
                     <UserInfo {...props} />
                     <StockList {...props} />
                 </div>
             </aside>
             <div className={styles.shadow}
-                onClick={e => { setAsideShow(false); setView(false); }}
+                onClick={e => { setAsideShow(false) }}
             >
                 <button className='fa fa-close'
-                    onClick={e => { setAsideShow(false); setView(false); }}
+                    onClick={e => { setAsideShow(false) }}
                 />
             </div>
         </>
