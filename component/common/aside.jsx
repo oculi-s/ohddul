@@ -1,12 +1,13 @@
 import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
-import { getSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import { getRank } from '#/User';
 
 import { Per, Color, Num, Int } from '@/module/ba';
 import { SignError } from '#/base/base';
+import { useRouter } from 'next/router';
 
 /**
  * 2023.07.06 useSession을 predbar에서 사용하면서
@@ -14,42 +15,35 @@ import { SignError } from '#/base/base';
  * login, out에서는 redirect=true를 사용하는 것으로 변경
  * aside에 띄울 세션 정보는 serverside에서 getSession을 통해 받아오는 것으로 결정
  */
-const SignIn = async (e, setUser, setError, setOn) => {
+const SignIn = async (e, router, setError, setOn) => {
     e.preventDefault();
     const id = e.target.id.value;
     const pw = e.target.pw.value;
     const res = await signIn("ohddul", {
-        id, pw, redirect: true
+        id, pw, redirect: false
     })
-    // if (res.ok) {
-    // const user = (await getSession())?.user;
-    // const queue = user?.queue || [];
-    // const favs = user?.favs || [];
-    // setUser({ queue, favs });
-    // setError(0);
-    // } else {
-    if (!res.ok) {
-        setError(Int(res.error));
+    if (res.ok) {
+        router.reload();
+    } else {
+        setError(Int(res?.error));
         setOn(1);
         setTimeout(() => {
             setOn(0);
         }, 1000);
     }
-    return res;
 }
 
-const SignOut = async (e, setUser) => {
+const SignOut = async (e) => {
     e.preventDefault();
     await signOut({ redirect: true });
-    setUser({ queue: [], favs: [] });
 }
 
-function LogOut({ setUser, user }) {
+function LogOut({ user }) {
     return <>
         <User user={user} />
         <form
             className={styles.logout}
-            onSubmit={e => { SignOut(e, setUser) }}
+            onSubmit={SignOut}
         >
             <div className={styles.submit}>
                 <button type='submit'>로그아웃</button>
@@ -58,14 +52,15 @@ function LogOut({ setUser, user }) {
     </>
 }
 
-function LogIn({ setUser }) {
+function LogIn() {
+    const router = useRouter();
     const [on, setOn] = useState(0);
     const [error, setError] = useState(0);
     return <>
         <form
             className={styles.login}
-            onSubmit={async (e) => {
-                await SignIn(e, setUser, setError, setOn);
+            onSubmit={(e) => {
+                SignIn(e, router, setError, setOn);
             }}>
             <input name='id' placeholder='ID' />
             <input name='pw' placeholder="비밀번호" type="password" />
@@ -187,10 +182,10 @@ export default function Aside(props) {
                 </div>
             </aside>
             <div className={styles.shadow}
-                onClick={e => { setAsideShow(false) }}
+                onClick={e => setAsideShow(false)}
             >
                 <button className='fa fa-close'
-                    onClick={e => { setAsideShow(false) }}
+                    onClick={e => setAsideShow(false)}
                 />
             </div>
         </>

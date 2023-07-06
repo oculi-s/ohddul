@@ -2,7 +2,7 @@ import json from "@/module/json";
 import { user as dir } from "@/module/dir";
 
 const defInfo = { index: {} }
-export const find = (key) => {
+export function find(key) {
     let userInfo = json.read(dir.admin, defInfo);
     if (userInfo.index == undefined) userInfo.index = {};
     if (userInfo[key] || userInfo?.index[key])
@@ -10,7 +10,7 @@ export const find = (key) => {
     return false;
 }
 
-export const create = (user) => {
+export function create(user) {
     let { id, uid } = user;
     const userInfo = json.read(dir.admin, defInfo);
     const userMeta = json.read(dir.meta, {});

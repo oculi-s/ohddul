@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
-const { withMinifyClassnamesConfig } = require('nextjs-plugin-minify-css-classname');
 
-module.exports = withMinifyClassnamesConfig({
-  enabled: process.env.NODE_ENV === 'production',
-})({
+module.exports = {
   reactStrictMode: false,
   webpack5: true,
   webpack: (config) => {
@@ -14,4 +11,4 @@ module.exports = withMinifyClassnamesConfig({
     config.resolve.fallback = { fs: false };
     return config;
   },
-})
+}

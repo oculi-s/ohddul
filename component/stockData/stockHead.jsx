@@ -14,17 +14,18 @@ const Bid = (price) => {
     return price < 2000 ? 1 : price < 20000 ? 10 : 100;
 }
 
-const submit = async ({
-    User, setUser,
-    code, name, again,
-    ohddul, change, uid, origin, date,
+async function submit({
+    update, again,
+    uid,
+    code, name,
+    ohddul, change,
+    origin, date,
     testing,
-    setTime, setChange, setDate, setAgain,
-    setBar, setOpacity
-}) => {
+    setTime, setChange, setDate, setAgain, setBar, setOpacity
+}) {
     if (again) return;
     if (ohddul == undefined && !date) {
-        alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.')
+        alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.');
         return;
     }
     date = dt.toString(dt.num() + dt.DAY * date);
@@ -34,11 +35,11 @@ const submit = async ({
         if (ohddul || change > 0) {
             res = 1;
         } else if (ohddul == undefined && change == 0) {
-            return '보합'
+            return '보합';
         }
-        return res ? '오름' : '떨어짐'
-    }
-    const value = (`${date}일 목표가 ${change + origin}원으로 `)
+        return res ? '오름' : '떨어짐';
+    };
+    const value = (`${date}일 목표가 ${change + origin}원으로 `);
     const msg = `${name}, ${ohddul == undefined ? value : ''}${od(ohddul, change)}을 예측하셨습니다.`;
     alert(msg);
     if (testing) {
@@ -46,38 +47,35 @@ const submit = async ({
         setChange(0);
         return;
     }
-    await json.queue({
-        url: dir.user.pred(uid),
-        data: { code, change, ohddul, origin }
-    })
-    await json.queue({
-        url: dir.stock.pred(code),
-        data: { uid, change, ohddul, origin }
-    })
+    const data = { o: origin }
+    if (ohddul) data.t = 'od', data.od = ohddul;
+    else data.t = 'pr', data.pr = origin + change;
+
+    const predData = { ...data, uid };
+    const userData = { ...data, c: code };
+    await json.queue({ url: dir.user.pred(uid), data: userData, });
+    await json.queue({ url: dir.stock.pred(code), data: predData, });
     await json.up({
         url: dir.stock.predAll,
         data: { code, key: 'queue' }
-    })
-    User?.queue?.push({ code, change, ohddul, origin, date: dt.num() });
-    setUser({ ...User });
+    });
+    update(e => { e.pred.push(data) });
     setAgain(true);
     setOpacity(0);
     setTimeout(() => setBar(false), 500);
     setTime(dt.num());
 }
 
-const Return = ({ setType, setChange }) => {
-    return <button onClick={
-        () => {
-            setType(0);
-            if (setChange) setChange(0);
-        }
-    } className={styles.return}>
+function Return({ setType, setChange }) {
+    return <button onClick={() => {
+        setType(0);
+        if (setChange) setChange(0);
+    }} className={styles.return}>
         <span className='fa fa-chevron-left'></span>
-    </button>
+    </button>;
 }
 
-const DateForm = ({ date = 1, setDate }) => {
+function DateForm({ date = 1, setDate }) {
     const keyDown = e => {
         if (e.key == '-') {
             e.preventDefault();
@@ -87,35 +85,34 @@ const DateForm = ({ date = 1, setDate }) => {
             e.preventDefault();
             set(date + 1);
         }
-    }
+    };
     const set = d => {
         d = parseInt(d || 0);
         d = Math.min(d, 90);
         d = Math.max(d, 0);
         setDate(d);
         return d;
-    }
+    };
     return <div className={styles.date}>
         <input
             type="text"
             value={date}
             onChange={e => e.target.value = set(e.target.value)}
-            onKeyDown={keyDown}
-        />
+            onKeyDown={keyDown} />
         <span>일 뒤</span>
-    </div>
+    </div>;
 }
 
-const PriceForm = ({
+function PriceForm({
     change, origin, setChange, submitProps
-}) => {
+}) {
     const set = (p) => {
         p = parseInt(p || 0);
         p = Math.min(p, origin * 5);
         p = Math.max(p, 0);
         setChange(p - origin);
         return p;
-    }
+    };
     const keyDown = e => {
         if (e.key == '=' || e.key == '-') {
             e.preventDefault();
@@ -130,7 +127,7 @@ const PriceForm = ({
             e.preventDefault();
             submit({ e, ...submitProps });
         }
-    }
+    };
     const changePercent = (Math.round(change / origin * 1000) / 10).toFixed(1);
     const changeSym = changePercent > 0 ? '+' : '';
     return <div
@@ -148,9 +145,8 @@ const PriceForm = ({
             id='price'
             step={Bid(change + origin)}
             value={change + origin}
-            onChange={e => { e.target.value = set(e.target.value) }}
-            onKeyDown={keyDown}
-        />
+            onChange={e => { e.target.value = set(e.target.value); }}
+            onKeyDown={keyDown} />
         <div className={Color(change)}>
             <span>
                 <span className={styles.priceDiff}>
@@ -165,9 +161,8 @@ const PriceForm = ({
         <button
             className='fa fa-refresh'
             onClick={e => setChange(0)}
-            type='button'
-        />
-    </div>
+            type='button' />
+    </div>;
 }
 
 /**
@@ -176,13 +171,12 @@ const PriceForm = ({
  * testing이 true이면 실제 데이터로 저장되지 않음
  */
 export const PredBar = ({
-    User, setUser,
     name, code, last,
     setView, setCnt, setTime,
     setBar, setOpacity,
     testing = false, help = true, defaultType = 0
 }) => {
-    const { data: session } = useSession();
+    const { data: session, update } = useSession();
     const origin = last?.c || last || 0;
     const [change, setChange] = useState(0);
     const [type, setType] = useState(defaultType);
@@ -192,7 +186,7 @@ export const PredBar = ({
     const uid = user?.uid;
 
     const submitProps = {
-        User, setUser,
+        update,
         again, setAgain,
         code, name, testing,
         change, origin,
@@ -262,8 +256,15 @@ export const PredBar = ({
     )
 }
 
-const Open = ({ time, view, setView }) => {
+const Open = ({ code, view, setView }) => {
     const { data: session, status } = useSession();
+    console.log(status);
+    const queue = session?.user?.queue;
+    queue?.sort(dt.sort);
+    const time = queue
+        ?.find(e => e.code == code)?.date;
+
+
     return <span className={styles.open}>
         {status == 'loading'
             ? <Loading small={true} />
@@ -297,22 +298,16 @@ const StockHead = ({
     const [view, setView] = useState(0);
     const [opacity, setOpacity] = useState(1);
 
-    useEffect(() => {
-        const queue = session?.user?.queue;
-        queue?.sort(dt.sort);
-        update();
-        const predTime = queue
-            ?.find(e => e.code == code)?.date;
-        setTime(predTime);
-        console.log(queue)
-    }, [User?.queue, code])
-    // useEffect(() => {
-    //     console.log('rerendering');
-    // }, [User?.queue, code]);
+    console.log(session?.user);
 
-    console.log(status);
+    useEffect(() => {
+        setView(0);
+        setOpacity(1);
+        console.log('rerendering');
+    }, [code]);
+
     const props = {
-        User, setUser,
+        update,
         name, code, last,
         setView, setTime,
         setBar, setOpacity
@@ -328,7 +323,7 @@ const StockHead = ({
                     title={type == "K" ? "코스피(유가증권)" : "코스닥"}
                 ></span>
             </h2>
-            <Open {...{ time, view, setView }} />
+            <Open {...{ code, view, setView }} />
         </div>
         {status == 'authenticated' &&
             <div className={`${styles.slide} ${view ? styles.view : ''}`}>

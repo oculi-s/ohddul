@@ -90,7 +90,8 @@ const Index = ({
     meta, group, price, index, induty,
     predict,
     userMeta,
-    stockPrice, stockEarn, stockShare,
+    stockPrice,
+    stockEarn, stockShare,
     stockPredict,
 }) => {
     const router = useRouter();
