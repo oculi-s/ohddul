@@ -32,12 +32,12 @@ function LogIn() {
         <div className={styles.login}>
             <p>지금 바로 시작하세요</p>
             <p>준비중입니다.</p>
-            {/* <Image
+            <Image
                 src={KakaoLogin.src}
                 width={214}
                 height={53}
-                onClick={e => signIn('kakao')}
-            /> */}
+            // onClick={e => signIn('kakao')}
+            />
         </div>
     </>
 }
