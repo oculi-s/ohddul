@@ -64,7 +64,7 @@
 
 .slide:not(.view) {
     >* {
-        margin-top: -70px !important;
+        margin-top: -75px !important;
         // transition: margin-top .3s ease-out;
     }
 }
@@ -157,10 +157,18 @@
     }
 
     .open {
-        margin-left: auto;
         align-self: baseline;
         font-size: 1em;
         white-space: nowrap;
+        display: flex;
+        margin-left: auto;
+        margin-top: auto;
+        min-width: 180px;
+
+        button {
+            width: 100%;
+            text-align: right;
+        }
 
         button:before {
             transform-origin: 50% 50%;

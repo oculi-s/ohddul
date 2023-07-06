@@ -13,14 +13,14 @@ const PredTable = ({ stockPredict, userMeta }) => {
         const meta = userMeta[uid];
         if (!meta) return <></>;
         const { id, rank } = meta;
-        const [curRank, nextRank] = getRank(rank);
+        const [color, num, next] = getRank(rank);
         const target = origin + change;
         let about, od = ohddul || change > 0;
         if (change) about = `${Num(target)} (${Fix(change / origin * 100)}%)`
         else about = `-`
         return (
             <tr key={`pred${i}`}>
-                <th className={curRank.slice(0, -1)}>
+                <th className={color}>
                     <Link href={`/profile/${id}`}>
                         {id}
                     </Link>

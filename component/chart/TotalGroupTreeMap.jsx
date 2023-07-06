@@ -38,7 +38,7 @@ const stockElement = ({
     >
         {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
             {code ?
-                <Link href={`/stock/${code}`}>{meta[code]?.n}</Link> :
+                <Link href={`/stock/${meta[code]?.n}`}>{meta[code]?.n}</Link> :
                 <Link href={`/group/${name}`}>
                     {GroupImg({ name })}
                 </Link>

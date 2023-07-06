@@ -3,8 +3,6 @@ import { json } from '@/pages/api/xhr';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Help from '#/base/Help';
-import toggleOnPageChange from '#/toggle';
-import { useRouter } from 'next/router';
 import { Color, Per } from '@/module/ba';
 import dir from '@/module/dir';
 import dt from '@/module/dt';
@@ -267,7 +265,7 @@ export const PredBar = ({
 const Open = ({ time, view, setView, status }) => {
     if (dt.pred(time))
         return <span className={styles.open}>
-            {status == 'loading' ? <Loading />
+            {status == 'loading' ? <Loading small={true} />
                 : <button
                     className={`fa fa-chevron-down ${view ? styles.up : ''}`}
                     onClick={e => { setView(!view) }}
@@ -276,7 +274,7 @@ const Open = ({ time, view, setView, status }) => {
                 </button>}
         </span>
     return <span className={styles.open}>
-        {status == 'loading' ? <Loading />
+        {status == 'loading' ? <Loading small={true} />
             : <span className='des'>
                 예측완료 : {dt.toString(time, { time: 1 })}
             </span>}
@@ -285,29 +283,30 @@ const Open = ({ time, view, setView, status }) => {
 
 const StockHead = ({
     code, last, User, setUser,
-    stockMeta
+    stockMeta,
 }) => {
-    const { status } = useSession();
-    console.log(User);
+    const { data: session, status, update } = useSession();
 
+    const [time, setTime] = useState();
     const name = stockMeta?.n;
     const type = stockMeta?.t;
-    const [bar, setBar] = useState(0);
+    const can = dt.pred(time);
+    const [bar, setBar] = useState(can);
     const [view, setView] = useState(0);
-    const [time, setTime] = useState(1e13);
-    const [opacity, setOpacity] = useState(0);
+    const [opacity, setOpacity] = useState(1);
 
-    User?.queue?.sort(dt.sort);
     useEffect(() => {
-        const predTime = User?.queue
+        const queue = session?.user?.queue;
+        queue?.sort(dt.sort);
+        update();
+        const predTime = queue
             ?.find(e => e.code == code)?.date;
-        const can = dt.pred(predTime);
-        setBar(can);
-        setView(0);
         setTime(predTime);
-        setOpacity(1);
-        console.log('rerendering');
-    }, [User?.queue, code]);
+        console.log(queue)
+    }, [User?.queue, code])
+    // useEffect(() => {
+    //     console.log('rerendering');
+    // }, [User?.queue, code]);
 
     const props = {
         User, setUser,
@@ -326,7 +325,7 @@ const StockHead = ({
                     title={type == "K" ? "코스피(유가증권)" : "코스닥"}
                 ></span>
             </h2>
-            {status == 'authenticated' && <Open {...{ time, view, setView, status }} />}
+            <Open {...{ time, view, setView, status }} />
         </div>
         {status == 'authenticated' &&
             <div className={`${styles.slide} ${view ? styles.view : ''}`}>

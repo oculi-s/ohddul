@@ -53,15 +53,16 @@ const IndutyFold = ({
             <th align='center'>전일종가</th>
             <th align='center'>시총</th>
         </tr>
-        {stock.map(code =>
-            <tr key={code}>
+        {stock.map(code => {
+            return <tr key={code}>
                 <th className={styles.stock}>
                     <FavStar {...{ code, User, setUser }} />
-                    <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
+                    <Link href={`/stock/${meta[code]?.n}`}>{meta[code]?.n}</Link>
                 </th>
                 <td>{Num(price[code]?.c)}</td>
                 <td>{Price(price[code]?.c * meta[code]?.a)}</td>
             </tr>
+        }
         )}
     </>
     const props = { router, name, body, folded };

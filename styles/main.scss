@@ -43,8 +43,6 @@
     }
 
     main {
-        width: 100%;
-        max-width: 100%;
         padding: 10px;
 
         tr {
@@ -66,12 +64,12 @@
 
 @include desktop {
     :root {
+        --main-width: #{$mainWidth};
         --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
         --top: 100px;
     }
 
     main {
-        width: $mainWidth;
 
         tr {
             >* {
@@ -235,7 +233,7 @@ main {
     display: table;
     text-align: left;
     margin-top: var(--top);
-    max-width: $mainWidth;
+    width: var(--main-width);
     padding-bottom: 800px;
     margin-bottom: 50px;
     position: relative;

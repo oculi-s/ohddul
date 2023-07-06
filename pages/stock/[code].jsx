@@ -17,7 +17,7 @@ import EarnElement from '#/stockData/stockEarn';
 import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/stockPred';
 
-import Container from '@/container/light';
+import Container from '@/container/heavy';
 
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
@@ -79,8 +79,13 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
     )
 }
 
+/**
+ * favs는 heavy container에서 사용하는 User와 setUser를 이용한다
+ * 
+ * pred는 꼬이면 안되기 때문에 중복제출 방지를 위해 session에 저장하고 update를 사용한다.
+ */
 const Index = ({
-    user,
+    User, setUser,
     setAsideShow,
     meta, group, price, index, induty,
     predict,
@@ -88,17 +93,12 @@ const Index = ({
     stockPrice, stockEarn, stockShare,
     stockPredict,
 }) => {
-    const [User, setUser] = useState();
     const router = useRouter();
     let code = router.query?.code;
-
     if (!parseInt(code)) code = meta.index[code];
     useEffect(() => {
         setAsideShow(false);
     }, [code, setAsideShow])
-    useEffect(() => {
-        if (!User) setUser(user);
-    }, [])
     if (!meta?.data) return;
     if (!code) return;
     const stockMeta = meta?.data[code];
@@ -150,5 +150,6 @@ const Index = ({
 }
 
 import { getServerSideProps } from "@/container/stock";
+import { useSession } from 'next-auth/react';
 export { getServerSideProps };
 export default Container(Index);

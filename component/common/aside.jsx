@@ -2,7 +2,7 @@ import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getRank } from '#/User';
 import Search from '#/common/search';
 
@@ -38,9 +38,9 @@ const SignOut = async (e, setUser) => {
     setUser({ queue: [], favs: [] });
 }
 
-function LogOut({ setUser }) {
+function LogOut({ setUser, user }) {
     return <>
-        <User />
+        <User user={user} />
         <form
             className={styles.logout}
             onSubmit={e => { SignOut(e, setUser) }}
@@ -72,13 +72,16 @@ function LogIn({ setUser }) {
     </>
 }
 
-function UserInfo({ setUser }) {
-    const { status } = useSession();
+function UserInfo({ setUser, session }) {
+    // const { status } = useSession();
     return <div className={`${styles.box} ${styles.user}`}>
-        {status == 'loading' ? <Loading /> :
+        {session?.user ?
+            <LogOut setUser={setUser} user={session?.user} /> :
+            <LogIn setUser={setUser} />}
+        {/* {status == 'loading' ? <Loading /> :
             status == 'authenticated' ?
                 <LogOut setUser={setUser} /> :
-                <LogIn setUser={setUser} />}
+                <LogIn setUser={setUser} />} */}
     </div>
 }
 
@@ -88,7 +91,7 @@ function AsideTable({ data }) {
         const { code, n, c, p } = e;
         return <tr key={code}>
             <th>
-                <Link href={`/stock/${code}`}>{n}</Link>
+                <Link href={`/stock/${n}`}>{n}</Link>
             </th>
             <td align='right'>{Num(c)}</td>
             <td className={Color(c - p)} align='center'>{Per(c, p)}</td>

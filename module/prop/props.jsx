@@ -7,8 +7,8 @@ export async function CrawlUser(ctx, props) {
     if (session?.user) {
         const user = {};
         const uid = session?.user?.uid;
-        user.favs = json.read(dir.user.favs(uid));
-        user.queue = json.read(dir.user.pred(uid)).queue;
+        user.favs = json.read(dir.user.favs(uid), []);
+        user.queue = json.read(dir.user.pred(uid), { queue: [] })?.queue;
         props.user = user;
     }
 }

@@ -44,14 +44,9 @@ export const getRank = rank => {
  * 그러려면 session에 meta를 담아 보내야 한다.
  * 2023.07.04 수정 완료
  */
-export default function User() {
-    const { data: session, status } = useSession();
-    if (status == 'loading' || status == 'unauthenticated') {
-        return (
-            <>로딩중입니다...</>
-        )
-    }
-    const user = session?.user;
+export default function User({ user }) {
+    // const { data: session } = useSession();
+    // const user = session?.user;
     const id = user?.id;
     const rank = user?.meta?.rank;
     const [color, num, next] = getRank(rank);

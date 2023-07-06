@@ -1,9 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import GroupImg from '@/public/group/Default';
 import { Num, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
-import { useSession } from 'next-auth/react';
 import FavStar from '#/base/FavStar';
 import styles from '$/Base/Fold.module.scss'
 
@@ -24,7 +22,6 @@ const GroupFold = ({
     const name = <>
         <Link href={`/group/${gname}`}>
             <GroupImg name={gname} />
-            {/* <Image src={groupImg[imgName]} alt={`${gname}그룹 로고`} /> */}
         </Link>
         <p>{gname}그룹 자산 : ({Price(group.equity * 10)}, {group.rank}위) 시총 : ({Price(priceSum)})</p>
     </>
@@ -43,18 +40,16 @@ const GroupFold = ({
         .sort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
         .map((code) => {
             const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
-            return (
-                <tr key={code}>
-                    <th className={styles.stock}>
-                        <FavStar {...{ code, User, setUser }} />
-                        <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
-                    </th>
-                    <td>{Num(price[code]?.c)}</td>
-                    <td>{Price(priceDict[code])}</td>
-                    <td>{cnt}</td>
-                    <td>{(predict[code]?.right || 0 / cnt) || 0}%</td>
-                </tr>
-            )
+            return <tr key={code}>
+                <th className={styles.stock}>
+                    <FavStar {...{ code, User, setUser }} />
+                    <Link href={`/stock/${meta[code]?.n}`}>{meta[code]?.n}</Link>
+                </th>
+                <td>{Num(price[code]?.c)}</td>
+                <td>{Price(priceDict[code])}</td>
+                <td>{cnt}</td>
+                <td>{(predict[code]?.right || 0 / cnt) || 0}%</td>
+            </tr>
         })
     const props = { name, head, body, router, folded };
     return <Fold {...props} />

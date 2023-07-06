@@ -33,14 +33,14 @@ export async function getServerSideProps(ctx) {
         uid = Object.keys(userMeta).find(k => userMeta[k].id == qid);
         id = userMeta[uid]?.id;
         rank = userMeta[uid]?.rank;
-        queue = json.read(dir.user.pred(uid), { queue: [], data: [] }).queue;
+        queue = json.read(dir.user.pred(uid), { queue: [] }).queue;
         favs = json.read(dir.user.favs(uid), []);
     } else if (session?.user) {
         uid = session?.user?.uid;
         id = session?.user?.meta?.id;
         rank = session?.user?.meta?.rank;
-        queue = json.read(dir.user.pred(uid)).queue;
-        favs = json.read(dir.user.favs(uid));
+        queue = json.read(dir.user.pred(uid), { queue: [] }).queue;
+        favs = json.read(dir.user.favs(uid), []);
         const user = { favs, queue };
         props = { ...props, user };
     }
