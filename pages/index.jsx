@@ -3,7 +3,6 @@ import GroupInduty from '#/subIndex/GroupInduty'
 
 import json from '@/module/json';
 import dir from '@/module/dir';
-import Container from '@/container/light';
 import { getSession } from 'next-auth/react';
 
 /**
@@ -28,22 +27,22 @@ export async function getServerSideProps(ctx) {
     return { props };
 }
 
-const Column = () => {
+function Column() {
     return <>
         - 칼럼 500자 이상<br />
         - 최신칼럼 / 인기칼럼<br />
         - 랭커들의 칼럼만 보기<br />
         - 좋아요 / 댓글 / 공유<br />
-    </>
+    </>;
 }
 
-const index = function (props) {
+function Index(props) {
     return (
         <div>
             <Market {...props} />
             <GroupInduty {...props} />
         </div>
-    )
+    );
 }
 
-export default Container(index);
+export default Index;

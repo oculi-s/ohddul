@@ -1,67 +1,67 @@
 import NextAuth from 'next-auth'
-// import KakaoProvider from 'next-auth/providers/kakao'
-import CredentialsProvider from 'next-auth/providers/credentials';
+import KakaoProvider from 'next-auth/providers/kakao'
+// import CredentialsProvider from 'next-auth/providers/credentials';
 import { find, create } from '@/module/auth/user';
-import { hashSync, compareSync } from 'bcryptjs'
-import { nanoid } from 'nanoid';
-import dir from '@/module/dir';
-import json from '@/module/json';
+// import { hashSync, compareSync } from 'bcryptjs'
+// import { nanoid } from 'nanoid';
+// import dir from '@/module/dir';
+// import json from '@/module/json';
 
-const status = {
-    exist: 300,
-    emptyID: 400,
-    emptyPW: 401,
-    regex: 402,
-    pwdiff: 403,
-    failed: 404
-}
-const pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*\W)(?!.* ).{8,16}$/);
+// const status = {
+//     exist: 300,
+//     emptyID: 400,
+//     emptyPW: 401,
+//     regex: 402,
+//     pwdiff: 403,
+//     failed: 404
+// }
+// const pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*\W)(?!.* ).{8,16}$/);
 
 const providers = [
-    CredentialsProvider({
-        id: "ohddul",
-        name: 'Credentials',
-        type: 'credentials',
-        credentials: {
-            id: {}, pw: {}
-        },
-        async authorize(credentials, req) {
-            let { isCreate, id, pw, pwCheck } = credentials;
-            const user = find(id);
-            if (!id) throw new Error(status.emptyID);
-            if (!pw) throw new Error(status.emptyPW);
-
-            if (isCreate) {
-                if (user) {
-                    throw new Error(status.exist);
-                } else if (!pwRegex.test(pw)) {
-                    throw new Error(status.regex);
-                } else if (pw != pwCheck) {
-                    throw new Error(status.pwdiff);
-                } else {
-                    let uid = nanoid(11);
-                    pw = hashSync(pw, 5);
-                    create({ id, pw, uid });
-                }
-            } else {
-                if (!user) {
-                    throw new Error(status.failed);
-                } else if (!compareSync(pw, user.pw)) {
-                    throw new Error(status.failed);
-                }
-            }
-            const admin = user?.admin;
-            const uid = user?.uid;
-            const meta = json.read(dir.user.meta)[uid];
-            const queue = json.read(dir.user.pred(uid), { queue: [] })?.queue;
-            const favs = json.read(dir.user.favs(uid));
-            return { id, uid, admin, meta, queue, favs };
-        }
+    KakaoProvider({
+        clientId: process.env.KAKAO_CLIENT_ID,
+        clientSecret: process.env.KAKAO_CLIENT_SECRET
     }),
-    // KakaoProvider({
-    //     clientId: process.env.KAKAO_CLIENT_ID,
-    //     clientSecret: process.env.KAKAO_CLIENT_SECRET,
-    //   })
+    // CredentialsProvider({
+    //     id: "ohddul",
+    //     name: 'Credentials',
+    //     type: 'credentials',
+    //     credentials: {
+    //         id: {}, pw: {}
+    //     },
+    //     async authorize(credentials, req) {
+    //         let { isCreate, id, pw, pwCheck } = credentials;
+    //         const user = find(id);
+    //         if (!id) throw new Error(status.emptyID);
+    //         if (!pw) throw new Error(status.emptyPW);
+
+    //         if (isCreate) {
+    //             if (user) {
+    //                 throw new Error(status.exist);
+    //             } else if (!pwRegex.test(pw)) {
+    //                 throw new Error(status.regex);
+    //             } else if (pw != pwCheck) {
+    //                 throw new Error(status.pwdiff);
+    //             } else {
+    //                 let uid = nanoid(11);
+    //                 pw = hashSync(pw, 5);
+    //                 create({ id, pw, uid });
+    //             }
+    //         } else {
+    //             if (!user) {
+    //                 throw new Error(status.failed);
+    //             } else if (!compareSync(pw, user.pw)) {
+    //                 throw new Error(status.failed);
+    //             }
+    //         }
+    //         const admin = user?.admin;
+    //         const uid = user?.uid;
+    //         const meta = json.read(dir.user.meta)[uid];
+    //         const queue = json.read(dir.user.pred(uid), { queue: [] })?.queue;
+    //         const favs = json.read(dir.user.favs(uid));
+    //         return { id, uid, admin, meta, queue, favs };
+    //     }
+    // }),
 ]
 
 /**
@@ -82,8 +82,29 @@ const providers = [
  * 전부 폐기 후 useState이용으로 결정 2023.07.04
  * 대신 userMeta등의 사용을 줄이기 위해 session에 rank, pred, favs를 초기에 담아 보냄
  */
+
+
+/**
+ * 2023.07.06 카카오 로그인을 구현하면서 모든 내용이 다 무용지물이 됨.
+ * 처음 jwt 토큰 생성에서 정보를 받아올 수 없고 생성된 토큰을 session으로 넘겨줄때 유저정보를 읽어야함.
+ * 1. signIn 함수는 boolean return, 유저 정지나 ip차단 등에 사용할 수 있음
+ */
 const callbacks = {
+    // signIn({ user, account, profile, email, credentials }) {
+    // return false;
+    // },
     jwt({ token, user, trigger, session }) {
+        if (trigger == 'signIn') {
+            const exist = find(user?.id);
+            console.log(exist);
+            if (!exist) {
+                token.user = create(user);
+                return token;
+            } else {
+                token.user = exist;
+                return token;
+            }
+        }
         if (!user) return token;
         token.user = user;
         return token;

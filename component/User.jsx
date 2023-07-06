@@ -46,7 +46,7 @@ export const getRank = rank => {
  */
 export default function User({ user }) {
     const id = user?.id;
-    const rank = user?.meta?.rank;
+    const rank = user?.rank;
     const [color, num, next] = getRank(rank);
     let rankName = color[0]?.toUpperCase() + num;
     if (color == 'unranked') rankName = "IRON";

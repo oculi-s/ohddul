@@ -1,23 +1,21 @@
 import json from "@/module/json";
 import { user as dir } from "@/module/dir";
 
-const defInfo = { index: {} }
-export function find(key) {
-    let userInfo = json.read(dir.admin, defInfo);
-    if (userInfo.index == undefined) userInfo.index = {};
-    if (userInfo[key] || userInfo?.index[key])
-        return userInfo[userInfo[key]] || userInfo[userInfo.index[key]];
-    return false;
+export function find(id) {
+    const userInfo = json.read(dir.admin, {});
+    return userInfo[id] || false;
 }
 
+/**
+ * uid를 굳이 만들 필요가 없다. 그냥 id사용하면 됨.
+ */
 export function create(user) {
-    let { id, uid } = user;
-    const userInfo = json.read(dir.admin, defInfo);
-    const userMeta = json.read(dir.meta, {});
-    userInfo[uid] = user;
-    userInfo.index[id] = uid;
-    userMeta[uid] = { rank: 1000, id: id };
-    json.write(dir.meta, userMeta, false);
-    json.write(dir.admin, userInfo, false);
-    return json.write(dir.pred(uid), { queue: [], data: [] });
+    const id = user?.id;
+    const name = user?.name;
+    const email = user?.email;
+    const admin = json.read(dir.admin, {});
+    admin[id] = { name, email, rank: 1000 };
+    json.write(dir.admin, admin, false);
+    console.log(`${id} user created`);
+    return { id, email, email, rank: 1000, queue: [], favs: [] };
 }

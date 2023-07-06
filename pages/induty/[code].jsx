@@ -2,7 +2,6 @@ import styles from '$/Group/Induty.module.scss';
 import { useRouter } from "next/router";
 import IndutyFold from "#/stockFold/IndutyFold";
 import { Big } from "@/module/ba";
-import Container from "@/container/light";
 
 import json from '@/module/json';
 import dir from '@/module/dir';
@@ -33,7 +32,7 @@ export async function getServerSideProps(ctx) {
     return { props };
 }
 
-const Index = ({ meta, price, induty, index, predict, User, setUser }) => {
+function Induty({ meta, price, induty, index, predict, User, setUser }) {
     const router = useRouter();
     const { code } = router.query;
     const name = index[Big(code)]?.n;
@@ -46,8 +45,8 @@ const Index = ({ meta, price, induty, index, predict, User, setUser }) => {
             <h2 className={styles.title}>{name}</h2>
             <hr />
             <IndutyFold {...props} />
-        </div >
-    </>
+        </div>
+    </>;
 }
 
-export default Container(Index);
+export default Induty;

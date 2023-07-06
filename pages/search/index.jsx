@@ -1,10 +1,8 @@
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import json from '@/module/json';
 import dir from '@/module/dir';
 
 import { getSession } from 'next-auth/react';
-import container from "@/container/light";
 
 export async function getServerSideProps(ctx) {
     const aside = json.read(dir.stock.light.aside);
@@ -13,18 +11,20 @@ export async function getServerSideProps(ctx) {
     return { props };
 }
 
-const Header = ({ router }) => (
-    <h1>검색어 : {router.query?.q}</h1>
-)
+function Header({ router }) {
+    return (
+        <h1>검색어 : {router.query?.q}</h1>
+    );
+}
 
-const Index = () => {
+function Search() {
     const router = useRouter();
-    const props = { router }
+    const props = { router };
     return (
         <>
             <Header {...props} />
         </>
-    )
+    );
 }
 
-export default container(Index);
+export default Search;

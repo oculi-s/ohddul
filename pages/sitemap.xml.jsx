@@ -41,4 +41,4 @@ export async function getServerSideProps(ctx) {
     return getServerSideSitemapLegacy(ctx, fields);
 }
 
-export default () => { };
+export default function Index() { };

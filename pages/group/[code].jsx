@@ -12,7 +12,6 @@ import { bpsHelp } from '#/stockData/HelpDescription';
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
-import container from "@/container/light";
 import { CrawlUser } from '@/module/prop/props';
 
 /**
@@ -108,12 +107,12 @@ const MetaTable = ({
     </div>
 }
 
-const Index = (props) => {
+function Group(props) {
     const router = useRouter();
     if (!props.group) return;
     const { code } = router.query;
     props = { ...props, router, code };
-    const names = ['요약정보', '실적정보', '출자정보']
+    const names = ['요약정보', '실적정보', '출자정보'];
     const datas = [
         <div key={0}>
             <PriceElement {...props} />
@@ -121,7 +120,7 @@ const Index = (props) => {
         <div key={1}>
             <h3>그룹사 상세정보</h3>
         </div>
-    ]
+    ];
     return <>
         <div>
             <h2 className={styles.title}>{code}그룹</h2>
@@ -133,7 +132,7 @@ const Index = (props) => {
         <div style={{ height: 300 }}>
             <ToggleTab names={names} datas={datas} />
         </div>
-    </>
+    </>;
 }
 
-export default container(Index);
+export default Group;

@@ -1,19 +1,25 @@
 import { SessionProvider } from "next-auth/react"
-import Script from 'next/script';
 import '$/main.scss'
+import HEAD from "#/common/Head";
+import Nav from "#/common/nav";
+import Aside from "#/common/aside";
+import Footer from "#/common/footer";
+import { getPageSize } from "#/base/base";
+import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
-	function kakaoInit() { // 페이지가 로드되면 실행
-		window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
-		console.log(window.Kakao.isInitialized());
-	}
+	const [mobAside, setAsideShow] = useState(false);
+	pageProps = { ...pageProps, mobAside, setAsideShow };
+	useEffect(() => { getPageSize(); }, [])
 	return (
 		<SessionProvider session={pageProps.session}>
-			<Component {...pageProps} />
-			<Script
-				src='https://developers.kakao.com/sdk/js/kakao.js'
-				onLoad={kakaoInit}
-			></Script>
+			<HEAD {...pageProps} />
+			<Nav {...pageProps} />
+			<Aside {...pageProps} />
+			<main>
+				<Component {...pageProps} />
+			</main>
+			<Footer />
 		</SessionProvider>
 	)
 }

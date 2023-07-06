@@ -12,9 +12,7 @@ import json from "@/module/json";
 
 import { PredBar } from "#/stockData/stockHead";
 import FavStar from "#/base/FavStar";
-import Container from "@/container/light";
 import { Curtain, Profile } from "#/profile/Header";
-import { CrawlUser } from "@/module/prop/props";
 import { useEffect } from "react";
 
 /**
@@ -140,13 +138,13 @@ const FavTable = ({ meta, price, pred, favs, mine, User, setUser }) => {
     </>
 }
 
-const Index = ({
-    id, uid, rank, pred, favs,
-    meta, price,
-    User, setUser,
-}) => {
+function Index({
+    id, uid, rank,
+    pred, favs, meta,
+    price, User, setUser,
+}) {
     // console.log(User);
-    const router = useRouter()
+    const router = useRouter();
     const { data: session, status } = useSession();
     const user = session?.user;
     const qid = router.query?.id;
@@ -159,11 +157,11 @@ const Index = ({
             if (!favs) favs = user?.favs;
             console.log(uid, id, rank, user);
         }
-    }, [session])
+    }, [session]);
 
     const mine = user?.uid == uid;
     if (!qid && status == 'unauthenticated') {
-        return <>로그인을 진행해주세요</>
+        return <>로그인을 진행해주세요</>;
     } else if (!uid) {
         return <>{qid} : 존재하지 않는 사용자입니다.</>;
     }
@@ -190,15 +188,15 @@ const Index = ({
                 <FavTable {...props} />
             </div>
         ]
-    }
+    };
     return (
         <>
             <Curtain {...props} />
-            <Profile {...props} />
+            <Index {...props} />
             <hr />
             <ToggleTab {...tabContents} />
         </>
-    )
+    );
 }
 
-export default Container(Index);
+export default Index;

@@ -2,74 +2,43 @@ import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
 import User from '#/User'
 import { signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getRank } from '#/User';
 
+import Image from 'next/image';
 import { Per, Color, Num, Int } from '@/module/ba';
-import { SignError } from '#/base/base';
-import { useRouter } from 'next/router';
+import KakaoLogin from '@/public/kakao_sync_login/kakao_login_large_narrow.png';
+import scss from '$/variables.module.scss';
 
 /**
  * 2023.07.06 useSession을 predbar에서 사용하면서
  * 
  * login, out에서는 redirect=true를 사용하는 것으로 변경
  * aside에 띄울 세션 정보는 serverside에서 getSession을 통해 받아오는 것으로 결정
+ * 
+ * 2023.07.06 kakao 로그인으로 바꾸면서 signin, out, 나머지 함수들 전부 폐기
  */
-const SignIn = async (e, router, setError, setOn) => {
-    e.preventDefault();
-    const id = e.target.id.value;
-    const pw = e.target.pw.value;
-    const res = await signIn("ohddul", {
-        id, pw, redirect: false
-    })
-    if (res.ok) {
-        router.reload();
-    } else {
-        setError(Int(res?.error));
-        setOn(1);
-        setTimeout(() => {
-            setOn(0);
-        }, 1000);
-    }
-}
-
-const SignOut = async (e) => {
-    e.preventDefault();
-    await signOut({ redirect: true });
-}
-
 function LogOut({ user }) {
     return <>
-        <User user={user} />
-        <form
-            className={styles.logout}
-            onSubmit={SignOut}
-        >
-            <div className={styles.submit}>
-                <button type='submit'>로그아웃</button>
-            </div>
-        </form>
+        <div className={styles.logout}>
+            <User user={user} />
+            <button onClick={e => signOut()}>로그아웃</button>
+        </div>
     </>
 }
 
 function LogIn() {
-    const router = useRouter();
-    const [on, setOn] = useState(0);
-    const [error, setError] = useState(0);
     return <>
-        <form
-            className={styles.login}
-            onSubmit={(e) => {
-                SignIn(e, router, setError, setOn);
-            }}>
-            <input name='id' placeholder='ID' />
-            <input name='pw' placeholder="비밀번호" type="password" />
-            <SignError code={error} on={on} />
-            <div className={styles.submit}>
-                <Link href="/create">회원가입</Link>
-                <button type='submit'>로그인</button>
-            </div>
-        </form>
+        <div className={styles.login}>
+            <p>지금 바로 시작하세요</p>
+            <p>준비중입니다.</p>
+            {/* <Image
+                src={KakaoLogin.src}
+                width={214}
+                height={53}
+                onClick={e => signIn('kakao')}
+            /> */}
+        </div>
     </>
 }
 

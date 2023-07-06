@@ -12,7 +12,6 @@ import PredHowto from '#/helpArticle/PredHowto';
 import BoardRules from '#/helpArticle/BoardRules';
 import Scoring from '#/helpArticle/Scoring';
 
-import Container from '@/container/light';
 import { getSession } from 'next-auth/react';
 
 /**
@@ -35,8 +34,7 @@ export const getServerSideProps = async (ctx) => {
     return { props };
 }
 
-
-const Index = (props) => {
+function Help(props) {
     const [tabIndex, setTabIndex] = useState(0);
     props = { ...props, setTabIndex };
     const names = ['기본정보', '예측방법', '점수산정', '차트보는법', '커뮤니티규칙'];
@@ -54,7 +52,7 @@ const Index = (props) => {
             {/* <ChartHowto {...props} /> */}
             <BoardRules {...props} />
         </div>
-    ]
+    ];
     return <>
         <ToC tabIndex={tabIndex} />
         <div className={styles.docs}>
@@ -63,7 +61,7 @@ const Index = (props) => {
             </span>
             <ToggleTab {...{ names, datas, tabIndex, setTabIndex }} />
         </div>
-    </>
+    </>;
 }
 
-export default Container(Index);
+export default Help;
