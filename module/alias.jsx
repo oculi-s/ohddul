@@ -1,12 +1,6 @@
 import path from 'path';
 
-var o;
-if (process.platform == 'linux') {
-    o = path.resolve('.');
-} else {
-    o = path.resolve('.');
-}
-
+var o = path.resolve('.');
 const adict = {
     "@": o,
     "$": path.join(o, "public"),
@@ -16,7 +10,7 @@ const adict = {
 }
 export default function encode(url) {
     url = url.split('/').filter(e => e.length);
-    url = url.map(e => String(adict[e] ? adict[e] : e).split('/')).flat().filter(e=>e.length);
-console.log(path.join(...url));
-    return '/'+url.join('/');
+    url = url.map(e => String(adict[e] ? adict[e] : e).split('/'))
+    url = url.flat().filter(e => e.length);
+    return '/' + url.join('/');
 }

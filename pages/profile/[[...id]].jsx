@@ -54,7 +54,7 @@ export async function getServerSideProps(ctx) {
     }
     const meta = Filter(Meta);
     const price = Filter(Price);
-    const title = `${id}님의 프로필 : 오떨`
+    const title = id ? `${id}님의 프로필 : 오떨` : false;
     props = {
         ...props,
         id, queue, favs, rank,
