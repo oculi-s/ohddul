@@ -1,21 +1,23 @@
 import json from "@/module/json";
 import { user as dir } from "@/module/dir";
 
-export function find(id) {
+export function find(uid) {
     const userInfo = json.read(dir.admin, {});
-    return userInfo[id] || false;
+    const queue = json.read(dir.pred(uid), { queue: [] }).queue;
+    if (userInfo[uid]) return { ...userInfo[uid], uid, queue };
+    else return false;
 }
 
 /**
- * uid를 굳이 만들 필요가 없다. 그냥 id사용하면 됨.
+ * uid는 초기에 들어오는 id로 사용하고, 나중에 유저가 id를 수정할 수 있도록 함.
  */
 export function create(user) {
-    const id = user?.id;
+    const uid = user?.id;
     const name = user?.name;
     const email = user?.email;
     const admin = json.read(dir.admin, {});
-    admin[id] = { name, email, rank: 1000 };
+    admin[uid] = { id: uid, name, email, rank: 1000 };
     json.write(dir.admin, admin, false);
-    console.log(`${id} user created`);
-    return { id, email, email, rank: 1000, queue: [], favs: [] };
+    console.log(`${uid} user created`);
+    return { id: uid, email, email, rank: 1000, queue: [] };
 }

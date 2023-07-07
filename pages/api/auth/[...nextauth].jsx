@@ -96,7 +96,6 @@ const callbacks = {
     jwt({ token, user, trigger, session }) {
         if (trigger == 'signIn') {
             const exist = find(user?.id);
-            console.log(exist);
             if (!exist) {
                 token.user = create(user);
                 return token;
@@ -104,6 +103,9 @@ const callbacks = {
                 token.user = exist;
                 return token;
             }
+        } else if (trigger == 'update') {
+            token?.user?.queue?.push(session);
+            return token;
         }
         if (!user) return token;
         token.user = user;

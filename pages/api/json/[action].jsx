@@ -14,10 +14,10 @@ export default function handler(req, res) {
             res.status(200).send(json.queue(url, data, false));
             break;
         case 'toggle':
-            res.status(200).send(json.toggle(url, data));
+            res.status(200).send(json.toggle(url, data, false));
             break;
         case 'up':
-            res.status(200).send(json.up(url, data));
+            res.status(200).send(json.up(url, data, false));
             break;
         default:
             res.status(400).send(false);

@@ -86,7 +86,6 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
  */
 const Index = ({
     User, setUser,
-    setAsideShow,
     meta, group, price, index, induty,
     predict,
     userMeta,
@@ -97,9 +96,6 @@ const Index = ({
     const router = useRouter();
     let code = router.query?.code;
     if (!parseInt(code)) code = meta.index[code];
-    useEffect(() => {
-        setAsideShow(false);
-    }, [code, setAsideShow])
     if (!meta?.data) return;
     if (!code) return;
     const stockMeta = meta?.data[code];
@@ -151,6 +147,5 @@ const Index = ({
 }
 
 import { getServerSideProps } from "@/container/stock";
-import { useSession } from 'next-auth/react';
 export { getServerSideProps };
 export default Container(Index);

@@ -1,9 +1,7 @@
 import styles from '$/Stock/Stock.module.scss';
-import toggleOnPageChange from '#/toggle';
 import EarnChart from '#/chart/EarnBar';
 import dt from '@/module/dt';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '#/base/Help';
 import '@/module/array';
@@ -16,9 +14,11 @@ function EarnTable({ stockMeta, stockEarn }) {
     const amount = stockMeta?.a;
     const [N, setN] = useState(5);
     const [view, setView] = useState(true);
-    const router = useRouter();
-    toggleOnPageChange(router, setN, 5);
-    toggleOnPageChange(router, setView, true);
+    useEffect(() => {
+        setN(5);
+        setView(true);
+    }, [stockMeta])
+
     const len = stockEarn.length;
     stockEarn = stockEarn.sort(dt.sort);
     const head = <tr>

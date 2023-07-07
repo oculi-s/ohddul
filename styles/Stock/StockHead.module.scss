@@ -58,15 +58,16 @@
     overflow-y: hidden;
 
     >* {
-        transition: margin-top .3s ease-in;
+        transition: margin-top .2s ease-in;
     }
 }
 
 // 두번클릭 방지로 transition 해제
+// margin-top이 95px인 건 type이 2일때 help가 높이를 차지하기 때문
 .slide:not(.view) {
     >* {
-        margin-top: -75px !important;
-        // transition: margin-top .3s ease-out;
+        margin-top: -100px !important;
+        transition: margin-top .2s ease-out;
     }
 }
 
@@ -75,7 +76,7 @@
 }
 
 .fade {
-    transition: opacity .5s ease-in !important;
+    transition: opacity .3s ease-in !important;
 }
 
 .predForm {
@@ -174,12 +175,11 @@
         button:before {
             transform-origin: 50% 50%;
             display: inline-block;
-            transition: all .3s;
+            transition: transform .2s;
         }
 
         .up::before {
             transform: rotate(180deg);
-            transition: all .3s;
         }
     }
 

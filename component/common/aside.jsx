@@ -18,10 +18,10 @@ import scss from '$/variables.module.scss';
  * 
  * 2023.07.06 kakao 로그인으로 바꾸면서 signin, out, 나머지 함수들 전부 폐기
  */
-function LogOut({ user }) {
+function LogOut({ user, setAsideShow }) {
     return <>
         <div className={styles.logout}>
-            <User user={user} />
+            <User user={user} setAsideShow={setAsideShow} />
             <button onClick={e => signOut()}>로그아웃</button>
         </div>
     </>
@@ -31,32 +31,34 @@ function LogIn() {
     return <>
         <div className={styles.login}>
             <p>지금 바로 시작하세요</p>
-            <p>준비중입니다.</p>
             <Image
                 src={KakaoLogin.src}
                 width={214}
                 height={53}
-            // onClick={e => signIn('kakao')}
+                onClick={e => signIn('kakao')}
             />
         </div>
     </>
 }
 
-function UserInfo({ setUser, session }) {
+function UserInfo({ setUser, session, setAsideShow }) {
     return <div className={`${styles.box} ${styles.user}`}>
         {session?.user ?
-            <LogOut setUser={setUser} user={session?.user} /> :
+            <LogOut setUser={setUser} user={session?.user} setAsideShow={setAsideShow} /> :
             <LogIn setUser={setUser} />}
     </div>
 }
 
 const N = 8;
-function AsideTable({ data }) {
+function AsideTable({ data, setAsideShow }) {
     const body = data?.map(e => {
         const { code, n, c, p } = e;
         return <tr key={code}>
             <th>
-                <Link href={`/stock/${n}`}>{n}</Link>
+                <Link
+                    href={`/stock/${n}`}
+                    onClick={e => setAsideShow(false)}
+                >{n}</Link>
             </th>
             <td align='right'>{Num(c)}</td>
             <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
@@ -65,28 +67,28 @@ function AsideTable({ data }) {
     return <table><tbody>{body}</tbody></table>;
 }
 
-function StockList({ aside }) {
+function StockList({ aside, setAsideShow }) {
     return <>
         <div className={styles.box}>
             <Link href="/stock/sum">
                 <span className={styles.sum}>시가총액 순위</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <AsideTable data={aside?.sum} />
+            <AsideTable data={aside?.sum} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
             <Link href="/stock/up">
                 <span className={styles.up}>오른종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <AsideTable data={aside?.up} />
+            <AsideTable data={aside?.up} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
             <Link href="/stock/down">
                 <span className={styles.down}>떨어진종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
-            <AsideTable data={aside?.down} />
+            <AsideTable data={aside?.down} setAsideShow={setAsideShow} />
         </div>
     </>
 }
@@ -103,7 +105,9 @@ function Rank({ userMeta }) {
             return (
                 <tr key={i}>
                     <th className={curRank.slice(0, -1)}>
-                        <Link href={`/profile/${id}`}>
+                        <Link
+                            href={`/profile/${id}`}
+                        >
                             {id}
                         </Link>
                     </th>

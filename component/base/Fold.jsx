@@ -1,10 +1,10 @@
-import toggleOnPageChange from '#/toggle';
 import styles from '$/Base/Fold.module.scss';
 import { useState } from 'react';
 
-const Fold = ({ head, body, name, router, folded = true }) => {
-    const [view, setView] = useState(!folded);
-    toggleOnPageChange(router, setView);
+const Fold = ({ head, body, name, view, setView }) => {
+    if (!view && !setView) {
+        [view, setView] = useState(false);
+    }
     return (
         <>
             <div className={styles.title}>

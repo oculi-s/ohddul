@@ -1,9 +1,9 @@
 import styles from '$/Help/Help.module.scss';
-import { PredBar } from '#/stockData/stockHead';
 import Image from 'next/image';
 import helpImage from '@/public/help';
 import Link from 'next/link';
 import { H3, H4 } from '@/module/help/header';
+import PredBar from '#/common/PredBar';
 
 function PredBlock1() {
     return <div className={`${styles.box} ${styles.predImage}`}>

@@ -10,10 +10,10 @@ import ToggleTab from "#/base/ToggleTab";
 import dir from "@/module/dir";
 import json from "@/module/json";
 
-import { PredBar } from "#/stockData/stockHead";
 import FavStar from "#/base/FavStar";
 import { Curtain, Profile } from "#/profile/Header";
 import { useEffect } from "react";
+import PredBar from "#/common/PredBar";
 
 /**
  * asdf
@@ -26,19 +26,18 @@ export async function getServerSideProps(ctx) {
     const session = await getSession(ctx);
     let props = { aside, userMeta, session };
 
-    let uid = false, id = false, rank = false, queue = [], favs = [];
+    let id = false, rank = false, email = false, queue = [], favs = [];
     if (qid) {
-        uid = Object.keys(userMeta).find(k => userMeta[k].id == qid);
-        id = userMeta[uid]?.id;
-        rank = userMeta[uid]?.rank;
-        queue = json.read(dir.user.pred(uid), { queue: [] }).queue;
-        favs = json.read(dir.user.favs(uid), []);
+        id = Object.keys(userMeta).find(k => userMeta[k].id == qid);
+        rank = userMeta[id]?.rank;
+        queue = json.read(dir.user.pred(id), { queue: [] }).queue;
+        favs = json.read(dir.user.favs(id), []);
     } else if (session?.user) {
-        uid = session?.user?.uid;
-        id = session?.user?.meta?.id;
-        rank = session?.user?.meta?.rank;
-        queue = json.read(dir.user.pred(uid), { queue: [] }).queue;
-        favs = json.read(dir.user.favs(uid), []);
+        id = session?.user?.id;
+        email = session?.user?.email;
+        rank = session?.user?.rank;
+        queue = session?.user?.queue;
+        favs = json.read(dir.user.favs(id), []);
         const user = { favs, queue };
         props = { ...props, user };
     }
@@ -54,7 +53,11 @@ export async function getServerSideProps(ctx) {
     const meta = Filter(Meta);
     const price = Filter(Price);
     const title = `${id}님의 프로필 : 오떨`
-    props = { ...props, id, uid, queue, favs, rank, meta, price, title };
+    props = {
+        ...props,
+        id, queue, favs, rank,
+        meta, price, title
+    };
     return { props };
 }
 
@@ -139,7 +142,7 @@ const FavTable = ({ meta, price, pred, favs, mine, User, setUser }) => {
 }
 
 function Index({
-    id, uid, rank,
+    id, rank,
     pred, favs, meta,
     price, User, setUser,
 }) {
@@ -151,25 +154,25 @@ function Index({
 
     useEffect(() => {
         if (!qid) {
-            if (!uid) uid = user?.uid;
+            if (!id) id = user?.id;
             if (!rank) rank = user?.rank;
             if (!pred) pred = user?.pred;
             if (!favs) favs = user?.favs;
-            console.log(uid, id, rank, user);
+            console.log(id, id, rank, user);
         }
     }, [session]);
 
-    const mine = user?.uid == uid;
+    const mine = user?.id == id;
     if (!qid && status == 'unauthenticated') {
         return <>로그인을 진행해주세요</>;
-    } else if (!uid) {
+    } else if (!id) {
         return <>{qid} : 존재하지 않는 사용자입니다.</>;
     }
 
     const props = {
         User, setUser,
         pred, favs,
-        id, uid, rank, mine,
+        id, rank, mine,
         meta, price,
     };
     const tabContents = {
@@ -192,7 +195,7 @@ function Index({
     return (
         <>
             <Curtain {...props} />
-            <Index {...props} />
+            <Profile {...props} />
             <hr />
             <ToggleTab {...tabContents} />
         </>

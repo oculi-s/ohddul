@@ -51,7 +51,7 @@ function remove(url) {
 function queue(url, elem, last = false) {
     url = encode(url);
     const data = read(url, { data: [], queue: [] });
-    elem.date = dt.num();
+    if (!elem?.d) elem.d = dt.num();
     data?.queue.push(elem);
     return write(url, data, last);
 }

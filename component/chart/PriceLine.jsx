@@ -262,11 +262,9 @@ function ButtonGroup({
     isEarn, setEarn,
     isMinMax, setMinMax,
     len, setLen, num, setNum,
-    bollingerBtn, timeBtn
+    bollingerBtn, timeBtn,
+    view, setView,
 }) {
-    const router = useRouter();
-    const [view, setView] = useState(false);
-    toggleOnPageChange(router, setView);
     if (!timeBtn && !bollingerBtn) return;
     return <>
         <div className={`${styles.navWrap} ${view ? styles.view : ''}`}>
@@ -339,8 +337,12 @@ function PriceLine({
     const [suboptions, setSubOptions] = useState(defaultOptions);
     prices = prices.map(price => price?.sort(dt.sort)?.slice(0, len));
 
+    const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [subData, setSubData] = useState({ labels: [], datasets: [] });
+    useEffect(() => {
+        setView(false);
+    }, [metas[0]])
     useEffect(() => {
         console.log('price 차트 렌더링중');
         refineData({
@@ -357,7 +359,8 @@ function PriceLine({
         isEarn, setEarn,
         isMinMax, setMinMax,
         len, setLen, num, setNum,
-        bollingerBtn, timeBtn
+        bollingerBtn, timeBtn,
+        view, setView
     }
     return (<>
         <div className={`${styles.wrap} ${percentMa && styles.withSub}`}>

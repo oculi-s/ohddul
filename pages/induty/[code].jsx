@@ -38,7 +38,7 @@ function Induty({ meta, price, induty, index, predict, User, setUser }) {
     const name = index[Big(code)]?.n;
     const props = {
         meta, code, price, induty, index, predict, router,
-        User, setUser, folded: true,
+        User, setUser
     };
     return <>
         <div>
