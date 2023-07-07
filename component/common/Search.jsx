@@ -168,6 +168,7 @@ function Index(props) {
             ref={e => { stockRef.current[i] = e; }}
             href={`/stock/${e.code}`}
             className={styles.element}
+            onClick={e => setAsideShow(false)}
         >
             <span>{e?.code}</span>
             <span>{e?.name?.toUpperCase()}</span>
@@ -181,6 +182,7 @@ function Index(props) {
             ref={e => { stockRef.current[N + i] = e; }}
             href={`/stock/${e?.code}`}
             className={styles.element}
+            onClick={e => setAsideShow(false)}
         >
             <span>{e?.gname?.toUpperCase()}</span>
             <span>{e?.name}</span>
@@ -193,6 +195,7 @@ function Index(props) {
             ref={e => { userRef.current[i] = e; }}
             href={`/profile/${e?.id}`}
             className={styles.element}
+            onClick={e => setAsideShow(false)}
         >
             <span>{e?.id}</span>
             <span>{e?.rank}</span>
