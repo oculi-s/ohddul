@@ -15,7 +15,8 @@ const adict = {
     "_": path.join(o, "data", "meta"),
 }
 export default function encode(url) {
-    url = url.split('/').filter(e => e);
-    url = url.map(e => String(adict[e] ? adict[e] : e));
-    return path.join(...url);
+    url = url.split('/').filter(e => e.length);
+    url = url.map(e => String(adict[e] ? adict[e] : e).split('/')).flat().filter(e=>e.length);
+console.log(path.join(...url));
+    return '/'+url.join('/');
 }
