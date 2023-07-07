@@ -34,7 +34,6 @@ async function xml(url, def = { data: [], last: dt.num() }) {
 }
 
 function write(url, data, last = true) {
-    url = encode(url);
     const dir = path.dirname(url);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     if (typeof (data) == 'object' && last) data.last = dt.num();
@@ -44,13 +43,11 @@ function write(url, data, last = true) {
 }
 
 function remove(url) {
-    url = encode(url);
     if (!fs.existsSync(url)) return;
     return fs.unlinkSync(url);
 }
 
 function queue(url, elem, last = false) {
-    url = encode(url);
     const data = read(url, { data: [], queue: [] });
     if (!elem?.d) elem.d = dt.num();
     data?.queue.push(elem);
@@ -61,7 +58,6 @@ function queue(url, elem, last = false) {
  * array json을 읽어오고 
  */
 function toggle(url, elem) {
-    url = encode(url);
     const data = read(url, []);
     const i = data.indexOf(elem);
     if (i != -1) {
@@ -73,7 +69,6 @@ function toggle(url, elem) {
 }
 
 function up(url, def) {
-    url = encode(url);
     const { code, key } = def;
     const init = {};
     init[code] = {};
