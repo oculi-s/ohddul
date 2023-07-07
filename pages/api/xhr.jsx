@@ -26,3 +26,11 @@ export const json = {
         return await Fetch('/api/json/toggle', props);
     }
 }
+
+export const user = {
+    find: async (props) => {
+        return await Fetch('/api/user/find', props);
+    }, change: async (props) => {
+        return await Fetch('/api/user/change', props);
+    }
+}

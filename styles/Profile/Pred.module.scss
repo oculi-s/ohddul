@@ -1,0 +1,16 @@
+.queueTable {
+    table-layout: fixed;
+
+    tr>* {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    thead {
+        text-align: center;
+    }
+
+    td {
+        text-align: center;
+    }
+}

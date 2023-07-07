@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import KakaoProvider from 'next-auth/providers/kakao'
 // import CredentialsProvider from 'next-auth/providers/credentials';
-import { find, create } from '@/module/auth/user';
+import { findUid, create } from '@/module/auth/user';
 // import { hashSync, compareSync } from 'bcryptjs'
 // import { nanoid } from 'nanoid';
 // import dir from '@/module/dir';
@@ -87,7 +87,7 @@ const providers = [
 /**
  * 2023.07.06 카카오 로그인을 구현하면서 모든 내용이 다 무용지물이 됨.
  * 처음 jwt 토큰 생성에서 정보를 받아올 수 없고 생성된 토큰을 session으로 넘겨줄때 유저정보를 읽어야함.
- * 1. signIn 함수는 boolean return, 유저 정지나 ip차단 등에 사용할 수 있음
+ * 1. signIn 함수는 boolean return, 유저 정지에 사용할 수 있음
  */
 const callbacks = {
     // signIn({ user, account, profile, email, credentials }) {
@@ -95,7 +95,7 @@ const callbacks = {
     // },
     jwt({ token, user, trigger, session }) {
         if (trigger == 'signIn') {
-            const exist = find(user?.id);
+            const exist = findUid(user?.id);
             if (!exist) {
                 token.user = create(user);
                 return token;
@@ -104,8 +104,16 @@ const callbacks = {
                 return token;
             }
         } else if (trigger == 'update') {
-            token?.user?.queue?.push(session);
-            return token;
+            if (session?.id) {
+                token.user.id = session?.id;
+                return token;
+            } else if (session?.email) {
+                token.user.email = session?.email;
+                return token;
+            } else {
+                token?.user?.queue?.push(session);
+                return token;
+            }
         }
         if (!user) return token;
         token.user = user;

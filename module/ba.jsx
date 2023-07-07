@@ -34,8 +34,12 @@ export const parseFix = (f, n = 2) => {
     return parseFloat(f.toFixed(n));
 }
 
-export const Color = (v = 0, d = 0) => {
-    return v == d ? '' : v > d ? 'red' : 'blue';
+/**
+ * a==b인경우 아무것도 없음
+ * a>b인경우 red, a<b인경우 blue를 return
+ */
+export const Color = (a = 0, b = 0) => {
+    return a == b ? '' : a > b ? 'red' : 'blue';
 }
 
 export const Price = (v = 0) => {

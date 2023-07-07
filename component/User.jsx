@@ -8,6 +8,10 @@ import bgGold from '@/public/rank/500.png'
 import bgPlatinum from '@/public/rank/1000.png'
 import bgDiamond from '@/public/rank/10000.png'
 import bgMaster from '@/public/rank/50000.png'
+import { useEffect, useRef, useState } from 'react'
+import toggleOnPageChange from './toggle'
+import { useRouter } from 'next/router'
+import { user } from '@/pages/api/xhr'
 import { useSession } from 'next-auth/react'
 
 export const getBg = rank => {
@@ -44,8 +48,7 @@ export const getRank = rank => {
  * 그러려면 session에 meta를 담아 보내야 한다.
  * 2023.07.04 수정 완료
  */
-export default function User({ user, setAsideShow }) {
-    console.log(setAsideShow)
+export function User({ user, setAsideShow }) {
     const id = user?.id;
     const rank = user?.rank;
     const [color, num, next] = getRank(rank);
@@ -62,4 +65,158 @@ export default function User({ user, setAsideShow }) {
             </Link>
         </div>
     )
+}
+
+function Alarms({ user, show }) {
+    return <div className={`${styles.alarmWrap} ${show ? styles.show : ''}`}>
+        준비중입니다.
+        {/* {user?.alarm?.slice(0, 5).map(e => {
+            return <div className={styles.alarmData}>
+                <h4>{e.title}</h4>
+                <div dangerouslySetInnerHTML={{ __html: e.data }}></div>
+                <button className='fa fa-trash'></button>
+            </div>
+        })} */}
+    </div>
+}
+
+async function checkId({ idRef, oid, setIdCheck }) {
+    const id = idRef?.current?.value;
+    const res = await user.find({ id });
+    if (id == oid) {
+        setIdCheck(-2);
+        return -2;
+    } else if (res) {
+        setIdCheck(-1);
+        return -1;
+    } else setIdCheck(1);
+    return 1;
+}
+
+async function change(uid) {
+    const id = document.querySelector('form #id').value;
+    const email = document.querySelector('form #email').value;
+    await user.change({ id, uid, email });
+    alert('변경되었습니다.');
+}
+
+function ChangeId() {
+    const { data: session, update } = useSession();
+    const router = useRouter();
+    const [idCheck, setIdCheck] = useState(0);
+    const oid = session?.user?.id;
+    const idRef = useRef();
+    return <div className={styles.box}>
+        <form onSubmit={async e => {
+            e.preventDefault();
+            await checkId({ idRef, oid, setIdCheck });
+        }}>
+            <input id='id' ref={idRef} defaultValue={oid} type='text' />
+            <button className={
+                idCheck == 0
+                    ? '' : idCheck == 1
+                        ? styles.pass : styles.fail
+            }>{
+                    idCheck == -2 ? '기존과 같은 ID입니다.' :
+                        idCheck == 0 ? '중복 확인' :
+                            idCheck == 1 ? '통과 완료' :
+                                <>이미 존재하는 ID입니다.</>
+                }</button>
+        </form>
+        <button
+            className={styles.midBtn}
+            type='button'
+            onClick={async e => {
+                const id = idRef?.current?.value;
+                const res = await checkId({ idRef, oid, setIdCheck })
+                if (res == 1) {
+                    await change(session?.user?.uid)
+                    await update({ id });
+                    router.reload();
+                } else alert('아이디 중복 확인을 진행해주세요.')
+            }}>
+            변경하기
+        </button>
+    </div>
+}
+
+function ChangeEmail() {
+    const { data: session, update } = useSession();
+    const [time, setTime] = useState(5 * 60);
+    return <div className={styles.box}>
+        <form onSubmit={async e => {
+            e.preventDefault();
+            alert('준비중입니다.')
+        }}>
+            <input id='email' defaultValue={session?.user?.email} type='email' />
+            <button>인증번호 받기</button>
+
+        </form>
+        <form onSubmit={async e => {
+            e.preventDefault();
+            alert('준비중입니다.')
+        }}>
+            <input type="text" placeholder='인증번호 입력' />
+            <button>변경하기</button>
+        </form>
+    </div>
+}
+
+function Setting({ user, show, setShow }) {
+    return <>
+        <div className={`${styles.settingWrap} ${show ? styles.show : ''}`}>
+            <div className={styles.setting}>
+                <h2>환경설정</h2>
+                <hr />
+                <h4>아이디 변경</h4>
+                <ChangeId />
+                <h4>이메일 변경</h4>
+                <ChangeEmail />
+            </div>
+
+            <button
+                className={`fa fa-close ${styles.close}`}
+                onClick={e => setShow(false)}
+            />
+        </div>
+        <div className={`${styles.shadow} ${show ? styles.show : ''}`} onClick={e => setShow(false)}></div>
+    </>
+}
+
+export function AlarmSetting({ user, setAsideShow }) {
+    const [alarmShow, setAlarmShow] = useState(false);
+    const [settingShow, setSettingShow] = useState(false);
+    const router = useRouter();
+    toggleOnPageChange(router, setAlarmShow);
+    toggleOnPageChange(router, setSettingShow);
+
+    useEffect(() => {
+        if (settingShow) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [settingShow]);
+    return <div className={styles.alarmSetting}>
+        <div className={styles.box}>
+            <button
+                className={`fa fa-bell ${styles.alarm}`}
+                data-count={user?.alarm?.length}
+                onClick={e => {
+                    setAlarmShow(e => !e);
+                }}
+            />
+            <Alarms user={user} show={alarmShow} />
+        </div>
+        <div className={styles.box}>
+            <button
+                className='fa fa-cog'
+                onClick={e => {
+                    setAsideShow(false)
+                    setSettingShow(true);
+                }}
+            />
+            <Setting user={user} show={settingShow} setShow={setSettingShow} />
+        </div>
+    </div>
 }

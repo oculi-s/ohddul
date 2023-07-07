@@ -1,9 +1,9 @@
 import { SessionProvider } from "next-auth/react"
 import '$/main.scss'
 import HEAD from "#/common/Head";
-import Nav from "#/common/nav";
-import Aside from "#/common/aside";
-import Footer from "#/common/footer";
+import Nav from "#/common/Nav";
+import Aside from "#/common/Aside";
+import Footer from "#/common/Footer";
 import { getPageSize } from "#/base/base";
 import { useEffect, useState } from "react";
 

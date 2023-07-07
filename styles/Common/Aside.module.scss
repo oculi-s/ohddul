@@ -56,18 +56,22 @@
         text-align: center;
         margin-top: auto;
 
-        button {
-            padding: 8px 15px;
-            border-radius: 8px;
-            background: $bgDark;
-            margin-left: auto;
-            margin-top: 10px;
-            display: table;
-            transition: background .3s;
-        }
+        .buttonWrap {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
 
-        button:hover {
-            background: $bgBright;
+            >button {
+                padding: 8px 15px;
+                border-radius: 8px;
+                background: $bgDark;
+                margin-top: 10px;
+                transition: background .3s;
+            }
+
+            >button:hover {
+                background: $bgBright;
+            }
         }
     }
 }

@@ -1,14 +1,12 @@
 import styles from '$/Common/Aside.module.scss'
 import Link from 'next/link'
-import User from '#/User'
 import { signIn, signOut } from "next-auth/react";
 import { useEffect } from 'react';
-import { getRank } from '#/User';
+import { AlarmSetting, User, getRank } from '#/User';
 
 import Image from 'next/image';
-import { Per, Color, Num, Int } from '@/module/ba';
+import { Per, Color, Num } from '@/module/ba';
 import KakaoLogin from '@/public/kakao_sync_login/kakao_login_large_narrow.png';
-import scss from '$/variables.module.scss';
 
 /**
  * 2023.07.06 useSession을 predbar에서 사용하면서
@@ -22,7 +20,10 @@ function LogOut({ user, setAsideShow }) {
     return <>
         <div className={styles.logout}>
             <User user={user} setAsideShow={setAsideShow} />
-            <button onClick={e => signOut()}>로그아웃</button>
+            <div className={styles.buttonWrap}>
+                <AlarmSetting user={user} setAsideShow={setAsideShow} />
+                <button onClick={e => signOut()}>로그아웃</button>
+            </div>
         </div>
     </>
 }

@@ -91,7 +91,7 @@ const ToC = ({ tabIndex }) => {
             }, 300);
         }
         window.addEventListener('scroll', () => {
-            const top = -document?.body?.getBoundingClientRect()?.top + Int(scss?.navHeight) + 6;
+            const top = -document?.body?.getBoundingClientRect()?.top + Int(scss?.navHeight) + 8;
             const at = headings?.find(e => e?.offsetTop >= top)
             const i = headings?.findIndex(e => e == at) - 1;
             if (i == -1) setSelected(0);

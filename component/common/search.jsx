@@ -222,17 +222,21 @@ function Index(props) {
         </div>
     ];
     return (
-        <div className={`${styles.search}`}>
+        <div className={styles.search}>
             <form onSubmit={e => moveQuery({ e, ...props })}>
-                <input
-                    onClick={e => { setView(true) }}
-                    onInput={e => { makeResult({ e, ...props }); }}
-                    onKeyDown={e => { inputKeydown({ e, ...props }); }}
-                    placeholder='종목/유저 검색 (ctrl+F)'
-                    id='q'
-                    type='text'
-                    autoComplete='off'
-                    ref={e => { inputRef.current = e; }} />
+                <div className={styles.inputWrap}>
+                    <span className={styles.placeHolder}>
+                        종목/유저 검색<span className='mh'> (ctrl+F)</span>
+                    </span>
+                    <input
+                        onClick={e => { setView(true) }}
+                        onInput={e => { makeResult({ e, ...props }); }}
+                        onKeyDown={e => { inputKeydown({ e, ...props }); }}
+                        id='q'
+                        type='text'
+                        autoComplete='off'
+                        ref={e => { inputRef.current = e; }} />
+                </div>
                 <button
                     className="fa fa-search"
                     type='submit' />

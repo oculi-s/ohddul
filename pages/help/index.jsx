@@ -38,7 +38,6 @@ function Help(props) {
     const router = useRouter();
     const [tabIndex, setTabIndex] = useState(router?.query?.p);
     useEffect(() => {
-        console.log(router?.query?.p)
         if (router?.query?.p) {
             history.replaceState(null, null, location.href?.split('?')[0]);
         }

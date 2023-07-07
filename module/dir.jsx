@@ -34,9 +34,10 @@ export const stock = {
 
 export const user = {
     admin: encode('@/module/auth/user.json'),
-    meta: encode(`@/data/user/meta.json`),
-    favs: id => encode(`@/data/user/${id}/favs.json`),
-    pred: id => encode(`@/data/user/${id}/pred.json`),
+    meta: uid => encode(`@/data/user/${uid}/meta.json`),
+    alarm: uid => encode(`@/data/user/${uid}/alarm.json`),
+    favs: uid => encode(`@/data/user/${uid}/favs.json`),
+    pred: uid => encode(`@/data/user/${uid}/pred.json`),
 }
 
 export default { stock, user };

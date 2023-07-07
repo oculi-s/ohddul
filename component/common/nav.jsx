@@ -1,6 +1,6 @@
 import styles from '$/Common/Nav.module.scss'
 import Link from 'next/link';
-import Search from '#/common/search';
+import Search from '#/common/Search';
 import { useState } from 'react';
 import Image from 'next/image';
 
@@ -14,6 +14,7 @@ export default function Nav(props) {
                     <Image src='/android-chrome-512x512.png'
                         width={'32'}
                         height={'32'}
+                        alt='오떨 로고'
                     />
                 </Link>
                 <div className={styles.button}><Link href="/help">도움말</Link></div>

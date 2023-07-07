@@ -14,13 +14,14 @@ import FavStar from "#/base/FavStar";
 import { Curtain, Profile } from "#/profile/Header";
 import { useEffect } from "react";
 import PredBar from "#/common/PredBar";
+import { PredTable } from "#/profile/profilePred";
 
 /**
  * asdf
  */
 export async function getServerSideProps(ctx) {
     const aside = json.read(dir.stock.light.aside);
-    const userMeta = json.read(dir.user.meta);
+    const userMeta = json.read(dir.user.admin);
 
     const qid = ctx.query?.id;
     const session = await getSession(ctx);
@@ -30,6 +31,7 @@ export async function getServerSideProps(ctx) {
     if (qid) {
         id = Object.keys(userMeta).find(k => userMeta[k].id == qid);
         rank = userMeta[id]?.rank;
+        email = userMeta[id]?.email;
         queue = json.read(dir.user.pred(id), { queue: [] }).queue;
         favs = json.read(dir.user.favs(id), []);
     } else if (session?.user) {
@@ -48,7 +50,7 @@ export async function getServerSideProps(ctx) {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) =>
                 favs?.includes(k)
-                || queue?.find(e => e.code == k)))
+                || queue?.find(e => e.c == k)))
     }
     const meta = Filter(Meta);
     const price = Filter(Price);
@@ -75,28 +77,10 @@ const Graph = ({ id, rank }) => {
             </div>
             <p className="des">다음랭크까지(+{100 - forNext})</p>
             <div className={styles.chart}>
-                <LineChart {...props} />
+                {/* <LineChart {...props} /> */}
             </div>
         </>
     )
-}
-
-const PredTable = ({ pred, meta, price }) => {
-    const names = ['오떨예측', '가격예측']
-    const queueTable = pred?.map((e, i) => {
-        const { code, change, date } = e;
-        const target = price[code]?.c + change;
-        return <tr key={`pred${i}`}>
-            <th><Link href={`/stock/${code}`}>{meta[code]?.n}</Link></th>
-            <td>
-                <span className={`fa fa-chevron-${change > 0 ? 'up red' : 'down blue'}`} />
-            </td>
-            <td>{Num(target)} ({Fix(change / price[code]?.c * 100)}%)</td>
-            <td>{dt.toString(date, { time: 1 })}</td>
-        </tr>
-    });
-    return <ToggleTab names={names} />
-    return <table><tbody>{queueTable}</tbody></table>;
 }
 
 const FavTable = ({ meta, price, pred, favs, mine, User, setUser }) => {
@@ -143,10 +127,9 @@ const FavTable = ({ meta, price, pred, favs, mine, User, setUser }) => {
 
 function Index({
     id, rank,
-    pred, favs, meta,
+    queue, favs, meta,
     price, User, setUser,
 }) {
-    // console.log(User);
     const router = useRouter();
     const { data: session, status } = useSession();
     const user = session?.user;
@@ -156,9 +139,8 @@ function Index({
         if (!qid) {
             if (!id) id = user?.id;
             if (!rank) rank = user?.rank;
-            if (!pred) pred = user?.pred;
             if (!favs) favs = user?.favs;
-            console.log(id, id, rank, user);
+            if (!queue) queue = user?.queue;
         }
     }, [session]);
 
@@ -170,8 +152,8 @@ function Index({
     }
 
     const props = {
-        User, setUser,
-        pred, favs,
+        User, setUser, user,
+        queue, favs,
         id, rank, mine,
         meta, price,
     };

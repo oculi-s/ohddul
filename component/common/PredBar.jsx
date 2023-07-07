@@ -57,13 +57,13 @@ async function submit({
         setChange(0);
         return;
     }
-    const data = { o: origin }
+    const d = dt.num();
+    const data = { o: origin, d }
     if (ohddul) {
         data.t = 'od', data.od = ohddul;
-        data.d = prDate;
     } else {
         data.t = 'pr', data.pr = origin + change;
-        data.d = dt.num();
+        data.at = prDate;
     }
 
     const predData = { ...data, uid };
