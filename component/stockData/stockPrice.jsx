@@ -46,9 +46,9 @@ function BBTable({ stockPrice }) {
                 <th colSpan={2}>120</th>
             </tr>
             <tr>
-                <th>%B</th><th>%BW</th>
-                <th>%B</th><th>%BW</th>
-                <th>%B</th><th>%BW</th>
+                <th>%B</th><th>BW</th>
+                <th>%B</th><th>BW</th>
+                <th>%B</th><th>BW</th>
             </tr>
             <tr>
                 <td className={pbColor(pb20)}>{Div(pb20, 1, 1)}</td>

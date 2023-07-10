@@ -110,6 +110,9 @@ const callbacks = {
             } else if (session?.email) {
                 token.user.email = session?.email;
                 return token;
+            } else if (session?.favs) {
+                token.user.favs = session?.favs;
+                return token;
             } else {
                 token?.user?.queue?.push(session);
                 return token;

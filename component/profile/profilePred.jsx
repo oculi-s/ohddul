@@ -21,7 +21,7 @@ export function PredTable({ queue, meta, price }) {
                     <span className={`fa fa-chevron-${od == 1 ? 'up red' : 'down blue'}`} />
                 </td>
             }
-            <td>{dt.parse(d, 'M월D일 HH:mm')}</td>
+            <td><p className='des'>{dt.parse(d, 'M월D일 HH:mm')}</p></td>
         </tr>;
     });
     return <table className={styles.queueTable}>

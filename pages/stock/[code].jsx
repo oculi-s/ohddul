@@ -84,15 +84,12 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
  * 
  * pred는 꼬이면 안되기 때문에 중복제출 방지를 위해 session에 저장하고 update를 사용한다.
  */
-const Index = ({
+function Index({
     User, setUser,
     meta, group, price, index, induty,
-    predict,
-    userMeta,
-    stockPrice,
-    stockEarn, stockShare,
-    stockPredict,
-}) => {
+    predict, userMeta,
+    stockPrice, stockEarn, stockShare, stockPredict,
+}) {
     const router = useRouter();
     let code = router.query?.code;
     if (!parseInt(code)) code = meta.index[code];
@@ -100,7 +97,7 @@ const Index = ({
     if (!code) return;
     const stockMeta = meta?.data[code];
     if (!stockMeta) {
-        return <div>종목 정보가 없습니다.</div>
+        return <div>종목 정보가 없습니다.</div>;
     }
     const last = price[code] || stockPrice?.data[0];
     const props = {
@@ -132,7 +129,7 @@ const Index = ({
                 <PredElement {...props} />
             </div>
         ]
-    }
+    };
     return (
         <>
             <StockHead {...props} />
@@ -143,7 +140,7 @@ const Index = ({
             <hr />
             <ToggleTab {...tabContents} />
         </>
-    )
+    );
 }
 
 import { getServerSideProps } from "@/container/stock";

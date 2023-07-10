@@ -3,6 +3,7 @@
 /public/.update
 data/
 .env
+module/auth/user.json
 
 # dependencies
 /node_modules

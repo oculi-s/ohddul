@@ -3,25 +3,26 @@ import { json } from "@/pages/api/xhr";
 import dir from "@/module/dir";
 import { useSession } from "next-auth/react";
 
-async function toggleFav({ User, setUser, code, uid }) {
+async function toggleFav({ User, setUser, code, uid, update }) {
     if (!uid) {
         alert("로그인 후 이용해주세요");
         return;
     }
-    User.favs = await json.toggle({
+    const favs = await json.toggle({
         url: dir.user.favs(uid),
         data: code
     });
-    setUser({ ...User });
+    update({ favs: favs });
+    // setUser({ ...User });
 }
 
 export default function FavStar({ code, User, setUser }) {
-    const { data: session } = useSession();
+    const { data: session, update } = useSession();
     const [favs, setFavs] = useState();
-    const orig = User?.favs?.find((e) => e === code);
+    const orig = session?.user?.favs?.find((e) => e === code);
     useEffect(() => {
         setFavs(orig);
-    }, [User?.favs, code, orig]);
+    }, [session?.user?.favs, code, orig]);
     const uid = session?.user?.uid;
     return (
         <span
@@ -31,7 +32,7 @@ export default function FavStar({ code, User, setUser }) {
             <span
                 className={`fa fa-star${favs ? '' : '-o'}`}
                 onClick={(e) => {
-                    toggleFav({ User, setUser, code, uid });
+                    toggleFav({ User, setUser, code, uid, update });
                 }}
             />
         </span>

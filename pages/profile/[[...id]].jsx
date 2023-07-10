@@ -2,46 +2,41 @@ import { useRouter } from "next/router";
 import styles from '$/Profile/Index.module.scss'
 import { getSession, useSession } from "next-auth/react";
 import LineChart from '#/chart/line';
-import Link from "next/link";
-import { Num, Fix, Per, Color } from '@/module/ba'
-import dt from "@/module/dt";
 import ToggleTab from "#/base/ToggleTab";
 
 import dir from "@/module/dir";
 import json from "@/module/json";
 
-import FavStar from "#/base/FavStar";
 import { Curtain, Profile } from "#/profile/Header";
 import { useEffect } from "react";
-import PredBar from "#/common/PredBar";
 import { PredTable } from "#/profile/profilePred";
+import { FavTable } from "#/profile/profileFavs";
 
 /**
  * asdf
  */
 export async function getServerSideProps(ctx) {
     const aside = json.read(dir.stock.light.aside);
-    const userMeta = json.read(dir.user.admin);
+    const admin = json.read(dir.user.admin);
 
-    const qid = ctx.query?.id;
+    const qid = ctx.query?.id?.find(e => true);
     const session = await getSession(ctx);
-    let props = { aside, userMeta, session };
+    let props = { aside, session };
 
-    let id = false, rank = false, email = false, queue = [], favs = [];
+    let uid = false, queue = [], favs = [];
+    let id, rank, email;
     if (qid) {
-        id = Object.keys(userMeta).find(k => userMeta[k].id == qid);
-        rank = userMeta[id]?.rank;
-        email = userMeta[id]?.email;
-        queue = json.read(dir.user.pred(id), { queue: [] }).queue;
-        favs = json.read(dir.user.favs(id), []);
+        uid = admin[qid];
+        id = qid;
+        const meta = json.read(dir.user.meta(uid), { rank, email });
+        queue = json.read(dir.user.pred(uid), { queue: [] }).queue;
+        favs = json.read(dir.user.favs(uid), []);
+        props = { ...props, id, ...meta, queue, favs };
     } else if (session?.user) {
-        id = session?.user?.id;
-        email = session?.user?.email;
-        rank = session?.user?.rank;
+        const meta = session?.user;
         queue = session?.user?.queue;
-        favs = json.read(dir.user.favs(id), []);
-        const user = { favs, queue };
-        props = { ...props, user };
+        favs = session?.user?.favs;
+        props = { ...props, ...meta, queue, favs };
     }
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
@@ -54,16 +49,12 @@ export async function getServerSideProps(ctx) {
     }
     const meta = Filter(Meta);
     const price = Filter(Price);
-    const title = id ? `${id}님의 프로필 : 오떨` : false;
-    props = {
-        ...props,
-        id, queue, favs, rank,
-        meta, price, title
-    };
+    const title = uid ? `${uid}님의 프로필 : 오떨` : false;
+    props = { ...props, meta, price, title };
     return { props };
 }
 
-const Graph = ({ id, rank }) => {
+function Graph({ id, rank }) {
     const prev = Math.floor(rank / 100) * 100;
     const forNext = (rank - prev);
     const { data: session } = useSession();
@@ -80,53 +71,11 @@ const Graph = ({ id, rank }) => {
                 {/* <LineChart {...props} /> */}
             </div>
         </>
-    )
-}
-
-const FavTable = ({ meta, price, pred, favs, mine, User, setUser }) => {
-    const head = <tr>
-        <th>종목</th>
-        <th>가격</th>
-        <th>전일비</th>
-    </tr>
-    const Rows = ({ code }) => {
-        const name = meta[code]?.n;
-        const close = price[code]?.c;
-        const prev = price[code]?.p;
-        return <>
-            <tr>
-                <th>
-                    {mine && <FavStar {...{ code, User, setUser }} />}
-                    <Link href={`/stock/${code}`}>{name}</Link>
-                </th>
-                <td>{close}</td>
-                <td className={Color(close - prev)}>{Per(close, prev)}</td>
-            </tr>
-            {mine && <tr>
-                <th colSpan={3}>
-                    <PredBar {...{
-                        code, last: price[code], name,
-                        help: false, testing: true
-                    }} />
-                </th>
-            </tr>}
-        </>
-    }
-    const body = favs?.map(code =>
-        <tbody key={code}>
-            <Rows {...{ code }} />
-        </tbody>)
-    return <>
-        <table>
-            <thead>{head}</thead>
-            {body}
-        </table>
-        {!mine && <p className="des">관심종목에 종목을 추가하면 <Link href={'/profile'}>내 프로필</Link>에서 예측바를 통해 바로 예측을 진행할 수 있습니다.</p>}
-    </>
+    );
 }
 
 function Index({
-    id, rank,
+    id, rank, email,
     queue, favs, meta,
     price, User, setUser,
 }) {

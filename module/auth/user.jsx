@@ -3,10 +3,13 @@ import { user as dir } from "@/module/dir";
 import { renderToStaticMarkup } from 'react-dom/server';
 
 export function findUid(uid) {
+    const id = json.read(dir.admin).index[uid];
+    if (!id) return false;
     const user = json.read(dir.meta(uid), false);
     const queue = json.read(dir.pred(uid), { queue: [] }).queue;
+    const favs = json.read(dir.favs(uid), []);
     const alarm = json.read(dir.alarm(uid), []);
-    if (user) return { ...user, uid, queue, alarm };
+    if (user) return { ...user, id, uid, queue, favs, alarm };
     else return false;
 }
 
@@ -19,10 +22,19 @@ export async function findId(id) {
 }
 
 export async function change({ id, uid, email }) {
-    const meta = json.read(dir.meta(uid));
-    if (id) meta.id = id;
-    if (email) meta.email = email;
-    json.write(dir.meta(uid), meta);
+    if (id) {
+        const meta = json.read(dir.admin);
+        const oid = meta.index[uid];
+        delete meta[oid];
+        meta[id] = uid;
+        meta.index[uid] = id;
+        json.write(dir.admin, meta, 0);
+    }
+    if (email) {
+        const meta = json.read(dir.meta(uid));
+        meta.email = email;
+        json.write(dir.meta(uid), meta, 0);
+    }
 }
 
 const firstAlarm = [{
@@ -42,14 +54,15 @@ export function create(user) {
     const uid = user?.id;
     const name = user?.name;
     const email = user?.email;
-    const list = json.read(dir.admin);
-    const data = { id: uid, name, email, rank: 1000 };
-    list.push(uid);
-    json.write(dir.admin, list, false);
+    const meta = json.read(dir.admin);
+    const data = { name, email, rank: 1000 };
+    meta[uid] = uid;
+    meta.index[uid] = uid;
+    json.write(dir.admin, meta, false);
     json.write(dir.meta(uid), data, false);
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);
     return {
-        ...data, uid, queue: [], alarm: firstAlarm
+        ...data, id: uid, uid, queue: [], favs: [], alarm: firstAlarm
     };
 }

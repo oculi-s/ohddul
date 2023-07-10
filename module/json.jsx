@@ -12,7 +12,7 @@ defDict[dir.stock.meta] = { data: {}, index: {} };
 defDict[dir.stock.all] = {};
 defDict[dir.stock.light.tree] = {};
 defDict[dir.stock.light.updown] = { all: { k: 0, q: 0 }, up: { k: 0, q: 0 }, down: { k: 0, q: 0 } };
-defDict[dir.user.admin] = [];
+defDict[dir.user.admin] = { index: {} };
 
 function read(url, def = { data: [], last: 0 }) {
     if (!fs.existsSync(url)) return defDict[url] || def;

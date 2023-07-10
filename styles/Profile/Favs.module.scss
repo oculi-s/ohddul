@@ -1,0 +1,32 @@
+.favTable {
+    thead {
+        text-align: center;
+    }
+
+    tbody {
+        overflow: hidden;
+
+        th:first-child {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .predBar {
+        max-height: 0px;
+        display: none;
+
+        &.view {
+            display: table-row;
+        }
+    }
+
+    .open {
+        font-size: .8em;
+        text-align: right;
+    }
+
+    td {
+        text-align: center;
+    }
+}

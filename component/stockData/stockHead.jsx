@@ -7,22 +7,26 @@ import { useSession } from 'next-auth/react';
 import { Loading } from '#/base/base';
 import PredBar from '#/common/PredBar';
 
-function Open({ status, time, view, setView }) {
+export function Open({ status, time, view, setView }) {
     return <span className={styles.open}>
         {status == 'loading'
             ? <Loading small={true} />
-            : status == 'unauthenticated'
-                ? ''
-                : dt.pred(time)
-                    ? <button
-                        className={`fa fa-chevron-down ${view ? styles.up : ''}`}
-                        onClick={e => { setView(!view); }}
-                    >
-                        &nbsp;오떨 맞추기
-                    </button>
-                    : <span className='des'>
-                        예측완료 : {dt.toString(time, { time: 1 })}
-                    </span>}
+            : dt.pred(time)
+                ? <button
+                    className={`fa fa-chevron-down ${view ? styles.up : ''}`}
+                    onClick={e => {
+                        if (status == 'authenticated') {
+                            setView(!view);
+                        } else {
+                            alert('로그인 후 이용해주세요')
+                        }
+                    }}
+                >
+                    &nbsp;오떨 맞추기
+                </button>
+                : <span className='des'>
+                    예측완료 : {dt.toString(time, { time: 1 })}
+                </span>}
     </span>;
 }
 

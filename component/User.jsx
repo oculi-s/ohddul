@@ -119,7 +119,7 @@ function ChangeId() {
             }>{
                     idCheck == -2 ? '기존과 같은 ID입니다.' :
                         idCheck == 0 ? '중복 확인' :
-                            idCheck == 1 ? '통과 완료' :
+                            idCheck == 1 ? '사용 가능' :
                                 <>이미 존재하는 ID입니다.</>
                 }</button>
         </form>

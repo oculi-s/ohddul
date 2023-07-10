@@ -42,11 +42,11 @@ function LogIn() {
     </>
 }
 
-function UserInfo({ setUser, session, setAsideShow }) {
+function UserInfo({ session, setAsideShow }) {
     return <div className={`${styles.box} ${styles.user}`}>
         {session?.user ?
-            <LogOut setUser={setUser} user={session?.user} setAsideShow={setAsideShow} /> :
-            <LogIn setUser={setUser} />}
+            <LogOut user={session?.user} setAsideShow={setAsideShow} /> :
+            <LogIn />}
     </div>
 }
 
