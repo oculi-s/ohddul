@@ -7,7 +7,12 @@ export default function HEAD({ title }) {
             <title>{title || `오르고 떨어지고, 오떨`}</title>
             <meta name="description" content="예측으로 얘기하자! 오르고 떨어지고, 오떨" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"></meta>
-
+            {/* 카카오 공유 */}
+            <meta property="og:title" content="오르고 떨어지고, 오떨" />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="/mstile-310x310.png" />
+            <meta property="og:description" content="주식을 예측하고 랭크를 매기는 커뮤니티" />
+            {/* 파비콘 */}
             <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-touch-icon-57x57.png" />
             <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114.png" />
             <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72.png" />
