@@ -9,14 +9,25 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
         const { t, c, d, o, pr, od, at, uid } = e;
         // console.log(dt.parse(dt.scoring(at || d)))
         const ref = useRef();
+        var cnt = 0;
         useEffect(() => {
             let time = dt.scoring(at || d) - dt.num();
             if (ref.current) {
-                ref.current.innerHTML = `-${dt.duration(time, 'D일 HH:mm:ss')}`
+                const e = ref?.current;
+                if (time >= 0) {
+                    e.innerHTML = `-${dt.duration(time, 'D일 HH:mm:ss')}`
+                } else {
+                    e.innerHTML = `대기중...`;
+                }
                 setInterval(() => {
+                    const dots = Array(cnt++ % 3 + 1).fill('.').join('');
                     time -= 1000;
-                    if (ref.current) {
-                        ref.current.innerHTML = `-${dt.duration(time, 'D일 HH:mm:ss')}`
+                    if (e) {
+                        if (time >= 0) {
+                            e.innerHTML = `-${dt.duration(time, 'D일 HH:mm:ss')}`
+                        } else {
+                            e.innerHTML = `대기중${dots}`;
+                        }
                     }
                 }, 1000);
             }
@@ -38,8 +49,8 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
                     <span className={`fa fa-chevron-${od == 1 ? 'up red' : 'down blue'}`} />
                 </td>
             }
-            <td><p className='des'>{dt.parse(d, 'M월D일 HH:mm')}</p></td>
-            <td><p className='des' ref={ref}></p></td>
+            <td><span className='des'>{dt.parse(d, 'M월D일 HH:mm')}</span></td>
+            <td><span className='des' ref={ref}></span></td>
         </tr>;
     });
     return <table className={styles.queueTable}>

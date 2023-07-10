@@ -40,7 +40,7 @@ function PredBlock2({ aside }) {
                 defaultType: 1, help: false
             }} />
         </div>
-
+        PC버전에서는 F9, F10을 이용해 빠르게 예측을 진행할 수 있습니다. (준비중입니다.)
         <H4 i={1}>가격 맞추기</H4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
@@ -48,7 +48,7 @@ function PredBlock2({ aside }) {
                 defaultType: 2, help: false
             }} />
         </div>
-        <p>목표가의 예측은 내일부터 최대 90일 후까지 가능하며, <span className='red'>최대 5배</span>까지 예측할 수 있습니다.</p>
+        <p>목표가의 예측은 다음 영업일부터 최대 90일 후까지 가능하며, <span className='red'>최대 5배</span>까지 예측할 수 있습니다.</p>
     </div>
 }
 
@@ -97,7 +97,10 @@ function PredBlock3({ setTabIndex }) {
                 </tbody>
             </table>
         </Collapse>
-        <p>대형주 쏠림을 방지하기 위해 당일 많은 사람이 맞춘 종목은 더 적은 점수를 받게 됩니다. <a onClick={e => setTabIndex(2)}>오떨의 점수산정 방식 보러가기</a></p>
+        <p>대형주 쏠림을 방지하기 위해 당일 많은 사람이 맞춘 종목은 더 적은 점수를 받게 됩니다. <a onClick={e => {
+            setTabIndex(2);
+            window.scrollTo(0, 0);
+        }}>오떨의 점수산정 방식 보러가기</a></p>
 
     </div>
 }

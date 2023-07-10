@@ -15,8 +15,8 @@ export function findUid(uid) {
 }
 
 export async function findId(id) {
-    const list = json.read(dir.admin);
-    const res = list
+    const ids = json.read(dir.admin);
+    const res = Object.keys(ids)
         ?.map(uid => json.read(dir.meta(uid)))
         ?.find(e => e.id == id);
     return res || false;
@@ -24,12 +24,12 @@ export async function findId(id) {
 
 export async function change({ id, uid, email }) {
     if (id) {
-        const meta = json.read(dir.admin);
-        const oid = meta.index[uid];
-        delete meta[oid];
-        meta[id] = uid;
-        meta.index[uid] = id;
-        json.write(dir.admin, meta, 0);
+        const ids = json.read(dir.admin);
+        const oid = ids.index[uid];
+        delete ids[oid];
+        ids[id] = uid;
+        ids.index[uid] = id;
+        json.write(dir.admin, ids, 0);
     }
     if (email) {
         const meta = json.read(dir.meta(uid));
