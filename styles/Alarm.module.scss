@@ -1,0 +1,28 @@
+@import 'variables.module.scss';
+
+.wrap {
+    .data {
+        background: $bgMid;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px auto;
+        opacity: 1;
+        transition: opacity .5s;
+
+        .time {
+            font-size: .9em;
+        }
+
+        button {
+            margin-left: auto;
+        }
+
+        &.unchecked {
+            background: $bgBright;
+        }
+    }
+
+    h4 {
+        margin: 0;
+    }
+}

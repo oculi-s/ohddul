@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-async function toggleFav({ User, setUser, code, uid, update }) {
+async function toggleFav({ code, uid, update }) {
     if (!uid) {
         alert("로그인 후 이용해주세요");
         return;
@@ -9,7 +9,7 @@ async function toggleFav({ User, setUser, code, uid, update }) {
     update({ favs: code });
 }
 
-export default function FavStar({ code, User, setUser }) {
+export default function FavStar({ code }) {
     const { data: session, update } = useSession();
     const [favs, setFavs] = useState();
     const orig = session?.user?.favs[code];
@@ -25,7 +25,7 @@ export default function FavStar({ code, User, setUser }) {
             <span
                 className={`fa fa-star${favs ? '' : '-o'}`}
                 onClick={(e) => {
-                    toggleFav({ User, setUser, code, uid, update });
+                    toggleFav({ code, uid, update });
                 }}
             />
         </span>

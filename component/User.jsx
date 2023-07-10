@@ -11,8 +11,9 @@ import bgMaster from '@/public/rank/50000.png'
 import { useEffect, useRef, useState } from 'react'
 import toggleOnPageChange from './toggle'
 import { useRouter } from 'next/router'
-import { user } from '@/pages/api/xhr'
+import { json, user } from '@/pages/api/xhr'
 import { useSession } from 'next-auth/react'
+import dir from '@/module/dir'
 
 export const getBg = rank => {
     return rank.includes('bronze') ? (bgBronze
@@ -67,44 +68,23 @@ export function User({ user, setAsideShow }) {
     )
 }
 
-export function Alarms() {
-    const { data: session, status, update } = useSession();
-    const user = session?.user;
-    const router = useRouter();
-    const [show, setShow] = useState(false);
-    // useEffect(() => {
-    //     console.log(1)
-    //     setShow(true);
-    // }, [user?.alarm])
-    toggleOnPageChange(router, setShow);
-    if (status != 'authenticated') return;
+export function Alarms({ uid }) {
+    const [len, setLen] = useState(0);
+    useEffect(() => {
+        async function lazyLoad() {
+            const data = await json.read({ url: dir.user.alarm(uid) });
+            setLen(data?.filter(e => !e.ch)?.length);
+        }
+        if (uid) lazyLoad();
+    }, [])
+    if (!uid) return;
     return <>
         <div className={styles.alarm}>
-            <button
+            <Link
+                href={'/alarm'}
                 className={`fa fa-bell`}
-                data-count={user?.alarm?.length}
-                onClick={e => {
-                    setShow(e => !e);
-                }}
+                data-count={len}
             />
-            <div className={`${styles.alarmWrap} ${show ? styles.show : ''}`}>
-                {user?.alarm?.length ? user?.alarm?.slice(0, 5).map((e, i) => {
-                    return <div className={styles.alarmData} key={i}>
-                        <div>
-                            <h4>{e.title}</h4>
-                            <div dangerouslySetInnerHTML={{ __html: e.data }}></div>
-                        </div>
-                        <button
-                            className='fa fa-trash'
-                            onClick={e => {
-                                update({ alarm: i }).then(e => setShow(true));
-                            }}
-                        />
-                    </div>
-                }) : <div className={styles.alarmData}>
-                    알림이 없습니다.
-                </div>}
-            </div>
         </div>
     </>
 }

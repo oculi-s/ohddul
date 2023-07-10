@@ -122,13 +122,6 @@ const callbacks = {
                 token.user.favs = favs;
                 json.write(dir.user.favs(uid), favs, 0);
                 return token;
-            } else if (session.alarm != undefined) {
-                const i = session?.alarm;
-                const alarm = token?.user?.alarm || [];
-                alarm.splice(i, 1);
-                token.user.alarm = alarm;
-                json.write(dir.user.alarm(uid), alarm);
-                return token;
             } else {
                 token?.user?.queue?.push(session);
                 return token;

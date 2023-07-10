@@ -1,6 +1,8 @@
 import json from "@/module/json";
+import dt from '@/module/dt';
 import { user as dir } from "@/module/dir";
 import { renderToStaticMarkup } from 'react-dom/server';
+import Link from "next/link";
 
 export function findUid(uid) {
     const id = json.read(dir.admin).index[uid];
@@ -8,8 +10,7 @@ export function findUid(uid) {
     const user = json.read(dir.meta(uid), false);
     const queue = json.read(dir.pred(uid), { queue: [] }).queue;
     const favs = json.read(dir.favs(uid), {});
-    const alarm = json.read(dir.alarm(uid), []);
-    if (user) return { ...user, id, uid, queue, favs, alarm };
+    if (user) return { ...user, id, uid, queue, favs };
     else return false;
 }
 
@@ -43,8 +44,11 @@ const firstAlarm = [{
         <>
             <p>회원가입을 축하드립니다.</p>
             <p>지금 바로 예측을 시작해보세요.</p>
+            <Link href={'/stock/삼성전자'}>삼성전자 예측하러 가기</Link>
         </>
-    )
+    ),
+    d: dt.num(),
+    ch: false,
 }]
 
 /**
@@ -63,6 +67,6 @@ export function create(user) {
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);
     return {
-        ...data, id: uid, uid, queue: [], favs: {}, alarm: firstAlarm
+        ...data, id: uid, uid, queue: [], favs: {}
     };
 }

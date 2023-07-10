@@ -1,5 +1,5 @@
 import styles from '$/Index.module.scss';
-import { Per, Color, Num, Div } from '@/module/ba';
+import { Per, Color, Num, Div, Fix, parseFix } from '@/module/ba';
 import dt from '@/module/dt';
 import PriceLine from '#/chart/PriceLine';
 import { getMaData } from '@/module/filter/priceAvg';
@@ -11,8 +11,8 @@ function Index({ data, last, prev, count, name }) {
     return <div className={styles.wrap}>
         <h3 className={styles.title}>
             {name == 'kospi' ? '코스피' : '코스닥'}&nbsp;
-            <span>{Num(last)}</span>&nbsp;
-            <span className={Color(last - prev)}>
+            <span>{parseFix(last, 1)}</span>&nbsp;
+            <span className={`${Color(last - prev)} ${styles.percent}`}>
                 ({Per(last, prev)})
             </span>
         </h3>
@@ -54,10 +54,12 @@ const Market = ({ market, count }) => {
     const props = { last, prev, count };
     return (<>
         <div className={`${styles.area} ${styles.chartArea}`}>
-            <Index {...props} data={kospi} name={'kospi'} />
-            <Index {...props} data={kosdaq} name={'kosdaq'} />
+            <div>
+                <Index {...props} data={kospi} name={'kospi'} />
+                <Index {...props} data={kosdaq} name={'kosdaq'} />
+            </div>
+            <p className='des'>* 기준일 : {kospi[0]?.d}</p>
         </div>
-        {/* <p className='des'>{kospi[0]?.d}</p> */}
     </>)
 }
 

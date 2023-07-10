@@ -84,12 +84,8 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
  * 
  * pred는 꼬이면 안되기 때문에 중복제출 방지를 위해 session에 저장하고 update를 사용한다.
  */
-function Index({
-    ids, code,
-    meta, group, price, index, induty,
-    predict, userMeta,
-    stockMeta, stockPrice, stockEarn, stockShare, stockPred,
-}) {
+function Index(props) {
+    const { meta, code, price, stockMeta, stockPrice, stockEarn, stockShare } = props;
     const router = useRouter();
 
     if (!meta?.data) return;
@@ -97,14 +93,7 @@ function Index({
         return <div>종목 정보가 없습니다.</div>;
     }
     const last = price[code] || stockPrice?.data[0];
-    const props = {
-        ids, code, router,
-        meta, group, price, index, induty, last,
-        predict,
-        userMeta,
-        stockMeta, stockEarn, stockPrice, stockShare,
-        stockPred,
-    };
+    props = { ...props, last, router };
 
     const tabContents = {
         names: ['가격변화', '실적추이', '지분정보', '예측모음'],

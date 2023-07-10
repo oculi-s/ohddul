@@ -216,6 +216,21 @@ export default function PredBar({
                 setType(0);
             }, 500);
         }
+
+        // const queue = session?.user?.queue?.sort(dt.sort);
+        // const defTime = queue?.find(e => e.c == code)?.d;
+        // const can = dt.pred(defTime);
+        // document.onkeydown = e => {
+        //     if (e.key == 'F9') {
+        //         e.preventDefault();
+        //         if (can)
+        //             submit({ ...submitProps, ohddul: 1 });
+        //     } else if (e.key == 'F10') {
+        //         e.preventDefault();
+        //         if (can)
+        //             submit({ ...submitProps, ohddul: -1 });
+        //     }
+        // }
     }, [code]);
 
 
