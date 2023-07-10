@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '$/Stock/Stock.module.scss';
 import { Num, Fix, Price, Color, Per, Div } from '@/module/ba';
@@ -6,7 +6,7 @@ import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
 import dt from '@/module/dt';
 import StockHead from '#/stockData/stockHead';
 import ToggleTab from '#/base/ToggleTab';
-import { LastUpdate } from '#/base/base';
+import { LastUpdate, Loading } from '#/base/base';
 import Help from '#/base/Help';
 import '@/module/array';
 
@@ -117,13 +117,15 @@ function Index(props) {
     };
     return (
         <>
-            <StockHead {...props} />
-            <hr />
-            <GroupFold {...props} />
-            <IndutyFold {...props} />
-            <MetaTable {...props} />
-            <hr />
-            <ToggleTab {...tabContents} />
+            <Suspense fallback={<Loading />} >
+                <StockHead {...props} />
+                <hr />
+                <GroupFold {...props} />
+                <IndutyFold {...props} />
+                <MetaTable {...props} />
+                <hr />
+                <ToggleTab {...tabContents} />
+            </Suspense>
         </>
     );
 }
