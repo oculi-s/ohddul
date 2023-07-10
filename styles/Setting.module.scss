@@ -1,0 +1,68 @@
+@import 'variables.module.scss';
+
+.setting {
+    background: $bgMid;
+    border-radius: 10px;
+    padding: 20px;
+
+    h4 {
+        margin-bottom: .5em;
+    }
+
+    .box {
+        margin: 10px auto;
+        background: $bgBright;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    button {
+        background: $bgDark;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background .3s;
+
+        &:hover {
+            background: $bgBrighter;
+        }
+    }
+
+    .pass {
+        background: $blueBright;
+        color: $textBright;
+        font-weight: bold;
+    }
+
+    .fail {
+        background: $redBright;
+        color: $textBright;
+        font-weight: bold;
+    }
+
+    .form {
+        display: flex;
+        justify-content: space-between;
+        white-space: nowrap;
+        margin-bottom: 10px;
+
+        >* {
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        input {
+            padding: 10px;
+            display: inline-block;
+            background: $bgDark;
+            width: 100%;
+            color: $textBright;
+        }
+
+    }
+}
+
+@include mobile {
+    .setting {
+        padding: 10px;
+    }
+}

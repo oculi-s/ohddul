@@ -68,7 +68,7 @@ export function User({ user, setAsideShow }) {
     )
 }
 
-export function Alarms({ uid }) {
+export function Alarms({ uid, setAsideShow }) {
     const [len, setLen] = useState(0);
     useEffect(() => {
         async function lazyLoad() {
@@ -79,116 +79,26 @@ export function Alarms({ uid }) {
     }, [])
     if (!uid) return;
     return <>
-        <div className={styles.alarm}>
+        <div className={styles.box}>
             <Link
                 href={'/alarm'}
-                className={`fa fa-bell`}
+                className={`fa fa-bell ${styles.alarm}`}
                 data-count={len}
+                onClick={e => setAsideShow(false)}
             />
         </div>
     </>
 }
 
-async function checkId({ idRef, oid, setIdCheck }) {
-    const id = idRef?.current?.value;
-    const res = await user.find({ id });
-    if (id == oid) {
-        setIdCheck(-2);
-        return -2;
-    } else if (res) {
-        setIdCheck(-1);
-        return -1;
-    } else setIdCheck(1);
-    return 1;
-}
-
-async function change(uid) {
-    const id = document.querySelector('form #id').value;
-    const email = document.querySelector('form #email').value;
-    await user.change({ id, uid, email });
-    alert('변경되었습니다.');
-}
-
-function ChangeId() {
-    const { data: session, update } = useSession();
-    const router = useRouter();
-    const [idCheck, setIdCheck] = useState(0);
-    const oid = session?.user?.id;
-    const idRef = useRef();
-    return <div className={styles.box}>
-        <form onSubmit={async e => {
-            e.preventDefault();
-            await checkId({ idRef, oid, setIdCheck });
-        }}>
-            <input id='id' ref={idRef} defaultValue={oid} type='text' />
-            <button className={
-                idCheck == 0
-                    ? '' : idCheck == 1
-                        ? styles.pass : styles.fail
-            }>{
-                    idCheck == -2 ? '기존과 같은 ID입니다.' :
-                        idCheck == 0 ? '중복 확인' :
-                            idCheck == 1 ? '사용 가능' :
-                                <>이미 존재하는 ID입니다.</>
-                }</button>
-        </form>
-        <button
-            className={styles.midBtn}
-            type='button'
-            onClick={async e => {
-                const id = idRef?.current?.value;
-                const res = await checkId({ idRef, oid, setIdCheck })
-                if (res == 1) {
-                    await change(session?.user?.uid)
-                    await update({ id });
-                    router.reload();
-                } else alert('아이디 중복 확인을 진행해주세요.')
-            }}>
-            변경하기
-        </button>
-    </div>
-}
-
-function ChangeEmail() {
-    const { data: session, update } = useSession();
-    const [time, setTime] = useState(5 * 60);
-    return <div className={styles.box}>
-        <form onSubmit={async e => {
-            e.preventDefault();
-            alert('준비중입니다.')
-        }}>
-            <input id='email' defaultValue={session?.user?.email} type='email' />
-            <button>인증번호 받기</button>
-
-        </form>
-        <form onSubmit={async e => {
-            e.preventDefault();
-            alert('준비중입니다.')
-        }}>
-            <input type="text" placeholder='인증번호 입력' />
-            <button>변경하기</button>
-        </form>
-    </div>
-}
-
-function Setting({ user, show, setShow }) {
+function Setting({ setAsideShow }) {
     return <>
-        <div className={`${styles.settingWrap} ${show ? styles.show : ''}`}>
-            <div className={styles.setting}>
-                <h2>환경설정</h2>
-                <hr />
-                <h4>아이디 변경</h4>
-                <ChangeId />
-                <h4>이메일 변경</h4>
-                <ChangeEmail />
-            </div>
-
-            <button
-                className={`fa fa-close ${styles.close}`}
-                onClick={e => setShow(false)}
+        <div className={styles.box}>
+            <Link
+                className='fa fa-cog'
+                href={'/setting'}
+                onClick={e => setAsideShow(false)}
             />
         </div>
-        <div className={`${styles.shadow} ${show ? styles.show : ''}`} onClick={e => setShow(false)}></div>
     </>
 }
 
@@ -205,15 +115,7 @@ export function AlarmSetting({ user, setAsideShow }) {
         }
     }, [settingShow]);
     return <div className={styles.alarmSetting}>
-        <div className={styles.box}>
-            <button
-                className='fa fa-cog'
-                onClick={e => {
-                    setAsideShow(false)
-                    setSettingShow(true);
-                }}
-            />
-            <Setting user={user} show={settingShow} setShow={setSettingShow} />
-        </div>
+        <Alarms uid={user?.uid} setAsideShow={setAsideShow} />
+        <Setting setAsideShow={setAsideShow} />
     </div>
 }

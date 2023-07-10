@@ -13,6 +13,9 @@ export default function HEAD({ title }) {
             <meta property="og:image" content="/mstile-310x310.png" />
             <meta property="og:description" content="주식을 예측하고 랭크를 매기는 커뮤니티" />
             {/* 파비콘 */}
+            <link rel="manifest" href="/site.webmanifest" />
+            <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
             <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-touch-icon-57x57.png" />
             <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114.png" />
             <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72.png" />
@@ -26,10 +29,11 @@ export default function HEAD({ title }) {
             <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
             <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
             <link rel="icon" type="image/png" href="/favicon-128.png" sizes="128x128" />
+            <link rel="manifest" href="/site.webmanifest" />
+            {/* <link rel="manifest" href="/manifest.json" /> */}
             <meta name="application-name" content="ohddul" />
-            <link rel="manifest" href="/manifest.json" />
             <meta name="theme-color" content="#ffffff" />
-            <meta name="msapplication-TileColor" content="#FFFFFF" />
+            <meta name="msapplication-TileColor" content="#2b5797" />
             <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
             <meta name="msapplication-square70x70logo" content="/mstile-70x70.png" />
             <meta name="msapplication-square150x150logo" content="/mstile-150x150.png" />

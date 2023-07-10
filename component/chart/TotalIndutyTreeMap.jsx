@@ -11,6 +11,7 @@ import Icon from '@/public/icon';
 function stockElement(index, {
     x0, y0, x1, y1, c, g, n, value: v
 }, i) {
+    if (!index) return;
     const gn = index[g];
     const inner = v > 0.5;
 

@@ -22,7 +22,6 @@ export default function Nav(props) {
                 <div className={styles.button}><Link href="/idea">의견게시판</Link></div>
             </div>
             <div className={styles.buttonList2} >
-                <Alarms uid={props?.session?.user?.uid} />
                 <button
                     className={`fa fa-bars ph`}
                     onClick={e => { setAsideShow(c => !c) }}

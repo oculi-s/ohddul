@@ -30,6 +30,7 @@
     "moment-timezone": "^0.5.43",
     "next": "^13.4.8",
     "next-auth": "^4.22.1",
+    "node": "^20.4.0",
     "node-html-parser": "^6.1.5",
     "node-schedule": "^2.1.1",
     "original-fs": "^1.2.0",
