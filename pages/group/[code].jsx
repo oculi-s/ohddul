@@ -25,7 +25,6 @@ import { CrawlUser } from '@/module/prop/props';
  */
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
-    const aside = json.read(dir.stock.light.aside);
     const group = json.read(dir.stock.group).data[code] || {};
 
     const Filter = (data) => {
@@ -56,20 +55,18 @@ export async function getServerSideProps(ctx) {
 
     const title = group?.name ? `${group?.name}그룹 : 오떨` : null;
     let props = {
-        title,
-        code, aside,
+        title, code,
         group, index, induty,
         userMeta,
         predict,
         meta, price, earn, share
     };
-    await CrawlUser(ctx, props);
     return { props }
 }
 
-const MetaTable = ({
+function MetaTable({
     group, meta, price, code, earn
-}) => {
+}) {
     group.light = true;
     meta.light = true;
     if (!group) return;
@@ -79,7 +76,7 @@ const MetaTable = ({
         equity: earn?.map(e => e?.equity)?.sum(),
         revenue: earn?.map(e => e?.revenue)?.sum(),
         profit: earn?.map(e => e?.profit)?.sum()
-    }
+    };
     const priceTotal = group?.price;
     const groupPrice = group?.child
         ?.map(e => ({ code: e, c: meta[e]?.a * price[e]?.c }))
@@ -104,7 +101,7 @@ const MetaTable = ({
                 </td>
             </tr>
         </tbody></table>
-    </div>
+    </div>;
 }
 
 function Group(props) {

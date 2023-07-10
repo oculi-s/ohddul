@@ -40,4 +40,9 @@ export const user = {
     alarm: uid => encode(`@/data/user/${uid}/alarm.json`),
 }
 
-export default { stock, user };
+export const board = {
+    ideas: encode('@/data/board/meta/idea.json'),
+    idea: uid => encode(`@/data/board/idea/${uid}.json`)
+}
+
+export default { stock, user, board };

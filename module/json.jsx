@@ -5,17 +5,18 @@ import dt from './dt';
 import { XMLParser } from 'fast-xml-parser/src/fxp';
 import dir from './dir';
 
-const defDict = {}
-defDict[dir.stock.light.aside] = { sum: [], up: [], down: [] };
-defDict[dir.stock.light.count] = { cnt: 0, earn: {}, none: {} };
-defDict[dir.stock.meta] = { data: {}, index: {} };
-defDict[dir.stock.all] = {};
-defDict[dir.stock.light.tree] = {};
-defDict[dir.stock.light.updown] = { all: { k: 0, q: 0 }, up: { k: 0, q: 0 }, down: { k: 0, q: 0 } };
-defDict[dir.user.admin] = { index: {} };
+const defs = {}
+defs[dir.stock.light.aside] = { sum: [], up: [], down: [] };
+defs[dir.stock.light.count] = { cnt: 0, earn: {}, none: {} };
+defs[dir.stock.meta] = { data: {}, index: {} };
+defs[dir.stock.all] = {};
+defs[dir.stock.light.tree] = {};
+defs[dir.stock.light.updown] = { all: { k: 0, q: 0 }, up: { k: 0, q: 0 }, down: { k: 0, q: 0 } };
+defs[dir.user.admin] = { index: {} };
+defs[dir.board.ideas] = {};
 
 function read(url, def = { data: [], last: 0 }) {
-    if (!fs.existsSync(url)) return defDict[url] || def;
+    if (!fs.existsSync(url)) return defs[url] || def;
     let data = fs.readFileSync(url, 'utf-8');
     try {
         data = JSON.parse(data);

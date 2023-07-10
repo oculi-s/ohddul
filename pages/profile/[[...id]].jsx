@@ -16,12 +16,11 @@ import { useEffect } from "react";
  * asdf
  */
 export async function getServerSideProps(ctx) {
-    const aside = json.read(dir.stock.light.aside);
     const admin = json.read(dir.user.admin);
 
     const qid = ctx.query?.id?.find(e => true);
     const session = await getSession(ctx);
-    let props = { aside, session };
+    let props = {};
 
     let uid = false, queue = [], favs = [];
     let id, rank, email;

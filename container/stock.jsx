@@ -42,7 +42,6 @@ export async function getServerSideProps(ctx) {
 		props = { ...props, stockMeta, stockPrice, stockEarn, stockShare, stockPred };
 	}
 
-	const aside = json.read(dir.stock.light.aside);
 	const Group = json.read(dir.stock.group);
 	const Index = json.read(dir.stock.induty).data;
 	const Induty = json.read(dir.stock.dart.induty).data;
@@ -80,12 +79,9 @@ export async function getServerSideProps(ctx) {
 	const ids = json.read(dir.user.admin);
 
 	const title = meta.data[code] ? `${meta.data[code]?.n} : 오떨` : null;
-	const session = await getSession(ctx);
 	props = {
-		session,
 		...props,
-		title,
-		ids, aside,
+		title, ids,
 		price, meta, group, index, induty,
 		predict,
 	};

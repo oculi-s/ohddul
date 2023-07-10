@@ -24,12 +24,10 @@ import { useRouter } from 'next/router';
  */
 export const getServerSideProps = async (ctx) => {
     const now = dt.num();
-    const aside = json.read(dir.stock.light.aside);
     const count = json.read(dir.stock.light.count);
     const title = "오떨 사용방법";
-    const session = await getSession(ctx);
     const props = {
-        now, aside, title, session, ...count
+        now, title, ...count
     };
     return { props };
 }

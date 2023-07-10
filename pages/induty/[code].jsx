@@ -10,7 +10,6 @@ import { filterIndex } from "@/module/filter/filter";
 
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
-    const aside = json.read(dir.stock.light.aside);
     const Index = json.read(dir.stock.induty).data;
     const Induty = json.read(dir.stock.dart.induty).data;
 
@@ -27,8 +26,7 @@ export async function getServerSideProps(ctx) {
     const induty = Filter(Induty);
 
     const title = index[Big(code)] ? `${index[Big(code)]?.n} : 오떨` : null;
-    let props = { aside, meta, index, price, induty, title };
-    await CrawlUser(ctx, props);
+    let props = { meta, index, price, induty, title };
     return { props };
 }
 

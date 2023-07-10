@@ -5,7 +5,7 @@ export default function HEAD({ title }) {
     return (
         <Head>
             <title>{title || `오르고 떨어지고, 오떨`}</title>
-            <meta name="description" content="예측으로 얘기하자! 오르고 떨어지고, 오떨" />
+            <meta name="description" content="주식을 예측하고 랭크를 매기는 커뮤니티, 오떨에 오신 것을 " />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"></meta>
             {/* 카카오 공유 */}
             <meta property="og:title" content="오르고 떨어지고, 오떨" />
@@ -27,6 +27,8 @@ export default function HEAD({ title }) {
             <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
             <link rel="icon" type="image/png" href="/favicon-128.png" sizes="128x128" />
             <meta name="application-name" content="ohddul" />
+            <link rel="manifest" href="/manifest.json" />
+            <meta name="theme-color" content="#ffffff" />
             <meta name="msapplication-TileColor" content="#FFFFFF" />
             <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
             <meta name="msapplication-square70x70logo" content="/mstile-70x70.png" />
