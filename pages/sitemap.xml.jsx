@@ -19,7 +19,7 @@ export async function getServerSideProps(ctx) {
         loc: process.env.URL,
         priority, lastmod,
     }, {
-        loc: `${process.env.URL}/example`,
+        loc: `${process.env.URL}/help`,
         priority, lastmod,
     },];
 
@@ -28,8 +28,8 @@ export async function getServerSideProps(ctx) {
         priority, lastmod,
     }));
 
-    const stockName = Object.keys(meta).map(code => ({
-        loc: `${process.env.URL}/stock/${meta[code]?.n}`,
+    const stockName = Object.values(meta).map(meta => ({
+        loc: `${process.env.URL}/stock/${encodeURIComponent(meta.n)}`,
         priority, lastmod,
     }))
 
