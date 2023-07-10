@@ -28,6 +28,11 @@ export async function getServerSideProps(ctx) {
         priority, lastmod,
     }));
 
+    const stockName = Object.keys(meta).map(code => ({
+        loc: `${process.env.URL}/stock/${meta[code]?.n}`,
+        priority, lastmod,
+    }))
+
     const induties = Object.keys(induty).map(iname => ({
         loc: `${process.env.URL}/induty/${iname.slice(1)}`,
         priority, lastmod,
@@ -37,7 +42,7 @@ export async function getServerSideProps(ctx) {
         priority, lastmod,
     }));
 
-    const fields = [...defaultFields, ...stocks, ...induties, ...groups];
+    const fields = [...defaultFields, ...stocks, ...stockName, ...induties, ...groups];
     return getServerSideSitemapLegacy(ctx, fields);
 }
 
