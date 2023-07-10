@@ -24,20 +24,22 @@ import { getSession } from 'next-auth/react';
  * * meta : 389 --> 262 (-127kb)
  * * induty : 262 --> 222 (-40kb)
  * * price : 222 --> 150 (-72kb)
+ * * meta.index : 149 --> 87 (-62kb)
  */
 export async function getServerSideProps(ctx) {
 	const meta = json.read(dir.stock.meta);
 	let code = ctx.query?.code;
 	if (!parseInt(code)) code = meta.index[code];
-	let props = {}
+	let props = { code }
 
 	// stockPage
 	if (code) {
+		const stockMeta = meta?.data[code];
 		const stockPrice = json.read(dir.stock.light.price(code));
 		const stockEarn = json.read(dir.stock.light.earn(code));
 		const stockShare = json.read(dir.stock.share(code));
-		const stockPredict = json.read(dir.stock.pred(code));
-		props = { ...props, stockPrice, stockEarn, stockShare, stockPredict };
+		const stockPred = json.read(dir.stock.pred(code));
+		props = { ...props, stockMeta, stockPrice, stockEarn, stockShare, stockPred };
 	}
 
 	const aside = json.read(dir.stock.light.aside);
@@ -59,13 +61,23 @@ export async function getServerSideProps(ctx) {
 				return 0;
 			}))
 	}
+	const FilterIndex = data => {
+		return Object.fromEntries(Object.entries(data)
+			?.filter(([k, v]) => {
+				if (v == code) return 1;
+				if (Induty[v] == iname) return 1;
+				if (Group?.index[v] == gname) return 1;
+				return 0;
+			}))
+	}
 
 	const induty = Filter(Induty);
 	meta.data = Filter(meta.data);
+	meta.index = FilterIndex(meta.index);
 	const Price = json.read(dir.stock.all);
 	const price = Filter(Price);
 	const predict = json.read(dir.stock.predAll);
-	const userMeta = json.read(dir.user.meta);
+	const ids = json.read(dir.user.admin);
 
 	const title = meta.data[code] ? `${meta.data[code]?.n} : 오떨` : null;
 	const session = await getSession(ctx);
@@ -73,7 +85,7 @@ export async function getServerSideProps(ctx) {
 		session,
 		...props,
 		title,
-		userMeta, aside,
+		ids, aside,
 		price, meta, group, index, induty,
 		predict,
 	};

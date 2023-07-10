@@ -67,17 +67,46 @@ export function User({ user, setAsideShow }) {
     )
 }
 
-function Alarms({ user, show }) {
-    return <div className={`${styles.alarmWrap} ${show ? styles.show : ''}`}>
-        준비중입니다.
-        {/* {user?.alarm?.slice(0, 5).map(e => {
-            return <div className={styles.alarmData}>
-                <h4>{e.title}</h4>
-                <div dangerouslySetInnerHTML={{ __html: e.data }}></div>
-                <button className='fa fa-trash'></button>
+export function Alarms() {
+    const { data: session, status, update } = useSession();
+    const user = session?.user;
+    const router = useRouter();
+    const [show, setShow] = useState(false);
+    // useEffect(() => {
+    //     console.log(1)
+    //     setShow(true);
+    // }, [user?.alarm])
+    toggleOnPageChange(router, setShow);
+    if (status != 'authenticated') return;
+    return <>
+        <div className={styles.alarm}>
+            <button
+                className={`fa fa-bell`}
+                data-count={user?.alarm?.length}
+                onClick={e => {
+                    setShow(e => !e);
+                }}
+            />
+            <div className={`${styles.alarmWrap} ${show ? styles.show : ''}`}>
+                {user?.alarm?.length ? user?.alarm?.slice(0, 5).map((e, i) => {
+                    return <div className={styles.alarmData} key={i}>
+                        <div>
+                            <h4>{e.title}</h4>
+                            <div dangerouslySetInnerHTML={{ __html: e.data }}></div>
+                        </div>
+                        <button
+                            className='fa fa-trash'
+                            onClick={e => {
+                                update({ alarm: i }).then(e => setShow(true));
+                            }}
+                        />
+                    </div>
+                }) : <div className={styles.alarmData}>
+                    알림이 없습니다.
+                </div>}
             </div>
-        })} */}
-    </div>
+        </div>
+    </>
 }
 
 async function checkId({ idRef, oid, setIdCheck }) {
@@ -184,10 +213,8 @@ function Setting({ user, show, setShow }) {
 }
 
 export function AlarmSetting({ user, setAsideShow }) {
-    const [alarmShow, setAlarmShow] = useState(false);
     const [settingShow, setSettingShow] = useState(false);
     const router = useRouter();
-    toggleOnPageChange(router, setAlarmShow);
     toggleOnPageChange(router, setSettingShow);
 
     useEffect(() => {
@@ -198,16 +225,6 @@ export function AlarmSetting({ user, setAsideShow }) {
         }
     }, [settingShow]);
     return <div className={styles.alarmSetting}>
-        <div className={styles.box}>
-            <button
-                className={`fa fa-bell ${styles.alarm}`}
-                data-count={user?.alarm?.length}
-                onClick={e => {
-                    setAlarmShow(e => !e);
-                }}
-            />
-            <Alarms user={user} show={alarmShow} />
-        </div>
         <div className={styles.box}>
             <button
                 className='fa fa-cog'

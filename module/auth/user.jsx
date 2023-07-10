@@ -7,7 +7,7 @@ export function findUid(uid) {
     if (!id) return false;
     const user = json.read(dir.meta(uid), false);
     const queue = json.read(dir.pred(uid), { queue: [] }).queue;
-    const favs = json.read(dir.favs(uid), []);
+    const favs = json.read(dir.favs(uid), {});
     const alarm = json.read(dir.alarm(uid), []);
     if (user) return { ...user, id, uid, queue, favs, alarm };
     else return false;
@@ -63,6 +63,6 @@ export function create(user) {
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);
     return {
-        ...data, id: uid, uid, queue: [], favs: [], alarm: firstAlarm
+        ...data, id: uid, uid, queue: [], favs: {}, alarm: firstAlarm
     };
 }

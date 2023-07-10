@@ -70,8 +70,9 @@
     }
 }
 
-.mobileBtn {
-    display: none;
+.buttonList2 {
+    display: flex;
+    margin-left: auto;
 }
 
 @include mobtab {

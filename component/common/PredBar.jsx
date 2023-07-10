@@ -49,7 +49,6 @@ async function submit({
         alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.');
         return;
     }
-    const prDate = dt.num() + dt.DAY * date;
     Alert({ name, ohddul, change, date, origin });
 
     if (testing) {
@@ -62,8 +61,11 @@ async function submit({
     if (ohddul) {
         data.t = 'od', data.od = ohddul;
     } else {
+        // 만약 가격 예측인경우 date일 뒤 장전일에 예측한 것처럼 설정함
+        const at = dt.now(d);
+        at.set({ date: at.date() + date, hour: 8, minute: 50, second: 0 });
         data.t = 'pr', data.pr = origin + change;
-        data.at = prDate;
+        data.at = dt.num(at);
     }
 
     const predData = { ...data, uid };

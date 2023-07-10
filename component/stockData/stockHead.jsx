@@ -25,7 +25,7 @@ export function Open({ status, time, view, setView }) {
                     &nbsp;오떨 맞추기
                 </button>
                 : <span className='des'>
-                    예측완료 : {dt.toString(time, { time: 1 })}
+                    예측완료 : {dt.toString(time, { time: 1, day: 1 })}
                 </span>}
     </span>;
 }

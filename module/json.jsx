@@ -65,7 +65,8 @@ function toggle(url, elem) {
     } else {
         data.push(elem);
     }
-    return write(url, data);
+    write(url, data);
+    return data;
 }
 
 function up(url, def) {

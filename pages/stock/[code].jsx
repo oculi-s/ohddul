@@ -17,7 +17,7 @@ import EarnElement from '#/stockData/stockEarn';
 import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/stockPred';
 
-import Container from '@/container/heavy';
+// import Container from '@/container/heavy';
 
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
@@ -85,29 +85,25 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, stockEarn = [] }) => {
  * pred는 꼬이면 안되기 때문에 중복제출 방지를 위해 session에 저장하고 update를 사용한다.
  */
 function Index({
-    User, setUser,
+    ids, code,
     meta, group, price, index, induty,
     predict, userMeta,
-    stockPrice, stockEarn, stockShare, stockPredict,
+    stockMeta, stockPrice, stockEarn, stockShare, stockPred,
 }) {
     const router = useRouter();
-    let code = router.query?.code;
-    if (!parseInt(code)) code = meta.index[code];
+
     if (!meta?.data) return;
-    if (!code) return;
-    const stockMeta = meta?.data[code];
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
     const last = price[code] || stockPrice?.data[0];
     const props = {
-        User, setUser,
-        code, router,
+        ids, code, router,
         meta, group, price, index, induty, last,
         predict,
         userMeta,
         stockMeta, stockEarn, stockPrice, stockShare,
-        stockPredict,
+        stockPred,
     };
 
     const tabContents = {
@@ -145,4 +141,4 @@ function Index({
 
 import { getServerSideProps } from "@/container/stock";
 export { getServerSideProps };
-export default Container(Index);
+export default Index;

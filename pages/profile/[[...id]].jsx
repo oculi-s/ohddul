@@ -8,9 +8,9 @@ import dir from "@/module/dir";
 import json from "@/module/json";
 
 import { Curtain, Profile } from "#/profile/Header";
-import { useEffect } from "react";
-import { PredTable } from "#/profile/profilePred";
 import { FavTable } from "#/profile/profileFavs";
+import ProfilePred from "#/profile/profilePred";
+import { useEffect } from "react";
 
 /**
  * asdf
@@ -44,7 +44,7 @@ export async function getServerSideProps(ctx) {
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) =>
-                favs?.includes(k)
+                Object.keys(favs)?.includes(k)
                 || queue?.find(e => e.c == k)))
     }
     const meta = Filter(Meta);
@@ -114,8 +114,7 @@ function Index({
                 <Graph {...props} />
             </div>,
             <div key={1}>
-                <h3>대기중인 예측</h3>
-                <PredTable {...props} />
+                <ProfilePred {...props} />
             </div>,
             <div key={2}>
                 <h3>관심 종목</h3>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Search from '#/common/Search';
 import { useState } from 'react';
 import Image from 'next/image';
+import { Alarms } from '#/User';
 
 export default function Nav(props) {
     const [view, setView] = useState(false);
@@ -20,9 +21,10 @@ export default function Nav(props) {
                 <div className={styles.button}><Link href="/help">도움말</Link></div>
                 <div className={styles.button}><Link href="/idea">의견게시판</Link></div>
             </div>
-            <div className={styles.mobileBtn}>
+            <div className={styles.buttonList2} >
+                <Alarms />
                 <button
-                    className={`fa fa-bars`}
+                    className={`fa fa-bars ph`}
                     onClick={e => { setAsideShow(c => !c) }}
                 />
             </div>

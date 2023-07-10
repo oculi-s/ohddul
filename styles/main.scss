@@ -34,7 +34,7 @@
     :root {
         --main-width: 100%;
         --nav-margin: 0;
-        --nav-height: 80px;
+        --nav-height: 85px;
         --top: 100px;
     }
 
@@ -238,6 +238,10 @@ table {
     border-collapse: collapse;
     width: 100%;
     margin: 10px auto;
+}
+
+table.fixed {
+    table-layout: fixed;
 }
 
 tr {

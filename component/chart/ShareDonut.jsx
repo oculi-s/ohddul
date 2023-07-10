@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 const options = {
     spanGaps: true,
     maintainAspectRatio: false,
-    animation: { duration: 300 },
+    animation: { duration: 200 },
     layout: {
         padding: {
             left: 10,

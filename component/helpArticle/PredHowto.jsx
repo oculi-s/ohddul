@@ -4,9 +4,11 @@ import helpImage from '@/public/help';
 import Link from 'next/link';
 import { H3, H4 } from '@/module/help/header';
 import PredBar from '#/common/PredBar';
+import { Collapse } from '#/base/base';
 
 function PredBlock1() {
     return <div className={`${styles.box} ${styles.predImage}`}>
+        <p>전체 예측 횟수는 제한이 없으며, 종목별로는 하루 1회가 가능합니다.</p>
         <H3 i={1}>예측바 열기</H3>
         <p>예측은 각 종목 페이지의 오른쪽 위에 있는 오떨맞추기 버튼을 눌러서 진행하실 수 있습니다.</p>
         <Image src={helpImage.pred1} alt='종목 예측 기본화면' />
@@ -17,7 +19,7 @@ function PredBlock1() {
     </div>;
 }
 
-function PredBlock2({ aside, setTabIndex }) {
+function PredBlock2({ aside }) {
     const first = aside?.sum[0];
     const code = first?.code;
     const name = first?.n;
@@ -46,15 +48,56 @@ function PredBlock2({ aside, setTabIndex }) {
                 defaultType: 2, help: false
             }} />
         </div>
+        <p>목표가의 예측은 내일부터 최대 90일 후까지 가능하며, <span className='red'>최대 5배</span>까지 예측할 수 있습니다.</p>
     </div>
 }
 
-function PredBlock3() {
+function PredBlock3({ setTabIndex }) {
     return <div className={styles.box}>
-        <H3 i={1}>예측의 반영시간</H3>
-        <p>오/떨을 예측할 때는 <span className='red'>내일 주가를 예측</span>해주시면 됩니다. 내일 해당 종목이 오르거나 떨어질지 여부를 예측해주시면 됩니다.</p>
-        <p>해당 종목의 뉴스를 미리 알고 예측하면 되지 않냐고요? 당일 많은 사람이 맞춘 종목은 더 적은 점수를 받게 됩니다. <a onClick={e => setTabIndex(2)}>오떨의 점수산정 방식 보러가기</a></p>
-        <p>목표가의 예측은 내일부터 최대 90일 후까지 가능하며, <span className='red'>최대 5배</span>까지 예측할 수 있습니다.</p>
+        <H3 i={1}>예측의 채점시간</H3>
+        <Image src={helpImage.pred3} alt='예측 시간' />
+        <p>오/떨을 예측할 때는 일반적으로 <span className='red'>다음 종가</span>를 예측 해주시면 됩니다.</p>
+        <p>아직 장이 시작되기 전에는 해당일자의 주가 예측이 가능합니다. 하지만 장이 시작된 이후에는 다음 영업일의 종가를 예측해야 합니다.</p>
+        <table className='fixed'>
+            <thead>
+                <tr><th>예측시간</th><th>예측 기준일 (채점시간)</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>
+                        <p>장 시작 전</p>
+                        <p>(00:00~08:59)</p>
+                    </th>
+                    <td>당일 장 마감 후</td>
+                </tr>
+                <tr>
+                    <th>
+                        <p>장 시작 후</p>
+                        <p>(09:00~23:59)</p>
+                    </th>
+                    <td>다음 영업일 장 마감 후</td></tr>
+                <tr>
+                    <th>
+                        <p>금요일 장후~월요일 장전</p>
+                    </th>
+                    <td>월요일 장 마감 후</td>
+                </tr>
+            </tbody>
+        </table>
+        <Collapse title={'예측 시간 예시'}>
+            <p>5개의 예측을 했고, 각각의 시간이 아래와 같다면 예측의 채점 시간은 아래와 같습니다.</p>
+            <table>
+                <thead align='center'><tr><th>예측시간</th><th>채점시간</th><th>-</th></tr></thead>
+                <tbody>
+                    <tr><th>월 07:00</th><td>월 15:30</td><td>장전에 예측했으니 당일 장후 채점</td></tr>
+                    <tr><th>월 09:30</th><td>화 15:30</td><td>장중에 예측했으니 다음날 장후 채점</td></tr>
+                    <tr><th>월 16:00</th><td>화 15:30</td><td>장후에 예측했으니 다음날 장후 채점</td></tr>
+                    <tr><th>금 09:10</th><td>월 15:30</td><td>금요일 장중에 예측했으니 월요일 장후 채점</td></tr>
+                    <tr><th>토 12:00</th><td>월 15:30</td><td>주말에 예측했으니 월요일 장 후 채점</td></tr>
+                </tbody>
+            </table>
+        </Collapse>
+        <p>대형주 쏠림을 방지하기 위해 당일 많은 사람이 맞춘 종목은 더 적은 점수를 받게 됩니다. <a onClick={e => setTabIndex(2)}>오떨의 점수산정 방식 보러가기</a></p>
 
     </div>
 }

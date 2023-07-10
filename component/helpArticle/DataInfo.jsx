@@ -71,8 +71,8 @@ function InfoBlock1({
                 })}
             </tbody></table>
         </div>
-        <H4 i={0}>데이터 출처</H4>
-        <p>데이터는 <Link href='https://opendart.fss.or.kr' target='blank'>openDart</Link>와 <Link href='https://data.go.kr' target='blank'>공공데이터포털</Link>, <Link href="https://apiportal.koreainvestment.com/">KIS developers</Link>를 이용합니다.</p>
+        {/* <H4 i={0}>데이터 출처</H4> */}
+        {/* <p>데이터는 <Link href='https://opendart.fss.or.kr' target='blank'>openDart</Link>와 <Link href='https://data.go.kr' target='blank'>공공데이터포털</Link>, <Link href="https://apiportal.koreainvestment.com/">KIS developers</Link>를 이용합니다.</p> */}
     </div>;
 }
 

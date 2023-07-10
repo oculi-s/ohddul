@@ -19,6 +19,8 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
     }
     if (setView) setView(true);
     q = q?.toLowerCase();
+    let N = 10;
+    if (window.innerWidth < Int(scss?.midWidth)) N = 5;
     const reg = new RegExp(`${q}|${inko?.en2ko(q)}|${inko?.ko2en(q)}`);
     const res = { stock: [], user: [], group: [] };
     for (let [name, code] of Object.entries(meta?.index || {})) {
@@ -27,7 +29,7 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
             res?.stock?.push({ code, name });
         else if (code?.includes(q))
             res?.stock?.push({ code, name });
-        if (res?.stock?.length >= 10) break;
+        if (res?.stock?.length >= N) break;
     }
 
     for (let [code, gname] of Object.entries(group?.index || {})) {
@@ -36,14 +38,14 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
         if (reg?.test(gname))
             res?.group?.push({ code, name, gname });
 
-        if (res?.group?.length >= 10) break;
+        if (res?.group?.length >= N) break;
     }
 
     for (let { id, rank } of Object.values(userMeta || {})) {
         let idl = id?.toLowerCase();
         if (reg?.test(idl))
             res?.user?.push({ id, rank });
-        if (res?.user?.length >= 20) break;
+        if (res?.user?.length >= N * 2) break;
     }
     setResult(res);
 }
@@ -168,7 +170,7 @@ function Index(props) {
             ref={e => { stockRef.current[i] = e; }}
             href={`/stock/${e.code}`}
             className={styles.element}
-            onClick={e => setAsideShow(false)}
+            onClick={e => setView(false)}
         >
             <span>{e?.code}</span>
             <span>{e?.name?.toUpperCase()}</span>
@@ -182,7 +184,7 @@ function Index(props) {
             ref={e => { stockRef.current[N + i] = e; }}
             href={`/stock/${e?.code}`}
             className={styles.element}
-            onClick={e => setAsideShow(false)}
+            onClick={e => setView(false)}
         >
             <span>{e?.gname?.toUpperCase()}</span>
             <span>{e?.name}</span>
@@ -195,7 +197,7 @@ function Index(props) {
             ref={e => { userRef.current[i] = e; }}
             href={`/profile/${e?.id}`}
             className={styles.element}
-            onClick={e => setAsideShow(false)}
+            onClick={e => setView(false)}
         >
             <span>{e?.id}</span>
             <span>{e?.rank}</span>
@@ -211,17 +213,23 @@ function Index(props) {
                 <span className='fa fa-chevron-right' />
                 종목
             </p>
-            <StockResult />
-            {result?.group?.length && <>
+            <div className={styles.list}>
+                <StockResult />
+            </div>
+            {result?.group?.length ? <>
                 <p className={styles.title}>
                     <span className='fa fa-chevron-right' />
                     그룹
                 </p>
-                <GroupResult />
-            </>}
+                <div className={styles.list}>
+                    <GroupResult />
+                </div>
+            </> : ''}
         </div>,
         <div key={1}>
-            <UserResult />
+            <div className={styles.list}>
+                <UserResult />
+            </div>
         </div>
     ];
     return (
@@ -238,7 +246,9 @@ function Index(props) {
                         id='q'
                         type='text'
                         autoComplete='off'
-                        ref={e => { inputRef.current = e; }} />
+                        ref={e => { inputRef.current = e; }}
+                        required
+                    />
                 </div>
                 <button
                     className="fa fa-search"

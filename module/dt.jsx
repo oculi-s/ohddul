@@ -1,6 +1,7 @@
 const moment = require('moment');
 moment.suppressDeprecationWarnings = true;
 require('moment-timezone');
+require('moment-duration-format')(moment);
 moment.tz.setDefault("Asia/Seoul");
 const pad = (v) => String(v).padStart(2, '0');
 
@@ -68,19 +69,42 @@ function update(dict) {
  * 가능하면 true, 불가능하면 false
  * 
  * 장전을 기준으로 장 시작 이후에 예측이 있다면 예측 불가 아니면 가능
+ * * 토일요일은 금요일 장 후 예측이 없을 때 예측가능
+ * * 토요일은 하루 전, 일요일은 이틀전으로 만든 뒤 예측시간과 비교
  * * 00:00-08:59 자정부터 장 전이라면 마지막 예측이 전날 9시 이전이어야 함.
  * * 09:00-23:59 장중부터 자정이라면 마지막 예측이 당일 9시 이전이어야 함.
  */
-function pred(last = 0) {
-    last = moment(last);
+function pred(d = 0) {
+    d = moment(d);
     const m = moment();
     const mkt = market();
-    m.set({ hour: 8, minute: 59, second: 0 })
-    if (mkt == -1) {
-        m.set({ date: m.date() - 1 });
+    const day = m.day();
+    if (day == 0) m.set({ date: m.date() - 2, hour: 15, minute: 30, second: 0 });
+    else if (day == 6) m.set({ date: m.date() - 1, hour: 15, minute: 30, second: 0 });
+    else {
+        m.set({ hour: 8, minute: 59, second: 0 })
+        if (mkt == -1) m.set({ date: m.date() - 1 });
     }
-    return last < m;
+    return d < m;
 }
+
+/**
+ * 입력인 예측시간을 바탕으로 채점 시간 (기준시간) 을 계산하는 함수
+ * 
+ * * 금요일 장 중부터 월요일 장전까지는 월요일 장후
+ */
+function scoring(d = 0) {
+    d = moment(d);
+    const mkt = market(d);
+    const day = d.day();
+    d.set({ hour: 15, minute: 30, second: 0 });
+    if (day == 0) d.set({ date: d.date() + 1 });
+    else if (day == 6) d.set({ date: d.date() + 2 });
+    else if (day == 5 && 0 <= mkt) d.set({ date: d.date() + 3 });
+    else if (0 <= mkt) d.set({ date: d.date() + 1 });
+    return d;
+}
+
 function toJson(m = moment()) {
     m = moment(m);
     let Y, M, D;
@@ -127,10 +151,14 @@ function hhmmss(m = moment()) {
     m = moment.duration(m);
     return `${pad(m.hours())}:${pad(m.minutes())}:${pad(m.seconds())}`;
 }
+function duration(m = moment(), format = 'DD HH:mm:ss') {
+    m = moment.duration(m);
+    return m.format(format);
+}
 
 module.exports = {
     DAY, YEARS, EARNKEYS, YEARTYPE,
-    parse, pred,
+    parse, pred, scoring, duration,
     market, update, toJson, toString, toQuar,
     prev, now, num, sort, lsort, min, hhmmss
 };

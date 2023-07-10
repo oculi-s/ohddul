@@ -2,6 +2,8 @@ import NextAuth from 'next-auth'
 import KakaoProvider from 'next-auth/providers/kakao'
 // import CredentialsProvider from 'next-auth/providers/credentials';
 import { findUid, create } from '@/module/auth/user';
+import json from '@/module/json';
+import dir from '@/module/dir';
 // import { hashSync, compareSync } from 'bcryptjs'
 // import { nanoid } from 'nanoid';
 // import dir from '@/module/dir';
@@ -93,7 +95,7 @@ const callbacks = {
     // signIn({ user, account, profile, email, credentials }) {
     // return false;
     // },
-    jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session }) {
         if (trigger == 'signIn') {
             const exist = findUid(user?.id);
             if (!exist) {
@@ -104,14 +106,28 @@ const callbacks = {
                 return token;
             }
         } else if (trigger == 'update') {
+            const uid = token?.user?.uid;
+            console.log(trigger, session, uid);
             if (session?.id) {
                 token.user.id = session?.id;
                 return token;
-            } else if (session?.email) {
+            } else if (session.email) {
                 token.user.email = session?.email;
                 return token;
-            } else if (session?.favs) {
-                token.user.favs = session?.favs;
+            } else if (session.favs) {
+                const code = session?.favs;
+                const favs = token?.user?.favs || {};
+                if (favs[code]) delete favs[code];
+                else favs[code] = 1;
+                token.user.favs = favs;
+                json.write(dir.user.favs(uid), favs, 0);
+                return token;
+            } else if (session.alarm != undefined) {
+                const i = session?.alarm;
+                const alarm = token?.user?.alarm || [];
+                alarm.splice(i, 1);
+                token.user.alarm = alarm;
+                json.write(dir.user.alarm(uid), alarm);
                 return token;
             } else {
                 token?.user?.queue?.push(session);
