@@ -20,7 +20,7 @@ function PredBlock1() {
 }
 
 function PredBlock2({ aside }) {
-    const first = aside?.sum[0];
+    const first = aside?.sum?.find(e => true);
     const code = first?.code;
     const name = first?.n;
     const last = first?.c;

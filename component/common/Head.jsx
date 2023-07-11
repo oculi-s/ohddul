@@ -5,13 +5,13 @@ export default function HEAD({ title }) {
     return (
         <Head>
             <title>{title || `오르고 떨어지고, 오떨`}</title>
-            <meta name="description" content="주식을 예측하고 랭크를 매기는 커뮤니티, 오떨에 오신 것을 " />
+            <meta name="description" content="주식 가격을 예측하고 점수를 쌓는 커뮤니티, 오떨에 오신 것을 환영합니다." />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"></meta>
             {/* 카카오 공유 */}
             <meta property="og:title" content="오르고 떨어지고, 오떨" />
             <meta property="og:type" content="website" />
             <meta property="og:image" content="/mstile-310x310.png" />
-            <meta property="og:description" content="주식을 예측하고 랭크를 매기는 커뮤니티" />
+            <meta property="og:description" content="주식 가격을 예측하고 점수를 쌓는 커뮤니티" />
             {/* 파비콘 */}
             <link rel="manifest" href="/site.webmanifest" />
             <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />

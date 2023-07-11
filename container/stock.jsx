@@ -2,9 +2,7 @@ import json from '@/module/json';
 import dir from '@/module/dir';
 
 import '@/module/array';
-import { CrawlUser } from '@/module/prop/props';
 import { filterIndex } from '@/module/filter/filter';
-import { getSession } from 'next-auth/react';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -86,6 +84,5 @@ export async function getServerSideProps(ctx) {
 		predict,
 	};
 
-	await CrawlUser(ctx, props);
 	return { props };
 }

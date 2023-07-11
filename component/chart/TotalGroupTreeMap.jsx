@@ -20,11 +20,11 @@ function stockElement(index, {
     const br = Math.pow(v, .05);
     const color = c ?
         H2R(groupColors[gn] || colors[0], br) :
-        H2R(groupColors[gn], .5);
+        H2R(groupColors[gn], .8);
 
     return <div
         key={i}
-        className={styles.stock}
+        className={`${styles.stock} ${styles[gn]}`}
         style={{
             left: `${x0}%`,
             top: `${y0}%`,
@@ -32,17 +32,18 @@ function stockElement(index, {
             height: `${y1 - y0}%`,
             backgroundColor: color,
             filter: `brightness(${c ? '1' : '1.5'})`,
-            fontSize: `${Math.pow(v, .3) * 6}px`
         }}
     >
-        {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
-            {c ?
-                <Link href={`/stock/${n}`}>{n}</Link> :
-                <Link href={`/group/${gn}`}>
-                    <GroupImg name={gn} />
-                </Link>}
-            <p className={styles.percent}>({parseFix(v / 10, 1)}%)</p>
-        </div>}
+        <div className={styles.inner}>
+            {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
+                {c ?
+                    <Link href={`/stock/${n}`}>{n}</Link> :
+                    <Link href={`/group/${gn}`}>
+                        <GroupImg name={gn} />
+                    </Link>}
+                <p className={styles.percent}>({parseFix(v / 10, 1)}%)</p>
+            </div>}
+        </div>
     </div>;
 }
 

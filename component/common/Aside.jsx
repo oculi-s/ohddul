@@ -7,6 +7,7 @@ import { AlarmSetting, User, getRank } from '#/User';
 import Image from 'next/image';
 import { Per, Color, Num } from '@/module/ba';
 import KakaoLogin from '@/public/kakao_sync_login/kakao_login_large_narrow.png';
+import { Logo } from '#/base/base';
 
 /**
  * 2023.07.06 useSession을 predbar에서 사용하면서
@@ -72,10 +73,19 @@ function StockList({ aside, setAsideShow }) {
     return <>
         <div className={styles.box}>
             <Link href="/stock/sum">
+                <Logo size={18} />
                 <span className={styles.sum}>시가총액 순위</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
             </Link>
             <AsideTable data={aside?.sum} setAsideShow={setAsideShow} />
+        </div>
+        <div className={styles.box}>
+            <Link href="/stock/group">
+                <Logo size={18} />
+                <span className={styles.sum}>그룹 순위</span>
+                &nbsp;<span className='fa fa-chevron-right'></span>
+            </Link>
+            <AsideTable data={aside?.group} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
             <Link href="/stock/up">

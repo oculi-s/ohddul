@@ -5,7 +5,7 @@ import ToggleTab from '#/base/ToggleTab';
 import scss from '$/variables.module.scss';
 import Inko from 'inko';
 import Link from 'next/link';
-import { json } from '@/pages/api/xhr';
+import { json, user } from '@/pages/api/xhr';
 import dir from '@/module/dir';
 import { Int } from '@/module/ba';
 
@@ -41,7 +41,7 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
         if (res?.group?.length >= N) break;
     }
 
-    for (let { id, rank } of Object.values(userMeta || {})) {
+    for (let [id, rank] of userMeta) {
         let idl = id?.toLowerCase();
         if (reg?.test(idl))
             res?.user?.push({ id, rank });
@@ -276,7 +276,7 @@ export default function Search(props) {
         async function lazyLoad() {
             setMeta(await json.read({ url: dir.stock.meta }));
             setGroup(await json.read({ url: dir.stock.group }));
-            setUserMeta(await json.read({ url: dir.user.meta }));
+            setUserMeta(await user.meta({}));
         }
         lazyLoad();
     }, [])

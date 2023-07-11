@@ -1,4 +1,4 @@
-const Fetch = async (url, props) => {
+async function Fetch(url, props) {
     props = JSON.stringify(props || {});
     let res = await fetch(url, {
         body: props, method: 'post'
@@ -32,5 +32,7 @@ export const user = {
         return await Fetch('/api/user/find', props);
     }, change: async (props) => {
         return await Fetch('/api/user/change', props);
+    }, meta: async (props) => {
+        return await Fetch('/api/user/meta', props);
     }
 }

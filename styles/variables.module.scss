@@ -14,10 +14,12 @@ $bgOpacity: #29344b4b;
 
 $textColor: #aaa;
 $textBright: #e5e5e5;
+$textDark : #8a8a8a;
 $anchor: #7ec5db;
 $anchorBright: #c2d8df;
 
-$borderColor: #21212d;
+$borderColor: #1a1a2d;
+// $borderColor: #21212d;
 $barColor: #313b53;
 
 $red: #e3665d;
@@ -40,6 +42,7 @@ $blueBright: #3a4be0;
     bgBright: $bgBright;
     bgBrighter: $bgBrighter;
 
+    textDark: $textDark;
     textColor: $textColor;
     textBright: $textBright;
     anchor: $anchor;

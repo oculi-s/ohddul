@@ -5,7 +5,6 @@ import { Big } from "@/module/ba";
 
 import json from '@/module/json';
 import dir from '@/module/dir';
-import { CrawlUser } from "@/module/prop/props";
 import { filterIndex } from "@/module/filter/filter";
 
 export async function getServerSideProps(ctx) {

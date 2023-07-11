@@ -12,7 +12,6 @@ import { bpsHelp } from '#/stockData/HelpDescription';
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
-import { CrawlUser } from '@/module/prop/props';
 
 /**
  * 그룹 정보를 보여주는 페이지

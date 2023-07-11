@@ -1,4 +1,4 @@
-import FavStar from "#/base/FavStar";
+import FavStar from "#/baseStock/FavStar";
 import PredBar from "#/common/PredBar";
 import { Color, Num, Per } from "@/module/ba";
 import Link from "next/link";
@@ -10,7 +10,8 @@ import { useSession } from "next-auth/react";
 
 export function FavTable({ meta, price, mine, favs }) {
     const { data: session, status } = useSession();
-    const { queue } = session?.user;
+    const queue = session?.user?.queue;
+    console.log(queue);
     const head = <tr>
         <th>종목</th>
         <th>가격</th>

@@ -83,9 +83,12 @@ export function Alarms({ uid, setAsideShow }) {
             <Link
                 href={'/alarm'}
                 className={`fa fa-bell ${styles.alarm}`}
-                data-count={len}
                 onClick={e => setAsideShow(false)}
-            />
+            >
+                {len ? <span
+                    data-count={len}
+                /> : ''}
+            </Link>
         </div>
     </>
 }

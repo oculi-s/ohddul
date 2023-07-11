@@ -1,0 +1,12 @@
+@import '../variables.module.scss';
+
+.table {
+    tr>* {
+        border: none;
+    }
+
+    thead {
+        border-top: 2px solid $borderColor;
+        border-bottom: 1px solid $borderColor;
+    }
+}

@@ -1,6 +1,7 @@
 import dt from '@/module/dt';
 import styles from '$/Base/base.module.scss'
 import { useState } from "react"
+import Image from 'next/image';
 
 export function LastUpdate({ data }) {
     let last = data?.last || 1;
@@ -10,6 +11,14 @@ export function LastUpdate({ data }) {
 export function LastData({ data }) {
     let last = (data?.last || data?.data || data || [])?.find(e => true)?.d || 1;
     return <p className="des">* 기준일 : {dt.toString(last, { time: 1, day: 1 })}</p>
+}
+
+export function Logo({ size = 32 }) {
+    return <Image src='/android-chrome-512x512.png'
+        width={size}
+        height={size}
+        alt='오떨 로고'
+    />
 }
 
 // export function SignError({ on, code }) {

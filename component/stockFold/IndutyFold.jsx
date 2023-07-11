@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Price, Big, Num } from '@/module/ba';
 import Fold from '#/base/Fold';
 import '@/module/array'
-import FavStar from '#/base/FavStar';
+import FavStar from '#/baseStock/FavStar';
 import styles from '$/Base/Fold.module.scss';
 import { useState } from 'react';
 

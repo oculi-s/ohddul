@@ -2,7 +2,7 @@ import styles from '$/Stock/StockHead.module.scss';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import dt from '@/module/dt';
-import FavStar from '#/base/FavStar';
+import FavStar from '#/baseStock/FavStar';
 import { useSession } from 'next-auth/react';
 import { Loading } from '#/base/base';
 import PredBar from '#/common/PredBar';
@@ -65,8 +65,8 @@ function StockHead({
     if (!name) return <></>;
     return <>
         <div className={styles.head}>
-            <FavStar {...props} />
             <h2>
+                <FavStar {...props} />
                 <Link href={'/stock/' + code}>{name}</Link>
                 <span
                     className={`${styles.market} ${styles[type == "K" ? 'k' : 'q']}`}

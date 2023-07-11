@@ -2,7 +2,7 @@ import json from '@/module/json';
 
 export default function handler(req, res) {
     let { action } = req.query;
-    let { url, data, def } = JSON.parse(req.body);
+    let { url, data, def } = JSON.parse(req.body || {});
     switch (action) {
         case 'read':
             res.status(200).send(json.read(url, def))

@@ -131,7 +131,7 @@ body {
     outline: none;
 }
 
-img {
+main img {
     max-width: 100%;
     width: auto;
     height: auto;
@@ -238,15 +238,17 @@ table {
     border-collapse: collapse;
     width: 100%;
     margin: 10px auto;
-}
 
-table.fixed {
-    table-layout: fixed;
+    thead {
+        text-align: center;
+    }
 }
 
 tr {
+    border-top: 1px solid $borderColor;
+    border-bottom: 1px solid $borderColor;
+
     >* {
-        border: 1px solid $borderColor;
         padding: 2px 3px;
         word-break: keep-all;
     }
@@ -259,6 +261,11 @@ tr {
         background: var(--td-color);
     }
 }
+
+table.fixed {
+    table-layout: fixed;
+}
+
 
 footer {
     position: fixed;

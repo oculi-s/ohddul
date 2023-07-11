@@ -2,38 +2,39 @@ import squarify from 'squarify'
 import styles from '$/Chart/Tree.module.scss'
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
+import scss from '$/variables.module.scss';
 import Link from 'next/link';
 import { Div, H2R, Price } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
 
-const stockElement = ({
+function stockElement({
     meta, code, first, name, total, value,
     x0, y0, x1, y1
-}) => {
-    const t = value / total;
+}) {
     const k = value / first;
     const inner = value / total * 100 > 0.05;
     const br = Math.pow(k, .05);
-    const color = H2R(groupColors[name] || colors[0], br)
-
+    const color = H2R(groupColors[name] || colors[0], br);
+    const style = {
+        left: `${x0}%`,
+        top: `${y0}%`,
+        width: `${x1 - x0}%`,
+        height: `${y1 - y0}%`,
+        backgroundColor: color,
+    };
     return <div
         key={code}
-        className={styles.stock}
-        style={{
-            left: `${x0}%`,
-            top: `${y0}%`,
-            width: `${x1 - x0}%`,
-            height: `${y1 - y0}%`,
-            backgroundColor: color,
-            fontSize: `${Math.pow(t, .3) * 60}px`
-        }}
+        className={`${styles.stock} ${styles[name]}`}
+        style={style}
     >
-        {inner && <div className={styles.info}>
-            <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
-            <p className={styles.percent}>({Price(value)}, {Div(value, total, 1)})</p>
-        </div>}
-    </div>
+        <div className={styles.inner}>
+            {inner && <div className={styles.info}>
+                <Link href={`/stock/${code}`}>{meta[code]?.n}</Link>
+                <p className={styles.percent}>({Price(value)}, {Div(value, total, 1)})</p>
+            </div>}
+        </div>
+    </div>;
 }
 
 const refindData = ({ group, meta, price }) => {

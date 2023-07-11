@@ -4,14 +4,13 @@ import GroupInduty from '#/subIndex/GroupInduty'
 import json from '@/module/json';
 import dir from '@/module/dir';
 import { getSession } from 'next-auth/react';
+import MajorShare from '#/subIndex/MajorShare';
 
 /**
  * 2023.07.04 데이터 380kb, treemap을 만드는 시간이 오래걸리므로 squrify된 데이터를 미리 저장할 것
  */
 const N = 252;
 export async function getServerSideProps(ctx) {
-    const session = await getSession(ctx);
-    const aside = json.read(dir.stock.light.aside);
     const predict = json.read(dir.stock.predAll);
     const tree = json.read(dir.stock.light.tree);
     const count = json.read(dir.stock.light.updown);
@@ -19,11 +18,7 @@ export async function getServerSideProps(ctx) {
     const market = json.read(dir.stock.light.market, { kospi: [], kosdaq: [] });
     market.kospi = market?.kospi?.slice(0, N);
     market.kosdaq = market?.kosdaq?.slice(0, N);
-    const props = {
-        session,
-        aside, tree,
-        predict, market, count
-    };
+    const props = { tree, predict, market, count };
     return { props };
 }
 
@@ -41,6 +36,7 @@ function Index(props) {
         <div>
             <Market {...props} />
             <GroupInduty {...props} />
+            <MajorShare {...props} />
         </div>
     );
 }

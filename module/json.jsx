@@ -12,6 +12,7 @@ defs[dir.stock.meta] = { data: {}, index: {} };
 defs[dir.stock.all] = {};
 defs[dir.stock.light.tree] = {};
 defs[dir.stock.light.updown] = { all: { k: 0, q: 0 }, up: { k: 0, q: 0 }, down: { k: 0, q: 0 } };
+defs[dir.stock.light.group] = { data: {}, index: {} };
 defs[dir.user.admin] = { index: {} };
 defs[dir.board.ideas] = {};
 

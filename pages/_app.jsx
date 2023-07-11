@@ -5,8 +5,8 @@ import Nav from "#/common/Nav";
 import Aside from "#/common/Aside";
 import Footer from "#/common/Footer";
 import { useState } from "react";
-import json from "@/module/json";
 import dir from "@/module/dir";
+import json from "@/module/json";
 
 export default function App({ Component, pageProps }) {
 	const [mobAside, setAsideShow] = useState(false);
@@ -25,8 +25,15 @@ export default function App({ Component, pageProps }) {
 	)
 }
 
+/**
+ * getInitialProps가 client와 server를 연결하는 함수라서 json.read에 오류가 뜸
+ * 일단 trycatch를 썼는데 수정 필요
+ */
 App.getInitialProps = async function (ctx) {
-	const aside = json.read(dir.stock.light.aside);
+	let aside = {};
+	try {
+		aside = json.read(dir.stock.light.aside);
+	} catch { };
 	const session = await getSession(ctx);
 	const pageProps = { aside, session }
 	return { pageProps }

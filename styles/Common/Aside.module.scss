@@ -16,9 +16,12 @@
     background: $bgMid;
     font-size: .9em;
 
-    >span {
-        display: block;
+    a {
         font-weight: bold;
+
+        img {
+            vertical-align: bottom;
+        }
     }
 
     th {

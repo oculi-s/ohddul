@@ -3,10 +3,11 @@ import TotalGroupTree from '#/chart/TotalGroupTreeMap';
 import TotalIndutyTree from '#/chart/TotalIndutyTreeMap';
 import ToggleTab from '#/base/ToggleTab';
 import { LastUpdate } from '#/base/base';
+import Link from 'next/link';
 
 export default function GroupInduty(props) {
     return <div className={`${styles.area} ${styles.groupArea}`}>
-        <h3>오늘의 시가총액</h3>
+        <h3><Link href={'/stock/sum'}>오늘의 시가총액 <span className='fa fa-chevron-right'></span></Link></h3>
         <ToggleTab
             names={['그룹', '업종']}
             datas={[

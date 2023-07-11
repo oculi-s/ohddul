@@ -20,7 +20,11 @@ const groupColors = {
     영풍: '#f4bd2c',
     CJ: '#ff9700',
     크래프톤: '#30303A',
-    HMM: '#c70125'
+    HMM: '#c70125',
+    다우키움: '#004ea2',
+    BGF: '#4DB756',
+    넷마블: '#5C3723',
+    아모레퍼시픽: '#015699'
 };
 
 export default groupColors;

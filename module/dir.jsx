@@ -1,14 +1,14 @@
 import encode from '@/module/alias';
 
 export const stock = {
-    update: encode('_/.update'),
+    all: encode('_/price.json'),
+    hist: encode('_/hist.json'),
     code: encode('_/code.json'),
     crno: encode('_/crno.json'),
     name: encode('_/name.json'),
     meta: encode('_/meta.json'),
     date: encode('_/date.json'),
     group: encode('_/group.json'),
-    all: encode('_/price.json'),
     market: encode('_/market.json'),
     induty: encode('_/index.json'),
     predAll: encode('_/predict.json'),
@@ -24,6 +24,7 @@ export const stock = {
         count: encode('_/light/count.json'),
         tree: encode('_/light/tree.json'),
         updown: encode('_/light/updown.json'),
+        group: encode('_/light/group.json'),
     },
     dart: {
         induty: encode('_/induty.json'),
@@ -33,7 +34,7 @@ export const stock = {
 }
 
 export const user = {
-    admin: encode('@/data/user/meta.json'),
+    admin: encode('@/data/user/ids.json'),
     meta: uid => encode(`@/data/user/${uid}/meta.json`),
     favs: uid => encode(`@/data/user/${uid}/favs.json`),
     pred: uid => encode(`@/data/user/${uid}/pred.json`),

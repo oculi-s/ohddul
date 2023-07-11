@@ -24,15 +24,16 @@ function stockElement(index, {
             width: `${x1 - x0}%`,
             height: `${y1 - y0}%`,
             backgroundColor: H2R(colors[g], .8),
-            fontSize: `${Math.pow(v, .3) * 5}px`
         }}
     >
-        {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
-            {n ?
-                <Link href={`/stock/${n}`}>{n}</Link> :
-                <Link href={`/induty/${c}`}>{gn}</Link>}
-            <p className={styles.percent}>({parseFix(v / 10, 1)}%)</p>
-        </div>}
+        <div className={styles.inner}>
+            {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
+                {n ?
+                    <Link href={`/stock/${n}`}>{n}</Link> :
+                    <Link href={`/induty/${c}`}>{gn}</Link>}
+                <p className={styles.percent}>({parseFix(v / 10, 1)}%)</p>
+            </div>}
+        </div>
     </div>;
 }
 

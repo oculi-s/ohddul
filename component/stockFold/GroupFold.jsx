@@ -2,7 +2,7 @@ import Link from 'next/link';
 import GroupImg from '@/public/group/Default';
 import { Num, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
-import FavStar from '#/base/FavStar';
+import FavStar from '#/baseStock/FavStar';
 import styles from '$/Base/Fold.module.scss'
 import '@/module/array';
 import { useState } from 'react';

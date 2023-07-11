@@ -1,0 +1,45 @@
+@import '../variables.module.scss';
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+
+    a {
+        color: $textBright;
+    }
+
+    >* {
+        text-align: center;
+    }
+
+    .prev {
+        margin-right: auto;
+        width: 20%;
+    }
+
+    .pages {
+        margin-left: auto;
+        margin-right: auto;
+        width: 60%;
+
+        .page {
+            margin: 0 5px;
+            display: inline-block;
+
+            a {
+                color: $textColor;
+                text-decoration: none;
+            }
+
+            &.active a {
+                color: $textBright;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .next {
+        margin-left: auto;
+        width: 20%;
+    }
+}

@@ -13,7 +13,7 @@ import { maxPoint, minPoint } from "@/module/chart/annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
 import merge from 'deepmerge';
 import { hairline } from "@/module/chart/plugins";
-import { parseFix } from "@/module/ba";
+import { Int, parseFix } from "@/module/ba";
 import '@/module/array'
 Chart.register(Annotation);
 
@@ -24,20 +24,6 @@ Chart.register(Annotation);
  */
 const defaultOptions = {
     plugins: {
-        tooltip: {
-            callbacks: {
-                // title: function (tooltipItem, data) {
-                //     return dt.toString(tooltipItem[0]?.label);
-                // },
-                // label: function (tooltipItem, data) {
-                //     return data;
-                // },
-                // afterLabel: function (tooltipItem, data) {
-                //     let percent = 1;
-                //     return '(' + percent + '%)';
-                // }
-            },
-        },
         legend: {},
         annotation: {
             drawTime: 'afterDatasetsDraw',
@@ -62,7 +48,7 @@ const plugins = [hairline, Annotation];
  * 이유는 start부터 end-1까지 데이터를 구하기 때문
  */
 async function getData({
-    price, amount, isEarn, isBollinger, num, isMinMax, percentMa
+    price, isEarn, num, isMinMax, percentMa
 }) {
     price = price?.sort(dt.lsort);
     const dates = price?.map(e => e.d);
@@ -83,12 +69,14 @@ async function getData({
         props = { ...props, priceMa };
     }
 
+    priceRaw.forEach((e, i) => {
+        if (!e) priceRaw[i] = priceRaw[i - 1]
+    })
     if (isMinMax) {
         var mini = 0, maxi = 0, min = 2e9, max = -1;
         priceRaw?.forEach((e, i) => {
             if (e && e < min) mini = i, min = e;
             if (e && e > max) maxi = i, max = e;
-            if (!e) priceRaw[i] = priceRaw[i - 1]
         })
         ymin = min, ymax = max;
         props = { ...props, mini, maxi, min, max };
@@ -109,6 +97,7 @@ async function getData({
         });
         props = { ...props, stockEps, stockBps };
     }
+    console.log(ymin, ymax);
     return { ...props, ymin, ymax };
 }
 
@@ -209,7 +198,10 @@ async function refineData({
                 }
             }
             options.scales = {
-                y: { min: ymin * 0.9, max: ymax * 1.1 }
+                y: {
+                    min: ymin > 0 ? ymin * 0.8 : ymin * 1.2,
+                    max: ymax * 1.1
+                }
             };
         }
         if (percentMa) {
@@ -242,7 +234,7 @@ async function refineData({
                 },
                 tooltip: {
                     callbacks: {
-                        label: function (ctx, data) {
+                        label: function (ctx) {
                             return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
                         },
                     }
@@ -308,7 +300,7 @@ function ButtonGroup({
                 />}
             </div>
             <button
-                onClick={e => setView(e => !e)}
+                onClick={() => setView(e => !e)}
                 className={`fa fa-chevron-down ${styles.toggleBtn} ${view ? styles.view : ''}`}
             />
         </div>

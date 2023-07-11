@@ -14,15 +14,23 @@ export function findUid(uid) {
     else return false;
 }
 
-export async function findId(id) {
-    const ids = json.read(dir.admin);
+export function findId(id) {
+    const ids = json.read(dir.admin).index;
     const res = Object.keys(ids)
         ?.map(uid => json.read(dir.meta(uid)))
         ?.find(e => e.id == id);
     return res || false;
 }
 
-export async function change({ id, uid, email }) {
+export function meta() {
+    const ids = json.read(dir.admin).index;
+    const res = Object.keys(ids)
+        ?.map(uid => [ids[uid], json.read(dir.meta(uid))])
+        ?.map(([id, meta]) => ([id, meta.rank]));
+    return res || [];
+}
+
+export function change({ id, uid, email }) {
     if (id) {
         const ids = json.read(dir.admin);
         const oid = ids.index[uid];
@@ -39,7 +47,7 @@ export async function change({ id, uid, email }) {
 }
 
 const firstAlarm = [{
-    title: "오떨에 오신것을 환영합니다.",
+    title: "오르고, 떨어지고, 오떨에 오신것을 환영합니다.",
     data: renderToStaticMarkup(
         <>
             <p>회원가입을 축하드립니다.</p>

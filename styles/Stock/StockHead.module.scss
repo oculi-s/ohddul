@@ -190,6 +190,13 @@
         * {
             color: $textBright
         }
+
+        >span {
+            font-size: .8em;
+            margin-top: auto;
+            margin-bottom: auto;
+            display: inline-block;
+        }
     }
 }
 

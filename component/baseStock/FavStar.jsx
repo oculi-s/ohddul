@@ -20,7 +20,7 @@ export default function FavStar({ code }) {
     return (
         <span
             className={`${favs ? 'yellow' : ''}`}
-            style={{ paddingRight: '5px', fontSize: '1.2em', cursor: 'pointer' }}
+            style={{ paddingRight: '5px', cursor: 'pointer' }}
         >
             <span
                 className={`fa fa-star${favs ? '' : '-o'}`}
