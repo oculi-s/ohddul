@@ -61,7 +61,7 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
             <td>
                 {hist[e]?.i >= 0 ?
                     <>
-                        {hist[e]?.i + 1}&nbsp;
+                        {hist[e]?.i + 1}<span>&nbsp;</span>
                         {d ? <span className={Color(d)}>
                             (<span className={`fa fa-caret-${d > 0 ? 'up' : 'down'}`} />{Math.abs(d)})
                         </span> : '(-)'}
