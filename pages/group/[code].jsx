@@ -24,11 +24,11 @@ import json from '@/module/json';
  */
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
-    const group = json.read(dir.stock.group).data[code] || {};
+    const group = json.read(dir.stock.light.group).data[code] || {};
 
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
-            ?.filter(([k, v]) => group?.child?.includes(k)))
+            ?.filter(([k, v]) => group?.ch?.includes(k)))
     }
     const predict = json.read(dir.stock.predAll);
     const userMeta = json.read(dir.user.meta);
@@ -41,18 +41,18 @@ export async function getServerSideProps(ctx) {
     const meta = Filter(Meta);
     const price = Filter(Price);
     induty.data = Filter(induty.data);
-    const earn = group?.child?.map(code => {
+    const earn = group?.ch?.map(code => {
         const data = json.read(dir.stock.earn(code)).data.filter(e => e.data);
         const equity = data.map(e => e?.equity).sum();
         const revenue = data.map(e => e?.revenue).sum();
         const profit = data.map(e => e?.profit).sum();
         return { code, equity, revenue, profit };
     }) || []
-    const share = group?.child?.map(e =>
+    const share = group?.ch?.map(e =>
         [e, json.read(dir.stock.share(e)).data]
     ) || []
 
-    const title = group?.name ? `${group?.name}그룹 : 오떨` : null;
+    const title = group?.n ? `${group?.n}그룹 : 오떨` : null;
     let props = {
         title, code,
         group, index, induty,
@@ -66,31 +66,29 @@ export async function getServerSideProps(ctx) {
 function MetaTable({
     group, meta, price, code, earn
 }) {
-    group.light = true;
     meta.light = true;
     if (!group) return;
-    const groupAsset = group?.asset;
 
     const groupEarn = {
         equity: earn?.map(e => e?.equity)?.sum(),
         revenue: earn?.map(e => e?.revenue)?.sum(),
         profit: earn?.map(e => e?.profit)?.sum()
     };
-    const priceTotal = group?.price;
-    const groupPrice = group?.child
+    const priceTotal = group?.p;
+    const groupPrice = group?.ch
         ?.map(e => ({ code: e, c: meta[e]?.a * price[e]?.c }))
         ?.sort((b, a) => a.c - b.c);
-    const groupClose = groupPrice?.map(e => e?.c).sum() / group?.child?.map(e => meta[e]?.a).sum();
+    const groupClose = groupPrice?.map(e => e?.c).sum() / group?.ch?.map(e => meta[e]?.a).sum();
     const first = groupPrice?.find(e => true);
 
-    const amount = group?.child?.map(e => meta[e]?.a)?.sum();
+    const amount = group?.ch?.map(e => meta[e]?.a)?.sum();
     const BPS = groupEarn.equity / amount;
     return <div className={styles.meta}>
         <table><tbody>
             <tr><th>시가총액</th><td>{Price(priceTotal)}</td></tr>
             <tr><th>수정주가<Help {...priceHelp} /></th><td>{Num(groupClose)}</td></tr>
             <tr><th>BPS<Help {...bpsHelp} /></th><td>{Num(BPS)}</td></tr>
-            <tr><th>종목 수</th><td>{group?.child?.length}</td></tr>
+            <tr><th>종목 수</th><td>{group?.ch?.length}</td></tr>
             <tr>
                 <th>대표주</th>
                 <td>
@@ -106,7 +104,7 @@ function MetaTable({
 function Group(props) {
     const router = useRouter();
     if (!props.group) return;
-    const { code } = router.query;
+    const code = router.query?.code;
     props = { ...props, router, code };
     const names = ['요약정보', '실적정보', '출자정보'];
     const datas = [

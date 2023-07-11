@@ -17,9 +17,9 @@ function GroupFold({
 }) {
     meta = meta?.data || meta;
     if (!group) return;
-    const gname = group?.name;
+    const gname = group?.n;
     if (!gname) return;
-    const priceDict = Object.fromEntries(group?.child.map(e => [e, meta[e]?.a * price[e]?.c]));
+    const priceDict = Object.fromEntries(group?.ch.map(e => [e, meta[e]?.a * price[e]?.c]));
     const priceSum = Object.values(priceDict).sum();
     const name = <>
         <Link href={`/group/${gname}`}>
@@ -38,7 +38,7 @@ function GroupFold({
     </>;
 
     const [view, setView] = useState(false);
-    const body = group?.child
+    const body = group?.ch
         .filter(code => meta[code])
         .sort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
         .map((code) => {

@@ -9,13 +9,13 @@ import '@/module/array';
 import { useEffect, useState } from 'react';
 
 function stockElement({
-    meta, code, first, name, total, value,
+    meta, code, first, n, total, value,
     x0, y0, x1, y1
 }) {
     const k = value / first;
     const inner = value / total * 100 > 0.05;
     const br = Math.pow(k, .05);
-    const color = H2R(groupColors[name] || colors[0], br);
+    const color = H2R(groupColors[n] || colors[0], br);
     const style = {
         left: `${x0}%`,
         top: `${y0}%`,
@@ -25,7 +25,7 @@ function stockElement({
     };
     return <div
         key={code}
-        className={`${styles.stock} ${styles[name]}`}
+        className={`${styles.stock} ${styles[n]}`}
         style={style}
     >
         <div className={styles.inner}>
@@ -38,12 +38,12 @@ function stockElement({
 }
 
 const refindData = ({ group, meta, price }) => {
-    const { name, child } = group;
-    let children = child
+    const { n, ch } = group;
+    let children = ch
         ?.filter(e => meta[e]?.a && price[e]?.c)
         ?.sort((b, a) => meta[a].a * price[a].c - meta[b].a * price[b].c);
     children = children?.map(code => ({
-        code, name,
+        code, n,
         first: meta[children[0]].a * price[children[0]].c,
         value: meta[code].a * price[code].c
     }));
@@ -51,13 +51,13 @@ const refindData = ({ group, meta, price }) => {
 }
 
 const GroupTreeMap = ({ group, meta, price }) => {
-    if (!group?.price) return;
+    if (!group?.p) return;
     meta = meta?.data || meta;
     const [data, setData] = useState([]);
     useEffect(() => {
         setData(refindData({ group, meta, price }));
     }, [])
-    const total = group.price;
+    const total = group.p;
     const box = { x0: 0, y0: 0, x1: 100, y1: 100 };
     const props = { group, meta, price, total };
     return (

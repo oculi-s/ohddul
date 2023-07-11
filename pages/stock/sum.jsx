@@ -5,12 +5,11 @@
 import styles from '$/Stock/Sum.module.scss'
 import Pagination from "#/base/Pagination";
 import FavStar from "#/baseStock/FavStar";
-import { Color, Num, Price } from "@/module/ba";
+import { Color, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
-import Help from '#/base/Help';
 
 export async function getServerSideProps(ctx) {
     const Meta = json.read(dir.meta).data;
@@ -88,9 +87,7 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
                 <th>#</th>
                 <th>종목명</th>
                 <th><span className='ph'>시총</span><span className='mh'>시가총액</span></th>
-                <th>1년전<Help span={<>
-                    <p>신규상장주는 -로 표시됩니다.</p>
-                </>} /></th>
+                <th>1년전</th>
                 <th>그룹</th>
             </tr>
         </thead>
@@ -99,7 +96,9 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
 
     return <>
         <h2>시가총액 순위</h2>
-        <p className='des'>* : 코스닥 종목</p>
-        <Pagination {...{ p, N, T, data }} />
+        <div className={styles.wrap}>
+            <p className='des'>* : 코스닥 종목</p>
+            <Pagination {...{ p, N, T, data }} />
+        </div>
     </>
 }
