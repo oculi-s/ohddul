@@ -8,10 +8,16 @@
     width: 100%;
 
     >p {
-        margin-top: 10px;
+        margin-top: 5px;
+    }
+
+    p>a {
+        color: $textBright;
     }
 
     h3 {
+        margin: 5px 0;
+
         * {
             color: $textBright;
         }
@@ -89,6 +95,12 @@
     background: $bgBright;
 }
 
+.major {
+    td {
+        text-align: center;
+    }
+}
+
 @include mobile {
     .area {
         padding: 10px;
@@ -101,7 +113,7 @@
         }
 
         >p {
-            margin-top: 5px;
+            margin-top: 3px;
         }
     }
 

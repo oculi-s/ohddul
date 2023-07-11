@@ -75,7 +75,7 @@ function StockList({ aside, setAsideShow }) {
             <Link href="/stock/sum">
                 <Logo size={18} />
                 <span className={styles.sum}>시가총액 순위</span>
-                &nbsp;<span className='fa fa-chevron-right'></span>
+                &nbsp;<span className='fa fa-caret-right'></span>
             </Link>
             <AsideTable data={aside?.sum} setAsideShow={setAsideShow} />
         </div>
@@ -83,21 +83,21 @@ function StockList({ aside, setAsideShow }) {
             <Link href="/stock/group">
                 <Logo size={18} />
                 <span className={styles.sum}>그룹 순위</span>
-                &nbsp;<span className='fa fa-chevron-right'></span>
+                &nbsp;<span className='fa fa-caret-right'></span>
             </Link>
             <AsideTable data={aside?.group} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
             <Link href="/stock/up">
                 <span className={styles.up}>오른종목</span>
-                &nbsp;<span className='fa fa-chevron-right'></span>
+                &nbsp;<span className='fa fa-caret-right'></span>
             </Link>
             <AsideTable data={aside?.up} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
             <Link href="/stock/down">
                 <span className={styles.down}>떨어진종목</span>
-                &nbsp;<span className='fa fa-chevron-right'></span>
+                &nbsp;<span className='fa fa-caret-right'></span>
             </Link>
             <AsideTable data={aside?.down} setAsideShow={setAsideShow} />
         </div>

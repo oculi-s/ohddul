@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Int, H2R, parseFix } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
-// import Image from 'next/image';
 import GroupImg from '@/public/group/Default';
 import Icon from '@/public/icon';
 
@@ -20,7 +19,7 @@ function stockElement(index, {
     const br = Math.pow(v, .05);
     const color = c ?
         H2R(groupColors[gn] || colors[0], br) :
-        H2R(groupColors[gn], .8);
+        H2R(groupColors[gn], .5);
 
     return <div
         key={i}

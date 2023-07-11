@@ -8,7 +8,7 @@
         max-width: 100px;
     }
 
-    th:first-child {
+    .num {
         font-size: .9em;
     }
 
@@ -18,6 +18,8 @@
     }
 
     .groupTh {
+        text-align: center;
+
         a>* {
             display: inline-block;
         }

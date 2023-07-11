@@ -19,7 +19,7 @@ export async function getServerSideProps(ctx) {
     const group = json.read(dir.group);
 
     const p = parseInt(ctx?.query?.p || 1);
-    const N = 20;
+    const N = parseInt(ctx?.query?.N || 15);
     const T = Object.keys(Meta)?.length || 0;
     const keys = Object.keys(Meta)
         ?.filter(e => Meta[e]?.a && Price[e]?.c)
@@ -51,14 +51,14 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
         const gname = group?.index[e];
         const d = hist[e]?.i - (i + (p - 1) * N);
         return <tr key={i}>
-            <th align='center'>{(p - 1) * N + i + 1}</th>
+            <th align='center' className={styles.num}>{(p - 1) * N + i + 1}</th>
             <th className={styles.stockTh}>
                 <FavStar code={e} />
                 <Link href={`/stock/${meta[e]?.n}`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
 
             </th>
             <td>{Price(meta[e]?.a * price[e]?.c)}</td>
-            <td>
+            <td className={styles.num}>
                 {hist[e]?.i >= 0 ?
                     <>
                         {hist[e]?.i + 1}<span>&nbsp;</span>
@@ -67,7 +67,6 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
                         </span> : '(-)'}
                     </>
                     : '-'}
-
             </td>
             <td>
                 <Link href={`/group/${gname}`}>
@@ -89,8 +88,8 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
                 <th>#</th>
                 <th>종목명</th>
                 <th><span className='ph'>시총</span><span className='mh'>시가총액</span></th>
-                <th>변화<Help span={<>
-                    <p>1년전과 변화를 비교하며, 신규상장주는 -로 표시됩니다.</p>
+                <th>1년전<Help span={<>
+                    <p>신규상장주는 -로 표시됩니다.</p>
                 </>} /></th>
                 <th>그룹</th>
             </tr>

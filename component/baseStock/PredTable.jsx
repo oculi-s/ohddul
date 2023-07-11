@@ -11,11 +11,11 @@ import { useEffect, useRef, useState } from 'react';
  * intv[i]를 이용하면 된다.
  */
 export function QueueTable({ queue, meta, by = 'stock', ids }) {
-    var cnt = 0;
     const ref = useRef([]);
     const [intv, setIntv] = useState([]);
     useEffect(() => {
         queue?.forEach((q, i) => {
+            var cnt = 0;
             const { at, d } = q;
             const e = ref?.current[i];
             if (!e) return;

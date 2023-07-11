@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 export function FavTable({ meta, price, mine, favs }) {
     const { data: session, status } = useSession();
     const queue = session?.user?.queue;
-    console.log(queue);
+    queue?.sort(dt.sort);
     const head = <tr>
         <th>종목</th>
         <th>가격</th>
@@ -41,7 +41,9 @@ export function FavTable({ meta, price, mine, favs }) {
                 <tr className={`${styles.predBar} ${view ? styles.view : ''}`}>
                     <th colSpan={4}>
                         <PredBar {...{
-                            code, last: price[code], name, help: false, view, setView
+                            code, last: price[code],
+                            name, help: false,
+                            view, setView
                         }} />
                     </th>
                 </tr>}

@@ -3,15 +3,13 @@
  */
 
 import styles from '$/Stock/Sum.module.scss'
-import { Color, Num, Price } from "@/module/ba";
+import { Color, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
-import Help from '#/base/Help';
 
 export async function getServerSideProps(ctx) {
-    const Hist = json.read(dir.hist);
     const Group = json.read(dir.light.group).data;
     const group = Object.values(Group)
         ?.filter(e => e?.ch?.length)
@@ -27,17 +25,20 @@ export default function Group({ group }) {
         const j = hisSort?.findIndex(e => e.h == h);
         const d = j - i;
         return <tr key={i}>
-            <th align='center'>{i + 1}</th>
+            <th align='center' className={styles.num}>{i + 1}</th>
             <th className={styles.groupTh}>
                 <Link href={`/group/${n}`}>
                     <GroupImg name={n} />
-                    <span className={styles.gname}>&nbsp;({n})</span>
+                    <span className={`${styles.gname} mh`}>&nbsp;({n})</span>
                 </Link>
             </th>
             <td>{Price(p)}</td>
-            <td>{j + 1} {d ? <span className={Color(d)}>
-                (<span className={`fa fa-caret-${d > 0 ? 'up' : 'down'}`} />{Math.abs(d)})
-            </span> : '(-)'}</td>
+            <td className={styles.num}>
+                {j + 1}<span>&nbsp;</span>
+                {d ? <span className={Color(d)}>
+                    (<span className={`fa fa-caret-${d > 0 ? 'up' : 'down'}`} />{Math.abs(d)})
+                </span> : '(-)'}
+            </td>
             <td>{ch?.length}개</td>
         </tr>
     })
@@ -53,10 +54,10 @@ export default function Group({ group }) {
             <tr>
                 <th>#</th>
                 <th>이름</th>
-                <th><span className='ph'>시총</span><span className='mh'>시가총액</span></th>
-                <th>변화<Help span={<>
-                    <p>1년전과 변화를 비교합니다.</p>
-                </>} /></th>
+                <th>
+                    <span className='ph'>시총</span><span className='mh'>시가총액</span>
+                </th>
+                <th>1년전</th>
                 <th>자회사</th>
             </tr>
         </thead>

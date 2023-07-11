@@ -1,24 +1,25 @@
 import Market from '#/subIndex/MarketInfo';
 import GroupInduty from '#/subIndex/GroupInduty'
+import MajorShare from '#/subIndex/MajorShare';
 
 import json from '@/module/json';
 import dir from '@/module/dir';
-import { getSession } from 'next-auth/react';
-import MajorShare from '#/subIndex/MajorShare';
+import '@/module/array';
 
-/**
- * 2023.07.04 데이터 380kb, treemap을 만드는 시간이 오래걸리므로 squrify된 데이터를 미리 저장할 것
- */
 const N = 252;
+const names = ['국민연금', 'JP모건'];
 export async function getServerSideProps(ctx) {
     const predict = json.read(dir.stock.predAll);
     const tree = json.read(dir.stock.light.tree);
     const count = json.read(dir.stock.light.updown);
 
+    const major = Object.fromEntries(names?.map(e =>
+        [e, json.read(dir.stock.major(e), { data: [] }).data?.slice(0, 10)]
+    ));
     const market = json.read(dir.stock.light.market, { kospi: [], kosdaq: [] });
     market.kospi = market?.kospi?.slice(0, N);
     market.kosdaq = market?.kosdaq?.slice(0, N);
-    const props = { tree, predict, market, count };
+    const props = { tree, predict, market, count, major };
     return { props };
 }
 

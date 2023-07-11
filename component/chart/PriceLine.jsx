@@ -97,7 +97,6 @@ async function getData({
         });
         props = { ...props, stockEps, stockBps };
     }
-    console.log(ymin, ymax);
     return { ...props, ymin, ymax };
 }
 

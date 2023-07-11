@@ -2,7 +2,7 @@ import styles from '$/Base/Pagination.module.scss';
 import Link from 'next/link';
 
 export default function Pagination({ data, p, N, T }) {
-    const M = parseInt((T + N) / N);
+    const M = parseInt(T / N);
 
     const pages = Array.from(Array(5).keys())
         ?.map(e => e + p - 2)
@@ -27,8 +27,11 @@ export default function Pagination({ data, p, N, T }) {
         </div>
         <div className={styles.footer}>
             <span className={styles.prev}>
+                <Link href={{ query: { p: 1 } }}>
+                    <span className='fa fa-angle-double-left'></span> 처음
+                </Link>
                 {p > 1 ? <Link href={{ query: { p: p - 1 } }}>
-                    <span className='fa fa-chevron-left'></span> 이전
+                    <span className='fa fa-angle-left'></span> 이전
                 </Link> : ''}
             </span>
             <div className={styles.pages}>
@@ -36,8 +39,11 @@ export default function Pagination({ data, p, N, T }) {
             </div>
             <span className={styles.next}>
                 {p < M ? <Link href={{ query: { p: p + 1 } }}>
-                    다음 <span className='fa fa-chevron-right'></span>
+                    다음 <span className='fa fa-angle-right'></span>
                 </Link> : ''}
+                <Link href={{ query: { p: M } }}>
+                    끝 <span className='fa fa-angle-double-right'></span>
+                </Link>
             </span>
 
         </div>

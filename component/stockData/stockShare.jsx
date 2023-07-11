@@ -6,19 +6,19 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export const NameDict = {
-    "J.P.MORGANSECURITIESPLC": "J.P.모건",
-    "TheCapitalGroupCompanies,Inc.": "Capital그룹",
-    "현대자동차": "현대차",
+    "J.P.MORGANSECURITIESPLC": "JP모건",
+    "JPMorganAssetManagement(AsiaPacific)Limited": "JP모건",
     "국민연금공단": "국민연금",
+    "TheCapitalGroupCompanies,Inc.": "Capital그룹",
     "BlackRockFundAdvisors": "BlackRock",
-    "MacquarieInvestmentManagementBusinessTrust": "Macquarie 자산운용",
+    "MacquarieInvestmentManagementBusinessTrust": "Macquarie",
     "CreditSuisseGroupAG": "CreditSuiss",
     "MORGANSTANLEY&COINTLPLC": "MorganStanley",
     "국민은행": "KB금융",
-    "JPMorganAssetManagement(AsiaPacific)Limited": "J.P.모건",
     "미래에셋자산운용": "미래에셋증권",
     "한국투자증권": "한국금융지주",
-    "KB자산운용": "KB금융"
+    "KB자산운용": "KB금융",
+    "현대자동차": "현대차",
 }
 
 const ShareTable = ({ meta, stockShare, stockMeta }) => {
