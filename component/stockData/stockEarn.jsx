@@ -7,9 +7,8 @@ import Help from '#/base/Help';
 import '@/module/array';
 import { profitHelp, revenueHelp } from './HelpDescription';
 
-function EarnTable({ stockMeta, stockEarn }) {
-    stockEarn = stockEarn?.data;
-    if (!stockEarn.length) return;
+function EarnTable({ stockMeta, earn }) {
+    if (!earn.length) return;
 
     const amount = stockMeta?.a;
     const [N, setN] = useState(5);
@@ -19,8 +18,8 @@ function EarnTable({ stockMeta, stockEarn }) {
         setView(true);
     }, [stockMeta])
 
-    const len = stockEarn.length;
-    stockEarn = stockEarn.sort(dt.sort);
+    const len = earn.length;
+    earn = earn.sort(dt.sort);
     const head = <tr>
         <th>분기</th>
         <th>자본</th>
@@ -31,13 +30,13 @@ function EarnTable({ stockMeta, stockEarn }) {
     </tr>;
     const avgQuar = Array(5).map(() => false);
     const avgYear = {};
-    stockEarn.forEach(({ date, profit, equity }) => {
+    earn.forEach(({ date, profit, equity }) => {
         const year = date.slice(0, 4);
         if (!avgYear[year]) avgYear[year] = { profit: 0, equity, cnt: 0 };
         avgYear[year].profit += profit;
         avgYear[year].cnt++;
     });
-    const data = stockEarn.map((e, i) => {
+    const data = earn.map((e, i) => {
         const { date, equity, revenue, profit } = e;
         const { Y, Q } = Quar(date);
         if (!avgQuar[Q]) avgQuar[Q] = { Q, equity: 0, revenue: 0, profit: 0, cnt: 0 };

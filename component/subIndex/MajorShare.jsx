@@ -1,10 +1,10 @@
 import ToggleTab from '#/base/ToggleTab';
-import { NameDict } from '#/stockData/stockShare';
 import styles from '$/Index.module.scss';
 import { Div } from '@/module/ba';
 import Link from 'next/link';
 import '@/module/array';
 import FavStar from '#/baseStock/FavStar';
+import NameDict from '#/stockData/NameDict';
 
 /**
  * 미리 데이터 저장해서 만들어놔야함
@@ -12,7 +12,6 @@ import FavStar from '#/baseStock/FavStar';
 export default function MajorShare({ major }) {
     const names = Object.keys(major)?.map(e => NameDict[e] || e);
     const datas = Object.entries(major)?.map(([_, share], i) => {
-        const sum = Object.values(share).map(e => e?.a * e?.c).sum();
         share?.sort((b, a) => a?.a * b?.t - b?.a * a?.t);
         share?.sort((b, a) => a.p - b.p);
         return <div key={i}>

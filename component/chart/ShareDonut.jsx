@@ -5,8 +5,8 @@ import { Div, parseFix } from '@/module/ba';
 import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import scss from '$/variables.module.scss';
-import { NameDict } from '#/stockData/stockShare';
 import { useEffect, useState } from 'react';
+import NameDict from '#/stockData/NameDict';
 
 const options = {
     spanGaps: true,
@@ -54,24 +54,24 @@ const options = {
     },
 }
 
-const ShareDonut = ({ stockShare, stockMeta }) => {
-    stockShare = stockShare?.data;
+const ShareDonut = ({ share, stockMeta }) => {
     const [data, setData] = useState({ labels: [], datasets: [] });
-
     useEffect(() => {
-        if (stockShare?.length) {
+        if (share?.length) {
             console.log('share 차트 렌더링중');
             const amount = stockMeta?.a;
-            let res = amount - stockShare.map(e => e.amount).sum();
+            const shareData = share
+                ?.map(e => parseFix(e.amount / amount * 100, 1));
+            const labels = share.map(e => e.name);
+            const len = shareData.length;
+            let backgroundColor = colors.slice(0, len);
+            let res = amount - share.map(e => e.amount).sum();
             res = Math.max(0, res);
-            const shareData = stockShare.map(e => parseFix(e.amount / amount * 100, 1));
-            const labels = stockShare.map(e => e.name);
             if (res > 1) {
                 shareData.push(parseFix(res / amount * 100, 1));
                 labels.push('데이터없음');
+                backgroundColor = [...colors.slice(0, len), scss.bgDark];
             }
-            const len = shareData.length;
-            const backgroundColor = [...colors.slice(0, len - 1), scss.bgDark];
             const data = {
                 labels,
                 datasets: [{
@@ -82,11 +82,11 @@ const ShareDonut = ({ stockShare, stockMeta }) => {
             };
             setData(data);
         }
-    }, [stockShare]);
+    }, [share]);
 
     return (
         <div className={styles.wrap}>
-            {stockShare?.length ? <Doughnut
+            {share?.length ? <Doughnut
                 data={data}
                 options={options}
                 plugins={[ChartDataLabels]}

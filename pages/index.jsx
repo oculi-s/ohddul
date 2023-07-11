@@ -7,13 +7,19 @@ import dir from '@/module/dir';
 import '@/module/array';
 
 const N = 252;
-const names = ['국민연금', 'JP모건'];
+const list = [
+    '국민연금', '산업은행',
+    'KB금융', '신한지주', 'NH투자증권',
+    '미래에셋증권', '삼성증권', 'VIP자산운용', '한국금융지주', '메리츠금융지주',
+    'OK저축은행',
+    'JP Morgan', 'BlackRock', 'CreditSuiss', 'MorganStanley', 'Fidelity', 'Capital'
+]
 export async function getServerSideProps(ctx) {
     const predict = json.read(dir.stock.predAll);
     const tree = json.read(dir.stock.light.tree);
     const count = json.read(dir.stock.light.updown);
 
-    const major = Object.fromEntries(names?.map(e =>
+    const major = Object.fromEntries(list?.map(e =>
         [e, json.read(dir.stock.major(e), { data: [] }).data?.slice(0, 10)]
     ));
     const market = json.read(dir.stock.light.market, { kospi: [], kosdaq: [] });

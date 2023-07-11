@@ -25,20 +25,19 @@ import { filterIndex } from '@/module/filter/filter';
  * * meta.index : 149 --> 87 (-62kb)
  */
 export async function getServerSideProps(ctx) {
-	const meta = json.read(dir.stock.meta);
+	const Meta = json.read(dir.stock.meta);
 	let code = ctx.query?.code;
-	if (!parseInt(code)) code = meta.index[code];
+	if (!parseInt(code)) code = Meta.index[code];
 	let props = { code }
 
 	// stockPage
-	if (code) {
-		const stockMeta = meta?.data[code];
-		const stockPrice = json.read(dir.stock.light.price(code));
-		const stockEarn = json.read(dir.stock.light.earn(code));
-		const stockShare = json.read(dir.stock.share(code));
-		const stockPred = json.read(dir.stock.pred(code));
-		props = { ...props, stockMeta, stockPrice, stockEarn, stockShare, stockPred };
-	}
+	const stockMeta = Meta?.data[code];
+	const stockPrice = json.read(dir.stock.light.price(code));
+	const earn = json.read(dir.stock.light.earn(code));
+	const share = json.read(dir.stock.share(code))
+	share.data = share.data?.filter(e => e.amount);
+	const stockPred = json.read(dir.stock.pred(code));
+	props = { ...props, stockMeta, stockPrice, earn, share, stockPred };
 
 	const Group = json.read(dir.stock.group);
 	const Index = json.read(dir.stock.induty).data;
@@ -55,6 +54,8 @@ export async function getServerSideProps(ctx) {
 				if (k == code) return 1;
 				if (Induty[k] == iname) return 1;
 				if (Group?.index[k] == gname) return 1;
+				if (share.data?.find(e => Meta.data[k]?.n == e.name))
+					return 1;
 				return 0;
 			}))
 	}
@@ -68,6 +69,7 @@ export async function getServerSideProps(ctx) {
 			}))
 	}
 
+	const meta = json.read(dir.stock.meta);
 	const induty = Filter(Induty);
 	meta.data = Filter(meta.data);
 	meta.index = FilterIndex(meta.index);
@@ -76,11 +78,11 @@ export async function getServerSideProps(ctx) {
 	const predict = json.read(dir.stock.predAll);
 	const ids = json.read(dir.user.admin);
 
-	const title = meta.data[code] ? `${meta.data[code]?.n} : 오떨` : null;
+	const title = Meta.data[code] ? `${Meta.data[code]?.n} : 오떨` : null;
 	props = {
 		...props,
 		title, ids,
-		price, meta, group, index, induty,
+		price, meta: Meta, group, index, induty,
 		predict,
 	};
 
