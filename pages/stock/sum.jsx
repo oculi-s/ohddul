@@ -90,7 +90,7 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
                 <th>종목명</th>
                 <th><span className='ph'>시총</span><span className='mh'>시가총액</span></th>
                 <th>변화<Help span={<>
-                    <p>1년전과 변화를 비교하며, 신규상장주는 "-"로 표시됩니다.</p>
+                    <p>1년전과 변화를 비교하며, 신규상장주는 -로 표시됩니다.</p>
                 </>} /></th>
                 <th>그룹</th>
             </tr>
