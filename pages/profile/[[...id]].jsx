@@ -16,7 +16,7 @@ import { useEffect } from "react";
  * asdf
  */
 export async function getServerSideProps(ctx) {
-    const admin = json.read(dir.user.admin);
+    const ids = json.read(dir.user.ids);
 
     const qid = ctx.query?.id?.find(e => true);
     const session = await getSession(ctx);
@@ -25,7 +25,7 @@ export async function getServerSideProps(ctx) {
     let uid = false, queue = [], favs = [];
     let id, rank, email;
     if (qid) {
-        uid = admin[qid];
+        uid = ids[qid];
         id = qid;
         const meta = json.read(dir.user.meta(uid), { rank, email });
         queue = json.read(dir.user.pred(uid), { queue: [] }).queue;

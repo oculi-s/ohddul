@@ -30,11 +30,12 @@ export default function App({ Component, pageProps }) {
  * 일단 trycatch를 썼는데 수정 필요
  */
 App.getInitialProps = async function (ctx) {
-	let aside = {};
+	let aside = {}, ban = [];
 	try {
 		aside = json.read(dir.stock.light.aside);
+		ban = json.read(dir.stock.ban);
 	} catch { };
 	const session = await getSession(ctx);
-	const pageProps = { aside, session }
+	const pageProps = { aside, session, ban }
 	return { pageProps }
 }

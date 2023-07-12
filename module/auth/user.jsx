@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import Link from "next/link";
 
 export function findUid(uid) {
-    const id = json.read(dir.admin).index[uid];
+    const id = json.read(dir.ids).index[uid];
     if (!id) return false;
     const user = json.read(dir.meta(uid), false);
     const queue = json.read(dir.pred(uid), { queue: [] }).queue;
@@ -15,7 +15,7 @@ export function findUid(uid) {
 }
 
 export function findId(id) {
-    const ids = json.read(dir.admin).index;
+    const ids = json.read(dir.ids).index;
     const res = Object.keys(ids)
         ?.map(uid => json.read(dir.meta(uid)))
         ?.find(e => e.id == id);
@@ -23,7 +23,7 @@ export function findId(id) {
 }
 
 export function meta() {
-    const ids = json.read(dir.admin).index;
+    const ids = json.read(dir.ids).index;
     const res = Object.keys(ids)
         ?.map(uid => [ids[uid], json.read(dir.meta(uid))])
         ?.map(([id, meta]) => ([id, meta.rank]));
@@ -32,12 +32,12 @@ export function meta() {
 
 export function change({ id, uid, email }) {
     if (id) {
-        const ids = json.read(dir.admin);
+        const ids = json.read(dir.ids);
         const oid = ids.index[uid];
         delete ids[oid];
         ids[id] = uid;
         ids.index[uid] = id;
-        json.write(dir.admin, ids, 0);
+        json.write(dir.ids, ids, 0);
     }
     if (email) {
         const meta = json.read(dir.meta(uid));
@@ -66,11 +66,11 @@ export function create(user) {
     const uid = user?.id;
     const name = user?.name;
     const email = user?.email;
-    const meta = json.read(dir.admin);
+    const meta = json.read(dir.ids);
     const data = { name, email, rank: 1000 };
     meta[uid] = uid;
     meta.index[uid] = uid;
-    json.write(dir.admin, meta, false);
+    json.write(dir.ids, meta, false);
     json.write(dir.meta(uid), data, false);
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);

@@ -95,7 +95,13 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
     </table>
 
     return <>
-        <h2>시가총액 순위</h2>
+        <div className={styles.title}>
+            <h2>시가총액 순위</h2>
+            <Link href={'/stock/group'}>
+                그룹순위 보러가기&nbsp;
+                <span className='fa fa-chevron-right'></span>
+            </Link>
+        </div>
         <div className={styles.wrap}>
             <p className='des'>* : 코스닥 종목</p>
             <Pagination {...{ p, N, T, data }} />

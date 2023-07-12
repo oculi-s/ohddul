@@ -72,7 +72,10 @@ function AsideTable({ data, setAsideShow }) {
 function StockList({ aside, setAsideShow }) {
     return <>
         <div className={styles.box}>
-            <Link href="/stock/sum">
+            <Link
+                href="/stock/sum"
+                onClick={e => setAsideShow(false)}
+            >
                 <Logo size={18} />
                 <span className={styles.sum}>시가총액 순위</span>
                 &nbsp;<span className='fa fa-caret-right'></span>
@@ -80,7 +83,10 @@ function StockList({ aside, setAsideShow }) {
             <AsideTable data={aside?.sum} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
-            <Link href="/stock/group">
+            <Link
+                href="/stock/group"
+                onClick={e => setAsideShow(false)}
+            >
                 <Logo size={18} />
                 <span className={styles.sum}>그룹 순위</span>
                 &nbsp;<span className='fa fa-caret-right'></span>
@@ -88,14 +94,20 @@ function StockList({ aside, setAsideShow }) {
             <AsideTable data={aside?.group} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
-            <Link href="/stock/up">
+            <Link
+                href="/stock/up"
+                onClick={e => setAsideShow(false)}
+            >
                 <span className={styles.up}>오른종목</span>
                 &nbsp;<span className='fa fa-caret-right'></span>
             </Link>
             <AsideTable data={aside?.up} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
-            <Link href="/stock/down">
+            <Link
+                href="/stock/down"
+                onClick={e => setAsideShow(false)}
+            >
                 <span className={styles.down}>떨어진종목</span>
                 &nbsp;<span className='fa fa-caret-right'></span>
             </Link>

@@ -11,6 +11,12 @@ Array.prototype.unique = function () {
     return this.filter((e, i) => this.indexOf(e) == i);
 }
 
+import { sort } from 'timsort';
+Array.prototype.qsort = function (cmp) {
+    sort(this, cmp);
+    return this;
+}
+
 Math.avg = (d) => {
     return Math.round(d?.sum() / d?.length);
 }

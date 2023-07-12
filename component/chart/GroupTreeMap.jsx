@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Div, H2R, Price } from '@/module/ba';
 import '@/module/array';
 import { useEffect, useState } from 'react';
+import '@/module/array';
 
 function stockElement({
     meta, code, first, n, total, value,
@@ -41,7 +42,7 @@ const refindData = ({ group, meta, price }) => {
     const { n, ch } = group;
     let children = ch
         ?.filter(e => meta[e]?.a && price[e]?.c)
-        ?.sort((b, a) => meta[a].a * price[a].c - meta[b].a * price[b].c);
+        ?.qsort((b, a) => meta[a].a * price[a].c - meta[b].a * price[b].c);
     children = children?.map(code => ({
         code, n,
         first: meta[children[0]].a * price[children[0]].c,

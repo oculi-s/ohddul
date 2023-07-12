@@ -61,7 +61,7 @@ const defaultOptions = {
 async function refineData({
     price, meta, addEarn, addBollinger, num,
 }) {
-    price = price?.sort(dt.lsort);
+    price = price?.qsort(dt.lsort);
     var maxIndex = 0, minIndex = 0;
     const dates = price?.map(e => e.d);
     const priceData = price?.map((e, i) => {

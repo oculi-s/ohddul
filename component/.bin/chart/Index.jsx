@@ -67,7 +67,7 @@ const plugins = [{
 }];
 
 async function getData({ price, amount, addEarn, addBollinger, num }) {
-    price = price?.sort(dt.lsort);
+    price = price?.qsort(dt.lsort);
     const dates = price?.map(e => e.d);
     const priceRaw = price?.map(e => e.c);
     const priceAvg = priceRaw?.map((e, i) => Math.avg(priceRaw?.slice(i - num, i)))
@@ -159,7 +159,7 @@ function PriceChart({
     const [num, setNum] = useState(N);
     const [data, setData] = useState({ labels: [], datasets: [] });
     prices = prices.map(price => {
-        price?.sort(dt.sort);
+        price?.qsort(dt.sort);
         return price?.slice(0, 5 * 252);
     })
     useEffect(() => {

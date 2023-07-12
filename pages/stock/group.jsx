@@ -65,7 +65,15 @@ export default function Group({ group }) {
     </table>
 
     return <>
-        <h2>그룹사 순위</h2>
-        {data}
+        <div className={styles.title}>
+            <h2>그룹 시가총액 순위</h2>
+            <Link href={'/stock/sum'}>
+                개별종목 보러가기&nbsp;
+                <span className='fa fa-chevron-right'></span>
+            </Link>
+        </div>
+        <div className={styles.wrap}>
+            {data}
+        </div>
     </>
 }

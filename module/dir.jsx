@@ -1,6 +1,7 @@
 import encode from '@/module/alias';
 
 export const stock = {
+    ban: encode('_/ban.json'),
     all: encode('_/price.json'),
     hist: encode('_/hist.json'),
     code: encode('_/code.json'),
@@ -35,7 +36,7 @@ export const stock = {
 }
 
 export const user = {
-    admin: encode('@/data/user/ids.json'),
+    ids: encode('@/data/user/ids.json'),
     meta: uid => encode(`@/data/user/${uid}/meta.json`),
     favs: uid => encode(`@/data/user/${uid}/favs.json`),
     pred: uid => encode(`@/data/user/${uid}/pred.json`),

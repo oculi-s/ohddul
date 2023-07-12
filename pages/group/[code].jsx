@@ -31,7 +31,6 @@ export async function getServerSideProps(ctx) {
             ?.filter(([k, v]) => group?.ch?.includes(k)))
     }
     const predict = json.read(dir.stock.predAll);
-    const userMeta = json.read(dir.user.meta);
 
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
@@ -56,7 +55,6 @@ export async function getServerSideProps(ctx) {
     let props = {
         title, code,
         group, index, induty,
-        userMeta,
         predict,
         meta, price, earn, share
     };

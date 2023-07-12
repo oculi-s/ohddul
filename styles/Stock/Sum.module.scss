@@ -6,6 +6,17 @@
     background: $bgMid;
 }
 
+.title {
+    display: flex;
+    align-items: baseline;
+
+    a {
+        margin-left: auto;
+        color: $textBright;
+        text-align: right;
+    }
+}
+
 .stockSum {
     white-space: nowrap;
 

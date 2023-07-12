@@ -54,7 +54,7 @@ const defaultOptions = {
 async function refineData({
     price, addBollinger, num,
 }) {
-    price = price?.sort(dt.lsort);
+    price = price?.qsort(dt.lsort);
     const dates = price?.map(e => e.d);
     const priceData = price?.map(e => e.c);
     const avgData = priceData?.map((e, i) =>

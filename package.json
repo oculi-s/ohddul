@@ -40,7 +40,8 @@
     "react-katex": "^3.0.1",
     "sass": "^1.62.0",
     "sharp": "^0.32.1",
-    "squarify": "^1.1.0"
+    "squarify": "^1.1.0",
+    "timsort": "^0.3.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",

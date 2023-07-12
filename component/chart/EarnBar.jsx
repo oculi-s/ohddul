@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import scss from '$/variables.module.scss';
 import { Int } from '@/module/ba';
 import merge from 'deepmerge';
+import '@/module/array';
 
 const defaultOptions = {
     plugins: {
@@ -31,7 +32,7 @@ const plugins = [hairline];
 
 function EarnChart({ earn, stockMeta }) {
     const amount = stockMeta?.a || 1;
-    earn = earn.sort((a, b) => new Date(a.date) - new Date(b.date));
+    earn = earn.qsort((a, b) => new Date(a.date) - new Date(b.date));
     const labels = earn.map(e => e.date);
     const profitData = earn.map(e => Math.round(e.profit / amount));
     const equityData = earn.map(e => Math.round(e.equity / amount));

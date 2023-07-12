@@ -43,11 +43,6 @@ function StockHead({
     const name = stockMeta?.n;
     const type = stockMeta?.t;
     const [view, setView] = useState(0);
-    const [opacity, setOpacity] = useState(1);
-
-    useEffect(() => {
-        setOpacity(1);
-    }, [code])
 
     useEffect(() => {
         console.log('predBar 렌더링중');
@@ -78,7 +73,7 @@ function StockHead({
         {status == 'authenticated' && bar &&
             <div className={`${styles.slide} ${view ? styles.view : ''}`}>
                 <div>
-                    <div style={{ opacity }} className={styles.fade}>
+                    <div className={styles.fade}>
                         <PredBar {...props} />
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import { board as dir } from "@/module/dir"
 import json from "@/module/json"
 import styles from '$/Board/Index.module.scss';
+import Link from "next/link";
 
 export async function getServerSideProps(ctx) {
     const board = json.read(dir.ideas);
@@ -9,7 +10,6 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Index({ session }) {
-    console.log(session?.user)
     return <>
         <h2>의견게시판</h2>
 
@@ -27,5 +27,7 @@ export default function Index({ session }) {
 
             </tbody>
         </table>
+
+        <Link href={'/editor'}>글쓰기</Link>
     </>
 }

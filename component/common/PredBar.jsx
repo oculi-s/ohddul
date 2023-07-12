@@ -217,7 +217,7 @@ export default function PredBar({
             }, 500);
         }
 
-        // const queue = session?.user?.queue?.sort(dt.sort);
+        // const queue = session?.user?.queue?.qsort(dt.sort);
         // const defTime = queue?.find(e => e.c == code)?.d;
         // const can = dt.pred(defTime);
         // document.onkeydown = e => {

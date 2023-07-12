@@ -85,14 +85,15 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, earn = [] }) => {
  * pred는 꼬이면 안되기 때문에 중복제출 방지를 위해 session에 저장하고 update를 사용한다.
  */
 function Index(props) {
-    const { meta, code, price, stockMeta, stockPrice, earn, share } = props;
+    const { meta, ban, code, price, stockMeta, stockPrice, earn, share } = props;
     const router = useRouter();
 
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
-    const last = price[code] || stockPrice?.data[0];
+    const last = stockPrice?.data[0] || price[code];
+    console.log(ban.map(e => meta[e]?.n))
     props = { ...props, last, router, share: share.data, earn: earn.data };
 
     const tabContents = {

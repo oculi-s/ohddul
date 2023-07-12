@@ -3,6 +3,7 @@ import 'chartjs-adapter-date-fns';
 import dt from "@/module/dt";
 import styles from '$/Chart/LIne.module.scss';
 import { Line } from "react-chartjs-2";
+import '@/module/array';
 
 const plugins = [{
     afterDraw: chart => {
@@ -39,7 +40,7 @@ const options = {
 
 function Index({ horLine, name, data, height }) {
     data = data || [];
-    data = data.sort(dt.lsort).slice(-252);
+    data = data.qsort(dt.lsort).slice(-252);
     const dates = data.map(e => dt.toString(e.date));
     const Raw = data.map(e => e.value);
     const chartData = {

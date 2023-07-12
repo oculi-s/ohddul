@@ -50,7 +50,7 @@ const plugins = [hairline, Annotation];
 async function getData({
     price, isEarn, num, isMinMax, percentMa
 }) {
-    price = price?.sort(dt.lsort);
+    price = price?.qsort(dt.lsort);
     const dates = price?.map(e => e.d);
     const priceRaw = price?.map(e => e.c);
     const priceAvg = dates?.map((e, i) => Math.avg(priceRaw?.slice(i + 1 - num, i + 1)));
@@ -69,8 +69,13 @@ async function getData({
         props = { ...props, priceMa };
     }
 
+    // 앞뒤 종가가 있을 때만 데이터 수정
     priceRaw.forEach((e, i) => {
-        if (!e) priceRaw[i] = priceRaw[i - 1]
+        if (!e) {
+            if (priceRaw[i - 1] && priceRaw[i + 1]) {
+                priceRaw[i] = priceRaw[i - 1];
+            }
+        }
     })
     if (isMinMax) {
         var mini = 0, maxi = 0, min = 2e9, max = -1;
@@ -326,7 +331,7 @@ function PriceLine({
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
     const [suboptions, setSubOptions] = useState(defaultOptions);
-    prices = prices.map(price => price?.sort(dt.sort)?.slice(0, len));
+    prices = prices.map(price => price?.qsort(dt.sort)?.slice(0, len));
 
     const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });

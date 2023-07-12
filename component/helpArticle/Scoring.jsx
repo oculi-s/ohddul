@@ -8,6 +8,7 @@ function ScoringBlock1() {
         <p>오떨에서는 유저별로 고유점수를 부여하며, 유저의 고유점수는 각 채점의 단위점수로 구성됩니다.</p>
         <h3>채점과 단위점수</h3>
         <p>모든 예측의 채점은 <span className='red'>데이터 업데이트 이후</span> 30분 이내로 이루어집니다. 오후 5시 이내에 모든 채점이 끝납니다.</p>
+        <p>랭크가 <span className='silver'>실버</span>에 도달할 때까지 <span className='red'>점수의 감점</span>은 없습니다.</p>
         <h4>오/떨 예측</h4>
         <p>오/떨 예측의 채점은 단순히 맞았는지 여부를 통해 진행합니다.</p>
         <table><tbody>
