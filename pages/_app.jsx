@@ -4,14 +4,15 @@ import HEAD from "#/common/Head";
 import Nav from "#/common/Nav";
 import Aside from "#/common/Aside";
 import Footer from "#/common/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dir from "@/module/dir";
 import json from "@/module/json";
+import { getPageSize } from "#/base/base";
 
 export default function App({ Component, pageProps }) {
 	const [mobAside, setAsideShow] = useState(false);
 	pageProps = { ...pageProps, mobAside, setAsideShow };
-	// useEffect(() => { getPageSize(); }, [])
+	useEffect(() => { getPageSize(); }, [])
 	return (
 		<SessionProvider session={pageProps.session}>
 			<HEAD {...pageProps} />

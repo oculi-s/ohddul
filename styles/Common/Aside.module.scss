@@ -96,6 +96,12 @@
     display: none;
 }
 
+.group {
+    svg {
+        height: 1em;
+    }
+}
+
 @include mobtab {
     .aside {
         position: fixed;

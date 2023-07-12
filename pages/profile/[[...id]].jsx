@@ -77,6 +77,7 @@ function Index({
     id, rank, email,
     queue, favs, meta,
     price, User, setUser,
+    ban,
 }) {
     const router = useRouter();
     const { data: session, status } = useSession();
@@ -103,7 +104,7 @@ function Index({
         User, setUser, user,
         queue, favs,
         id, rank, mine,
-        meta, price,
+        meta, price, ban,
     };
     const tabContents = {
         names: ["랭크변화", mine ? "내 예측" : "예측", "관심종목"],

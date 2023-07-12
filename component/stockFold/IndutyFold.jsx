@@ -27,7 +27,7 @@ function IndutyFold({
     const child = Object.keys(index)?.filter(e => e.slice(0, -1) == indutyCode);
     const stock = Object.keys(meta).filter(e => induty[e] == indutyNum)
         ?.filter(e => meta[e]?.a && price[e]?.c)
-        ?.sort((b, a) => meta[a]?.a * price[a]?.c - meta[b]?.a * price[b]?.c);
+        ?.qsort((b, a) => meta[a]?.a * price[a]?.c - meta[b]?.a * price[b]?.c);
     const len = child?.length + stock?.length + 2;
 
     const total = stock.map(e => meta[e]?.a * price[e]?.c || 0).sum();

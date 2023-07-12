@@ -22,7 +22,7 @@ export async function getServerSideProps(ctx) {
     const T = Object.keys(Meta)?.length || 0;
     const keys = Object.keys(Meta)
         ?.filter(e => Meta[e]?.a && Price[e]?.c)
-        ?.sort((b, a) =>
+        ?.qsort((b, a) =>
             Meta[a].a * Price[a].c - Meta[b].a * Price[b].c
         )
         ?.slice((p - 1) * N, p * N)
@@ -35,7 +35,7 @@ export async function getServerSideProps(ctx) {
     const price = Filter(Price);
     const hist = Object.fromEntries(Object.keys(Hist)
         ?.filter(e => Meta[e]?.a && Hist[e]?.h)
-        ?.sort((b, a) => Meta[a].a * Hist[a].h - Meta[b].a * Hist[b].h)
+        ?.qsort((b, a) => Meta[a].a * Hist[a].h - Meta[b].a * Hist[b].h)
         ?.map((e, i) => [e, { h: Hist[e], i }])
         ?.filter(([k, v]) => KeyMap[k])
     )

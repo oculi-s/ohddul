@@ -63,7 +63,7 @@ function BBTable({ stockPrice }) {
 }
 
 const PriceElement = ({ stockPrice, stockMeta }) => {
-    stockPrice = stockPrice?.data?.sort(dt.lsort);
+    stockPrice = stockPrice?.data?.qsort(dt.lsort);
     const chartProps = {
         prices: [stockPrice],
         metas: [stockMeta],

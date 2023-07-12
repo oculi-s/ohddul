@@ -31,7 +31,7 @@ export function Profile({ rank, user, id }) {
     let data = user?.pred?.data;
     let ts = rank;
     data = data
-        ?.sort(dt.sort)
+        ?.qsort(dt.sort)
         ?.map(e => {
             e.value = ts;
             ts -= e.change;

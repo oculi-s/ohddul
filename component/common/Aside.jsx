@@ -5,9 +5,10 @@ import { useEffect } from 'react';
 import { AlarmSetting, User, getRank } from '#/User';
 
 import Image from 'next/image';
-import { Per, Color, Num } from '@/module/ba';
+import { Per, Color, Num, Price } from '@/module/ba';
 import KakaoLogin from '@/public/kakao_sync_login/kakao_login_large_narrow.png';
 import { Logo } from '#/base/base';
+import GroupImg from '@/public/group/Default';
 
 /**
  * 2023.07.06 useSession을 predbar에서 사용하면서
@@ -68,6 +69,26 @@ function AsideTable({ data, setAsideShow }) {
     })
     return <table><tbody>{body}</tbody></table>;
 }
+function AsideGroup({ data, setAsideShow }) {
+    const body = data?.map(e => {
+        const { n, c, p } = e;
+        return <tr key={n}>
+            <th>
+                <Link
+                    href={`/group/${n}`}
+                    onClick={e => setAsideShow(false)}
+                ><GroupImg name={n} /></Link>
+            </th>
+            <td align='right'>{Price(c)}</td>
+            <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
+        </tr>
+    })
+    return <table className={styles.group}>
+        <tbody>
+            {body}
+        </tbody>
+    </table>;
+}
 
 function StockList({ aside, setAsideShow }) {
     return <>
@@ -91,7 +112,7 @@ function StockList({ aside, setAsideShow }) {
                 <span className={styles.sum}>그룹 순위</span>
                 &nbsp;<span className='fa fa-caret-right'></span>
             </Link>
-            <AsideTable data={aside?.group} setAsideShow={setAsideShow} />
+            <AsideGroup data={aside?.group} setAsideShow={setAsideShow} />
         </div>
         <div className={styles.box}>
             <Link

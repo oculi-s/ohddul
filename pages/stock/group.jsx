@@ -8,18 +8,19 @@ import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
+import '@/module/array';
 
 export async function getServerSideProps(ctx) {
     const Group = json.read(dir.light.group).data;
     const group = Object.values(Group)
         ?.filter(e => e?.ch?.length)
-        ?.sort((b, a) => a.p - b.p);
+        ?.qsort((b, a) => a.p - b.p);
     const props = { group };
     return { props };
 }
 
 export default function Group({ group }) {
-    const hisSort = Array.from(group)?.sort((b, a) => a.h - b.h);
+    const hisSort = Array.from(group)?.qsort((b, a) => a.h - b.h);
     const body = group?.map((e, i) => {
         const { n, p, ch, h } = e;
         const j = hisSort?.findIndex(e => e.h == h);

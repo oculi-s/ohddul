@@ -177,7 +177,7 @@ function Index(props) {
         </Link>);
 
     const GroupResult = () => result?.group
-        ?.sort((a, b) => a?.gname?.localeCompare(b?.gname))
+        ?.qsort((a, b) => a?.gname?.localeCompare(b?.gname))
         .map((e, i) => <Link
             key={`group${e.code}`}
             onKeyDown={e => { elementKeydown({ e, i: N + i, ...props }); }}

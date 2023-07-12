@@ -8,10 +8,10 @@ import styles from '$/Profile/Favs.module.scss';
 import { Open } from "#/stockData/stockHead";
 import { useSession } from "next-auth/react";
 
-export function FavTable({ meta, price, mine, favs }) {
+export function FavTable({ meta, price, mine, favs, ban }) {
     const { data: session, status } = useSession();
     const queue = session?.user?.queue;
-    queue?.sort(dt.sort);
+    queue?.qsort(dt.sort);
     const head = <tr>
         <th>종목</th>
         <th>가격</th>
@@ -19,6 +19,7 @@ export function FavTable({ meta, price, mine, favs }) {
         <th>예측하기</th>
     </tr>;
     function Rows({ code }) {
+        console.log(ban[code])
         const [view, setView] = useState(false);
         const name = meta[code]?.n;
         const close = price[code]?.c;
@@ -32,12 +33,14 @@ export function FavTable({ meta, price, mine, favs }) {
                 </th>
                 <td>{Num(close)}</td>
                 <td className={Color(close - prev)}>{Per(close, prev)}</td>
-                <td>{dt.pred(time) ?
-                    <p className={styles.open}><Open {...{ status, time, view, setView }} /></p> :
-                    <p className="des">예측완료 {dt.parse(time, 'M월D일 HH:mm')}</p>
+                <td>{ban[code] ?
+                    <p className="des red">거래정지</p>
+                    : dt.pred(time) ?
+                        <p className={styles.open}><Open {...{ status, time, view, setView }} /></p> :
+                        <p className="des">예측완료 {dt.parse(time, 'M월D일 HH:mm')}</p>
                 }</td>
             </tr>
-            {mine && dt.pred(time) &&
+            {mine && dt.pred(time) && !ban[code] &&
                 <tr className={`${styles.predBar} ${view ? styles.view : ''}`}>
                     <th colSpan={4}>
                         <PredBar {...{

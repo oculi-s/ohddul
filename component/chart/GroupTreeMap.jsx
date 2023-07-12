@@ -51,25 +51,22 @@ const refindData = ({ group, meta, price }) => {
     return children;
 }
 
-const GroupTreeMap = ({ group, meta, price }) => {
+function GroupTreeMap({ group, meta, price }) {
     if (!group?.p) return;
     meta = meta?.data || meta;
     const [data, setData] = useState([]);
     useEffect(() => {
+        console.log('treemap 렌더링중');
         setData(refindData({ group, meta, price }));
-    }, [])
+    }, [group]);
     const total = group.p;
     const box = { x0: 0, y0: 0, x1: 100, y1: 100 };
     const props = { group, meta, price, total };
-    return (
-        <>
-            <div className={styles.wrap}>
-                {squarify(data, box)?.map(node =>
-                    stockElement({ ...node, ...props }))
-                }
-            </div>
-        </>
-    );
-};
+    return <div className={styles.wrap}>
+        {squarify(data, box)?.map(node =>
+            stockElement({ ...node, ...props }))
+        }
+    </div>;
+}
 
 export default GroupTreeMap;

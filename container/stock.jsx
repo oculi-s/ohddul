@@ -73,6 +73,7 @@ export async function getServerSideProps(ctx) {
 	const induty = Filter(Induty);
 	meta.data = Filter(meta.data);
 	meta.index = FilterIndex(meta.index);
+
 	const Price = json.read(dir.stock.all);
 	const price = Filter(Price);
 	const predict = json.read(dir.stock.predAll);
@@ -82,7 +83,7 @@ export async function getServerSideProps(ctx) {
 	props = {
 		...props,
 		title, ids,
-		price, meta: Meta, group, index, induty,
+		price, meta, group, index, induty,
 		predict,
 	};
 

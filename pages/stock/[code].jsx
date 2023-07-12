@@ -24,8 +24,8 @@ import PredElement from '#/stockData/stockPred';
  *  
 */
 const MetaTable = ({ stockMeta, stockPredict, stockPrice, earn = [] }) => {
-    earn = earn?.sort(dt.lsort);
-    stockPrice = stockPrice?.data?.sort(dt.lsort);
+    earn = earn?.qsort(dt.lsort);
+    stockPrice = stockPrice?.data?.qsort(dt.lsort);
     const last = stockPrice?.slice(-1)[0];
 
     const lastPrice = last?.c;
@@ -79,6 +79,7 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, earn = [] }) => {
     )
 }
 
+
 /**
  * favs는 heavy container에서 사용하는 User와 setUser를 이용한다
  * 
@@ -87,14 +88,14 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, earn = [] }) => {
 function Index(props) {
     const { meta, ban, code, price, stockMeta, stockPrice, earn, share } = props;
     const router = useRouter();
+    console.log(ban);
 
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
     const last = stockPrice?.data[0] || price[code];
-    console.log(ban.map(e => meta[e]?.n))
-    props = { ...props, last, router, share: share.data, earn: earn.data };
+    props = { ...props, last, router, share: share.data, earn: earn.data, ban: ban[code] };
 
     const tabContents = {
         names: ['가격변화', '실적추이', '지분정보', '예측모음'],
@@ -116,6 +117,7 @@ function Index(props) {
             </div>
         ]
     };
+    if (ban[code]) tabContents.names.pop()
     return (
         <>
             <Suspense fallback={<Loading />} >

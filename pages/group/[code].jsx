@@ -12,6 +12,7 @@ import { bpsHelp } from '#/stockData/HelpDescription';
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
+import '@/module/array';
 
 /**
  * 그룹 정보를 보여주는 페이지
@@ -75,7 +76,7 @@ function MetaTable({
     const priceTotal = group?.p;
     const groupPrice = group?.ch
         ?.map(e => ({ code: e, c: meta[e]?.a * price[e]?.c }))
-        ?.sort((b, a) => a.c - b.c);
+        ?.qsort((b, a) => a.c - b.c);
     const groupClose = groupPrice?.map(e => e?.c).sum() / group?.ch?.map(e => meta[e]?.a).sum();
     const first = groupPrice?.find(e => true);
 

@@ -19,7 +19,7 @@ function EarnTable({ stockMeta, earn }) {
     }, [stockMeta])
 
     const len = earn.length;
-    earn = earn.sort(dt.sort);
+    earn = earn.qsort(dt.sort);
     const head = <tr>
         <th>분기</th>
         <th>자본</th>

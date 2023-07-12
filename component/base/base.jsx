@@ -62,3 +62,9 @@ export function getPageSize() {
     else if (len > 1024) console.log((len / 1024).toFixed(1) + ' KB');
     else console.log(len + ' B');
 }
+
+export function Ban() {
+    return <div className={styles.ban}>
+        거래정지 종목입니다.
+    </div>
+}

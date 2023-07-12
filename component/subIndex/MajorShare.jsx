@@ -12,8 +12,8 @@ import NameDict from '#/stockData/NameDict';
 export default function MajorShare({ major }) {
     const names = Object.keys(major)?.map(e => NameDict[e] || e);
     const datas = Object.entries(major)?.map(([_, share], i) => {
-        share?.sort((b, a) => a?.a * b?.t - b?.a * a?.t);
-        share?.sort((b, a) => a.p - b.p);
+        share?.qsort((b, a) => a?.a * b?.t - b?.a * a?.t);
+        share?.qsort((b, a) => a.p - b.p);
         return <div key={i}>
             <table className={`${styles.major} fixed`}>
                 <colgroup>

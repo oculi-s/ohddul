@@ -4,8 +4,8 @@ import { Num, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
 import FavStar from '#/baseStock/FavStar';
 import styles from '$/Base/Fold.module.scss'
-import '@/module/array';
 import { useState } from 'react';
+import '@/module/array';
 
 /**
  * 데이터로 전체 group데이터를 가져올게 아니고
@@ -40,7 +40,7 @@ function GroupFold({
     const [view, setView] = useState(false);
     const body = group?.ch
         .filter(code => meta[code])
-        .sort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
+        .qsort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
         .map((code) => {
             const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
             return <tr key={code}>

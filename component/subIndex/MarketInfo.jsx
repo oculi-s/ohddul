@@ -47,8 +47,8 @@ function Index({ data, last, prev, count, name }) {
 
 const Market = ({ market, count }) => {
     if (!market) return;
-    const kospi = market?.kospi?.sort(dt.sort);
-    const kosdaq = market?.kosdaq?.sort(dt.sort);
+    const kospi = market?.kospi?.qsort(dt.sort);
+    const kosdaq = market?.kosdaq?.qsort(dt.sort);
     const last = { kospi: kospi[0]?.c, kosdaq: kosdaq[0]?.c };
     const prev = { kospi: kospi[1]?.c, kosdaq: kosdaq[1]?.c };
     const props = { last, prev, count };
