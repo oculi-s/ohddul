@@ -24,8 +24,8 @@ async function checkId({ idRef, oid, setIdCheck }) {
 }
 
 async function change(uid) {
-    const id = document.querySelector('form #id').value;
-    const email = document.querySelector('form #email').value;
+    const id = document.querySelector('#id').value;
+    const email = document.querySelector('#email').value;
     await user.change({ id, uid, email });
     alert('변경되었습니다.');
 }
@@ -36,7 +36,6 @@ function ChangeId() {
     const [idCheck, setIdCheck] = useState(0);
     const oid = session?.user?.id;
     const idRef = useRef();
-    console.log(idCheck);
     return <div className={styles.box}>
         <div className={styles.form}>
             <input id='id' ref={idRef} defaultValue={oid} type='text' />

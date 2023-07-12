@@ -19,7 +19,6 @@ export function FavTable({ meta, price, mine, favs, ban }) {
         <th>예측하기</th>
     </tr>;
     function Rows({ code }) {
-        console.log(ban[code])
         const [view, setView] = useState(false);
         const name = meta[code]?.n;
         const close = price[code]?.c;
