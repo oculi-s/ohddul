@@ -208,7 +208,7 @@ async function refineData({
                 }
             }
             options.scales = {
-                x: { min: dt.num() - from },
+                x: { min: from },
                 y: {
                     min: ymin > 0 ? ymin * 0.8 : ymin * 1.2,
                     max: ymax * 1.1
@@ -236,7 +236,7 @@ function ButtonGroup({
     isBollinger, setBollinger,
     isEarn, setEarn,
     isMinMax, setMinMax,
-    from, setFrom, num, setNum,
+    len, setLen, num, setNum,
     bollingerBtn, timeBtn,
     view, setView,
 }) {
@@ -271,8 +271,8 @@ function ButtonGroup({
                     title={'기간'}
                     names={['6M', '1Y', '5Y']}
                     values={[dt.YEAR / 2, dt.YEAR, dt.YEAR * 5]}
-                    onChange={setFrom}
-                    defaultValue={from}
+                    onChange={setLen}
+                    defaultValue={len}
                 />}
                 {bollingerBtn && <RadioSelect
                     title={'이평'}
@@ -300,15 +300,18 @@ function PriceLine({
 }) {
     defaultOptions.scales.x.display = x;
     defaultOptions.scales.y.display = y;
+    const Prices = prices.map(price => price
+        ?.qsort(dt.lsort));
 
+    const [len, setLen] = useState(L);
+    const first = Prices?.find(e => true)?.find(e => true)?.d;
+    const from = Math.max(dt.num() - len, dt.num(first))
     const [num, setNum] = useState(N);
-    const [from, setFrom] = useState(L);
     const [isEarn, setEarn] = useState(addEarn);
     const [isMinMax, setMinMax] = useState(minMax);
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
-    const Prices = prices.map(price => price
-        ?.qsort(dt.lsort));
+
 
     const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });
@@ -329,13 +332,13 @@ function PriceLine({
                 console.timeEnd('price');
             })
         }
-    }, [load?.price, isEarn, isBollinger, isMinMax, num, from])
+    }, [load?.price, isEarn, isBollinger, isMinMax, num, len])
 
     const props = {
         isBollinger, setBollinger,
         isEarn, setEarn,
         isMinMax, setMinMax,
-        from, setFrom, num, setNum,
+        from, len, setLen, num, setNum,
         bollingerBtn, timeBtn,
         view, setView
     }
@@ -343,7 +346,7 @@ function PriceLine({
 
     const suboption = {
         scales: {
-            x: { min: dt.num() - from },
+            x: { min: from },
             y: { min: -20, max: 120, display: true }
         },
         plugins: {

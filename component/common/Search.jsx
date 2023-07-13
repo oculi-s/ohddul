@@ -194,17 +194,17 @@ function Index(props) {
 
     const UserResult = () => (result?.user || userDef)
         ?.map((e, i) => {
-            const [color] = getRank(e?.rank);
+            const [pred, cur] = getRank(e?.rank);
             return <Link
                 key={e.id}
                 onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
                 ref={e => { userRef.current[i] = e; }}
                 href={`/profile/${e?.id}`}
-                className={`${styles.element} ${color}`}
+                className={`${styles.element} ${cur.color}`}
                 onClick={e => setView(false)}
             >
                 <span>{e?.id}</span>
-                <span>{Int(e?.rank)}</span>
+                <span>{cur.color?.slice(0, 1)?.toUpperCase()}{cur.num} {Int(e?.rank)}</span>
             </Link>
         });
 

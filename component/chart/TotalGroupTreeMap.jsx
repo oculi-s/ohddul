@@ -75,8 +75,8 @@ const TotalGroupTree = ({ tree }) => {
                 onClick={e => setStock(c => 1 - c)}
             >
                 {squarify(data, box)?.map((e, i) => stockElement(index, e, i))}
+                <i onClick={e => { e.preventDefault(); setFixed(!fixed); e.stopPropagation() }}><Icon name='FullScreen' /></i>
             </div>
-            <i onClick={e => setFixed(!fixed)}><Icon name='FullScreen' /></i>
         </>
     );
 };
