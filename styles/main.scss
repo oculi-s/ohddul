@@ -115,9 +115,12 @@ p {
     margin: 0;
 }
 
+html {
+    background: $bgDark;
+}
+
 html,
 body {
-    background: $bgDark;
     margin: 0;
     padding: 0;
     height: 100%;

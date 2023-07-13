@@ -5,7 +5,7 @@ import dt from '@/module/dt';
 import FavStar from '#/baseStock/FavStar';
 import { useSession } from 'next-auth/react';
 import { Loading } from '#/base/base';
-import PredBar from '#/common/PredBar';
+import PredBar from '#/baseStock/PredBar';
 import '@/module/array';
 
 export function Open({ status, ban, time, view, setView }) {

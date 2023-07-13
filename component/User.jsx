@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import { json, user } from '@/pages/api/xhr'
 import { useSession } from 'next-auth/react'
 import dir from '@/module/dir'
+import { Int } from '@/module/ba'
 
 export const getBg = rank => {
     return rank.includes('bronze') ? (bgBronze
@@ -60,7 +61,7 @@ export function User({ user, setAsideShow }) {
             <Link href='/profile' onClick={e => setAsideShow(false)}>
                 <div className={styles.id}>{id}</div>
                 <div className={styles.rank}>
-                    <span className={color}>{rank}</span>
+                    <span className={color}>{Int(rank)}</span>
                     &nbsp;{rankName}
                 </div>
             </Link>

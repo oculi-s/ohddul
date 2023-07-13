@@ -6,7 +6,7 @@
     height: 80px;
     left: 0;
     top: var(--nav-height);
-    z-index: -1;
+    z-index: 0;
     position: fixed;
 }
 
@@ -14,6 +14,13 @@
     padding: 20px 0;
 }
 
+.metaTable {
+    width: auto;
+    margin-right: 0;
+    margin-left: auto;
+    z-index: 1;
+    position: relative;
+}
 
 .id {
     display: inline-block;

@@ -23,10 +23,8 @@ import PredElement from '#/stockData/stockPred';
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
 */
-const MetaTable = ({ stockMeta, stockPredict, stockPrice, earn = [] }) => {
-    earn = earn?.qsort(dt.lsort);
-    stockPrice = stockPrice?.data?.qsort(dt.lsort);
-    const last = stockPrice?.slice(-1)[0];
+const MetaTable = ({ stockMeta, stockPredict, last, earn = [] }) => {
+    earn?.qsort(dt.lsort);
 
     const lastPrice = last?.c;
     const amount = stockMeta?.a;
@@ -79,22 +77,16 @@ const MetaTable = ({ stockMeta, stockPredict, stockPrice, earn = [] }) => {
     )
 }
 
-
-/**
- * favs는 heavy container에서 사용하는 User와 setUser를 이용한다
- * 
- * pred는 꼬이면 안되기 때문에 중복제출 방지를 위해 session에 저장하고 update를 사용한다.
- */
 function Index(props) {
-    const { meta, ban, code, price, stockMeta, stockPrice, earn, share } = props;
+    const { meta, ban, code, stockMeta, stockPrice, earn, share } = props;
     const router = useRouter();
-    console.log(ban);
 
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
-    const last = stockPrice?.data[0] || price[code];
+    stockPrice?.data?.qsort(dt.lsort);
+    const last = stockPrice?.data?.slice(-1)[0];
     props = { ...props, last, router, share: share.data, earn: earn.data, ban: ban[code] };
 
     const tabContents = {

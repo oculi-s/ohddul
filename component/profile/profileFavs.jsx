@@ -1,5 +1,5 @@
 import FavStar from "#/baseStock/FavStar";
-import PredBar from "#/common/PredBar";
+import PredBar from "#/baseStock/PredBar";
 import { Color, Num, Per } from "@/module/ba";
 import Link from "next/link";
 import { useState } from "react";

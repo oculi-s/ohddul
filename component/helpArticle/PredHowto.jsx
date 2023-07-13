@@ -3,7 +3,7 @@ import Image from 'next/image';
 import helpImage from '@/public/help';
 import Link from 'next/link';
 import { H3, H4 } from '@/module/help/header';
-import PredBar from '#/common/PredBar';
+import PredBar from '#/baseStock/PredBar';
 import { Collapse } from '#/base/base';
 
 function PredBlock1() {

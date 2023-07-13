@@ -194,8 +194,7 @@ export default function PredBar({
     const [type, setType] = useState(defaultType);
     const [date, setDate] = useState(1);
     const [again, setAgain] = useState(false); // 중복제출 방지
-
-    const origin = last?.c || last || 0;
+    const [origin, setOrigin] = useState(last?.c || last || 0);
     const uid = session?.user?.uid;
 
     const submitProps = {
@@ -210,6 +209,7 @@ export default function PredBar({
         if (!testing) {
             setView(0);
             setTimeout(() => {
+                setOrigin(last?.c || last || 0);
                 setChange(0);
                 setDate(1);
                 setAgain(false);

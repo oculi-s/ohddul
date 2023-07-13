@@ -3,6 +3,7 @@ import dir from '@/module/dir';
 
 import '@/module/array';
 import { filterIndex } from '@/module/filter/filter';
+import NameDict from '#/stockData/NameDict';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -52,9 +53,9 @@ export async function getServerSideProps(ctx) {
 		return Object.fromEntries(Object.entries(data)
 			?.filter(([k, v]) => {
 				if (k == code) return 1;
-				if (Induty[k] == iname) return 1;
-				if (Group?.index[k] == gname) return 1;
-				if (share.data?.find(e => Meta.data[k]?.n == e.name))
+				if (iname && Induty[k] == iname) return 1;
+				if (gname && Group?.index[k] == gname) return 1;
+				if (share.data?.find(e => Meta.data[k]?.n == NameDict[e.name] || e.name))
 					return 1;
 				return 0;
 			}))
@@ -63,8 +64,10 @@ export async function getServerSideProps(ctx) {
 		return Object.fromEntries(Object.entries(data)
 			?.filter(([k, v]) => {
 				if (v == code) return 1;
-				if (Induty[v] == iname) return 1;
-				if (Group?.index[v] == gname) return 1;
+				if (iname && Induty[v] == iname) return 1;
+				if (gname && Group?.index[v] == gname) return 1;
+				if (share.data?.find(e => Meta.data[v]?.n == NameDict[e.name] || e.name))
+					return 1;
 				return 0;
 			}))
 	}
