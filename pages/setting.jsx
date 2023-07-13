@@ -2,7 +2,7 @@ import styles from '$/Setting.module.scss';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { user } from './api/xhr';
+import api from './api';
 import ToggleTab from '#/base/ToggleTab';
 
 export function getServerSideProps() {
@@ -12,7 +12,7 @@ export function getServerSideProps() {
 
 async function checkId({ idRef, oid, setIdCheck }) {
     const id = idRef?.current?.value;
-    const res = await user.find({ id });
+    const res = await api.user.find({ id });
     if (id == oid) {
         setIdCheck(-2);
         return -2;
@@ -26,7 +26,7 @@ async function checkId({ idRef, oid, setIdCheck }) {
 async function change(uid) {
     const id = document.querySelector('#id').value;
     const email = document.querySelector('#email').value;
-    await user.change({ id, uid, email });
+    await api.user.change({ id, uid, email });
     alert('변경되었습니다.');
 }
 

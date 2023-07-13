@@ -5,13 +5,13 @@ import ToggleTab from '#/base/ToggleTab';
 import scss from '$/variables.module.scss';
 import Inko from 'inko';
 import Link from 'next/link';
-import { json, user } from '@/pages/api/xhr';
+import api from '@/pages/api';
 import dir from '@/module/dir';
 import { Int } from '@/module/ba';
 
 const inko = new Inko();
 
-function makeResult({ e, setView, setResult, meta, group, userMeta }) {
+function makeResult({ e, setView, setResult, meta, group, users }) {
     let q = e.target?.value;
     if (!q) {
         if (setView) setView(false);
@@ -41,7 +41,7 @@ function makeResult({ e, setView, setResult, meta, group, userMeta }) {
         if (res?.group?.length >= N) break;
     }
 
-    for (let [id, rank] of userMeta) {
+    for (let [id, rank] of users) {
         let idl = id?.toLowerCase();
         if (reg?.test(idl))
             res?.user?.push({ id, rank });
@@ -126,11 +126,11 @@ function resKeydown({ e, setTabIndex, tabIndex, inputRef }) {
     }
 }
 
-function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result }) {
+function moveQuery({ e, meta, users, router, setAsideShow, setView, result }) {
     e.preventDefault();
     const q = e.target?.q?.value?.toLowerCase();
     const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.name?.toLowerCase() == q);
-    const resUser = Object.values(userMeta).find(e => e.id == q);
+    const resUser = Object.values(users).find(e => e.id == q);
     if (resStock) {
         router.push(`/stock/${resStock[0]}`);
     } else if (resUser) {
@@ -153,8 +153,9 @@ function moveQuery({ e, meta, userMeta, router, setAsideShow, setView, result })
 }
 
 function Index(props) {
-    const def = props?.aside?.sum?.map(({ code, n }) => ({ code, name: n }));
-    const [result, setResult] = useState({ stock: def });
+    const stockDef = props?.aside?.sum?.map(({ code, n }) => ({ code, name: n }));
+    const userDef = props?.users?.map(([id, rank]) => ({ id, rank }));
+    const [result, setResult] = useState();
     const [tabIndex, setTabIndex] = useState(0);
     props = {
         ...props,
@@ -163,7 +164,7 @@ function Index(props) {
     const { inputRef, userRef, stockRef, view, setView } = props || {}
     const N = result?.stock?.length;
 
-    const StockResult = () => result?.stock
+    const StockResult = () => (result?.stock || stockDef)
         ?.map((e, i) => <Link
             key={`stock${e.code}`}
             onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
@@ -190,7 +191,7 @@ function Index(props) {
             <span>{e?.name}</span>
         </Link>);
 
-    const UserResult = () => result?.user
+    const UserResult = () => (result?.user || userDef)
         ?.map((e, i) => <Link
             key={e.id}
             onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
@@ -268,15 +269,15 @@ function Index(props) {
 export default function Search(props) {
     const [meta, setMeta] = useState();
     const [group, setGroup] = useState();
-    const [userMeta, setUserMeta] = useState();
+    const [users, setUsers] = useState();
     useEffect(() => {
         /**
          * meta와 userMeta의 lazyloading
          */
         async function lazyLoad() {
-            setMeta(await json.read({ url: dir.stock.meta }));
-            setGroup(await json.read({ url: dir.stock.group }));
-            setUserMeta(await user.meta({}));
+            setMeta(await api.json.read({ url: dir.stock.meta }));
+            setGroup(await api.json.read({ url: dir.stock.group }));
+            setUsers(await api.user.meta({}));
         }
         lazyLoad();
     }, [])
@@ -289,7 +290,7 @@ export default function Search(props) {
     const router = useRouter();
     props = {
         ...props,
-        meta, group, userMeta,
+        meta, group, users,
         router,
         stockRef, userRef, inputRef
     };

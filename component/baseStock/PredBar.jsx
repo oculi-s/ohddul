@@ -2,7 +2,7 @@ import styles from '$/Stock/StockHead.module.scss';
 import { Color, Per } from '@/module/ba';
 import dir from '@/module/dir';
 import dt from '@/module/dt';
-import { json } from '@/pages/api/xhr';
+import api from '@/pages/api';
 import Help from '#/base/Help';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -70,9 +70,9 @@ async function submit({
 
     const predData = { ...data, uid };
     const userData = { ...data, c: code };
-    await json.queue({ url: dir.user.pred(uid), data: userData, });
-    await json.queue({ url: dir.stock.pred(code), data: predData, });
-    await json.up({
+    await api.json.queue({ url: dir.user.pred(uid), data: userData, });
+    await api.json.queue({ url: dir.stock.pred(code), data: predData, });
+    await api.json.up({
         url: dir.stock.predAll,
         data: { code, key: 'queue' }
     });

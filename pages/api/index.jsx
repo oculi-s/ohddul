@@ -36,3 +36,6 @@ export const user = {
         return await Fetch('/api/user/meta', props);
     }
 }
+
+const api = { json, user };
+export default api;

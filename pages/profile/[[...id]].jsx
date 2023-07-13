@@ -10,7 +10,9 @@ import json from "@/module/json";
 import { Curtain, Profile } from "#/profile/Header";
 import { FavTable } from "#/profile/profileFavs";
 import ProfilePred from "#/profile/profilePred";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import api from "../api";
 
 /**
  * asdf
@@ -53,11 +55,24 @@ export async function getServerSideProps(ctx) {
     return { props };
 }
 
-function Graph({ id, rank }) {
-    const prev = Math.floor(rank / 100) * 100;
-    const forNext = (rank - prev);
+function Graph({ id }) {
     const { data: session } = useSession();
     const user = session?.user;
+    const [meta, setMeta] = useState({ rank: 1000 });
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        async function fetchData() {
+            const uid = user?.uid;
+            if (uid) {
+                setMeta(await api.json.read({ url: dir.user.meta(uid) }))
+            }
+            setLoading(false);
+        }
+        fetchData();
+    }, [user])
+    const rank = meta?.rank;
+    const prev = Math.floor(rank / 100) * 100;
+    const forNext = (rank - prev);
 
     const props = { horLine: rank, data: user?.pred?.data, name: id };
     return (

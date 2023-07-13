@@ -49,7 +49,11 @@ export function Collapse({ title, children }) {
     </div>
 }
 
-export const Loading = ({ small }) => {
+export const Loading = ({ small, inline = false }) => {
+    if (inline) {
+        return <span className={`${styles.spinner} ${small ? styles.small : ''}`}>
+        </span>
+    }
     return <div className={`${styles.spinner} ${small ? styles.small : ''}`}>
         <div />
     </div>

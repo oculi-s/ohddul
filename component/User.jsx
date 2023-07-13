@@ -11,7 +11,7 @@ import bgMaster from '@/public/rank/50000.png'
 import { useEffect, useRef, useState } from 'react'
 import toggleOnPageChange from './toggle'
 import { useRouter } from 'next/router'
-import { json, user } from '@/pages/api/xhr'
+import api from '@/pages/api'
 import { useSession } from 'next-auth/react'
 import dir from '@/module/dir'
 import { Int } from '@/module/ba'
@@ -52,8 +52,20 @@ export const getRank = rank => {
  */
 export function User({ user, setAsideShow }) {
     const id = user?.id;
-    const rank = user?.rank;
-    const [color, num, next] = getRank(rank);
+    const [meta, setMeta] = useState({ rank: 1000 });
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        async function fetch() {
+            const uid = user?.uid;
+            if (uid) {
+                setMeta(await api.json.read({ url: dir.user.meta(uid) }));
+            }
+            setLoading(false);
+        }
+        fetch();
+    }, [user])
+    const Lazy = (data) => loading ? '...' : data;
+    const [color, num, next] = getRank(meta?.rank);
     let rankName = color[0]?.toUpperCase() + num;
     if (color == 'unranked') rankName = "IRON";
     return (
@@ -61,8 +73,10 @@ export function User({ user, setAsideShow }) {
             <Link href='/profile' onClick={e => setAsideShow(false)}>
                 <div className={styles.id}>{id}</div>
                 <div className={styles.rank}>
-                    <span className={color}>{Int(rank)}</span>
-                    &nbsp;{rankName}
+                    <span className={color}>
+                        {Lazy(Int(meta?.rank))}
+                    </span>
+                    &nbsp;{Lazy(rankName)}
                 </div>
             </Link>
         </div>
@@ -73,7 +87,7 @@ export function Alarms({ uid, setAsideShow }) {
     const [len, setLen] = useState(0);
     useEffect(() => {
         async function lazyLoad() {
-            const data = await json.read({ url: dir.user.alarm(uid) });
+            const data = await api.json.read({ url: dir.user.alarm(uid) });
             setLen(data?.filter(e => !e.ch)?.length);
         }
         if (uid) lazyLoad();
