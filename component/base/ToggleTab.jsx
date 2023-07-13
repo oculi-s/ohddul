@@ -10,7 +10,6 @@ function ToggleTab({
     names, datas, tabIndex = 0, setTabIndex
 }) {
     const router = useRouter();
-    console.log('toggletab 렌더링중');
     if (!tabIndex && !setTabIndex) {
         [tabIndex, setTabIndex] = useState(tabIndex);
     }

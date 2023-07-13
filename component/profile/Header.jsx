@@ -13,7 +13,13 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
     const data = pred?.data;
     const dataLen = data?.length || 0;
     const queueLen = queue?.length || 0;
-    const right = data?.filter(e => e.p >= 0).length;
+    const right = data?.filter(e => e.v >= 0).length;
+    const odDataLen = data?.filter(e => e.t == 'od')?.length || 0;
+    const prDataLen = data?.filter(e => e.t == 'pr')?.length || 0;
+    const odQueueLen = queue?.filter(e => e.t == 'od')?.length || 0;
+    const prQueueLen = queue?.filter(e => e.t == 'pr')?.length || 0;
+    const odRight = data?.filter(e => e.t == 'od')?.filter(e => e.v >= 0).length;
+    const prRight = data?.filter(e => e.t == 'pr')?.filter(e => e.v >= 0).length;
     const bg = getBg(color);
     return (
         <div className={styles.profile}>
@@ -32,21 +38,38 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
             </h2>
             <table className={`${styles.metaTable} fixed`}>
                 <tbody>
-                    <tr><th colSpan={2}>
+                    <tr><th colSpan={3} align='left'>
                         <div className={color}>
                             {Lazy(color == 'unranked' ?
                                 <b>IRON {Int(meta?.rank)}</b> :
                                 <b>{color.slice(0, 1).toUpperCase() + num} {Int(meta?.rank)}</b>)}
                         </div>
                     </th></tr>
-                    <tr><th>예측완료</th><td>{Lazy(dataLen, '...')}개</td></tr>
-                    <tr><th>채점 대기중</th><td>{Lazy(queueLen, '...')}개</td></tr>
-                    <tr><th>적중률</th>
+                    <tr><th></th><th>오/떨</th><th>가격</th></tr>
+                    <tr>
+                        <th>예측완료</th>
+                        <td>{Lazy(odDataLen, '...')}개</td>
+                        <td>{Lazy(prDataLen, '...')}개</td>
+                    </tr>
+                    <tr>
+                        <th>채점대기</th>
+                        <td>{Lazy(odQueueLen, '...')}개</td>
+                        <td>{Lazy(prQueueLen, '...')}개</td>
+                    </tr>
+                    <tr><th rowSpan={2}>적중률</th>
                         <td>
-                            {Lazy(Div(right, dataLen), '...%')}&nbsp;
-                            ({Lazy(right, '...')}/{Lazy(dataLen, '...')})
+                            {Lazy(Div(odRight, odDataLen), '...%')}<br />
+                            ({Lazy(odRight, '...')}/{Lazy(odDataLen, '...')})
+                        </td>
+                        <td>
+                            {Lazy(Div(prRight, prDataLen), '...%')}<br />
+                            ({Lazy(prRight, '...')}/{Lazy(prDataLen, '...')})
                         </td>
                     </tr>
+                    <tr><td colSpan={2}>
+                        {Lazy(Div(right, dataLen), '...%')}&nbsp;
+                        ({Lazy(right, '...')}/{Lazy(dataLen, '...')})
+                    </td></tr>
                 </tbody>
             </table>
         </div>

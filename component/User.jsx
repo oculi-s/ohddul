@@ -9,11 +9,9 @@ import bgPlatinum from '@/public/rank/1000.png'
 import bgDiamond from '@/public/rank/10000.png'
 import bgMaster from '@/public/rank/50000.png'
 import { useEffect, useState } from 'react'
-import toggleOnPageChange from './toggle'
-import { useRouter } from 'next/router'
 import api from '@/pages/api'
 import dir from '@/module/dir'
-import { Int, Sleep } from '@/module/ba'
+import { Int } from '@/module/ba'
 import { Loading } from './base/base'
 
 export const getBg = rank => {
@@ -41,7 +39,7 @@ export const getRank = rank => {
             return [e.slice(0, -1), e.slice(-1), rlist[i + 1]];
         }
     }
-    return ['master1', 'master1'];
+    return ['master', '1', 5000];
 }
 
 /**

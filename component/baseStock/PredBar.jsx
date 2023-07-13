@@ -4,7 +4,6 @@ import dir from '@/module/dir';
 import dt from '@/module/dt';
 import api from '@/pages/api';
 import Help from '#/base/Help';
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 const Bid = (price) => {
@@ -48,6 +47,10 @@ async function submit({
     if (again) return;
     if (!ohddul && !date) {
         alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.');
+        return;
+    }
+    if (!uid) {
+        alert('로그인 정보가 없습니다. 관리자에게 문의해주세요.');
         return;
     }
     Alert({ name, ohddul, change, date, origin });
@@ -188,18 +191,17 @@ function PriceForm({
  * testing이 true이면 실제 데이터로 저장되지 않음
  */
 export default function PredBar({
+    uid,
     name, code, last,
     setPred, setTime, setView,
     setCnt,
     testing = false, help = true, defaultType = 0
 }) {
-    const { data: session } = useSession();
     const [change, setChange] = useState(0);
     const [type, setType] = useState(defaultType);
     const [date, setDate] = useState(1);
     const [again, setAgain] = useState(false); // 중복제출 방지
     const [origin, setOrigin] = useState(last?.c || last || 0);
-    const uid = session?.user?.uid;
 
     const submitProps = {
         setPred, setTime, setView,

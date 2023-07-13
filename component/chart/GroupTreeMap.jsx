@@ -56,7 +56,6 @@ function GroupTreeMap({ group, meta, price }) {
     meta = meta?.data || meta;
     const [data, setData] = useState([]);
     useEffect(() => {
-        console.log('treemap 렌더링중');
         setData(refindData({ group, meta, price }));
     }, [group]);
     const total = group.p;

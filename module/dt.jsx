@@ -8,6 +8,7 @@ const pad = (v) => String(v).padStart(2, '0');
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 const TYPES = { '-03-31': 3, '-06-30': 2, '-09-30': 4, '-12-31': 1 };
 const DAY = 1000 * 60 * 60 * 24;
+const YEAR = DAY * 365;
 const YEARS = Array.from(Array(10).keys(), x => toJson().Y - x).sort().filter(e => e > 2014);
 const EARNKEYS = YEARS.map(year => Object.keys(TYPES).map(type => `${year}${type}`)).flat().filter(e => num(e) <= num() && num(e) >= num('2015-'));
 function YEARTYPE(key) { return [key.slice(0, 4), TYPES[key.slice(4)]] };
@@ -157,7 +158,7 @@ function duration(m = moment(), format = 'DD HH:mm:ss') {
 }
 
 module.exports = {
-    DAY, YEARS, EARNKEYS, YEARTYPE,
+    DAY, YEAR, YEARS, EARNKEYS, YEARTYPE,
     parse, pred, scoring, duration,
     market, update, toJson, toString, toQuar,
     prev, now, num, sort, lsort, min, hhmmss

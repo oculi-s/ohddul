@@ -1,4 +1,3 @@
-import encode from '@/module/alias'
 import fs from 'fs';
 import path from 'path';
 import dt from './dt';

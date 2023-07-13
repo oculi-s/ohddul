@@ -30,14 +30,14 @@ export function Open({ uid, load, ban, time, view, setView }) {
 }
 
 function StockHead({
+    uid,
     code, last, ban,
     stockMeta,
-    userPred, loadUser: load, setPred, session
+    userPred, loadUser: load, setPred
 }) {
     const name = stockMeta?.n;
     const type = stockMeta?.t;
 
-    const uid = session?.user?.uid;
     const queue = userPred?.queue;
     queue?.sort(dt.sort)
     let orig = queue?.find(e => e.c == code)?.d;
@@ -52,6 +52,7 @@ function StockHead({
     }, [code]);
 
     const props = {
+        uid,
         setPred, setView, setTime, load,
         name, code, last,
     };

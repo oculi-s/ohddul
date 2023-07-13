@@ -41,10 +41,10 @@ export function FavTable({
                 <tr className={`${styles.predBar} ${view ? styles.view : ''}`}>
                     <th colSpan={4}>
                         <PredBar {...{
+                            uid,
                             setPred, setTime, setView,
                             code, last: price[code],
                             name, help: false,
-                            view,
                         }} />
                     </th>
                 </tr>}

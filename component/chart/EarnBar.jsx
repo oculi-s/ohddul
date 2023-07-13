@@ -56,7 +56,7 @@ function EarnChart({ earn, stockMeta }) {
 
     useEffect(() => {
         if (earn?.length) {
-            console.log('earn 차트 렌더링중');
+            console.time('earn');
             const ismob = window.innerWidth <= Int(scss.mobWidth);
             const option = { scales: { y: {} } };
             if (ismob) option.scales.y.display = false;
@@ -64,6 +64,7 @@ function EarnChart({ earn, stockMeta }) {
             setOptions(merge(defaultOptions, option));
             setEquity(refineData(equityData, '자본(BPS)'));
             setProfit(refineData(profitData, '이익(EPS)'));
+            console.timeEnd('earn');
         }
     }, [earn])
 

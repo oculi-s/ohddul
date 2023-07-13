@@ -1,7 +1,7 @@
 import { Div, Per } from '@/module/ba';
 import scss from '$/variables.module.scss';
 
-export function maxPoint({ max, i, last, len }) {
+export function maxPoint({ max, i, d, last, len }) {
     return ({
         type: 'label',
         color: scss.red,
@@ -13,13 +13,13 @@ export function maxPoint({ max, i, last, len }) {
             x: i * 2 <= len ? 'start' : 'end',
             y: 'center'
         },
-        xValue: i,
+        xValue: d,
         yValue: max,
         yAdjust: 5,
     });
 }
 
-export function minPoint({ min, i, last, len }) {
+export function minPoint({ min, i, d, last, len }) {
     return ({
         type: 'label',
         color: scss.blue,
@@ -32,7 +32,7 @@ export function minPoint({ min, i, last, len }) {
             x: i * 2 <= len ? 'start' : 'end',
             y: 'center'
         },
-        xValue: i,
+        xValue: d,
         yValue: min,
         yAdjust: -5,
     });

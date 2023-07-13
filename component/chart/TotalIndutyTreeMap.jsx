@@ -44,7 +44,6 @@ const TotalIndutyTree = ({ tree }) => {
     const [fixed, setFixed] = useState(false);
 
     useEffect(() => {
-        console.log('treemap 차트 렌더링중')
         setData(tree.induty?.slice(0, N)?.map(e => {
             const t = { ...e };
             if (!stock) delete t.children;

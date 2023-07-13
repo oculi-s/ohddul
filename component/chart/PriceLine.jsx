@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import Annotation from "chartjs-plugin-annotation";
+import merge from 'deepmerge';
 import styles from '$/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
@@ -9,11 +10,10 @@ import colors from "@/module/colors";
 import scss from '$/variables.module.scss';
 import { maxPoint, minPoint } from "@/module/chart/annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
-import merge from 'deepmerge';
 import { hairline } from "@/module/chart/plugins";
 import { parseFix } from "@/module/ba";
-import '@/module/array'
 import { Loading } from "#/base/base";
+import '@/module/array'
 Chart.register(Annotation);
 
 /**
@@ -23,19 +23,27 @@ Chart.register(Annotation);
  */
 const defaultOptions = {
     plugins: {
-        legend: {},
+        legend: { display: false },
         annotation: {
             drawTime: 'afterDatasetsDraw',
         },
     },
     animation: {
-        x: { duration: 0, from: 1000 },
+        x: { duration: 0 },
         duration: 100
     },
     interaction: { intersect: false, mode: 'index', },
     spanGaps: true,
     maintainAspectRatio: false,
-    scales: { x: {}, y: {} }
+    scales: {
+        x: {
+            type: "time",
+            time: {
+                tooltipFormat: "yyyy-MM-dd"
+
+            }
+        }, y: {}
+    }
 }
 
 const plugins = [hairline, Annotation];
@@ -110,10 +118,10 @@ async function getData({
  * 6개월 데이터 120이평에서 데이터가 너무 표시가 안돼서 slice를 2023.06.30 폐기
  */
 async function refineData({
-    prices, num, isEarn, isBollinger, isMinMax, percentMa
+    prices, num, isEarn, isBollinger, isMinMax, percentMa, from
 }) {
     let mainData = [], date, options = {};
-    let subData = [], suboptions = {};
+    let subData = [];
     const k = prices?.length;
     for await (let i of Array(k).keys()) {
         const price = prices[i];
@@ -184,7 +192,8 @@ async function refineData({
                 annotation: {
                     annotations: [
                         {
-                            type: 'line', yMin: max, yMax: max,
+                            type: 'line',
+                            yMin: max, yMax: max,
                             borderColor: scss?.redDark,
                             borderWidth: .5,
                         }, {
@@ -193,12 +202,13 @@ async function refineData({
                             borderColor: scss?.blueDark,
                             borderWidth: .5,
                         },
-                        maxPoint({ i: maxi, max, last: last?.c, len: price?.length }),
-                        minPoint({ i: mini, min, last: last?.c, len: price?.length }),
+                        maxPoint({ i: maxi, d: dates[maxi], max, last: last?.c, len: price?.length }),
+                        minPoint({ i: mini, d: dates[mini], min, last: last?.c, len: price?.length }),
                     ]
                 }
             }
             options.scales = {
+                x: { min: dt.num() - from },
                 y: {
                     min: ymin > 0 ? ymin * 0.8 : ymin * 1.2,
                     max: ymax * 1.1
@@ -206,47 +216,19 @@ async function refineData({
             };
         }
         if (percentMa) {
-            const def = { borderWidth: 1, pointRadius: 0 }
-            subData = [...subData, {
+            subData = [{
                 data: priceMa,
                 label: '%B',
                 borderColor: scss?.bgBrighter,
                 backgroundColor: scss?.bgBrighter,
-                ...def
+                borderWidth: 1, pointRadius: 0
             }]
-            suboptions.scales = {
-                y: { min: -20, max: 120, display: true }
-            }
-            suboptions.plugins = {
-                annotation: {
-                    annotations: [{
-                        type: 'line',
-                        yMin: 50, yMax: 50,
-                        borderColor: scss.bgBrighter,
-                        borderWidth: 1,
-                    }, {
-                        type: 'box',
-                        yMin: 0, yMax: 100,
-                        borderColor: scss.bgBrighter,
-                        backgroundColor: scss.bgOpacity,
-                        borderDash: [5, 5],
-                        borderWidth: 1,
-                    }]
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function (ctx) {
-                            return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
-                        },
-                    }
-                }
-            }
         }
     }
     return [
         { labels: date, datasets: mainData },
         { labels: date, datasets: subData },
-        options, suboptions
+        options
     ];
 }
 
@@ -254,7 +236,7 @@ function ButtonGroup({
     isBollinger, setBollinger,
     isEarn, setEarn,
     isMinMax, setMinMax,
-    len, setLen, num, setNum,
+    from, setFrom, num, setNum,
     bollingerBtn, timeBtn,
     view, setView,
 }) {
@@ -288,9 +270,9 @@ function ButtonGroup({
                 {timeBtn && <RadioSelect
                     title={'기간'}
                     names={['6M', '1Y', '5Y']}
-                    values={[YEAR_LEN / 2, YEAR_LEN, YEAR_LEN * 5]}
-                    onChange={setLen}
-                    defaultValue={len}
+                    values={[dt.YEAR / 2, dt.YEAR, dt.YEAR * 5]}
+                    onChange={setFrom}
+                    defaultValue={from}
                 />}
                 {bollingerBtn && <RadioSelect
                     title={'이평'}
@@ -308,27 +290,25 @@ function ButtonGroup({
     </>
 }
 
-const YEAR_LEN = 252;
 function PriceLine({
     prices = [{}], load,
     addEarn = true, addBollinger = false, minMax = true,
-    N = 60, L = YEAR_LEN * 5,
+    N = 60, L = dt.YEAR * 5,
     percentMa = true,
     bollingerBtn = true, timeBtn = true,
-    x = false, y = false, legend = false,
+    x = false, y = false,
 }) {
-    defaultOptions.plugins.legend.display = legend;
     defaultOptions.scales.x.display = x;
     defaultOptions.scales.y.display = y;
 
     const [num, setNum] = useState(N);
-    const [len, setLen] = useState(L);
+    const [from, setFrom] = useState(L);
     const [isEarn, setEarn] = useState(addEarn);
     const [isMinMax, setMinMax] = useState(minMax);
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
-    const [suboptions, setSubOptions] = useState(defaultOptions);
-    const Prices = prices.map(price => price?.qsort(dt.lsort)?.slice(-len));
+    const Prices = prices.map(price => price
+        ?.qsort(dt.lsort));
 
     const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });
@@ -336,26 +316,60 @@ function PriceLine({
     useEffect(() => {
         setView(false);
     }, [prices])
+    // 20, 60, 120을 async로 미리 만들어 놓고, 그때그때 minmax만 따로 구해줘야함
     useEffect(() => {
         if (!load?.price) {
-            console.log('price 차트 렌더링중');
+            console.time('price');
             refineData({
-                prices: Prices, num, isEarn, isBollinger, isMinMax, percentMa
-            }).then(([data, sub, option, suboption]) => {
+                prices: Prices, num, isEarn, isBollinger, isMinMax, percentMa, from
+            }).then(([data, sub, option]) => {
                 setData(data);
                 setSubData(sub);
                 setOptions(merge(defaultOptions, option))
-                setSubOptions(merge(defaultOptions, suboption));
+                console.timeEnd('price');
             })
         }
-    }, [load?.price, isEarn, isBollinger, isMinMax, num, len])
+    }, [load?.price, isEarn, isBollinger, isMinMax, num, from])
+
     const props = {
         isBollinger, setBollinger,
         isEarn, setEarn,
         isMinMax, setMinMax,
-        len, setLen, num, setNum,
+        from, setFrom, num, setNum,
         bollingerBtn, timeBtn,
         view, setView
+    }
+
+
+    const suboption = {
+        scales: {
+            x: { min: dt.num() - from },
+            y: { min: -20, max: 120, display: true }
+        },
+        plugins: {
+            annotation: {
+                annotations: [{
+                    type: 'line',
+                    yMin: 50, yMax: 50,
+                    borderColor: scss.bgBrighter,
+                    borderWidth: 1,
+                }, {
+                    type: 'box',
+                    yMin: 0, yMax: 100,
+                    borderColor: scss.bgBrighter,
+                    backgroundColor: scss.bgOpacity,
+                    borderDash: [5, 5],
+                    borderWidth: 1,
+                }]
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (ctx) {
+                        return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
+                    },
+                }
+            }
+        }
     }
     return (<>
         <div className={`${styles.wrap} ${percentMa && styles.withSub}`}>
@@ -374,9 +388,9 @@ function PriceLine({
                     {load?.price
                         ? <Loading left={"auto"} right={"auto"} />
                         : <Line
-                            options={suboptions}
                             plugins={plugins}
                             data={subData}
+                            options={merge(defaultOptions, suboption)}
                         />}
                 </div>
             }

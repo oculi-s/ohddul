@@ -6,23 +6,23 @@
     }
 
     >*[rank^="bronze"] {
-        color: var(--rank-bronze);
+        color: $bronze;
     }
 
     >*[rank^="silver"] {
-        color: var(--rank-silver);
+        color: $silver;
     }
 
     >*[rank^="gold"] {
-        color: var(--rank-gold);
+        color: $gold;
     }
 
     >*[rank^="platinum"] {
-        color: var(--rank-platinum);
+        color: $platinum;
     }
 
     >*[rank^="diamond"] {
-        color: var(--rank-diamond);
+        color: $diamond;
     }
 }
 

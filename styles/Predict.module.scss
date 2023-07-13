@@ -12,7 +12,7 @@
     }
 
     input:checked+label {
-        background: var(--blue);
+        background: $blue;
     }
 
     input:checked+label::after {
@@ -21,7 +21,7 @@
 
     label {
         display: block;
-        background: var(--red);
+        background: $red;
         width: 20px;
         height: 20px;
         margin: auto;

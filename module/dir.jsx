@@ -40,6 +40,7 @@ export const user = {
     meta: uid => encode(`@/data/user/${uid}/meta.json`),
     favs: uid => encode(`@/data/user/${uid}/favs.json`),
     pred: uid => encode(`@/data/user/${uid}/pred.json`),
+    hist: uid => encode(`@/data/user/${uid}/hist.json`),
     alarm: uid => encode(`@/data/user/${uid}/alarm.json`),
 }
 

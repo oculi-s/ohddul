@@ -29,6 +29,15 @@ $blue: #727ddd;
 $blueDark: #323764;
 $blueBright: #3a4be0;
 
+
+$unranked: #383838;
+$bronze: #884e1e;
+$silver: #7e7e7e;
+$gold: #bdb32a;
+$platinum: #4aebba;
+$diamond: #4a9deb;
+$master: #eb4a4a;
+
 :export {
     mobWidth: $mobWidth;
     midWidth: $midWidth;
@@ -57,6 +66,14 @@ $blueBright: #3a4be0;
     blue: $blue;
     blueDark: $blueDark;
     blueBright: $blueBright;
+
+    unranked: $unranked;
+    bronze: $bronze;
+    silver: $silver;
+    gold: $gold;
+    platinum: $platinum;
+    diamond: $diamond;
+    master: $master;
 }
 
 @mixin mobile {

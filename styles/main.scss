@@ -1,19 +1,6 @@
 @import 'variables.module.scss';
 
 :root {
-    --red: #e3665d;
-    --blue: #5566ff;
-    --green: #5ba76e;
-    --rank-unranked: #383838;
-    --rank-bronze: #884e1e;
-    --rank-silver: #7e7e7e;
-    --rank-gold: #bdb32a;
-    --rank-platinum: #4aebba;
-    --rank-diamond: #4a9deb;
-    --rank-master: #eb4a4a;
-}
-
-:root {
     --border-color: #21212d;
     --text-color: #aaa;
     --text-darker: #666;
@@ -282,63 +269,63 @@ footer {
 
 .unranked,
 .unranked * {
-    color: var(--rank-unranked) !important;
+    color: $unranked !important;
 }
 
 .bronze,
 .bronze * {
-    color: var(--rank-bronze) !important;
+    color: $bronze !important;
 }
 
 .silver,
 .silver * {
-    color: var(--rank-silver) !important;
+    color: $silver !important;
 }
 
 .gold,
 .gold * {
-    color: var(--rank-gold) !important;
+    color: $gold !important;
 }
 
 .platinum,
 .platinum * {
-    color: var(--rank-platinum) !important;
+    color: $platinum !important;
 }
 
 .diamond,
 .diamond * {
-    color: var(--rank-diamond) !important;
+    color: $diamond !important;
 }
 
 .master,
 .master * {
-    color: var(--rank-master) !important;
+    color: $master !important;
 }
 
 .bg-unranked {
-    background: var(--rank-unranked);
+    background: $unranked;
 }
 
 .bg-bronze {
-    background: var(--rank-bronze);
+    background: $bronze;
 }
 
 .bg-silver {
-    background: var(--rank-silver);
+    background: $silver;
 }
 
 .bg-gold {
-    background: var(--rank-gold);
+    background: $gold;
 }
 
 .bg-platinum {
-    background: var(--rank-platinum);
+    background: $platinum;
 }
 
 .bg-diamond {
-    background: var(--rank-diamond);
+    background: $diamond;
 }
 
 .bg-master {
-    background: var(--rank-master);
+    background: $master;
 }

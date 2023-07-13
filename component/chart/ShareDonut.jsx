@@ -58,7 +58,7 @@ const ShareDonut = ({ share, stockMeta }) => {
     const [data, setData] = useState({ labels: [], datasets: [] });
     useEffect(() => {
         if (share?.length) {
-            console.log('share 차트 렌더링중');
+            console.time('share');
             const amount = stockMeta?.a;
             const shareData = share
                 ?.map(e => parseFix(e.amount / amount * 100, 1));
@@ -81,6 +81,7 @@ const ShareDonut = ({ share, stockMeta }) => {
                 }]
             };
             setData(data);
+            console.timeEnd('share')
         }
     }, [share]);
 

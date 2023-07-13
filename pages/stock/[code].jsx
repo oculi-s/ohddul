@@ -99,7 +99,7 @@ function Index(props) {
     const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
     useEffect(() => {
-        console.log('predBar 렌더링중');
+        console.time('predBar');
         async function fetch() {
             if (uid && !userPred) {
                 api.json.read({
@@ -107,8 +107,10 @@ function Index(props) {
                     def: { queue: [], data: [] }
                 }).then(pred => {
                     setPred(pred);
-                    setLoadUser(e => { e.pred = false; return e });
+                    setLoadUser({ pred: false });
                 })
+            } else {
+                setLoadUser({ pred: false });
             }
             setLoadStock({ price: true });
             if (prices[code]) {
@@ -121,6 +123,7 @@ function Index(props) {
                     setLoadStock({ price: false });
                 })
             }
+            console.timeEnd('predBar');
         }
         fetch();
     }, [code])
@@ -134,6 +137,7 @@ function Index(props) {
     const last = price[code];
     props = {
         ...props,
+        uid,
         last, router, share: share.data, earn: earn.data, ban: ban[code],
         userPred, loadUser, setPred,
         stockPrice, loadStock,
