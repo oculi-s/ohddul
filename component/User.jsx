@@ -63,7 +63,7 @@ export function User({ user, setAsideShow }) {
             setLoading(false);
         }
         fetch();
-    }, [user])
+    }, [])
     const Lazy = (data) => loading ? '...' : data;
     const [color, num, next] = getRank(meta?.rank);
     let rankName = color[0]?.toUpperCase() + num;
@@ -91,7 +91,7 @@ export function Alarms({ uid, setAsideShow }) {
             setLen(data?.filter(e => !e.ch)?.length);
         }
         if (uid) lazyLoad();
-    }, [])
+    }, [uid])
     if (!uid) return;
     return <>
         <div className={styles.box}>

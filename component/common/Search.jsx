@@ -201,7 +201,7 @@ function Index(props) {
             onClick={e => setView(false)}
         >
             <span>{e?.id}</span>
-            <span>{e?.rank}</span>
+            <span>{Int(e?.rank)}</span>
         </Link>);
 
     const names = [

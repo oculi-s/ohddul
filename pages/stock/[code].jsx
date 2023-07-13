@@ -1,13 +1,16 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '$/Stock/Stock.module.scss';
-import { Num, Fix, Price, Color, Per, Div } from '@/module/ba';
+import { Num, Fix, Price, Color, Per, Div, Sleep } from '@/module/ba';
 import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
-import dt from '@/module/dt';
 import StockHead from '#/stockData/stockHead';
 import ToggleTab from '#/base/ToggleTab';
 import { LastUpdate, Loading } from '#/base/base';
 import Help from '#/base/Help';
+import { useSession } from 'next-auth/react';
+import api from '../api';
+import dir from '@/module/dir';
+import dt from '@/module/dt';
 import '@/module/array';
 
 import GroupFold from '#/stockFold/GroupFold';
@@ -23,11 +26,11 @@ import PredElement from '#/stockData/stockPred';
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
 */
-const MetaTable = ({ stockMeta, stockPredict, last, earn = [] }) => {
+const MetaTable = ({ stockMeta: meta, stockPred: pred, last, earn = [] }) => {
     earn?.qsort(dt.lsort);
 
     const lastPrice = last?.c;
-    const amount = stockMeta?.a;
+    const amount = meta?.a;
     const total = amount * lastPrice;
     const EPS = (last?.eps || 0);
     const BPS = (last?.bps || 0);
@@ -35,7 +38,9 @@ const MetaTable = ({ stockMeta, stockPredict, last, earn = [] }) => {
     const revenueSum = Object.values(earn)?.map(e => e?.revenue)?.sum();
     const profitSum = Object.values(earn)?.map(e => e?.profit)?.sum();
 
-    const cnt = stockPredict?.data?.length || 0 + stockPredict?.queue?.length || 0;
+    const dataLen = pred?.data?.length || 0;
+    const queueLen = pred?.queue?.length || 0;
+    const right = pred?.data?.filter(e => e.v >= 0).length || 0;
 
     return (
         <div className={`${styles.meta} clear`}>
@@ -70,8 +75,8 @@ const MetaTable = ({ stockMeta, stockPredict, last, earn = [] }) => {
                     <th>이익률<Help {...prHelp} /></th>
                     <td>{Div(profitSum, revenueSum)}</td>
                 </tr> || ''}
-                <tr><th>총 예측 수</th><td>{cnt}</td></tr>
-                <tr><th>정답률</th><td>{Fix(0, 1)}%</td></tr>
+                <tr><th>총 예측 수</th><td>{dataLen + queueLen}</td></tr>
+                <tr><th>정답률</th><td>{Div(right, dataLen, 1)} ({right}/{dataLen})</td></tr>
             </tbody></table>
         </div >
     )
@@ -81,13 +86,34 @@ function Index(props) {
     const { meta, ban, code, stockMeta, stockPrice, earn, share } = props;
     const router = useRouter();
 
+    const [userPred, setPred] = useState({ queue: [], data: [] });
+    const [loadUser, setLoad] = useState({ pred: true });
+    const uid = props?.session?.user?.uid;
+    useEffect(() => {
+        console.log('predBar 렌더링중');
+        async function fetch() {
+            if (uid) {
+                api.json.read({ url: dir.user.pred(uid) }).then(pred => {
+                    setPred(pred);
+                    setLoad(e => { e.pred = false; return e });
+                })
+            }
+        }
+        fetch();
+    }, [code])
+
+
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
     stockPrice?.data?.qsort(dt.lsort);
     const last = stockPrice?.data?.slice(-1)[0];
-    props = { ...props, last, router, share: share.data, earn: earn.data, ban: ban[code] };
+    props = {
+        ...props,
+        last, router, share: share.data, earn: earn.data, ban: ban[code],
+        userPred, loadUser, setPred,
+    };
 
     const tabContents = {
         names: ['가격변화', '실적추이', '지분정보', '예측모음'],
@@ -112,15 +138,13 @@ function Index(props) {
     if (ban[code]) tabContents.names.pop()
     return (
         <>
-            <Suspense fallback={<Loading />} >
-                <StockHead {...props} />
-                <hr />
-                <GroupFold {...props} />
-                <IndutyFold {...props} />
-                <MetaTable {...props} />
-                <hr />
-                <ToggleTab {...tabContents} />
-            </Suspense>
+            <StockHead {...props} />
+            <hr />
+            <GroupFold {...props} />
+            <IndutyFold {...props} />
+            <MetaTable {...props} />
+            <hr />
+            <ToggleTab {...tabContents} />
         </>
     );
 }

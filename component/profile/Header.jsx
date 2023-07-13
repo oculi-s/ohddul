@@ -1,43 +1,14 @@
 import { getBg, getRank } from '#/User';
 import styles from '$/Profile/Header.module.scss'
-import { useEffect, useState } from 'react'
-import api from '@/pages/api';
-import dir from '@/module/dir';
 import { Div, Int } from '@/module/ba';
 import { Loading } from '#/base/base';
 
-export function Curtain({ rank }) {
-    const [color, num, next] = getRank(rank);
-    useEffect(() => {
-        document.querySelector('nav').classList.add(`bg-${color}`);
-    }, [color]);
-    return <div
-        className={styles.curtain}
-        style={{ background: `linear-gradient(180deg, var(--rank-${color}), transparent)` }} />;
-}
-
-function Header({ color, num, id }) {
-
-}
-
-export function Profile({ user, id }) {
-    const [pred, setPred] = useState({ queue: [], data: [] });
-    const [meta, setMeta] = useState({ rank: 1000 });
+/**
+ * Profile에서 curtain까지 전부 다룸
+ */
+export default function Header({ userMeta: meta, userPred: pred, loadUser: load }) {
     const [color, num, next] = getRank(meta?.rank);
-    const [loading, setLoading] = useState(true);
-    const props = { color, num, id };
-    useEffect(() => {
-        async function fetch() {
-            const uid = user?.uid;
-            if (uid) {
-                setMeta(await api.json.read({ url: dir.user.meta(uid) }));
-                setPred(await api.json.read({ url: dir.user.pred(uid) }));
-            }
-            setLoading(false);
-        }
-        fetch();
-    }, [user])
-    const Lazy = (data) => loading ? '...' : data;
+    const Lazy = (data) => load?.meta ? '...' : data;
     const queue = pred?.queue;
     const data = pred?.data;
     const dataLen = data?.length || 0;
@@ -46,16 +17,20 @@ export function Profile({ user, id }) {
     const bg = getBg(color);
     return (
         <div className={styles.profile}>
+            <div
+                className={styles.curtain}
+                style={{ background: `linear-gradient(180deg, var(--rank-${color}), transparent)` }}
+            />
             <h2 className={styles.id}>
-                {loading ? <Loading small={true} />
+                {load?.meta ? <Loading small={true} inline={true} />
                     : <span
                         className={color}
                         ranknum={num}
                         style={{ backgroundImage: `url(${bg.src})` }}>
                     </span>}
-                {id}
+                {meta?.id}
             </h2>
-            <table className={styles.metaTable}>
+            <table className={`${styles.metaTable} fixed`}>
                 <tbody>
                     <tr><th colSpan={2}>
                         <div className={color}>

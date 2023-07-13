@@ -7,12 +7,13 @@ import ToggleTab from "#/base/ToggleTab";
 import dir from "@/module/dir";
 import json from "@/module/json";
 
-import { Curtain, Profile } from "#/profile/Header";
+import Header from "#/profile/Header";
 import { FavTable } from "#/profile/profileFavs";
 import ProfilePred from "#/profile/profilePred";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import api from "../api";
+import api from "@/pages/api";
+import { Int } from "@/module/ba";
+import { getRank } from "#/User";
 
 /**
  * asdf
@@ -24,21 +25,20 @@ export async function getServerSideProps(ctx) {
     const session = await getSession(ctx);
     let props = {};
 
-    let uid = false, queue = [], favs = [];
-    let id, rank, email;
+    let pred = { queue: [], data: [] }, favs = [];
+    let id, uid = false;
     if (qid) {
         uid = ids[qid];
         id = qid;
-        const meta = json.read(dir.user.meta(uid), { rank, email });
-        queue = json.read(dir.user.pred(uid), { queue: [] }).queue;
         favs = json.read(dir.user.favs(uid), []);
-        props = { ...props, id, ...meta, queue, favs };
     } else if (session?.user) {
-        const meta = session?.user;
-        queue = session?.user?.queue;
+        const user = session?.user;
+        uid = user?.uid;
+        id = user?.id;
         favs = session?.user?.favs;
-        props = { ...props, ...meta, queue, favs };
     }
+    props = { ...props, uid, id, favs };
+    pred = json.read(dir.user.pred(uid), { data: [], queue: [] });
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
 
@@ -46,7 +46,8 @@ export async function getServerSideProps(ctx) {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) =>
                 Object.keys(favs)?.includes(k)
-                || queue?.find(e => e.c == k)))
+                || pred?.queue?.find(e => e.c == k)
+                || pred?.data?.find(e => e.c == k)))
     }
     const meta = Filter(Meta);
     const price = Filter(Price);
@@ -55,30 +56,17 @@ export async function getServerSideProps(ctx) {
     return { props };
 }
 
-function Graph({ id }) {
-    const { data: session } = useSession();
-    const user = session?.user;
-    const [meta, setMeta] = useState({ rank: 1000 });
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        async function fetchData() {
-            const uid = user?.uid;
-            if (uid) {
-                setMeta(await api.json.read({ url: dir.user.meta(uid) }))
-            }
-            setLoading(false);
-        }
-        fetchData();
-    }, [user])
+function Graph({ userMeta: meta }) {
     const rank = meta?.rank;
+    const [color] = getRank(rank);
     const prev = Math.floor(rank / 100) * 100;
-    const forNext = (rank - prev);
+    const forNext = Int(rank - prev);
 
-    const props = { horLine: rank, data: user?.pred?.data, name: id };
+    const props = { horLine: rank };
     return (
         <>
             <div className={styles.bar}>
-                <div rank={rank} style={{ width: Math.max(forNext, 1) + '%' }}></div>
+                <div className={`bg-${color}`} style={{ width: Math.max(forNext, 1) + '%' }}></div>
             </div>
             <p className="des">다음랭크까지(+{100 - forNext})</p>
             <div className={styles.chart}>
@@ -89,10 +77,9 @@ function Graph({ id }) {
 }
 
 function Index({
-    id, rank, email,
-    queue, favs, meta,
-    price, User, setUser,
-    ban,
+    uid, id, favs, // user
+    email,
+    meta, price, ban, // stock
 }) {
     const router = useRouter();
     const { data: session, status } = useSession();
@@ -102,11 +89,32 @@ function Index({
     useEffect(() => {
         if (!qid) {
             if (!id) id = user?.id;
-            if (!rank) rank = user?.rank;
+            if (!uid) uid = user?.uid;
             if (!favs) favs = user?.favs;
-            if (!queue) queue = user?.queue;
         }
     }, [session]);
+
+    /**
+     * userPred와 userMeta를 api를 통해 읽어와야 함.
+     */
+    const [userPred, setPred] = useState({ queue: [], data: [] });
+    const [userMeta, setMeta] = useState({ rank: 1000 });
+    const [loadUser, setLoad] = useState({ meta: true, pred: true });
+    useEffect(() => {
+        async function fetch() {
+            if (uid) {
+                api.json.read({ url: dir.user.meta(uid) }).then(meta => {
+                    setMeta(meta);
+                    setLoad(e => { e.meta = false; return e });
+                })
+                api.json.read({ url: dir.user.pred(uid) }).then(pred => {
+                    setPred(pred);
+                    setLoad(e => { e.pred = false; return e });
+                })
+            }
+        }
+        fetch();
+    }, [uid])
 
     const mine = user?.id == id;
     if (!qid && status == 'unauthenticated') {
@@ -116,10 +124,10 @@ function Index({
     }
 
     const props = {
-        User, setUser, user,
-        queue, favs,
-        id, rank, mine,
-        meta, price, ban,
+        status,
+        userMeta, userPred, setPred, loadUser, // Client Fetch
+        user, uid, favs, id, mine, // Server
+        meta, price, ban, // stock
     };
     const tabContents = {
         names: ["랭크변화", mine ? "내 예측" : "예측", "관심종목"],
@@ -139,8 +147,7 @@ function Index({
     };
     return (
         <>
-            <Curtain {...props} />
-            <Profile {...props} />
+            <Header {...props} />
             <hr />
             <ToggleTab {...tabContents} />
         </>

@@ -12,12 +12,14 @@ import { useEffect, useRef, useState } from 'react';
  */
 export function QueueTable({ queue, meta, by = 'stock', ids }) {
     const ref = useRef([]);
-    const [intv, setIntv] = useState([]);
+    const [intv, setIntv] = useState({});
+    queue?.sort(dt.lsort);
     useEffect(() => {
+        Object.values(intv).forEach(e => clearInterval(e));
         queue?.forEach((q, i) => {
             var cnt = 0;
             const { at, d } = q;
-            const e = ref?.current[i];
+            const e = ref?.current[d];
             if (!e) return;
             let time = dt.scoring(at || d) - dt.num();
             if (time >= 0) {
@@ -25,8 +27,7 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
             } else {
                 e.innerHTML = `대기중...`;
             }
-            if (intv[i]) return;
-            setInterval(() => {
+            intv[d] = setInterval(() => {
                 const dots = Array(cnt++ % 3 + 1).fill('.').join('');
                 time -= 1000;
                 if (e) {
@@ -37,12 +38,11 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
                     }
                 }
             }, 1000);
-            setIntv(e => { e[i] = true; return e; });
+            setIntv(intv);
         })
     }, [queue])
     const queueBody = queue?.map((e, i) => {
         const { t, c, d, o, pr, od, at, uid } = e;
-        // console.log(dt.parse(dt.scoring(at || d)))
         return <tr key={`pred${i}`}>
             <th>{by == 'stock' ?
                 <Link href={`/stock/${meta[c]?.n}`}>{meta[c]?.n}</Link>
@@ -51,7 +51,6 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
             <td>{t == 'od' ? '오떨' : '가격'}</td>
             {t == 'pr'
                 ? <>
-                    {/* <td>{dt.parse(at, 'M월D일')}</td> */}
                     <td>{Num(pr)}<span className='mh'>&nbsp;</span><br className='ph' />
                         <span className={Color(pr, o)}>({Per(pr, o)})</span>
                     </td>
@@ -61,7 +60,7 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
                 </td>
             }
             <td><span className='des'>{dt.parse(d, 'M월D일 HH:mm')}</span></td>
-            <td><span className='des' ref={e => { ref.current[i] = e }}></span></td>
+            <td><span className='des' ref={e => { ref.current[d] = e }}></span></td>
         </tr>;
     });
     return <table className={styles.queueTable}>
@@ -73,7 +72,6 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
             <tr>
                 <th>{by == 'stock' ? '종목' : '유저'}</th>
                 <th><span className='mh'>예측</span>종류</th>
-                {/* <th colSpan={2}>예측</th> */}
                 <th>예측</th>
                 <th><span className='mh'>예측</span>시간</th>
                 <th>채점<span className='mh'>시간</span></th>

@@ -23,9 +23,10 @@
 }
 
 .id {
-    display: inline-block;
     color: white;
     font-size: 2em;
+    z-index: 1;
+    position: relative;
 
     >span {
         position: relative;

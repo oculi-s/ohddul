@@ -25,10 +25,10 @@ function ToggleTab({
         className={i == tabIndex ? '' : 'd'}
     >{e}</div>);
     return (
-        <>
+        <div className={styles.toggleTab}>
             <div className={styles.tabGroup}>{names}</div>
             <div>{datas}</div>
-        </>
+        </div>
     );
 }
 

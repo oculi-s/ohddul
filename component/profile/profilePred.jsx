@@ -1,11 +1,11 @@
 import { QueueTable } from "#/baseStock/PredTable"
 
 
-function ProfilePred(props) {
+function ProfilePred({ meta, userPred }) {
+    const queue = userPred?.queue;
     return <>
-
         <h3>대기중인 예측</h3>
-        <QueueTable {...props} />
+        <QueueTable {...{ queue, meta }} />
     </>
 }
 

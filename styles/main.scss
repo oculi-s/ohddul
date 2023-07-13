@@ -93,6 +93,11 @@ main {
     position: relative;
 }
 
+hr {
+    position: relative;
+    z-index: 1;
+}
+
 h1,
 h2,
 h3,
@@ -308,4 +313,32 @@ footer {
 .master,
 .master * {
     color: var(--rank-master) !important;
+}
+
+.bg-unranked {
+    background: var(--rank-unranked);
+}
+
+.bg-bronze {
+    background: var(--rank-bronze);
+}
+
+.bg-silver {
+    background: var(--rank-silver);
+}
+
+.bg-gold {
+    background: var(--rank-gold);
+}
+
+.bg-platinum {
+    background: var(--rank-platinum);
+}
+
+.bg-diamond {
+    background: var(--rank-diamond);
+}
+
+.bg-master {
+    background: var(--rank-master);
 }

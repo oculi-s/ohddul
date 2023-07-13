@@ -55,7 +55,7 @@ export async function getServerSideProps(ctx) {
 				if (k == code) return 1;
 				if (iname && Induty[k] == iname) return 1;
 				if (gname && Group?.index[k] == gname) return 1;
-				if (share.data?.find(e => Meta.data[k]?.n == NameDict[e.name] || e.name))
+				if (share.data?.find(e => Meta.data[k]?.n == (NameDict[e.name] || e.name)))
 					return 1;
 				return 0;
 			}))
@@ -66,7 +66,7 @@ export async function getServerSideProps(ctx) {
 				if (v == code) return 1;
 				if (iname && Induty[v] == iname) return 1;
 				if (gname && Group?.index[v] == gname) return 1;
-				if (share.data?.find(e => Meta.data[v]?.n == NameDict[e.name] || e.name))
+				if (share.data?.find(e => Meta.data[v]?.n == (NameDict[e.name] || e.name)))
 					return 1;
 				return 0;
 			}))

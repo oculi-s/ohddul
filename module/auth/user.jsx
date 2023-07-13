@@ -4,13 +4,14 @@ import { user as dir } from "@/module/dir";
 import { renderToStaticMarkup } from 'react-dom/server';
 import Link from "next/link";
 
+/**
+ * Session에 담길 정보는 id, uid, favs뿐
+ * 나머지는 fetch를 통해 알아올것
+ */
 export function findUid(uid) {
     const id = json.read(dir.ids).index[uid];
-    if (!id) return false;
-    const user = json.read(dir.meta(uid), false);
-    const queue = json.read(dir.pred(uid), { queue: [] }).queue;
     const favs = json.read(dir.favs(uid), {});
-    if (user) return { ...user, id, uid, queue, favs };
+    if (id) return { id, uid, favs };
     else return false;
 }
 
@@ -32,6 +33,9 @@ export function meta() {
 
 export function change({ id, uid, email }) {
     if (id) {
+        const meta = json.read(dir.meta(uid));
+        meta.id = id;
+        json.write(dir.meta(uid), meta);
         const ids = json.read(dir.ids);
         const oid = ids.index[uid];
         delete ids[oid];
@@ -67,14 +71,12 @@ export function create(user) {
     const name = user?.name;
     const email = user?.email;
     const meta = json.read(dir.ids);
-    const data = { name, email, rank: 1000 };
+    const data = { id: uid, name, email, rank: 1000 };
     meta[uid] = uid;
     meta.index[uid] = uid;
     json.write(dir.ids, meta, false);
     json.write(dir.meta(uid), data, false);
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);
-    return {
-        ...data, id: uid, uid, queue: [], favs: {}
-    };
+    return { id: uid, uid, favs: {} };
 }

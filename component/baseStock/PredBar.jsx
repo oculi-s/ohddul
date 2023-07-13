@@ -37,7 +37,8 @@ const Alert = ({ name, ohddul, change, date, origin }) => {
  * * session 업데이트와 함께 상위문서인 stockHead에서 자동 리렌더
  */
 async function submit({
-    update, again, uid,
+    setPred, setTime, setView,
+    again, uid,
     code, name,
     ohddul, change, origin, date,
 
@@ -76,7 +77,9 @@ async function submit({
         url: dir.stock.predAll,
         data: { code, key: 'queue' }
     });
-    update(userData);
+    setPred(e => { e.queue.push(userData); return e });
+    setTime(dt.num());
+    setView(false);
     setAgain(true);
 }
 
@@ -186,10 +189,11 @@ function PriceForm({
  */
 export default function PredBar({
     name, code, last,
-    setView, setCnt,
+    setPred, setTime, setView,
+    setCnt,
     testing = false, help = true, defaultType = 0
 }) {
-    const { data: session, update } = useSession();
+    const { data: session } = useSession();
     const [change, setChange] = useState(0);
     const [type, setType] = useState(defaultType);
     const [date, setDate] = useState(1);
@@ -198,12 +202,12 @@ export default function PredBar({
     const uid = session?.user?.uid;
 
     const submitProps = {
-        update,
+        setPred, setTime, setView,
         again, setAgain,
         code, name, testing,
         change, origin,
         uid, date,
-        setView, setCnt, setChange, setDate,
+        setCnt, setChange, setDate,
     };
     useEffect(() => {
         if (!testing) {
@@ -216,21 +220,6 @@ export default function PredBar({
                 setType(0);
             }, 500);
         }
-
-        // const queue = session?.user?.queue?.qsort(dt.sort);
-        // const defTime = queue?.find(e => e.c == code)?.d;
-        // const can = dt.pred(defTime);
-        // document.onkeydown = e => {
-        //     if (e.key == 'F9') {
-        //         e.preventDefault();
-        //         if (can)
-        //             submit({ ...submitProps, ohddul: 1 });
-        //     } else if (e.key == 'F10') {
-        //         e.preventDefault();
-        //         if (can)
-        //             submit({ ...submitProps, ohddul: -1 });
-        //     }
-        // }
     }, [code]);
 
 
@@ -260,33 +249,31 @@ export default function PredBar({
             </button>
         </div>;
     }
-    return (
-        <div className={styles.fade}>
-            <div className={`${styles.type} ${styles.type2}`}>
-                <Return {...{ setType, setChange }} />
-                <form
-                    className={styles.predForm}
-                    onSubmit={e => {
-                        e.preventDefault();
-                        submit(submitProps);
-                    }}
-                >
-                    <DateForm {...{ date, setDate }} />
-                    <PriceForm {...{ change, origin, setChange, submitProps }} />
-                    <button type='submit' className='fa fa-arrow-right'></button>
-                </form>
-            </div>
-            {help && <div className={styles.help}>
-                <Help {...{
-                    des: ' 단축키',
-                    data: <>
-                        <tr><th>&uarr;, &darr;</th><td rowSpan={2}>가격 변경</td></tr>
-                        <tr><th>+, -</th></tr>
-                        <tr><th>Enter</th><td>맞추기</td></tr>
-                        <tr><th>R</th><td>가격 초기화</td></tr>
-                    </>
-                }} />
-            </div>}
+    return <div className={styles.fade}>
+        <div className={`${styles.type} ${styles.type2}`}>
+            <Return {...{ setType, setChange }} />
+            <form
+                className={styles.predForm}
+                onSubmit={e => {
+                    e.preventDefault();
+                    submit(submitProps);
+                }}
+            >
+                <DateForm {...{ date, setDate }} />
+                <PriceForm {...{ change, origin, setChange, submitProps }} />
+                <button type='submit' className='fa fa-arrow-right'></button>
+            </form>
         </div>
-    );
+        {help && <div className={styles.help}>
+            <Help {...{
+                des: ' 단축키',
+                data: <>
+                    <tr><th>&uarr;, &darr;</th><td rowSpan={2}>가격 변경</td></tr>
+                    <tr><th>+, -</th></tr>
+                    <tr><th>Enter</th><td>맞추기</td></tr>
+                    <tr><th>R</th><td>가격 초기화</td></tr>
+                </>
+            }} />
+        </div>}
+    </div>
 }
