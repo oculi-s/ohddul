@@ -122,10 +122,8 @@ const callbacks = {
                 token.user.favs = favs;
                 json.write(dir.user.favs(uid), favs, 0);
                 return token;
-            } else {
-                token?.user?.queue?.push(session);
-                return token;
             }
+            return token;
         }
         if (!user) return token;
         token.user = user;

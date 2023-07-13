@@ -39,7 +39,6 @@ function Column() {
 }
 
 function Index(props) {
-    console.log(props.group)
     return (
         <div>
             <Market {...props} />

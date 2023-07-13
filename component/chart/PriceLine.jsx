@@ -337,16 +337,18 @@ function PriceLine({
         setView(false);
     }, [prices])
     useEffect(() => {
-        console.log('price 차트 렌더링중');
-        refineData({
-            prices: Prices, num, isEarn, isBollinger, isMinMax, percentMa
-        }).then(([data, sub, option, suboption]) => {
-            setData(data);
-            setSubData(sub);
-            setOptions(merge(defaultOptions, option))
-            setSubOptions(merge(defaultOptions, suboption));
-        })
-    }, [prices, isEarn, isBollinger, isMinMax, num, len])
+        if (!load?.price) {
+            console.log('price 차트 렌더링중');
+            refineData({
+                prices: Prices, num, isEarn, isBollinger, isMinMax, percentMa
+            }).then(([data, sub, option, suboption]) => {
+                setData(data);
+                setSubData(sub);
+                setOptions(merge(defaultOptions, option))
+                setSubOptions(merge(defaultOptions, suboption));
+            })
+        }
+    }, [load?.price, isEarn, isBollinger, isMinMax, num, len])
     const props = {
         isBollinger, setBollinger,
         isEarn, setEarn,

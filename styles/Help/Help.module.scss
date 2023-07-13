@@ -18,6 +18,10 @@
             counter-increment: h4;
             content: counter(h3) "." counter(h4) ". ";
         }
+
+        b {
+            color: $textBright;
+        }
     }
 }
 

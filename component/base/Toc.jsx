@@ -80,7 +80,6 @@ const ToC = ({ tabIndex }) => {
         const headings = $('main')
             ?.$$('h2, h3, h4, h5')
             ?.filter(e => !e.closest('.d') && !e.closest('dialog'));
-        console.log('TOC rendering');
         setHeading(refineData(headings));
         const hash = location?.hash;
         if (hash) {

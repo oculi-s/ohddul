@@ -1,13 +1,12 @@
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '$/Stock/Stock.module.scss';
-import { Num, Fix, Price, Color, Per, Div, Sleep } from '@/module/ba';
+import { Num, Price, Color, Per, Div } from '@/module/ba';
 import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
 import StockHead from '#/stockData/stockHead';
 import ToggleTab from '#/base/ToggleTab';
-import { LastUpdate, Loading } from '#/base/base';
+import { LastUpdate } from '#/base/base';
 import Help from '#/base/Help';
-import { useSession } from 'next-auth/react';
 import api from '../api';
 import dir from '@/module/dir';
 import dt from '@/module/dt';
@@ -20,8 +19,6 @@ import EarnElement from '#/stockData/stockEarn';
 import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/stockPred';
 
-// import Container from '@/container/heavy';
-
 /**
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
@@ -31,9 +28,8 @@ function MetaTable({
 }) {
     earn?.qsort(dt.lsort);
 
-    const lastPrice = last?.c;
     const amount = meta?.a;
-    const total = amount * lastPrice;
+    const total = amount * last?.c;
     const EPS = (last?.eps || 0);
     const BPS = (last?.bps || 0);
     const ROE = Div(earn?.slice(0, 4)?.map(e => e?.profit).sum(), earn[0]?.equity);
@@ -48,13 +44,21 @@ function MetaTable({
         <div className={`${styles.meta} clear`}>
             <table><tbody>
                 <tr><th>시가총액</th><td>{Price(total)}</td></tr>
-                <tr><th>최근종가</th><td>{Num(lastPrice)}</td></tr>
+                <tr>
+                    <th>최근종가</th><td>{Num(last?.c)}&nbsp;
+                        <span className={styles.percent}>
+                            (<span className={Color(last?.c - last?.p)}>
+                                {Per(last?.c, last?.p)}
+                            </span>)
+                        </span>
+                    </td>
+                </tr>
                 {EPS && <tr>
                     <th>EPS<Help {...epsHelp} /></th>
                     <td>{Num(EPS)}&nbsp;
                         <span className={styles.percent}>
-                            (<span className={Color(EPS - lastPrice)}>
-                                {Per(EPS, lastPrice)}
+                            (<span className={Color(EPS - last?.c)}>
+                                {Per(EPS, last?.c)}
                             </span>)
                         </span>
                     </td>
@@ -63,8 +67,8 @@ function MetaTable({
                     <th>BPS<Help {...bpsHelp} /></th>
                     <td>{Num(BPS)}&nbsp;
                         <span className={styles.percent}>
-                            (<span className={Color(BPS - lastPrice)}>
-                                {Per(BPS, lastPrice)}
+                            (<span className={Color(BPS - last?.c)}>
+                                {Per(BPS, last?.c)}
                             </span>)
                         </span>
                     </td>
@@ -88,6 +92,7 @@ function Index(props) {
     const { meta, price, ban, code, stockMeta, earn, share } = props;
     const router = useRouter();
 
+    const prices = {};
     const [userPred, setPred] = useState();
     const [stockPrice, setPrice] = useState();
     const [loadUser, setLoadUser] = useState({ pred: true });
@@ -97,17 +102,25 @@ function Index(props) {
         console.log('predBar 렌더링중');
         async function fetch() {
             if (uid && !userPred) {
-                api.json.read({ url: dir.user.pred(uid) }).then(pred => {
+                api.json.read({
+                    url: dir.user.pred(uid),
+                    def: { queue: [], data: [] }
+                }).then(pred => {
                     setPred(pred);
                     setLoadUser(e => { e.pred = false; return e });
                 })
             }
-            setPrice({ data: [] })
-            setLoadStock(e => { e.price = true; return e; });
-            api.json.read({ url: dir.stock.light.price(code) }).then(price => {
-                setPrice(price);
-                setLoadStock(e => { e.price = false; return e; });
-            })
+            setLoadStock({ price: true });
+            if (prices[code]) {
+                setPrice(prices[code]);
+                setLoadStock({ price: false });
+            } else {
+                api.json.read({ url: dir.stock.light.price(code) }).then(price => {
+                    setPrice(price);
+                    prices[code] = price;
+                    setLoadStock({ price: false });
+                })
+            }
         }
         fetch();
     }, [code])

@@ -103,11 +103,16 @@ function Index({
     useEffect(() => {
         async function fetch() {
             if (uid) {
-                api.json.read({ url: dir.user.meta(uid) }).then(meta => {
+                api.json.read({
+                    url: dir.user.meta(uid)
+                }).then(meta => {
                     setMeta(meta);
                     setLoad(e => { e.meta = false; return e });
                 })
-                api.json.read({ url: dir.user.pred(uid) }).then(pred => {
+                api.json.read({
+                    url: dir.user.pred(uid),
+                    def: { queue: [], data: [] }
+                }).then(pred => {
                     setPred(pred);
                     setLoad(e => { e.pred = false; return e });
                 })
