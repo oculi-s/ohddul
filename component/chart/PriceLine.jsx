@@ -7,13 +7,11 @@ import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
 import colors from "@/module/colors";
 import scss from '$/variables.module.scss';
-import toggleOnPageChange from "#/toggle";
-import { useRouter } from "next/router";
 import { maxPoint, minPoint } from "@/module/chart/annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
 import merge from 'deepmerge';
 import { hairline } from "@/module/chart/plugins";
-import { Int, parseFix } from "@/module/ba";
+import { parseFix } from "@/module/ba";
 import '@/module/array'
 import { Loading } from "#/base/base";
 Chart.register(Annotation);

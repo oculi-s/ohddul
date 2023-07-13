@@ -98,7 +98,6 @@ function Index(props) {
         async function fetch() {
             if (uid && !userPred) {
                 api.json.read({ url: dir.user.pred(uid) }).then(pred => {
-                    console.log('!')
                     setPred(pred);
                     setLoadUser(e => { e.pred = false; return e });
                 })

@@ -51,9 +51,6 @@ function StockHead({
         setTime(orig);
     }, [code]);
 
-    console.log(load, dt.parse(queue?.find(e => e.c == code)?.d));
-    console.log(bar, uid);
-
     const props = {
         setPred, setView, setTime, load,
         name, code, last,
