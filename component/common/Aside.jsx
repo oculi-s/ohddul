@@ -145,10 +145,10 @@ function Rank({ userMeta }) {
     let data = (userList)
         .slice(0, N)
         .map(({ id, rank }, i) => {
-            let [curRank, nextRank] = getRank(rank);
+            const [color, num, next] = getRank(rank);
             return (
                 <tr key={i}>
-                    <th className={curRank.slice(0, -1)}>
+                    <th className={color}>
                         <Link
                             href={`/profile/${id}`}
                         >

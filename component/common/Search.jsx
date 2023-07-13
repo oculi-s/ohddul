@@ -8,6 +8,7 @@ import Link from 'next/link';
 import api from '@/pages/api';
 import dir from '@/module/dir';
 import { Int } from '@/module/ba';
+import { getRank } from '#/User';
 
 const inko = new Inko();
 
@@ -192,17 +193,20 @@ function Index(props) {
         </Link>);
 
     const UserResult = () => (result?.user || userDef)
-        ?.map((e, i) => <Link
-            key={e.id}
-            onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
-            ref={e => { userRef.current[i] = e; }}
-            href={`/profile/${e?.id}`}
-            className={styles.element}
-            onClick={e => setView(false)}
-        >
-            <span>{e?.id}</span>
-            <span>{Int(e?.rank)}</span>
-        </Link>);
+        ?.map((e, i) => {
+            const [color] = getRank(e?.rank);
+            return <Link
+                key={e.id}
+                onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
+                ref={e => { userRef.current[i] = e; }}
+                href={`/profile/${e?.id}`}
+                className={`${styles.element} ${color}`}
+                onClick={e => setView(false)}
+            >
+                <span>{e?.id}</span>
+                <span>{Int(e?.rank)}</span>
+            </Link>
+        });
 
     const names = [
         <span key={`tab0`}>종목정보</span>,

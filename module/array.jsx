@@ -21,6 +21,29 @@ Array.prototype.trans = function () {
     return this[0].map((x, i) => this.map(x => x[i]));
 }
 
+Array.prototype.min = function () {
+    return Math.min(...this);
+}
+
+Array.prototype.max = function () {
+    return Math.max(...this);
+}
+
+Array.prototype.findIndexes = function (f) {
+    return this.map(f).map((e, i) => e ? i : null).filter(e => e != null);
+}
+
+Array.prototype.pushIf = function (each, f) {
+    const index = this.findIndexes(f);
+    if (index.length == 0) this.push(each);
+    else {
+        this[index[0]] = each;
+        index.slice(1).forEach(i => {
+            this.splice(i, 1);
+        })
+    }
+}
+
 Math.avg = (d) => {
     return Math.round(d?.sum() / d?.length);
 }

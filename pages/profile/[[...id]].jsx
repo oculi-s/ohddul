@@ -60,15 +60,14 @@ export async function getServerSideProps(ctx) {
 
 function Graph({ userMeta: meta, userHist: data, loadUser: load }) {
     const rank = meta?.rank;
-    const [color] = getRank(rank);
-    const prev = Math.floor(rank / 100) * 100;
-    const forNext = Int(rank - prev);
+    const [prev, cur] = getRank(rank);
+    const forNext = Int(rank - cur.score);
 
     const props = { rank, data, load };
     return (
         <>
             <div className={styles.bar}>
-                <div className={`bg-${color}`} style={{ width: Math.max(forNext, 1) + '%' }}></div>
+                <div className={`bg-${cur.color}`} style={{ width: Math.max(forNext, 1) + '%' }}></div>
             </div>
             <p className="des">다음랭크까지(+{100 - forNext})</p>
             <div className={styles.chart}>

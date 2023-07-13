@@ -25,7 +25,7 @@ export const getBg = rank => {
 }
 
 export const getRank = rank => {
-    let rlist = [
+    const rlist = [
         'unranked0',
         'bronze4', 'bronze3', 'bronze2', 'bronze1',
         'silver4', 'silver3', 'silver2', 'silver1',
@@ -36,10 +36,16 @@ export const getRank = rank => {
     ]
     for (let [i, e] of rlist.entries()) {
         if (rank <= 1000 + i * 100) {
-            return [e.slice(0, -1), e.slice(-1), rlist[i + 1]];
+            const p = i == 0 ? rlist[0] : rlist[i - 1];
+            const n = rlist[i + 1];
+            return [
+                { color: p.slice(0, -1), num: p.slice(-1), score: 1000 + (i - 2) * 100 },
+                { color: e.slice(0, -1), num: e.slice(-1), score: 1000 + (i - 1) * 100 },
+                { color: n.slice(0, -1), num: n.slice(-1), score: 1000 + i * 100 },
+            ]
         }
     }
-    return ['master', '1', 5000];
+    return ['master', '1', 'master', '1', 5000, 5000];
 }
 
 /**
@@ -60,16 +66,16 @@ export function User({ user, setAsideShow }) {
         fetch();
     }, [])
     const Lazy = (data) => loading ? <Loading size={14} /> : data;
-    const [color, num, next] = getRank(meta?.rank);
-    let rankName = color[0]?.toUpperCase() + num;
-    if (color == 'unranked') rankName = "IRON";
+    const [prev, cur, next] = getRank(meta?.rank);
+    let rankName = cur.color[0]?.toUpperCase() + cur.num;
+    if (cur.color == 'unranked') rankName = "IRON";
     return (
         <div className={styles.user}>
             <Link href='/profile' onClick={e => setAsideShow(false)}>
                 <div className={styles.id}>{id}</div>
                 <div className={styles.rank}>
                     {Lazy(<>
-                        <span className={color}>
+                        <span className={cur.color}>
                             {Int(meta?.rank)}
                         </span> {rankName}
                     </>)}
