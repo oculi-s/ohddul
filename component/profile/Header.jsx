@@ -6,9 +6,9 @@ import { Loading } from '#/base/base';
 /**
  * Profile에서 curtain까지 전부 다룸
  */
-export default function Header({ userMeta: meta, userPred: pred, loadUser: load }) {
+export default function Header({ id, userMeta: meta, userPred: pred, loadUser: load }) {
     const [color, num, next] = getRank(meta?.rank);
-    const Lazy = (data) => load?.meta ? '...' : data;
+    const Lazy = (data, L = <Loading size={15} />) => load?.meta ? L : data;
     const queue = pred?.queue;
     const data = pred?.data;
     const dataLen = data?.length || 0;
@@ -22,13 +22,13 @@ export default function Header({ userMeta: meta, userPred: pred, loadUser: load 
                 style={{ background: `linear-gradient(180deg, var(--rank-${color}), transparent)` }}
             />
             <h2 className={styles.id}>
-                {load?.meta ? <Loading small={true} inline={true} />
+                {load?.meta ? <Loading inline={true} size={40} />
                     : <span
                         className={color}
                         ranknum={num}
                         style={{ backgroundImage: `url(${bg.src})` }}>
                     </span>}
-                {meta?.id}
+                {id}
             </h2>
             <table className={`${styles.metaTable} fixed`}>
                 <tbody>
@@ -39,12 +39,12 @@ export default function Header({ userMeta: meta, userPred: pred, loadUser: load 
                                 <b>{color.slice(0, 1).toUpperCase() + num} {Int(meta?.rank)}</b>)}
                         </div>
                     </th></tr>
-                    <tr><th>예측완료</th><td>{Lazy(dataLen)}개</td></tr>
-                    <tr><th>채점 대기중</th><td>{Lazy(queueLen)}개</td></tr>
+                    <tr><th>예측완료</th><td>{Lazy(dataLen, '...')}개</td></tr>
+                    <tr><th>채점 대기중</th><td>{Lazy(queueLen, '...')}개</td></tr>
                     <tr><th>적중률</th>
                         <td>
-                            {Lazy(Div(right, dataLen))}&nbsp;
-                            ({Lazy(right)}/{Lazy(dataLen)})
+                            {Lazy(Div(right, dataLen), '...%')}&nbsp;
+                            ({Lazy(right, '...')}/{Lazy(dataLen, '...')})
                         </td>
                     </tr>
                 </tbody>

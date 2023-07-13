@@ -33,12 +33,11 @@ export async function getServerSideProps(ctx) {
 
 	// stockPage
 	const stockMeta = Meta?.data[code];
-	const stockPrice = json.read(dir.stock.light.price(code));
 	const earn = json.read(dir.stock.light.earn(code));
 	const share = json.read(dir.stock.share(code))
 	share.data = share.data?.filter(e => e.amount);
 	const stockPred = json.read(dir.stock.pred(code));
-	props = { ...props, stockMeta, stockPrice, earn, share, stockPred };
+	props = { ...props, stockMeta, earn, share, stockPred };
 
 	const Group = json.read(dir.stock.light.group);
 	const Index = json.read(dir.stock.induty).data;

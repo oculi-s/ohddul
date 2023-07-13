@@ -26,7 +26,9 @@ import PredElement from '#/stockData/stockPred';
  * earnonPrice를 통해 bps와 eps가 들어가있음
  *  
 */
-const MetaTable = ({ stockMeta: meta, stockPred: pred, last, earn = [] }) => {
+function MetaTable({
+    stockMeta: meta, stockPred: pred, last, earn = [],
+}) {
     earn?.qsort(dt.lsort);
 
     const lastPrice = last?.c;
@@ -78,26 +80,35 @@ const MetaTable = ({ stockMeta: meta, stockPred: pred, last, earn = [] }) => {
                 <tr><th>총 예측 수</th><td>{dataLen + queueLen}</td></tr>
                 <tr><th>정답률</th><td>{Div(right, dataLen, 1)} ({right}/{dataLen})</td></tr>
             </tbody></table>
-        </div >
-    )
+        </div>
+    );
 }
 
 function Index(props) {
-    const { meta, ban, code, stockMeta, stockPrice, earn, share } = props;
+    const { meta, price, ban, code, stockMeta, earn, share } = props;
     const router = useRouter();
 
-    const [userPred, setPred] = useState({ queue: [], data: [] });
-    const [loadUser, setLoad] = useState({ pred: true });
+    const [userPred, setPred] = useState();
+    const [stockPrice, setPrice] = useState();
+    const [loadUser, setLoadUser] = useState({ pred: true });
+    const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
     useEffect(() => {
         console.log('predBar 렌더링중');
         async function fetch() {
-            if (uid) {
+            if (uid && !userPred) {
                 api.json.read({ url: dir.user.pred(uid) }).then(pred => {
+                    console.log('!')
                     setPred(pred);
-                    setLoad(e => { e.pred = false; return e });
+                    setLoadUser(e => { e.pred = false; return e });
                 })
             }
+            setPrice({ data: [] })
+            setLoadStock(e => { e.price = true; return e; });
+            api.json.read({ url: dir.stock.light.price(code) }).then(price => {
+                setPrice(price);
+                setLoadStock(e => { e.price = false; return e; });
+            })
         }
         fetch();
     }, [code])
@@ -108,11 +119,12 @@ function Index(props) {
         return <div>종목 정보가 없습니다.</div>;
     }
     stockPrice?.data?.qsort(dt.lsort);
-    const last = stockPrice?.data?.slice(-1)[0];
+    const last = price[code];
     props = {
         ...props,
         last, router, share: share.data, earn: earn.data, ban: ban[code],
         userPred, loadUser, setPred,
+        stockPrice, loadStock,
     };
 
     const tabContents = {
@@ -120,7 +132,7 @@ function Index(props) {
         datas: [
             <div key={0}>
                 <PriceElement {...props} />
-                <LastUpdate last={stockPrice.last} />
+                <LastUpdate last={stockPrice?.last} />
             </div>,
             <div key={1}>
                 <EarnElement {...props} />

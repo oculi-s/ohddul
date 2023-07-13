@@ -12,7 +12,7 @@ import { FavTable } from "#/profile/profileFavs";
 import ProfilePred from "#/profile/profilePred";
 import { useEffect, useState } from "react";
 import api from "@/pages/api";
-import { Int } from "@/module/ba";
+import { Int, Sleep } from "@/module/ba";
 import { getRank } from "#/User";
 
 /**

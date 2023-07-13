@@ -15,6 +15,7 @@ import merge from 'deepmerge';
 import { hairline } from "@/module/chart/plugins";
 import { Int, parseFix } from "@/module/ba";
 import '@/module/array'
+import { Loading } from "#/base/base";
 Chart.register(Annotation);
 
 /**
@@ -31,7 +32,7 @@ const defaultOptions = {
     },
     animation: {
         x: { duration: 0, from: 1000 },
-        y: { duration: 300 }
+        duration: 100
     },
     interaction: { intersect: false, mode: 'index', },
     spanGaps: true,
@@ -50,7 +51,6 @@ const plugins = [hairline, Annotation];
 async function getData({
     price, isEarn, num, isMinMax, percentMa
 }) {
-    price = price?.qsort(dt.lsort);
     const dates = price?.map(e => e.d);
     const priceRaw = price?.map(e => e.c);
     const priceAvg = dates?.map((e, i) => Math.avg(priceRaw?.slice(i + 1 - num, i + 1)));
@@ -70,7 +70,7 @@ async function getData({
     }
 
     // 앞뒤 종가가 있을 때만 데이터 수정
-    priceRaw.forEach((e, i) => {
+    priceRaw?.forEach((e, i) => {
         if (!e) {
             if (priceRaw[i - 1] && priceRaw[i + 1]) {
                 priceRaw[i] = priceRaw[i - 1];
@@ -112,14 +112,13 @@ async function getData({
  * 6개월 데이터 120이평에서 데이터가 너무 표시가 안돼서 slice를 2023.06.30 폐기
  */
 async function refineData({
-    prices, metas, num, isEarn, isBollinger, isMinMax, percentMa
+    prices, num, isEarn, isBollinger, isMinMax, percentMa
 }) {
     let mainData = [], date, options = {};
     let subData = [], suboptions = {};
     const k = prices?.length;
     for await (let i of Array(k).keys()) {
         const price = prices[i];
-        const amount = metas[i]?.a;
         const last = price?.find(() => true);
         const {
             dates,
@@ -130,7 +129,7 @@ async function refineData({
             min, mini, max, maxi,
             ymin, ymax,
         } = await getData({
-            price, amount,
+            price,
             isEarn, isBollinger,
             num, isMinMax, percentMa
         });
@@ -313,7 +312,7 @@ function ButtonGroup({
 
 const YEAR_LEN = 252;
 function PriceLine({
-    prices = [{}], metas = [{}],
+    prices = [{}], load,
     addEarn = true, addBollinger = false, minMax = true,
     N = 60, L = YEAR_LEN * 5,
     percentMa = true,
@@ -331,25 +330,25 @@ function PriceLine({
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
     const [suboptions, setSubOptions] = useState(defaultOptions);
-    prices = prices.map(price => price?.qsort(dt.sort)?.slice(0, len));
+    const Prices = prices.map(price => price?.qsort(dt.lsort)?.slice(-len));
 
     const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [subData, setSubData] = useState({ labels: [], datasets: [] });
     useEffect(() => {
         setView(false);
-    }, [metas[0]])
+    }, [prices])
     useEffect(() => {
         console.log('price 차트 렌더링중');
         refineData({
-            prices, metas, num, isEarn, isBollinger, isMinMax, percentMa
+            prices: Prices, num, isEarn, isBollinger, isMinMax, percentMa
         }).then(([data, sub, option, suboption]) => {
             setData(data);
             setSubData(sub);
             setOptions(merge(defaultOptions, option))
             setSubOptions(merge(defaultOptions, suboption));
         })
-    }, [metas[0], isEarn, isBollinger, isMinMax, num, len])
+    }, [prices, isEarn, isBollinger, isMinMax, num, len])
     const props = {
         isBollinger, setBollinger,
         isEarn, setEarn,
@@ -362,19 +361,23 @@ function PriceLine({
         <div className={`${styles.wrap} ${percentMa && styles.withSub}`}>
             <ButtonGroup {...props} />
             <div className={styles.chart}>
-                <Line
-                    options={options}
-                    plugins={plugins}
-                    data={data}
-                />
+                {load?.price
+                    ? <Loading left={"auto"} right={"auto"} />
+                    : <Line
+                        options={options}
+                        plugins={plugins}
+                        data={data}
+                    />}
             </div>
             {percentMa &&
                 <div className={`${styles.chart} ${styles.sub}`}>
-                    <Line
-                        options={suboptions}
-                        plugins={plugins}
-                        data={subData}
-                    />
+                    {load?.price
+                        ? <Loading left={"auto"} right={"auto"} />
+                        : <Line
+                            options={suboptions}
+                            plugins={plugins}
+                            data={subData}
+                        />}
                 </div>
             }
         </div >

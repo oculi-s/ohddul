@@ -17,6 +17,10 @@ Array.prototype.qsort = function (cmp) {
     return this;
 }
 
+Array.prototype.trans = function () {
+    return this[0].map((x, i) => this.map(x => x[i]));
+}
+
 Math.avg = (d) => {
     return Math.round(d?.sum() / d?.length);
 }

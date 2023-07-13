@@ -2,11 +2,10 @@ import FavStar from "#/baseStock/FavStar";
 import PredBar from "#/baseStock/PredBar";
 import { Color, Num, Per } from "@/module/ba";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dt from '@/module/dt';
 import styles from '$/Profile/Favs.module.scss';
 import { Open } from "#/stockData/stockHead";
-import { Loading } from "#/base/base";
 
 export function FavTable({
     meta, price, mine, favs, ban, uid,

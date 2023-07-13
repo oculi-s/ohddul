@@ -70,7 +70,7 @@ function StockHead({
                 ></span>
             </h2>
             {load.pred
-                ? <Loading small={true} inline={true} />
+                ? <Loading right={70} size={25} />
                 : <Open {...{ uid, ban, time: orig, view, setView }} />
             }
         </div>

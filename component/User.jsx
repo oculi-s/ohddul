@@ -8,13 +8,13 @@ import bgGold from '@/public/rank/500.png'
 import bgPlatinum from '@/public/rank/1000.png'
 import bgDiamond from '@/public/rank/10000.png'
 import bgMaster from '@/public/rank/50000.png'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import toggleOnPageChange from './toggle'
 import { useRouter } from 'next/router'
 import api from '@/pages/api'
-import { useSession } from 'next-auth/react'
 import dir from '@/module/dir'
-import { Int } from '@/module/ba'
+import { Int, Sleep } from '@/module/ba'
+import { Loading } from './base/base'
 
 export const getBg = rank => {
     return rank.includes('bronze') ? (bgBronze
@@ -46,9 +46,6 @@ export const getRank = rank => {
 
 /**
  * 유저정보 박스, 완전히 독립적으로 실행되도록 해야함.
- * 
- * 그러려면 session에 meta를 담아 보내야 한다.
- * 2023.07.04 수정 완료
  */
 export function User({ user, setAsideShow }) {
     const id = user?.id;
@@ -64,7 +61,7 @@ export function User({ user, setAsideShow }) {
         }
         fetch();
     }, [])
-    const Lazy = (data) => loading ? '...' : data;
+    const Lazy = (data) => loading ? <Loading size={14} /> : data;
     const [color, num, next] = getRank(meta?.rank);
     let rankName = color[0]?.toUpperCase() + num;
     if (color == 'unranked') rankName = "IRON";
@@ -73,10 +70,11 @@ export function User({ user, setAsideShow }) {
             <Link href='/profile' onClick={e => setAsideShow(false)}>
                 <div className={styles.id}>{id}</div>
                 <div className={styles.rank}>
-                    <span className={color}>
-                        {Lazy(Int(meta?.rank))}
-                    </span>
-                    &nbsp;{Lazy(rankName)}
+                    {Lazy(<>
+                        <span className={color}>
+                            {Int(meta?.rank)}
+                        </span> {rankName}
+                    </>)}
                 </div>
             </Link>
         </div>
@@ -100,9 +98,7 @@ export function Alarms({ uid, setAsideShow }) {
                 className={`fa fa-bell ${styles.alarm}`}
                 onClick={e => setAsideShow(false)}
             >
-                {len ? <span
-                    data-count={len}
-                /> : ''}
+                {len ? <span data-count={len} /> : ''}
             </Link>
         </div>
     </>
@@ -121,17 +117,6 @@ function Setting({ setAsideShow }) {
 }
 
 export function AlarmSetting({ user, setAsideShow }) {
-    const [settingShow, setSettingShow] = useState(false);
-    const router = useRouter();
-    toggleOnPageChange(router, setSettingShow);
-
-    useEffect(() => {
-        if (settingShow) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-    }, [settingShow]);
     return <div className={styles.alarmSetting}>
         <Alarms uid={user?.uid} setAsideShow={setAsideShow} />
         <Setting setAsideShow={setAsideShow} />

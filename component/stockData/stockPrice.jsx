@@ -62,11 +62,12 @@ function BBTable({ stockPrice }) {
     </table>;
 }
 
-const PriceElement = ({ stockPrice, stockMeta }) => {
+const PriceElement = ({ stockPrice, stockMeta, loadStock }) => {
     stockPrice = stockPrice?.data?.qsort(dt.lsort);
     const chartProps = {
         prices: [stockPrice],
         metas: [stockMeta],
+        load: loadStock,
     }
     return <>
         <h3>가격차트</h3>

@@ -67,33 +67,18 @@
 }
 
 .spinner {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     margin: auto;
-    width: 100%;
+    width: auto;
     height: 100%;
+    margin-bottom: 0;
 
     >div {
-        width: 60px;
-        height: 60px;
         border: 10px solid $bgDark;
         border-top: 10px solid $bgBright;
         border-radius: 50%;
         animation: spinner 1.5s linear infinite;
-    }
-
-    &.small {
-        >div {
-            width: 30px;
-            height: 30px;
-            border-width: 5px;
-        }
-    }
-
-    &.inline {
-        display: inline-flex;
-        width: 200px;
-        margin-right: 0;
     }
 }

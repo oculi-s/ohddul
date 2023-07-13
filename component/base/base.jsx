@@ -2,6 +2,7 @@ import dt from '@/module/dt';
 import styles from '$/Base/base.module.scss'
 import { useState } from "react"
 import Image from 'next/image';
+import { Int } from '@/module/ba';
 
 export function LastUpdate({ last }) {
     last = last || 1;
@@ -49,14 +50,22 @@ export function Collapse({ title, children }) {
     </div>
 }
 
-export const Loading = ({ small, inline = false }) => {
+export const Loading = ({
+    left = 'auto', right = 10, size = 60
+}) => {
     return <div
-        className={`
-        ${styles.spinner} 
-        ${small ? styles.small : ''}
-        ${inline ? styles.inline : ''}
-        `}>
-        <div />
+        className={styles.spinner}
+        style={{
+            marginRight: right,
+            marginLeft: left,
+        }}
+    >
+        <div
+            style={{
+                width: size, height: size,
+                borderWidth: Int(size / 6),
+            }}
+        />
     </div>
 }
 
