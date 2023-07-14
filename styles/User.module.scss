@@ -51,21 +51,23 @@
         height: 35px;
         position: relative;
 
-        &.alarm span::after {
-            content: attr(data-count);
+        &.alarm span {
             position: absolute;
             right: 0;
             top: 0;
-            font-size: 4px;
-            padding: .6em;
+            width: 13px;
+            height: 13px;
             border-radius: 50%;
-            color: white;
+            font-size: 10px;
             background: rgba(255, 0, 0, .85);
-            text-align: center;
+            color: white;
             font-weight: bold;
-            width: 2em;
-            height: 2em;
-            line-height: 2em;
+
+            &:after {
+                content: attr(data-count);
+                margin: auto;
+                vertical-align: middle;
+            }
         }
     }
 }

@@ -19,6 +19,17 @@
 
         &.unchecked {
             background: $bgBright;
+
+            .time:before {
+                content: "";
+                width: .8em;
+                height: .8em;
+                display: inline-block;
+                background: $redBright;
+                border-radius: 50%;
+                margin-right: 5px;
+                vertical-align: middle;
+            }
         }
     }
 
