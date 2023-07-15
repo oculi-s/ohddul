@@ -28,11 +28,11 @@ import NameDict from '#/stockData/NameDict';
 export async function getServerSideProps(ctx) {
 	const Meta = json.read(dir.stock.meta);
 	let code = ctx.query?.code;
-	if (!parseInt(code)) code = Meta.index[code];
+	if (!parseInt(code)) code = Meta.index[code] || false;
 	let props = { code }
 
 	// stockPage
-	const stockMeta = Meta?.data[code];
+	const stockMeta = Meta?.data[code] || false;
 	const earn = json.read(dir.stock.light.earn(code));
 	const share = json.read(dir.stock.share(code))
 	share.data = share.data?.filter(e => e.amount);

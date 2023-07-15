@@ -27,6 +27,7 @@ export const stock = {
         tree: encode('_/light/tree.json'),
         updown: encode('_/light/updown.json'),
         group: encode('_/light/group.json'),
+        ratio: encode('_/light/ratio.json'),
     },
     dart: {
         induty: encode('_/induty.json'),

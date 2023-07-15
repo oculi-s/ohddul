@@ -106,7 +106,7 @@ function StockList({ aside, setAsideShow }) {
         </div>
         <div className={styles.box}>
             <Link
-                href="/stock/group"
+                href="/group"
                 onClick={e => setAsideShow(false)}
             >
                 <Logo size={18} />
