@@ -209,10 +209,10 @@ async function refineData({
             }
             options.scales = {
                 x: { min: from },
-                y: {
-                    min: ymin > 0 ? ymin * 0.8 : ymin * 1.2,
-                    max: ymax * 1.1
-                }
+                // y: {
+                //     min: ymin > 0 ? ymin * 0.8 : ymin * 1.2,
+                //     max: ymax * 1.1
+                // }
             };
         }
         if (percentMa) {

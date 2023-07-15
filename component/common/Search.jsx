@@ -200,32 +200,31 @@ function Index(props) {
                 onKeyDown={e => { elementKeydown({ e, i, ...props }); }}
                 ref={e => { userRef.current[i] = e; }}
                 href={`/profile/${e?.id}`}
-                className={`${styles.element} ${cur.color}`}
+                className={styles.element}
                 onClick={e => setView(false)}
             >
                 <span>{e?.id}</span>
-                <span>{cur.color?.slice(0, 1)?.toUpperCase()}{cur.num} {Int(e?.rank)}</span>
+                <span className={cur.color}>
+                    {cur.color?.slice(0, 1)?.toUpperCase()}{cur.num} {Int(e?.rank)}
+                </span>
             </Link>
         });
 
-    const names = [
-        <span key={`tab0`}>종목정보</span>,
-        <span key={`tab1`}>유저정보</span>
-    ];
+    const names = ['종목', '유저'];
     const datas = [
         <div key={0}>
-            <p className={styles.title}>
+            <h4 className={styles.title}>
                 <span className='fa fa-chevron-right' />
                 종목
-            </p>
+            </h4>
             <div className={styles.list}>
                 <StockResult />
             </div>
             {result?.group?.length ? <>
-                <p className={styles.title}>
+                <h4 className={styles.title}>
                     <span className='fa fa-chevron-right' />
                     그룹
-                </p>
+                </h4>
                 <div className={styles.list}>
                     <GroupResult />
                 </div>
