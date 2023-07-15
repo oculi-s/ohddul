@@ -13,6 +13,7 @@ import ToggleTab from '#/base/ToggleTab';
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 
+import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import { Line } from 'react-chartjs-2';
 import { hairline } from '@/module/chart/plugins';
