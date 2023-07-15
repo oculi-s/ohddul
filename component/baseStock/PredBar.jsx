@@ -49,7 +49,7 @@ async function submit({
         alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.');
         return;
     }
-    if (!uid) {
+    if (!testing && !uid) {
         alert('로그인 정보가 없습니다. 관리자에게 문의해주세요.');
         return;
     }

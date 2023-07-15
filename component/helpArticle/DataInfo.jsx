@@ -91,9 +91,9 @@ const InfoBlock2 = ({ none }) => {
                     회사의 지분을 매입한 뒤 사명을 변경하는 방식으로
                     우회상장하는 목적으로 설립된 회사
                 </>} /> ({SPAC?.length}개)</H4>
-        {SPAC?.map(Stock)}
+        <Collapse>{SPAC?.map(Stock)}</Collapse>
         <H4 i={0}>거래불가({notSPAC?.length}개)</H4>
-        {notSPAC?.map(Stock)}
+        <Collapse>{notSPAC?.map(Stock)}</Collapse>
     </div>
 }
 

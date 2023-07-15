@@ -22,7 +22,8 @@ import dir from '@/module/dir';
 const providers = [
     KakaoProvider({
         clientId: process.env.KAKAO_CLIENT_ID,
-        clientSecret: process.env.KAKAO_CLIENT_SECRET
+        clientSecret: process.env.KAKAO_CLIENT_SECRET,
+        checks: ['none']
     }),
     // CredentialsProvider({
     //     id: "ohddul",

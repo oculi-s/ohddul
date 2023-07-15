@@ -41,7 +41,7 @@ function Help(props) {
         }
     }, [])
     props = { ...props, setTabIndex };
-    const names = ['기본정보', '예측방법', '점수산정']//, '차트보는법', '커뮤니티규칙'];
+    const names = ['기본정보', '예측방법', '고유점수']//, '차트보는법', '커뮤니티규칙'];
     const datas = [
         <div key={0}>
             <DataInfo {...props} />

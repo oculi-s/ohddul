@@ -63,7 +63,8 @@ const options = {
 
 function Index({ rank, name, data, load }) {
     data?.qsort(dt.lsort)?.slice(-252);
-    data?.pushIf({ d: dt.parse(), v: 0 }, e => e.d == dt.parse())
+    if (data.findIndex(e => e.d == dt.parse()) == -1)
+        data?.push({ d: dt.parse(), v: 0 })
     const dates = data.map(e => e.d);
     var s = 1000;
     data = data.map(({ d, v }) => {

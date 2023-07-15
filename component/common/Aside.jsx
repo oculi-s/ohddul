@@ -36,6 +36,7 @@ function LogIn() {
             <p>지금 바로 시작하세요</p>
             <Image
                 src={KakaoLogin.src}
+                alt='카카오 로그인'
                 width={214}
                 height={53}
                 onClick={e => signIn('kakao')}

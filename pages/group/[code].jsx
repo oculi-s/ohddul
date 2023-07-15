@@ -31,6 +31,11 @@ export async function getServerSideProps(ctx) {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) => group?.ch?.includes(k)))
     }
+
+    // const groupPrice = group.ch?.map(e=>{
+    //     const price = json.read(dir.stock.price(e)).data;
+
+    // })
     const predict = json.read(dir.stock.predAll);
 
     const Meta = json.read(dir.stock.meta).data;
