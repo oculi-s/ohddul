@@ -59,12 +59,12 @@ export default function MajorShare({ major }) {
         )
         return <ToggleTab names={names} datas={datas} />
     })
-    return <div className={styles.area}>
+    return <article className={styles.area}>
         <h3>주요기관의 선택</h3>
         <p className='des'><Link href={'/idea'}>
             추가요청하기&nbsp;
             <span className='fa fa-caret-right'></span>
         </Link></p>
         <ToggleTab names={names} datas={datas} />
-    </div>
+    </article>
 }

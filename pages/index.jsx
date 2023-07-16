@@ -40,11 +40,11 @@ function Column() {
 
 function Index(props) {
     return (
-        <div>
+        <section>
             <Market {...props} />
             <GroupInduty {...props} />
             <MajorShare {...props} />
-        </div>
+        </section>
     );
 }
 

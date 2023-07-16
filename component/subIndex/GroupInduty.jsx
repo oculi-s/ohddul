@@ -5,7 +5,7 @@ import ToggleTab from '#/base/ToggleTab';
 import Link from 'next/link';
 
 export default function GroupInduty(props) {
-    return <div className={`${styles.area} ${styles.groupArea}`}>
+    return <article className={`${styles.area} ${styles.groupArea}`}>
         <h3><Link href={'/stock/sum'}>오늘의 시가총액 <span className='fa fa-chevron-right'></span></Link></h3>
         <ToggleTab
             names={['그룹', '업종']}
@@ -19,5 +19,5 @@ export default function GroupInduty(props) {
             ]}
         />
         <p className='des'>클릭하시면 종목/전체가 전환됩니다.</p>
-    </div>
+    </article>
 }

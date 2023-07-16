@@ -53,13 +53,13 @@ const Market = ({ market, count }) => {
     const prev = { kospi: kospi[1]?.c, kosdaq: kosdaq[1]?.c };
     const props = { last, prev, count };
     return (<>
-        <div className={`${styles.area} ${styles.chartArea}`}>
+        <article className={`${styles.area} ${styles.chartArea}`}>
             <div>
                 <Index {...props} data={kospi} name={'kospi'} />
                 <Index {...props} data={kosdaq} name={'kosdaq'} />
             </div>
             <p className='des'>* 기준일 : {kospi[0]?.d}</p>
-        </div>
+        </article>
     </>)
 }
 

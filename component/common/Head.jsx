@@ -41,8 +41,8 @@ export default function HEAD({ title }) {
             <meta name="msapplication-square310x310logo" content="/mstile-310x310.png" />
 
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"></link>
-            <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1762696463079495"
-                crossorigin="anonymous"></Script>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1762696463079495"
+                crossorigin="anonymous"></script>
         </Head>
     )
 }
