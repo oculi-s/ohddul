@@ -240,21 +240,51 @@ table {
     }
 }
 
+table {
+    border-radius: 10px;
+    box-shadow: 0 0 10px $bgDarker;
+    // border-radius: 10px;
+
+    thead tr>* {
+        // border-radius: 10px 10px 0 0;
+        background: var(--th-color);
+
+        &:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        &:last-child {
+            border-radius: 0 10px 0 0;
+        }
+    }
+
+    tbody {
+        tr>* {
+            background: $bgMid;
+        }
+
+        tr:last-child {
+            >*:first-child {
+                border-radius: 0 0 0 10px;
+            }
+
+            >*:last-child {
+                border-radius: 0 0 10px 0;
+            }
+        }
+
+        // border-radius: 0 0 10px 10px;
+    }
+}
+
 tr {
-    border-top: 1px solid $borderColor;
-    border-bottom: 1px solid $borderColor;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: $bgDark;
 
     >* {
         padding: 2px 3px;
         word-break: keep-all;
-    }
-
-    >th {
-        background: var(--th-color);
-    }
-
-    >td {
-        background: var(--td-color);
     }
 }
 

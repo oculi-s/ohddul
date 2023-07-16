@@ -2,9 +2,10 @@
 
 .area {
     background: $bgMid;
+    box-shadow: 0 0 50px $bgDarker;
     padding: 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     width: 100%;
 
     >p {
@@ -35,7 +36,7 @@
     }
 
     .wrap {
-        width: 49%;
+        width: 48%;
         display: flex;
         flex-direction: column;
 
@@ -80,11 +81,8 @@
 
 .indutyArea,
 .groupArea {
-    background: $bgMid;
-
     .chart {
         height: 400px;
-        padding: 10px;
         position: relative;
     }
 }
@@ -96,8 +94,9 @@
 
 .chart {
     border-radius: 10px;
-    padding: 5px;
     background: $bgBright;
+
+    box-shadow: 0 0 10px $bgDarker;
 }
 
 .major {
@@ -125,7 +124,6 @@
     .chartArea {
         .chart {
             height: 100px;
-            padding: 5px;
         }
     }
 

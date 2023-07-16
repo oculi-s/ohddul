@@ -8,6 +8,10 @@
     .percent {
         font-size: .8em;
     }
+
+    th {
+        background: var(--th-color);
+    }
 }
 
 .priceChart {

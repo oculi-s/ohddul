@@ -79,9 +79,6 @@ function GroupTable({ group }) {
 const options = {
     plugins: {
         legend: { display: false },
-        annotation: {
-            drawTime: 'afterDatasetsDraw',
-        },
         tooltip: {
             itemSort: function (a, b) {
                 return b.raw - a.raw;

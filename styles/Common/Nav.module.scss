@@ -28,11 +28,10 @@
             height: 100%;
             display: inline-flex;
             align-items: center;
-            transition: background .3s;
             border-radius: 5px;
 
             a {
-                border-right: 1px solid $borderColor;
+                transition: color .3s;
                 font-size: 1em;
                 text-decoration: none;
                 color: $textColor;
@@ -54,14 +53,10 @@
             }
         }
 
-        .button:first-of-type {
-            a {
-                border-left: 1px solid $borderColor;
-            }
-        }
-
         .button:hover {
-            background: $bgDarker;
+            a {
+                color: $textBright;
+            }
         }
     }
 

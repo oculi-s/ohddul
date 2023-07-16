@@ -1,8 +1,8 @@
-$midWidth: 1280px;
 $mobWidth: 450px;
-$mainWidth: 700px;
-$navWidth: 250px;
+$mainWidth: 800px;
+$navWidth: 260px;
 $navHeight: 60px;
+$midWidth: $mainWidth + 2*$navWidth;
 
 $bgDarker: #030d18;
 $bgDark: #04111e;
@@ -15,7 +15,8 @@ $bgOpacity: #29344b4b;
 $textColor: #aaa;
 $textBright: #e5e5e5;
 $textDark : #8a8a8a;
-$anchor: #7ec5db;
+// $anchor: #c4c4c4;
+$anchor: #9dc9d6;
 $anchorBright: #c2d8df;
 
 $borderColor: #1a1a2d;
