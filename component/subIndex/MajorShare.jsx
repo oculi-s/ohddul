@@ -61,7 +61,7 @@ export default function MajorShare({ major }) {
     })
     return <article className={styles.area}>
         <h3>주요기관의 선택</h3>
-        <p className='des'><Link href={'/idea'}>
+        <p className='des'><Link href={'/board'}>
             추가요청하기&nbsp;
             <span className='fa fa-caret-right'></span>
         </Link></p>

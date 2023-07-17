@@ -14,7 +14,7 @@ export default function Nav(props) {
                     <Logo />
                 </Link>
                 <div className={styles.button}><Link href="/help">도움말</Link></div>
-                <div className={styles.button}><Link href="/idea">의견게시판</Link></div>
+                <div className={styles.button}><Link href="/board">의견게시판</Link></div>
             </div>
             <div className={styles.buttonList2} >
                 <button

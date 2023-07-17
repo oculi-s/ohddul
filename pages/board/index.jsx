@@ -29,10 +29,8 @@ export default function Index({ session, board }) {
             <thead align='center'><tr><th>번호</th><th>제목</th><th>작성자</th><th>등록일</th><th>조회수</th></tr></thead>
             <tbody>
 
-
             </tbody>
         </table>
-
         <Link href={'/editor'}>글쓰기</Link>
     </>
 }
