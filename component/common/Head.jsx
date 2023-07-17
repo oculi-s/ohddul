@@ -42,7 +42,7 @@ export default function HEAD({ title }) {
 
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"></link>
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1762696463079495"
-                crossorigin="anonymous"></script>
+                crossOrigin="anonymous"></script>
         </Head>
     )
 }

@@ -240,7 +240,6 @@ function ButtonGroup({
     bollingerBtn, timeBtn,
     view, setView,
 }) {
-    if (!timeBtn && !bollingerBtn) return;
     return <>
         <div className={`${styles.navWrap} ${view ? styles.view : ''}`}>
             <div className={`${styles.nav}`}>
@@ -375,8 +374,8 @@ function PriceLine({
         }
     }
     return (<>
-        <div className={`${styles.wrap} ${percentMa && styles.withSub}`}>
-            <ButtonGroup {...props} />
+        <div className={`${styles.wrap} ${percentMa ? styles.withSub : ""} ${timeBtn || bollingerBtn ? styles.withBtn : ""}`}>
+            {timeBtn || bollingerBtn ? <ButtonGroup {...props} /> : ""}
             <div className={styles.chart}>
                 {load?.price
                     ? <Loading left={"auto"} right={"auto"} />

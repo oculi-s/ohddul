@@ -1,0 +1,58 @@
+@import '../variables.module.scss';
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.login {
+    background: $kakao;
+    height: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 250px;
+    display: block;
+    margin: auto;
+
+    * {
+        font-family: 'Pretendard-Regular';
+    }
+
+    .inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 80%;
+        height: 40%;
+        margin: auto;
+
+        >* {
+            height: 100%;
+        }
+
+        >div {
+            margin: auto;
+            font-size: 16px;
+
+            span {
+                color: rgba(0, 0, 0, .85);
+                display: block;
+                line-height: 100%;
+            }
+        }
+    }
+}
+
+.must {
+    background: $bgMid;
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    text-align: center;
+
+    >div {
+        margin-top: 10px;
+    }
+}

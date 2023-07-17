@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import api from "@/pages/api";
 import { Int, Sleep } from "@/module/ba";
 import { getRank } from "#/User";
+import { MustLogin } from "#/base/Kakao";
 
 /**
  * asdf
@@ -122,7 +123,7 @@ function Index({
     }, [uid])
 
     if (!qid && !uid) {
-        return <>로그인을 진행해주세요</>;
+        return <MustLogin />;
     } else if (!id) {
         return <>{qid} : 존재하지 않는 사용자입니다.</>;
     }

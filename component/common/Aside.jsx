@@ -6,9 +6,9 @@ import { AlarmSetting, User, getRank } from '#/User';
 
 import Image from 'next/image';
 import { Per, Color, Num, Price } from '@/module/ba';
-import KakaoLogin from '@/public/kakao_sync_login/kakao_login_large_narrow.png';
 import { Logo } from '#/base/base';
 import GroupImg from '@/public/group/Default';
+import { KakaoLogin } from '#/base/Kakao';
 
 /**
  * 2023.07.06 useSession을 predbar에서 사용하면서
@@ -34,13 +34,7 @@ function LogIn() {
     return <>
         <div className={styles.login}>
             <p>지금 바로 시작하세요</p>
-            <Image
-                src={KakaoLogin.src}
-                alt='카카오 로그인'
-                width={214}
-                height={53}
-                onClick={e => signIn('kakao')}
-            />
+            <KakaoLogin />
         </div>
     </>
 }

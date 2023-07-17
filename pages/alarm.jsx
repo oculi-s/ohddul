@@ -3,6 +3,7 @@ import dt from '@/module/dt';
 import dir from "@/module/dir";
 import json from "@/module/json";
 import { getSession } from "next-auth/react";
+import { MustLogin } from '#/base/Kakao';
 
 export async function getServerSideProps(ctx) {
     const session = await getSession(ctx);
@@ -15,11 +16,7 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Alarm({ alarm, session }) {
-    if (!session) {
-        return <>
-            <p>로그인을 진행해주세요</p>
-        </>
-    }
+    if (!session) return <MustLogin />;
     return <>
         <h2>알림</h2>
         <div className={styles.wrap}>

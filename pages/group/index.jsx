@@ -3,7 +3,7 @@
  */
 
 import styles from '$/Stock/Sum.module.scss'
-import { Color, Price } from "@/module/ba";
+import { Color, H2R, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
@@ -101,24 +101,24 @@ const options = {
             }
         }, y: {
             max: 12,
-            min: .8
         }
     }
 }
 const plugins = [hairline];
 
 function GroupChart({ ratio }) {
-    const N = 252 * 2;
+    const N = -1;
     const labels = ratio?.삼성?.map(e => e.d)?.slice(0, N);
     const datasets = Object.keys(ratio)
+        ?.sort((a, b) => ratio[a].slice(-1)[0].c - ratio[b].slice(-1)[0].c)
         ?.map(e => [e, ratio[e]])
         ?.map(([g, e], i) => ({
             label: g,
             borderColor: groupColors[g] || colors[i],
-            backgroundColor: groupColors[g] || colors[i],
+            backgroundColor: H2R(groupColors[g] || colors[i], .3),
             borderWidth: 1,
             pointRadius: 0,
-            // fill: true,
+            fill: true,
             data: e?.map(e => e.c)?.slice(0, N)
         }))
     return <div style={{ height: 600 }}>
