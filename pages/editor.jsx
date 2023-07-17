@@ -10,7 +10,7 @@ export function getServerSideProps(ctx) {
 export default function Editor({ session }) {
     const [type, setType] = useState(0);
 
-    return <>준비중입니다.</>
+    return <>준비중입니다.</>;
     if (!session) return <MustLogin />
 
     if (type == 0) {

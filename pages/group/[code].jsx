@@ -107,7 +107,7 @@ function MetaTable({
 
 function Group(props) {
     const router = useRouter();
-    if (!props.group) return;
+    if (!props.group?.n) return <>그룹 정보가 없습니다.</>;
     const code = router.query?.code;
     props = { ...props, router, code };
     const names = ['요약정보', '실적정보', '출자정보'];
