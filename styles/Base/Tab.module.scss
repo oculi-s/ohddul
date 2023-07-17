@@ -24,7 +24,7 @@
 
     .tab.active,
     .tab:hover {
-        background: var(--th-color);
+        background: $bgDark;
         border-color: $textColor;
     }
 }

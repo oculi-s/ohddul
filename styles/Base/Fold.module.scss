@@ -7,7 +7,7 @@
     display: block;
     min-height: 19px;
     text-align: center;
-    background: var(--th-color);
+    background: $thColor;
     overflow-y: clip !important;
 
     .name {
@@ -35,8 +35,8 @@
     display: block;
     margin-top: 5px;
     padding: 5px 0;
-    background: var(--td-color);
-    border-top: 1px solid var(--border-color);
+    background: $tbColor;
+    border-top: 1px solid $borderColor;
     cursor: pointer;
 }
 

@@ -1,15 +1,5 @@
 @import 'variables.module.scss';
 
-:root {
-    --border-color: #21212d;
-    --text-color: #aaa;
-    --text-darker: #666;
-    --bg-body: #04111e;
-    --bg-main: #10192C;
-    --th-color: #0f1122;
-    --td-color: #161824;
-}
-
 *::-webkit-scrollbar {
     display: none;
 }
@@ -247,7 +237,7 @@ table {
 
     thead tr>* {
         // border-radius: 10px 10px 0 0;
-        background: var(--th-color);
+        background: $thColor;
 
         &:first-child {
             border-radius: 10px 0 0 0;
@@ -260,7 +250,7 @@ table {
 
     tbody {
         tr>* {
-            background: $bgMid;
+            background: $tbColor;
         }
 
         tr:last-child {

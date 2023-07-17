@@ -43,8 +43,10 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
                     <b>{cur.color.slice(0, 1).toUpperCase() + cur.num} {Int(meta?.rank)}</b>)}
             </div>
             <table className={`${styles.metaTable} fixed`}>
-                <tbody>
+                <thead>
                     <tr><th></th><th>오/떨</th><th>가격</th></tr>
+                </thead>
+                <tbody>
                     <tr>
                         <th>예측완료</th>
                         <td>{Lazy(odDataLen, '...')}개</td>
