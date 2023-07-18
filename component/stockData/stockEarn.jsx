@@ -6,6 +6,7 @@ import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '#/base/Help';
 import '@/module/array';
 import { profitHelp, revenueHelp } from './HelpDescription';
+import { Bar } from '#/base/base';
 
 function EarnTable({ stockMeta, earn }) {
     if (!earn.length) return;
@@ -63,12 +64,9 @@ function EarnTable({ stockMeta, earn }) {
                 className={Color(ROE?.profit / ROE?.equity)}>
                 {Div(ROE?.profit, ROE?.equity)}
             </td>}
-            <td>
+            <td style={{ position: 'relative' }}>
                 <span>{PR}</span>
-                <div
-                    className={styles.bar}
-                    style={{ width: PR[0] == '-' ? '0' : PR }}
-                />
+                <Bar width={PR[0] == '-' ? 0 : PR} />
             </td>
         </tr>;
     });
@@ -96,13 +94,9 @@ function EarnTable({ stockMeta, earn }) {
                         const PR = Div(profit, revenue);
                         return <tr key={Q}>
                             <th>{Q}Q</th>
-                            <td>
+                            <td style={{ position: 'relative' }}>
                                 <span>{PR}</span>
-                                <div
-                                    className={styles.bar}
-                                    style={{ width: PR[0] == '-' ? '0%' : PR }}
-                                >
-                                </div>
+                                <Bar width={PR[0] == '-' ? '0' : PR} />
                             </td>
                             <td>{Num(revenue / cnt / amount)}</td>
                             <td>{Num(profit / cnt / amount)}</td>
@@ -116,23 +110,25 @@ function EarnTable({ stockMeta, earn }) {
             <thead>{head}</thead>
             <tbody>
                 {data}
+            </tbody>
+            <tfoot>
                 {view && <tr onClick={() => {
                     setN(N + 5);
                     if (N + 5 >= len) { setView(false); }
                 }} className={styles.more}>
                     <th colSpan={6}>더보기</th>
                 </tr>}
-            </tbody>
+            </tfoot>
         </table>
     </div>;
 }
 
-const EarnElement = (props) => {
+function EarnElement(props) {
     return <>
         <h3>실적 차트</h3>
         <EarnChart {...props} y={true} />
         <EarnTable {...props} />
-    </>
+    </>;
 }
 
 export default EarnElement;

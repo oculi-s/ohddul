@@ -1,7 +1,7 @@
 import styles from '$/Index.module.scss';
 import TotalGroupTree from '#/chart/TotalGroupTreeMap';
 import TotalIndutyTree from '#/chart/TotalIndutyTreeMap';
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 import Link from 'next/link';
 
 export default function GroupInduty(props) {

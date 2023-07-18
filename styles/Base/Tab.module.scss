@@ -1,8 +1,8 @@
 @import '../variables.module.scss';
 
 .toggleTab {
-    z-index: 1;
-    position: relative;
+    // z-index: 1;
+    // position: relative;
 }
 
 .tabGroup {
@@ -10,7 +10,7 @@
     box-shadow: 0px -4px 0px -2px $borderColor inset;
     padding: 5px;
     padding-bottom: 0;
-    background: $bgMidBright;
+    background: $bgMidDark;
 
     .tab {
         padding: 8px 10px;
@@ -20,6 +20,8 @@
         border-bottom: 2px solid transparent;
         min-width: 60px;
         text-align: center;
+        color: $textColor;
+        text-decoration: none;
     }
 
     .tab.active,

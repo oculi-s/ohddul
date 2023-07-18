@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import api from './api';
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 
 export function getServerSideProps() {
     const props = {};

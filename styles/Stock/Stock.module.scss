@@ -8,15 +8,11 @@
     .percent {
         font-size: .8em;
     }
-
-    th {
-        background: $thColor;
-    }
 }
 
 .priceChart {
     height: 420px;
-    background: $bgMid;
+    background: $bgMidDark;
     padding: 20px;
     border-radius: 10px;
     box-sizing: border-box;
@@ -28,6 +24,10 @@
     margin-right: 0;
     text-align: center;
     table-layout: fixed;
+
+    th {
+        background: $thColor;
+    }
 }
 
 .predTable {
@@ -44,7 +44,6 @@
 
     tr>* {
         text-align: center;
-        position: relative;
     }
 
     td {

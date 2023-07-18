@@ -13,7 +13,7 @@ const Fold = ({ head, body, name, view, setView }) => {
             <div className={styles.title}>
                 <div className={styles.name}>{name}</div>
                 <div className={styles.btn}
-                    onClick={e => { setView(!view) }}
+                    onClick={e => setView(!view)}
                 >
                     [펼치기 / 접기]
                 </div>

@@ -2,7 +2,7 @@ import styles from '$/Group/Group.module.scss'
 import { useRouter } from "next/router";
 import Link from "next/link";
 import GroupFold from "#/stockFold/GroupFold";
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 import Help from '#/base/Help';
 
 import { priceHelp } from '#/group/HelpDescription';

@@ -1,4 +1,4 @@
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 import styles from '$/Index.module.scss';
 import { Div } from '@/module/ba';
 import Link from 'next/link';

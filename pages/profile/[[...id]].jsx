@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import styles from '$/Profile/Index.module.scss'
 import { getSession } from "next-auth/react";
 import LineChart from '#/chart/HistLine';
-import ToggleTab from "#/base/ToggleTab";
+import { ToggleTab } from "#/base/ToggleTab";
 
 import dir from "@/module/dir";
 import json from "@/module/json";

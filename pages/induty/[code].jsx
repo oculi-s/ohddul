@@ -9,7 +9,7 @@ import { filterIndex } from "@/module/filter/filter";
 
 export async function getServerSideProps(ctx) {
     const code = ctx.query?.code;
-    const Index = json.read(dir.stock.induty).data;
+    const Index = json.read(dir.stock.light.index).data;
     const Induty = json.read(dir.stock.dart.induty).data;
 
     const Filter = (data) => {

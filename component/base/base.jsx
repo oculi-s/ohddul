@@ -23,6 +23,10 @@ export function Logo({ size = 32 }) {
     />
 }
 
+export function Bar({ width = '0%' }) {
+    return <div className={styles.bar} style={{ width }} />;
+}
+
 // export function SignError({ on, code }) {
 //     const msg = {
 //         0: '',

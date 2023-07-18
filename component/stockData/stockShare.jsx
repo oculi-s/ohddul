@@ -68,14 +68,15 @@ const ShareTable = ({ meta, share, stockMeta }) => {
     </div>
 }
 
-const ShareElement = (props) => {
+function ShareElement(props) {
     return <div>
         <h3>지분 차트</h3>
         <div className={styles.share}>
             <ShareDonut {...props} />
             <ShareTable {...props} />
         </div>
-    </div>
+        <h3>이 회사가 보유한 다른 회사의 주식</h3>
+    </div>;
 }
 
 export default ShareElement;

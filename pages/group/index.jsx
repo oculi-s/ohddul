@@ -9,7 +9,7 @@ import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
 import '@/module/array';
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 

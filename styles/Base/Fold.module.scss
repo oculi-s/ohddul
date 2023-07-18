@@ -42,7 +42,7 @@
 
 .content {
     max-height: 0;
-    transition: max-height .3s ease-out;
+    // transition: max-height .3s ease-out;
     overflow-wrap: break-word;
     overflow-y: clip !important;
 
@@ -52,10 +52,6 @@
         .stock {
             white-space: nowrap;
             max-width: 40vw;
-        }
-
-        thead {
-            text-align: center;
         }
 
         tr>* {
@@ -68,12 +64,13 @@
         th:not(:first-child),
         td {
             width: min-content;
-        }
-
-        td {
             text-align: center;
             white-space: nowrap;
             // width: 100px;
+        }
+
+        *[rowspan] {
+            border-right: 1px solid $bgDark;
         }
     }
 

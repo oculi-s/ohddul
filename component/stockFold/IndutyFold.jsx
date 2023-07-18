@@ -42,19 +42,19 @@ function IndutyFold({
 
     const [view, setView] = useState(false);
     const body = <>
-        <tr>
+        <tr className='th'>
             {index[parCode] && <th rowSpan={len} align='center'><Induty e={parCode} /></th>}
             <th rowSpan={len} align='center'><Induty e={indutyCode} /></th>
         </tr>
-        {child.map(e => <tr key={e}>
+        {child.map(e => <tr key={e} className='th'>
             <th colSpan={3} align='center'><Induty e={e} /></th>
         </tr>
         )}
-        <tr>
+        {stock?.length ? <tr className='th'>
             <th align='center'>종목</th>
             <th align='center'>전일종가</th>
             <th align='center'>시총</th>
-        </tr>
+        </tr> : ""}
         {stock.map(code => {
             return <tr key={code}>
                 <th className={styles.stock}>

@@ -67,7 +67,6 @@ main {
     width: var(--main-width);
     padding-bottom: 800px;
     margin-bottom: 50px;
-    position: relative;
 }
 
 hr {
@@ -224,27 +223,17 @@ table {
     border-collapse: collapse;
     width: 100%;
     margin: 10px auto;
-
-    thead {
-        text-align: center;
-    }
-}
-
-table {
     border-radius: 10px;
     box-shadow: 0 0 10px $bgDarker;
-    // border-radius: 10px;
+    border-radius: 10px;
+    overflow: hidden;
 
-    thead tr>* {
-        // border-radius: 10px 10px 0 0;
-        background: $thColor;
+    thead,
+    tfoot {
+        text-align: center;
 
-        &:first-child {
-            border-radius: 10px 0 0 0;
-        }
-
-        &:last-child {
-            border-radius: 0 10px 0 0;
+        tr>* {
+            background: $thColor;
         }
     }
 
@@ -253,17 +242,17 @@ table {
             background: $tbColor;
         }
 
-        tr:last-child {
-            >*:first-child {
-                border-radius: 0 0 0 10px;
-            }
-
-            >*:last-child {
-                border-radius: 0 0 10px 0;
+        &:not(thead+*) {
+            th {
+                background: $thColor;
             }
         }
+    }
 
-        // border-radius: 0 0 10px 10px;
+    .th {
+        * {
+            background: $thColor;
+        }
     }
 }
 

@@ -82,3 +82,12 @@
         animation: spinner 1.5s linear infinite;
     }
 }
+
+.bar {
+    height: 100%;
+    background: $barColor;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}

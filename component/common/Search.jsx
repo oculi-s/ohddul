@@ -1,7 +1,7 @@
 import styles from '$/Common/Search.module.scss'
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 import scss from '$/variables.module.scss';
 import Inko from 'inko';
 import Link from 'next/link';

@@ -2,11 +2,12 @@ import styles from "$/Base/Tab.module.scss";
 import { useState } from "react";
 import toggleOnPageChange from "#/toggle";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 /**
  * tabIndex가 쿼리 파라미터로 주어지는 경우 default로 지정해줌
  */
-function ToggleTab({
+export function ToggleTab({
     names, datas, tabIndex = 0, setTabIndex
 }) {
     const router = useRouter();
@@ -31,4 +32,19 @@ function ToggleTab({
     );
 }
 
-export default ToggleTab;
+export function ToggleQuery({
+    names, query
+}) {
+    const router = useRouter();
+    const tabName = router.query?.tab || query[0];
+    console.log(tabName)
+    names = names?.map((e, i) => <Link
+        className={`${styles.tab} ${tabName == e ? styles.active : ''}`}
+        href={{ query: { ...router.query, tab: query[i] } }}
+    >{e}</Link>)
+    return (
+        <div className={styles.toggleTab}>
+            <div className={styles.tabGroup}>{names}</div>
+        </div>
+    );
+}

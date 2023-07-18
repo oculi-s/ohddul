@@ -6,7 +6,7 @@ import dt from '@/module/dt';
 import ToC from '#/base/Toc';
 import dir from '@/module/dir';
 
-import ToggleTab from '#/base/ToggleTab';
+import { ToggleTab } from '#/base/ToggleTab';
 import DataInfo from '#/helpArticle/DataInfo';
 import PredHowto from '#/helpArticle/PredHowto';
 import Scoring from '#/helpArticle/Scoring';
