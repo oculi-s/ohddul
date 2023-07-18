@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from '$/Base/Toc.module.scss';
 import scss from '$/variables.module.scss';
 import { Int } from "@/module/ba";
+import { useRouter } from "next/router";
 
 function refineData(headings) {
     const nest = [];
@@ -59,7 +60,8 @@ function Headings({ headings, selected, click }) {
  * 
  * header의 scroll-margin-top이 navHeight+5px이기 때문
  */
-const ToC = ({ tabIndex }) => {
+const ToC = () => {
+    const router = useRouter();
     const [nestedHeadings, setHeading] = useState([]);
     const [selected, setSelected] = useState(0);
 
@@ -97,7 +99,7 @@ const ToC = ({ tabIndex }) => {
             else if (i >= 0) setSelected(i);
             else setSelected(headings.length - 1);
         });
-    }, [tabIndex])
+    }, [router?.query])
 
     return <div className={styles.wrap}>
         <div className={styles.toc}>

@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from '$/Help/Help.module.scss';
 
 import json from '@/module/json';
-import dt from '@/module/dt';
 import ToC from '#/base/Toc';
 import dir from '@/module/dir';
 
-import { ToggleTab } from '#/base/ToggleTab';
+import { ToggleQuery } from '#/base/ToggleTab';
 import DataInfo from '#/helpArticle/DataInfo';
 import PredHowto from '#/helpArticle/PredHowto';
 import Scoring from '#/helpArticle/Scoring';
 
-import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 /**
  * priceNull을 구할 때 서버에서 데이터를 전부 읽고 진행할지 고민인데
@@ -23,47 +22,45 @@ import { useRouter } from 'next/router';
  * 2. 그래서 count 파일 따로 만듬. 데이터 1.94kb로 절약 시간도 매우 빠르게 개선
  */
 export const getServerSideProps = async (ctx) => {
-    const now = dt.num();
+    const tab = ctx.query?.tab || 'base';
+
+    const ban = json.read(dir.stock.ban);
     const count = json.read(dir.stock.light.count);
     const title = "오떨 사용방법";
-    const props = {
-        now, title, ...count
-    };
+    const props = { title, ...count, tab, ban };
     return { props };
 }
 
-function Help(props) {
+export function Stock([code, name], i) {
+    return <span key={i}><Link href={`/stock/${code}`}>{name}</Link>, </span>;
+}
+
+function Help({ aside, tab, cnt, earn, none, ban }) {
     const router = useRouter();
-    const [tabIndex, setTabIndex] = useState(router?.query?.p);
     useEffect(() => {
         if (router?.query?.p) {
             history.replaceState(null, null, location.href?.split('?')[0]);
         }
     }, [])
-    props = { ...props, setTabIndex };
+    const query = ['base', 'pred', 'score']//,'chart','community'];
     const names = ['기본정보', '예측방법', '고유점수']//, '차트보는법', '커뮤니티규칙'];
-    const datas = [
-        <div key={0}>
-            <DataInfo {...props} />
-        </div>,
-        <div key={1}>
-            <PredHowto {...props} />
-        </div>,
-        <div key={2}>
-            <Scoring />
-        </div>,
-        <div key={3}>
-            {/* <ChartHowto {...props} /> */}
-            {/* <BoardRules {...props} /> */}
-        </div>
-    ];
     return <>
-        <ToC tabIndex={tabIndex} />
+        <ToC />
         <div className={styles.docs}>
             <span className={styles.title}>
                 예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
             </span>
-            <ToggleTab {...{ names, datas, tabIndex, setTabIndex }} />
+            <ToggleQuery {...{ query, names }} />
+            {tab == 'base' ? <div>
+                <DataInfo cnt={cnt} earn={earn} none={none} />
+            </div> : tab == 'pred' ? <div>
+                <PredHowto aside={aside} ban={ban} />
+            </div> : tab == 'score' ? <div>
+                <Scoring />
+            </div> : <div>
+                {/* <ChartHowto {...props} /> */}
+                {/* <BoardRules {...props} /> */}
+            </div>}
         </div>
     </>;
 }

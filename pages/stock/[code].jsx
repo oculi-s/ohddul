@@ -4,7 +4,7 @@ import styles from '$/Stock/Stock.module.scss';
 import { Num, Price, Color, Per, Div } from '@/module/ba';
 import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
 import StockHead from '#/stockData/stockHead';
-import { ToggleQuery, ToggleTab } from '#/base/ToggleTab';
+import { ToggleQuery } from '#/base/ToggleTab';
 import { LastUpdate } from '#/base/base';
 import Help from '#/base/Help';
 import api from '../api';
@@ -255,16 +255,16 @@ function Index(props) {
             <MetaTable {...props} />
             <hr />
             <ToggleQuery {...tabContents} />
-            {tab == 'price' ? <div key={0}>
+            {tab == 'price' ? <div>
                 <PriceElement {...props} />
                 <LastUpdate last={stockPrice?.last} />
-            </div> : tab == 'earn' ? <div key={1}>
+            </div> : tab == 'earn' ? <div>
                 <EarnElement {...props} />
                 <LastUpdate last={earn.last} />
-            </div> : tab == 'share' ? <div key={2}>
+            </div> : tab == 'share' ? <div>
                 <ShareElement />
                 <LastUpdate last={share.last} />
-            </div> : <div key={3}>
+            </div> : <div>
                 <PredElement {...props} />
             </div>}
         </>

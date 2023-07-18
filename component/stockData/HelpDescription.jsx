@@ -91,6 +91,4 @@ export const profitHelp = {
             </tbody>
         </table>
     </>
-
-
 }

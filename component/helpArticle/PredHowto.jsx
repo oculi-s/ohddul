@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { H3, H4 } from '@/module/help/header';
 import PredBar from '#/baseStock/PredBar';
 import { Collapse } from '#/base/base';
+import { Stock } from '@/pages/help';
+import Help from '#/base/Help';
 
 function PredBlock1() {
     return <div className={`${styles.box} ${styles.predImage}`}>
         <p>전체 예측 횟수는 제한이 없으며, 종목별로는 하루 1회가 가능합니다.</p>
-        <H3 i={1}>예측바 열기</H3>
+        <H3>예측바 열기</H3>
         <p>예측은 각 종목 페이지의 오른쪽 위에 있는 오떨맞추기 버튼을 눌러서 진행하실 수 있습니다.</p>
         <Image src={helpImage.pred1} alt='종목 예측 기본화면' />
         <p>버튼을 누르면 아래와 같은 예측바가 내려옵니다.</p>
@@ -25,7 +27,7 @@ function PredBlock2({ aside }) {
     const name = first?.n;
     const last = first?.c;
     return <div className={styles.box}>
-        <H3 i={1}>예측바 테스트하기</H3>
+        <H3>예측바 테스트하기</H3>
         아래는 <Link href={`/stock/${code}`}>{name}</Link>의 테스트용 예측바입니다.
         <div className={styles.predBarWrap}>
             <PredBar {...{
@@ -33,7 +35,7 @@ function PredBlock2({ aside }) {
             }} />
         </div>
         <p>오/떨 맞추기를 선택하시면 각각 오름과 떨어짐을, 가격 맞추기를 선택하시면 목표 가격을 맞추실 수 있습니다.</p>
-        <H4 i={1}>오/떨 맞추기</H4>
+        <H4>오/떨 맞추기</H4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
                 name, code, last, testing: true,
@@ -41,7 +43,7 @@ function PredBlock2({ aside }) {
             }} />
         </div>
         PC버전에서는 F9, F10을 이용해 빠르게 예측을 진행할 수 있습니다. (준비중입니다.)
-        <H4 i={1}>가격 맞추기</H4>
+        <H4>가격 맞추기</H4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
                 name, code, last, testing: true,
@@ -52,9 +54,9 @@ function PredBlock2({ aside }) {
     </div>
 }
 
-function PredBlock3({ setTabIndex }) {
+function PredBlock3() {
     return <div className={styles.box}>
-        <H3 i={1}>예측의 채점시간</H3>
+        <H3>예측의 채점시간</H3>
         <Image src={helpImage.pred3} alt='예측 시간' />
         <p>오/떨을 예측할 때는 일반적으로 <span className='red'>다음 종가</span>를 예측 해주시면 됩니다.</p>
         <p>아직 장이 시작되기 전에는 해당일자의 주가 예측이 가능합니다. 하지만 장이 시작된 이후에는 다음 영업일의 종가를 예측해야 합니다.</p>
@@ -97,19 +99,38 @@ function PredBlock3({ setTabIndex }) {
                 </tbody>
             </table>
         </Collapse>
-        <p>대형주 쏠림을 방지하기 위해 당일 많은 사람이 맞춘 종목은 더 적은 점수를 받게 됩니다. <a onClick={e => {
-            setTabIndex(2);
-            window.scrollTo(0, 0);
-        }}>오떨의 점수산정 방식 보러가기</a></p>
-
+        <p>대형주 쏠림을 방지하기 위해 당일 많은 사람이 맞춘 종목은 더 적은 점수를 받게 됩니다. <Link href={{ query: { tab: 'score' } }}>오떨의 점수산정 방식 보러가기</Link></p>
     </div>
 }
 
-function PredHowto(props) {
+function PredBlock4({ ban }) {
+    ban = Object.entries(ban);
+    const SPAC = ban?.filter(e => e[1]?.includes('스팩'));
+    const notSPAC = ban?.filter(e => !e[1]?.includes('스팩'));
+    return <div className={styles.box}>
+        <H3>예측이 불가능한 종목 ({ban.length}개)</H3>
+        거래정지 주식, 혹은 가격 데이터가 불완전한 종목은 가격변화가 없기 때문에 가격을 예측할 수 없습니다.
+        <H4>합병이 예정된 스팩주<Help
+            title={'기업인수목적회사'}
+            span={<>
+                2000억의 시총을 가지고 비상장 회사를 물색하여
+                회사의 지분을 매입한 뒤 사명을 변경하는 방식으로
+                우회상장하는 목적으로 설립된 회사입니다.
+            </>}
+        />
+        </H4>
+        <Collapse>{SPAC?.map(Stock)}</Collapse>
+        <H4>기타 거래정지주</H4>
+        <Collapse>{notSPAC?.map(Stock)}</Collapse>
+    </div>
+}
+
+function PredHowto({ aside, ban }) {
     return <div>
-        <PredBlock1 {...props} />
-        <PredBlock2 {...props} />
-        <PredBlock3 {...props} />
+        <PredBlock1 />
+        <PredBlock2 aside={aside} />
+        <PredBlock3 />
+        <PredBlock4 ban={ban} />
     </div>;
 }
 

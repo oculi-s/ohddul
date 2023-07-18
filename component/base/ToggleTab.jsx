@@ -37,9 +37,8 @@ export function ToggleQuery({
 }) {
     const router = useRouter();
     const tabName = router.query?.tab || query[0];
-    console.log(tabName)
     names = names?.map((e, i) => <Link
-        className={`${styles.tab} ${tabName == e ? styles.active : ''}`}
+        className={`${styles.tab} ${tabName == query[i] ? styles.active : ''}`}
         href={{ query: { ...router.query, tab: query[i] } }}
     >{e}</Link>)
     return (
