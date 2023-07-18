@@ -124,11 +124,13 @@ function GroupChart() {
     const ref = useRef();
     const [len, setLen] = useState(dt.YEAR * 5);
     const from = dt.num() - len;
-    const [data, setData] = useState({ labels: [], datasets: [] });
+    const [data, setData] = useState();
     const [options, setOptions] = useState(defaultOptions);
     const [isLoad, setLoad] = useState(true);
     useEffect(() => {
         async function fetch() {
+            console.time('ratio');
+            if (data?.labels?.length) return;
             const ratio = (await api.json.read({ url: dir.light.ratio })).data;
             const labels = ratio?.삼성?.map(e => e.d);
             const datasets = Object.keys(ratio)
@@ -145,11 +147,11 @@ function GroupChart() {
                 }))
             setData({ labels, datasets });
             setLoad(false);
+            console.timeEnd('ratio');
         }
         fetch();
     }, [])
     useEffect(() => {
-        console.log(2);
         const option = { scales: { x: { min: from } } };
         setOptions(deepmerge(options, option));
     }, [len])

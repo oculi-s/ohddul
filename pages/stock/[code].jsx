@@ -189,10 +189,11 @@ function MetaTable({
 function Index(props) {
     const { meta, price, ban, code, stockMeta, earn, share, tab } = props;
     const router = useRouter();
+    const nums = [20, 60, 120];
 
     const prices = {};
     const [userPred, setPred] = useState();
-    const [stockPrice, setPrice] = useState();
+    const [stockPrice, setPrice] = useState({});
     const [loadUser, setLoadUser] = useState({ pred: true });
     const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
@@ -215,11 +216,19 @@ function Index(props) {
                 setPrice(prices[code]);
                 setLoadStock({ price: false });
             } else {
-                api.json.read({ url: dir.stock.light.price(code) }).then(price => {
-                    setPrice(price);
-                    prices[code] = price;
-                    setLoadStock({ price: false });
-                })
+                await api.json.read({ url: dir.stock.light.price(code) })
+                    .then(price => {
+                        stockPrice.priceRaw = price;
+                    })
+                for await (let num of nums) {
+                    await api.json.read({ url: dir.stock.chart.price(code, num) })
+                        .then(price => {
+                            stockPrice[num] = price;
+                        })
+                }
+                prices[code] = stockPrice;
+                setPrice(stockPrice);
+                setLoadStock({ price: false });
             }
             console.timeEnd('predBar');
         }
@@ -227,12 +236,13 @@ function Index(props) {
     }, [code])
 
 
+    const priceRaw = stockPrice?.priceRaw;
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
-    stockPrice?.data?.qsort(dt.lsort);
     const last = price[code];
+    console.log(stockPrice)
     props = {
         ...props,
         uid,
@@ -257,7 +267,7 @@ function Index(props) {
             <ToggleQuery {...tabContents} />
             {tab == 'price' ? <div>
                 <PriceElement {...props} />
-                <LastUpdate last={stockPrice?.last} />
+                <LastUpdate last={priceRaw?.last} />
             </div> : tab == 'earn' ? <div>
                 <EarnElement {...props} />
                 <LastUpdate last={earn.last} />

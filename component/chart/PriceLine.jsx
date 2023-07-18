@@ -116,40 +116,46 @@ async function getData({
  * 
  * 이평을 계산할 때 num보다 작은 데이터에서 이평 계산이 안되어 잘리는 걸 같이 잘라주었다가
  * 6개월 데이터 120이평에서 데이터가 너무 표시가 안돼서 slice를 2023.06.30 폐기
+ * 
+ * 20, 60, 120을 미리 만들어서 렌더하는 것으로 수정
+ * 시간절약 : 4~6ms -> 1ms 미만
  */
-async function refineData({
+function refineData({
     prices, num, isEarn, isBollinger, isMinMax, percentMa, from
 }) {
     let mainData = [], date, options = {};
     let subData = [];
-    const k = prices?.length;
-    for await (let i of Array(k).keys()) {
+    for (let i of prices.keys()) {
         const price = prices[i];
-        const last = price?.find(() => true);
+        const raw = price?.priceRaw?.data;
+        if (!price[num] || !raw) continue;
+        date = raw?.map(e => e?.d);
+        const priceRaw = raw?.map(e => e?.c);
+        const last = priceRaw.find(e => true);
+        const start = Math.max(from, new Date(date[0]));
+        var mini = -1, maxi = -1, min, max;
+        for (let [i, e] of raw.entries()) {
+            if (!e?.c && raw[i - 1]?.c && raw[i + 1]?.c) {
+                raw[i].c = raw[i - 1].c;
+            }
+            if (new Date(e.d) > from) {
+                const c = e.c;
+                if (mini == -1) mini = i, min = c;
+                else if (c < min) mini = i, min = c;
+                if (maxi == -1) maxi = i, max = c;
+                else if (c > max) maxi = i, max = c;
+            }
+        }
         const {
-            dates,
-            priceRaw, priceAvg,
-            priceTop, priceBot,
-            stockEps, stockBps,
-            priceMa,
-            min, mini, max, maxi,
-            ymin, ymax,
-        } = await getData({
-            price,
-            isEarn, isBollinger,
-            num, isMinMax, percentMa
-        });
-        date = dates//?.slice(num);
+            priceAvg, priceTop, priceBot, stockEps, stockBps, priceMa,
+        } = price[num];
         mainData = [...mainData, {
-            data: priceRaw,//?.slice(num),
-            label: '종가',
+            data: priceRaw, label: '종가',
             borderColor: 'gray',
             borderWidth: 1,
             pointRadius: 0
         }, {
-            data: priceAvg,//?.slice(num),
-            label: `${num}일 이평`,
-            fill: false,
+            data: priceAvg, label: `${num}일 이평`,
             borderColor: colors[i],
             backgroundColor: colors[i],
             borderWidth: 1.5,
@@ -158,14 +164,12 @@ async function refineData({
         if (isEarn) {
             const def = { borderWidth: 2, pointRadius: 0 }
             mainData = [...mainData, {
-                data: stockEps,//?.slice(num),
-                label: "EPS",
+                data: stockEps, label: "EPS",
                 borderColor: scss?.red,
                 backgroundColor: scss?.red,
                 ...def
             }, {
-                data: stockBps,//?.slice(num),
-                label: "BPS",
+                data: stockBps, label: "BPS",
                 borderColor: scss?.blue,
                 backgroundColor: scss?.blue,
                 ...def
@@ -174,20 +178,20 @@ async function refineData({
         if (isBollinger) {
             const def = { borderWidth: 1, pointRadius: 0 }
             mainData = [...mainData, {
-                data: priceTop,//?.slice(num),
-                label: "BB상단",
+                data: priceTop, label: "BB상단",
                 borderColor: scss?.red,
                 backgroundColor: scss?.red,
                 ...def
             }, {
-                data: priceBot,//?.slice(num),
-                label: "BB하단",
+                data: priceBot, label: "BB하단",
                 borderColor: scss?.blue,
                 backgroundColor: scss?.blue,
                 ...def
             }]
         }
         if (isMinMax) {
+            console.log(mini, maxi);
+
             options.plugins = {
                 annotation: {
                     annotations: [
@@ -202,19 +206,13 @@ async function refineData({
                             borderColor: scss?.blueDark,
                             borderWidth: .5,
                         },
-                        maxPoint({ i: maxi, d: dates[maxi], max, last: last?.c, len: price?.length }),
-                        minPoint({ i: mini, d: dates[mini], min, last: last?.c, len: price?.length }),
+                        maxPoint({ i: maxi, d: date[maxi], max, last, len: raw?.length }),
+                        minPoint({ i: mini, d: date[mini], min, last, len: raw?.length }),
                     ]
                 }
             }
-            options.scales = {
-                x: { min: from },
-                // y: {
-                //     min: ymin > 0 ? ymin * 0.8 : ymin * 1.2,
-                //     max: ymax * 1.1
-                // }
-            };
         }
+        options.scales = { x: { min: start } };
         if (percentMa) {
             subData = [{
                 data: priceMa,
@@ -299,12 +297,9 @@ function PriceLine({
 }) {
     defaultOptions.scales.x.display = x;
     defaultOptions.scales.y.display = y;
-    const Prices = prices.map(price => price
-        ?.qsort(dt.lsort));
 
     const [len, setLen] = useState(L);
-    const first = Prices?.find(e => true)?.find(e => true)?.d;
-    const from = Math.max(dt.num() - len, dt.num(first))
+    const from = dt.num() - len;
     const [num, setNum] = useState(N);
     const [isEarn, setEarn] = useState(addEarn);
     const [isMinMax, setMinMax] = useState(minMax);
@@ -317,18 +312,20 @@ function PriceLine({
     useEffect(() => {
         setView(false);
     }, [prices])
+
     // 20, 60, 120을 async로 미리 만들어 놓고, 그때그때 minmax만 따로 구해줘야함
     useEffect(() => {
         if (!load?.price) {
             console.time('price');
-            refineData({
-                prices: Prices, num, isEarn, isBollinger, isMinMax, percentMa, from
-            }).then(([data, sub, option]) => {
-                setData(data);
-                setSubData(sub);
-                setOptions(merge(defaultOptions, option))
-                console.timeEnd('price');
+            const [data, sub, option] = refineData({
+                prices, num,
+                isEarn, isBollinger, isMinMax,
+                percentMa, from
             })
+            setData(data);
+            setSubData(sub);
+            setOptions(merge(defaultOptions, option))
+            console.timeEnd('price');
         }
     }, [load?.price, isEarn, isBollinger, isMinMax, num, len])
 
@@ -340,7 +337,6 @@ function PriceLine({
         bollingerBtn, timeBtn,
         view, setView
     }
-
 
     const suboption = {
         scales: {

@@ -30,6 +30,9 @@ export const stock = {
         index: encode('_/light/index.json'),
         ratio: encode('_/light/ratio.json'),
     },
+    chart: {
+        price: (code, num = 20) => encode(`&/${code}/priceChart${num}.json`)
+    },
     dart: {
         induty: encode('_/induty.json'),
         xml: encode('_/CORPCODE.xml'),

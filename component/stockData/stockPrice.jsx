@@ -7,8 +7,9 @@ import { getMaData } from '@/module/filter/priceAvg';
 import dt from '@/module/dt';
 import '@/module/array';
 
-function MaTable({ stockPrice }) {
-    const { last, avg20, avg60, avg120 } = getMaData(stockPrice);
+function MaTable({ stockPrice = [] }) {
+    const price = Array.from(stockPrice)?.sort(dt.sort);
+    const { last, avg20, avg60, avg120 } = getMaData(price);
     return <table className={styles.priceTable}>
         <tbody>
             <tr>
@@ -27,12 +28,13 @@ function MaTable({ stockPrice }) {
  * %B 상승기준은 20%미만, 하락 기준은 80%이상
  * BW 변동성 기준은 5%
  */
-function BBTable({ stockPrice }) {
+function BBTable({ stockPrice = [] }) {
+    const price = Array.from(stockPrice)?.sort(dt.sort);
     const { last,
         bot20, avg20, top20, pb20, bw20,
         bot60, avg60, top60, pb60, bw60,
         bot120, avg120, top120, pb120, bw120,
-    } = getMaData(stockPrice);
+    } = getMaData(price);
 
     const pbColor = pb => pb < .2 ? 'red' : pb > .8 ? 'blue' : '';
     const bwClass = bw => bw < 0.05 ? 'bold' : '';
@@ -63,7 +65,7 @@ function BBTable({ stockPrice }) {
 }
 
 const PriceElement = ({ stockPrice, stockMeta, loadStock }) => {
-    stockPrice = stockPrice?.data?.qsort(dt.lsort);
+    const priceRaw = stockPrice?.priceRaw?.data;
     const chartProps = {
         prices: [stockPrice],
         metas: [stockMeta],
@@ -76,8 +78,8 @@ const PriceElement = ({ stockPrice, stockMeta, loadStock }) => {
         </div>
         <h3>가격지표</h3>
         <div>
-            <MaTable stockPrice={stockPrice} />
-            <BBTable stockPrice={stockPrice} />
+            <MaTable stockPrice={priceRaw} />
+            <BBTable stockPrice={priceRaw} />
         </div>
     </>
 }
