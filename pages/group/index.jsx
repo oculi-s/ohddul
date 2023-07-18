@@ -34,9 +34,6 @@ export async function getServerSideProps(ctx) {
             ?.filter(g => g?.ch?.length)
             ?.qsort((b, a) => a.p - b.p);
         props = { ...props, group };
-    } else if (tab == 'change') {
-        const ratio = json.read(dir.light.ratio).data;
-        props = { ...props, ratio };
     }
     return { props };
 }
@@ -180,7 +177,7 @@ function GroupChart() {
     </div>
 }
 
-export default function Group({ tab, group, ratio }) {
+export default function Group({ tab, group }) {
     const query = ['rank', 'change'];
     const names = ['순위', '변화'];
 
@@ -196,7 +193,7 @@ export default function Group({ tab, group, ratio }) {
         {tab == 'rank' ? <div className={styles.wrap}>
             <GroupTable group={group} />
         </div> : <div className={styles.wrap}>
-            <GroupChart ratio={ratio} />
+            <GroupChart />
         </div>}
     </>
 }
