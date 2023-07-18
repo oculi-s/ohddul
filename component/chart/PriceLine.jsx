@@ -311,7 +311,6 @@ function PriceLine({
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
 
-
     const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [subData, setSubData] = useState({ labels: [], datasets: [] });

@@ -4,7 +4,6 @@ import '@/module/array';
 export function RadioSelect({
     title, defaultValue, onChange, names = [], values = []
 }) {
-    const key = Math.randInt();
     return <>
         <div className={styles.radioGroup}>
             <h4>{title}</h4>

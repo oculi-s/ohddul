@@ -6,25 +6,36 @@ import styles from '$/Stock/Sum.module.scss'
 import { Color, H2R, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
+import dt from '@/module/dt';
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
 import '@/module/array';
-import { ToggleTab } from '#/base/ToggleTab';
+import { ToggleQuery } from '#/base/ToggleTab';
 import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 
-import { Chart } from "chart.js/auto";
+import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
-import { Line } from 'react-chartjs-2';
+import { Chart, Line } from 'react-chartjs-2';
 import { hairline } from '@/module/chart/plugins';
+import { RadioSelect } from '#/base/InputSelector';
+import { useEffect, useRef, useState } from 'react';
+import deepmerge from 'deepmerge';
 
 export async function getServerSideProps(ctx) {
-    const Group = json.read(dir.light.group);
-    const group = Object.values(Group.data)
-        ?.filter(g => g?.ch?.length)
-        ?.qsort((b, a) => a.p - b.p);
-    const ratio = json.read(dir.light.ratio).data;
-    const props = { group, ratio };
+    const tab = ctx.query?.tab || 'rank';
+
+    let props = { tab };
+    if (tab == 'rank') {
+        const Group = json.read(dir.light.group);
+        const group = Object.values(Group.data)
+            ?.filter(g => g?.ch?.length)
+            ?.qsort((b, a) => a.p - b.p);
+        props = { ...props, group };
+    } else if (tab == 'change') {
+        const ratio = json.read(dir.light.ratio).data;
+        props = { ...props, ratio };
+    }
     return { props };
 }
 
@@ -75,8 +86,7 @@ function GroupTable({ group }) {
     </table>
 }
 
-
-const options = {
+const defaultOptions = {
     plugins: {
         legend: { display: false },
         tooltip: {
@@ -94,10 +104,15 @@ const options = {
     maintainAspectRatio: false,
     scales: {
         x: {
-            display: false,
             type: "time",
             time: {
                 tooltipFormat: "yyyy-MM-dd"
+            },
+            ticks: {
+                maxTicksLimit: 3,
+                callback: function (value) {
+                    return dt.parse(value);
+                }
             }
         }, y: {
             max: 12,
@@ -107,39 +122,55 @@ const options = {
 const plugins = [hairline];
 
 function GroupChart({ ratio }) {
-    const N = -1;
-    const labels = ratio?.삼성?.map(e => e.d)?.slice(0, N);
-    const datasets = Object.keys(ratio)
-        ?.sort((a, b) => ratio[a].slice(-1)[0].c - ratio[b].slice(-1)[0].c)
-        ?.map(e => [e, ratio[e]])
-        ?.map(([g, e], i) => ({
-            label: g,
-            borderColor: groupColors[g] || colors[i],
-            backgroundColor: H2R(groupColors[g] || colors[i], .3),
-            borderWidth: 1,
-            pointRadius: 0,
-            fill: true,
-            data: e?.map(e => e.c)?.slice(0, N)
-        }))
-    return <div style={{ height: 600 }}>
-        <Line
-            plugins={plugins}
-            data={{ labels, datasets }}
-            options={options}
-        />
+    const ref = useRef();
+    const [len, setLen] = useState(dt.YEAR * 5);
+    const from = dt.num() - len;
+    const [data, setData] = useState({ labels: [], datasets: [] });
+    const [options, setOptions] = useState(defaultOptions);
+    useEffect(() => {
+        const labels = ratio?.삼성?.map(e => e.d);
+        const datasets = Object.keys(ratio)
+            ?.sort((a, b) => ratio[a].slice(-1)[0].c - ratio[b].slice(-1)[0].c)
+            ?.map(e => [e, ratio[e]])
+            ?.map(([g, e], i) => ({
+                label: g,
+                borderColor: groupColors[g] || colors[i],
+                backgroundColor: H2R(groupColors[g] || colors[i], .5 - i * .05),
+                borderWidth: 1,
+                pointRadius: 0,
+                fill: true,
+                data: e?.map(e => e.c)
+            }))
+        setData({ labels, datasets });
+    }, [])
+    useEffect(() => {
+        const option = { scales: { x: { min: from } } };
+        setOptions(deepmerge(options, option));
+    }, [len])
+    return <div>
+        <div className={styles.buttonGroup}>
+            <RadioSelect
+                title={'기간'}
+                onChange={setLen}
+                names={['3M', '6M', '1Y', '2Y', '3Y', '4Y', '5Y']}
+                values={[dt.YEAR / 4, dt.YEAR / 2, dt.YEAR, dt.YEAR * 2, dt.YEAR * 3, dt.YEAR * 4, dt.YEAR * 5]}
+                defaultValue={len}
+            />
+        </div>
+        <div className={styles.chart}>
+            <Line
+                ref={ref}
+                plugins={plugins}
+                data={data}
+                options={options}
+            />
+        </div>
     </div>
 }
 
-export default function Group(props) {
+export default function Group({ tab, group, ratio }) {
+    const query = ['rank', 'change'];
     const names = ['순위', '변화'];
-    const datas = [
-        <div className={styles.wrap} key={0}>
-            <GroupTable {...props} />
-        </div>,
-        <div className={styles.wrap} key={1}>
-            <GroupChart {...props} />
-        </div>
-    ]
 
     return <>
         <div className={styles.title}>
@@ -149,6 +180,11 @@ export default function Group(props) {
                 <span className='fa fa-chevron-right'></span>
             </Link>
         </div>
-        <ToggleTab names={names} datas={datas} />
+        <ToggleQuery names={names} query={query} />
+        {tab == 'rank' ? <div className={styles.wrap}>
+            <GroupTable group={group} />
+        </div> : <div className={styles.wrap}>
+            <GroupChart ratio={ratio} />
+        </div>}
     </>
 }
