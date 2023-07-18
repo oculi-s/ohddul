@@ -1,13 +1,14 @@
 import styles from '$/Index.module.scss';
 import { Per, Color, Num, Div, Fix, parseFix } from '@/module/ba';
 import dt from '@/module/dt';
-import PriceLine from '#/chart/PriceLine';
 import { getMaData } from '@/module/filter/priceAvg';
+import IndexLine from '#/chart/IndexLine';
 
 function Index({ data, last, prev, count, name }) {
     const { avg60, top60, bot60 } = getMaData(data);
     last = last[name];
     prev = prev[name];
+    console.log(data);
     return <div className={styles.wrap}>
         <h3 className={styles.title}>
             {name == 'kospi' ? '코스피' : '코스닥'}&nbsp;
@@ -25,11 +26,8 @@ function Index({ data, last, prev, count, name }) {
             <span className={styles.percent}> ({Div(count?.down[name], count?.all[name])})</span>
         </div>
         <div className={styles.chart}>
-            <PriceLine {...{
-                prices: [data], metas: [{ name }],
-                addBollinger: true, N: 60,
-                bollingerBtn: false, timeBtn: false,
-                minMax: false, percentMa: false,
+            <IndexLine {...{
+                data, addBollinger: true,
             }} />
         </div>
         <table><tbody>

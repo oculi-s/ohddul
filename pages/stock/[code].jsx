@@ -242,7 +242,6 @@ function Index(props) {
         return <div>종목 정보가 없습니다.</div>;
     }
     const last = price[code];
-    console.log(stockPrice)
     props = {
         ...props,
         uid,

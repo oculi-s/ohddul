@@ -53,63 +53,64 @@ const plugins = [hairline, Annotation];
  * 
  * priceRaw를 slice할 때 i+1-num 부터 i+1까지 해야함
  * 이유는 start부터 end-1까지 데이터를 구하기 때문
+ * 2023.07.18 데이터를 미리 계산해 저장해두면서 폐기
  */
-async function getData({
-    price, isEarn, num, isMinMax, percentMa
-}) {
-    const dates = price?.map(e => e.d);
-    const priceRaw = price?.map(e => e.c);
-    const priceAvg = dates?.map((e, i) => Math.avg(priceRaw?.slice(i + 1 - num, i + 1)));
-    const priceTop = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), 2))
-    const priceBot = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), -2))
+// async function getData({
+//     price, isEarn, num, isMinMax, percentMa
+// }) {
+//     const dates = price?.map(e => e.d);
+//     const priceRaw = price?.map(e => e.c);
+//     const priceAvg = dates?.map((e, i) => Math.avg(priceRaw?.slice(i + 1 - num, i + 1)));
+//     const priceTop = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), 2))
+//     const priceBot = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), -2))
 
-    var props = { dates, priceRaw, priceAvg, priceTop, priceBot };
-    var ymin = 2e9, ymax = -1;
+//     var props = { dates, priceRaw, priceAvg, priceTop, priceBot };
+//     var ymin = 2e9, ymax = -1;
 
-    if (percentMa) {
-        const priceMa = dates?.map((e, i) => {
-            // if (!priceTop[i]) return 50;
-            // if (!priceBot[i]) return 50;
-            return (priceRaw[i] - priceBot[i]) / (priceTop[i] - priceBot[i]) * 100;
-        })
-        props = { ...props, priceMa };
-    }
+//     if (percentMa) {
+//         const priceMa = dates?.map((e, i) => {
+//             // if (!priceTop[i]) return 50;
+//             // if (!priceBot[i]) return 50;
+//             return (priceRaw[i] - priceBot[i]) / (priceTop[i] - priceBot[i]) * 100;
+//         })
+//         props = { ...props, priceMa };
+//     }
 
-    // 앞뒤 종가가 있을 때만 데이터 수정
-    priceRaw?.forEach((e, i) => {
-        if (!e) {
-            if (priceRaw[i - 1] && priceRaw[i + 1]) {
-                priceRaw[i] = priceRaw[i - 1];
-            }
-        }
-    })
-    if (isMinMax) {
-        var mini = 0, maxi = 0, min = 2e9, max = -1;
-        priceRaw?.forEach((e, i) => {
-            if (e && e < min) mini = i, min = e;
-            if (e && e > max) maxi = i, max = e;
-        })
-        ymin = min, ymax = max;
-        props = { ...props, mini, maxi, min, max };
-    }
+//     // 앞뒤 종가가 있을 때만 데이터 수정
+//     priceRaw?.forEach((e, i) => {
+//         if (!e) {
+//             if (priceRaw[i - 1] && priceRaw[i + 1]) {
+//                 priceRaw[i] = priceRaw[i - 1];
+//             }
+//         }
+//     })
+//     if (isMinMax) {
+//         var mini = 0, maxi = 0, min = 2e9, max = -1;
+//         priceRaw?.forEach((e, i) => {
+//             if (e && e < min) mini = i, min = e;
+//             if (e && e > max) maxi = i, max = e;
+//         })
+//         ymin = min, ymax = max;
+//         props = { ...props, mini, maxi, min, max };
+//     }
 
-    if (isEarn) {
-        const stockEps = price?.map(e => {
-            const v = e?.eps
-            if (v && v < ymin) ymin = v;
-            if (v && v > ymax) ymax = v;
-            return v;
-        });
-        const stockBps = price?.map(e => {
-            const v = e?.bps
-            if (v && v < ymin) ymin = v;
-            if (v && v > ymax) ymax = v;
-            return v;
-        });
-        props = { ...props, stockEps, stockBps };
-    }
-    return { ...props, ymin, ymax };
-}
+//     if (isEarn) {
+//         const stockEps = price?.map(e => {
+//             const v = e?.eps
+//             if (v && v < ymin) ymin = v;
+//             if (v && v > ymax) ymax = v;
+//             return v;
+//         });
+//         const stockBps = price?.map(e => {
+//             const v = e?.bps
+//             if (v && v < ymin) ymin = v;
+//             if (v && v > ymax) ymax = v;
+//             return v;
+//         });
+//         props = { ...props, stockEps, stockBps };
+//     }
+//     return { ...props, ymin, ymax };
+// }
 
 /**
  * 계산된 차트 데이터를 정제하여 차트에 입힐 수 있도록 만드는 함수
@@ -153,13 +154,13 @@ function refineData({
             data: priceRaw, label: '종가',
             borderColor: 'gray',
             borderWidth: 1,
-            pointRadius: 0
+            pointRadius: 0,
         }, {
             data: priceAvg, label: `${num}일 이평`,
             borderColor: colors[i],
             backgroundColor: colors[i],
             borderWidth: 1.5,
-            pointRadius: 0
+            pointRadius: 0,
         }];
         if (isEarn) {
             const def = { borderWidth: 2, pointRadius: 0 }
@@ -190,8 +191,6 @@ function refineData({
             }]
         }
         if (isMinMax) {
-            console.log(mini, maxi);
-
             options.plugins = {
                 annotation: {
                     annotations: [
@@ -326,6 +325,8 @@ function PriceLine({
             setSubData(sub);
             setOptions(merge(defaultOptions, option))
             console.timeEnd('price');
+        } else {
+            setData({ labels: [], datasets: [] })
         }
     }, [load?.price, isEarn, isBollinger, isMinMax, num, len])
 
