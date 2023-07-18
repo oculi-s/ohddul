@@ -262,7 +262,7 @@ function Index(props) {
                 <EarnElement {...props} />
                 <LastUpdate last={earn.last} />
             </div> : tab == 'share' ? <div>
-                <ShareElement />
+                <ShareElement {...props} />
                 <LastUpdate last={share.last} />
             </div> : <div>
                 <PredElement {...props} />

@@ -16,7 +16,7 @@ import colors from '@/module/colors';
 
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
-import { Chart, Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import { hairline } from '@/module/chart/plugins';
 import { RadioSelect } from '#/base/InputSelector';
 import { useEffect, useRef, useState } from 'react';
