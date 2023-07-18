@@ -21,6 +21,8 @@ import { hairline } from '@/module/chart/plugins';
 import { RadioSelect } from '#/base/InputSelector';
 import { useEffect, useRef, useState } from 'react';
 import deepmerge from 'deepmerge';
+import api from '../api';
+import { Loading } from '#/base/base';
 
 export async function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'rank';
@@ -121,29 +123,36 @@ const defaultOptions = {
 }
 const plugins = [hairline];
 
-function GroupChart({ ratio }) {
+function GroupChart() {
     const ref = useRef();
     const [len, setLen] = useState(dt.YEAR * 5);
     const from = dt.num() - len;
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [options, setOptions] = useState(defaultOptions);
+    const [isLoad, setLoad] = useState(true);
     useEffect(() => {
-        const labels = ratio?.삼성?.map(e => e.d);
-        const datasets = Object.keys(ratio)
-            ?.sort((a, b) => ratio[a].slice(-1)[0].c - ratio[b].slice(-1)[0].c)
-            ?.map(e => [e, ratio[e]])
-            ?.map(([g, e], i) => ({
-                label: g,
-                borderColor: groupColors[g] || colors[i],
-                backgroundColor: H2R(groupColors[g] || colors[i], .5 - i * .05),
-                borderWidth: 1,
-                pointRadius: 0,
-                fill: true,
-                data: e?.map(e => e.c)
-            }))
-        setData({ labels, datasets });
+        async function fetch() {
+            const ratio = (await api.json.read({ url: dir.light.ratio })).data;
+            const labels = ratio?.삼성?.map(e => e.d);
+            const datasets = Object.keys(ratio)
+                ?.sort((a, b) => ratio[a].slice(-1)[0].c - ratio[b].slice(-1)[0].c)
+                ?.map(e => [e, ratio[e]])
+                ?.map(([g, e], i) => ({
+                    label: g,
+                    borderColor: groupColors[g] || colors[i],
+                    backgroundColor: H2R(groupColors[g] || colors[i], .5 - i * .05),
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    fill: true,
+                    data: e?.map(e => e.c)
+                }))
+            setData({ labels, datasets });
+            setLoad(false);
+        }
+        fetch();
     }, [])
     useEffect(() => {
+        console.log(2);
         const option = { scales: { x: { min: from } } };
         setOptions(deepmerge(options, option));
     }, [len])
@@ -158,12 +167,15 @@ function GroupChart({ ratio }) {
             />
         </div>
         <div className={styles.chart}>
-            <Line
-                ref={ref}
-                plugins={plugins}
-                data={data}
-                options={options}
-            />
+            {isLoad
+                ? <Loading left={"auto"} right={"auto"} />
+                : <Line
+                    ref={ref}
+                    plugins={plugins}
+                    data={data}
+                    options={options}
+                />
+            }
         </div>
     </div>
 }
