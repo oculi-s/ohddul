@@ -9,7 +9,7 @@ import { LastUpdate } from '#/base/base';
 import Help from '#/base/Help';
 import api from '../api';
 import json from '@/module/json';
-import dir from '@/module/dir';
+import dir, { stock } from '@/module/dir';
 import dt from '@/module/dt';
 import '@/module/array';
 
@@ -49,21 +49,22 @@ export async function getServerSideProps(ctx) {
     if (!parseInt(code)) code = Meta.index[code] || false;
     const tab = ctx.query?.tab || 'price';
 
-    let earn = { data: [] }, share = { data: [] };
+    let earn = { data: [] }, share = { data: [] }, other = { data: [] };
     let props = { code, tab };
     const stockMeta = Meta?.data[code] || false;
     props = { ...props, stockMeta, earn, share };
-    if (tab == 'earn') {
-        earn = json.read(dir.stock.light.earn(code));
-        props = { ...props, earn };
-    } else if (tab == 'share') {
-        share = json.read(dir.stock.share(code))
-        share.data = share.data?.filter(e => e.amount);
-        props = { ...props, share };
-    } else if (tab == 'pred') {
-        const pred = json.read(dir.stock.pred(code));
-        props = { ...props, pred };
-    }
+    // if (tab == 'earn') {
+    earn = json.read(dir.stock.light.earn(code));
+    props = { ...props, earn };
+    // } else if (tab == 'share') {
+    share = json.read(dir.stock.share(code));
+    other = json.read(dir.stock.other(code));
+    share.data = share.data?.filter(e => e.amount);
+    props = { ...props, share, other };
+    // } else if (tab == 'pred') {
+    const pred = json.read(dir.stock.pred(code));
+    props = { ...props, pred };
+    // }
 
     const Group = json.read(dir.stock.light.group);
     const Index = json.read(dir.stock.light.index).data;
@@ -82,6 +83,8 @@ export async function getServerSideProps(ctx) {
                 if (gname && Group?.index[k] == gname) return 1;
                 if (share.data?.find(e => Meta.data[k]?.n == (NameDict[e.name] || e.name)))
                     return 1;
+                if (other.data?.find(e => e.from == k))
+                    return 1;
                 return 0;
             }))
     }
@@ -92,6 +95,8 @@ export async function getServerSideProps(ctx) {
                 if (iname && Induty[v] == iname) return 1;
                 if (gname && Group?.index[v] == gname) return 1;
                 if (share.data?.find(e => Meta.data[v]?.n == (NameDict[e.name] || e.name)))
+                    return 1;
+                if (other.data?.find(e => e.from == v))
                     return 1;
                 return 0;
             }))
@@ -122,8 +127,9 @@ export async function getServerSideProps(ctx) {
  *  
 */
 function MetaTable({
-    stockMeta: meta, pred, last, earn = [],
+    stockMeta: meta, pred, last, earn = { data: [] },
 }) {
+    earn = earn.data;
     earn?.qsort(dt.lsort);
 
     const amount = meta?.a;
@@ -186,8 +192,37 @@ function MetaTable({
     );
 }
 
+function StockQuery({
+    meta, price, stockPrice, loadStock, stockMeta,
+    earn, share, other, pred, ids
+}) {
+    const tabContents = {
+        query: ['price', 'earn', 'share', 'pred'],
+        names: ['가격변화', '실적추이', '지분정보', '예측모음'],
+    };
+    const router = useRouter();
+    const tab = router?.query?.tab || 'price';
+    const priceRaw = stockPrice?.priceRaw;
+    return <>
+        <ToggleQuery {...tabContents} />
+
+        {tab == 'price' ? <div>
+            <PriceElement stockPrice={stockPrice} loadStock={loadStock} />
+            <LastUpdate last={priceRaw?.last} />
+        </div> : tab == 'earn' ? <div>
+            <EarnElement earn={earn?.data} meta={stockMeta} />
+            <LastUpdate last={earn?.last} />
+        </div> : tab == 'share' ? <div>
+            <ShareElement meta={meta} share={share?.data} other={other?.data} price={price} stockMeta={stockMeta} />
+            <LastUpdate last={share?.last} />
+        </div> : <div>
+            <PredElement meta={meta} ids={ids} pred={pred} />
+        </div>}
+    </>
+}
+
 function Index(props) {
-    const { meta, price, ban, code, stockMeta, earn, share, tab } = props;
+    const { meta, price, ban, code, stockMeta, tab } = props;
     const router = useRouter();
     const nums = [20, 60, 120];
 
@@ -198,8 +233,8 @@ function Index(props) {
     const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
     useEffect(() => {
-        console.time('predBar');
         async function fetch() {
+            console.time('predBar');
             if (uid && !userPred) {
                 api.json.read({
                     url: dir.user.pred(uid),
@@ -211,6 +246,10 @@ function Index(props) {
             } else {
                 setLoadUser({ pred: false });
             }
+            console.timeEnd('predBar');
+
+            if (tab != 'price') return;
+            console.time('priceLoad');
             setLoadStock({ price: true });
             if (prices[code]) {
                 setPrice(prices[code]);
@@ -230,13 +269,12 @@ function Index(props) {
                 setPrice(stockPrice);
                 setLoadStock({ price: false });
             }
-            console.timeEnd('predBar');
+            console.timeEnd('priceLoad');
         }
         fetch();
     }, [code])
 
 
-    const priceRaw = stockPrice?.priceRaw;
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
@@ -245,15 +283,11 @@ function Index(props) {
     props = {
         ...props,
         uid,
-        last, router, share: share.data, earn: earn.data, ban: ban[code],
+        last, router, ban: ban[code],
         userPred, loadUser, setPred,
         stockPrice, loadStock,
     };
 
-    const tabContents = {
-        query: ['price', 'earn', 'share', 'pred'],
-        names: ['가격변화', '실적추이', '지분정보', '예측모음'],
-    };
     if (ban[code]) tabContents.names.pop()
     return (
         <>
@@ -263,19 +297,7 @@ function Index(props) {
             <IndutyFold {...props} />
             <MetaTable {...props} />
             <hr />
-            <ToggleQuery {...tabContents} />
-            {tab == 'price' ? <div>
-                <PriceElement {...props} />
-                <LastUpdate last={priceRaw?.last} />
-            </div> : tab == 'earn' ? <div>
-                <EarnElement {...props} />
-                <LastUpdate last={earn.last} />
-            </div> : tab == 'share' ? <div>
-                <ShareElement {...props} />
-                <LastUpdate last={share.last} />
-            </div> : <div>
-                <PredElement {...props} />
-            </div>}
+            <StockQuery {...props} />
         </>
     );
 }

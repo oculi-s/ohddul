@@ -30,8 +30,8 @@ const defaultOptions = {
 
 const plugins = [hairline];
 
-function EarnChart({ earn, stockMeta }) {
-    const amount = stockMeta?.a || 1;
+function EarnChart({ earn, meta }) {
+    const amount = meta?.a || 1;
     earn = earn.qsort((a, b) => new Date(a.date) - new Date(b.date));
     const labels = earn.map(e => e.date);
     const profitData = earn.map(e => Math.round(e.profit / amount));

@@ -91,7 +91,7 @@ function MetaTable({
         <table><tbody>
             <tr><th>시가총액</th><td>{Price(priceTotal)}</td></tr>
             <tr><th>수정주가<Help {...priceHelp} /></th><td>{Num(groupClose)}</td></tr>
-            <tr><th>BPS<Help {...bpsHelp} /></th><td>{Num(BPS)}</td></tr>
+            {/* <tr><th>BPS<Help {...bpsHelp} /></th><td>{Num(BPS)}</td></tr> */}
             <tr><th>종목 수</th><td>{group?.ch?.length}</td></tr>
             <tr>
                 <th>대표주</th>

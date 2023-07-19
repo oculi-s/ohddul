@@ -1,14 +1,13 @@
 import { QueueTable } from '#/baseStock/PredTable';
 
-function PredElement(props) {
-    const pred = props?.pred;
+function PredElement({ meta, ids, pred }) {
     return <>
         <h3>예측모음</h3>
         <QueueTable
             queue={pred?.queue}
-            meta={props?.meta}
+            meta={meta}
             by='user'
-            ids={props?.ids}
+            ids={ids}
         />
     </>;
 }

@@ -1,23 +1,25 @@
 import styles from '$/Stock/Stock.module.scss';
 import ShareDonut from "#/chart/ShareDonut";
-import { Div } from "@/module/ba";
+import { Div, Price } from "@/module/ba";
 import Help from '#/base/Help';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import NameDict from '#/stockData/NameDict';
+import { overflowHelp } from './HelpDescription';
+import { Loading } from '#/base/base';
 
-const ShareTable = ({ meta, share, stockMeta }) => {
+function ShareTable({ meta, share, stockMeta }) {
     if (!share) return;
     const [data, setData] = useState();
     const [foot, setFoot] = useState();
+    const [load, setLoad] = useState(true);
     useEffect(() => {
         if (share?.length) {
-            const amount = stockMeta?.a;
-            const total = amount;
             let res = 0;
             const data = share
                 ?.map((e, i) => {
-                    let { name, amount, date } = e;
+                    let { no, name, amount, date } = e;
+                    const total = stockMeta?.a;
                     res += amount;
                     if (NameDict[name]) name = NameDict[name];
                     const code = meta?.index[name];
@@ -26,56 +28,109 @@ const ShareTable = ({ meta, share, stockMeta }) => {
                     }
                     return <tr key={i}>
                         <th>{name}</th><td>{Div(amount, total, 1)}</td>
-                        <td className={styles.date}>{date}</td>
-                    </tr>
+                        <td className={styles.date}>
+                            <Link
+                                href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${no}`}
+                                target='_blank'
+                            >{date}</Link>
+                        </td>
+                    </tr>;
                 });
             setData(data);
-            setFoot(Div(res, amount));
+            setFoot(Div(res, stockMeta?.a));
+            setLoad(false);
         } else {
             setData([]);
             setFoot(Div(0, 1));
+            setLoad(true);
+        }
+    }, [share]);
+    return <div className={styles.shareTable}>
+        {load ? <Loading left='auto' right='auto' />
+            : data?.length ?
+                <table>
+                    <thead>
+                        <tr>
+                            <th>이름</th><th>지분</th>
+                            <th>기준일<Help span={`작년 사업보고서의 데이터를 기준으로 하며, 제공된 데이터에 따라 현재 상황과 차이가 날 수 있습니다.`} /></th>
+                        </tr>
+                    </thead>
+                    <tbody>{data}</tbody>
+                    <tfoot>
+                        <tr>
+                            <th>전체</th>
+                            <th>{foot}</th>
+                            <th>-</th>
+                        </tr>
+                    </tfoot>
+                </table> :
+                <><p>API에서 제공된<br />지분 데이터가 없습니다.</p></>}
+    </div>;
+}
+
+function OtherTable({ meta, share, price }) {
+    if (!share) return;
+    const [data, setData] = useState();
+    useEffect(() => {
+        if (share?.length) {
+            share.sort((b, a) =>
+                price[a.from]?.c * a.amount - price[b.from]?.c * b.amount)
+            const data = share
+                ?.map((e, i) => {
+                    const { no, amount, date, from } = e;
+                    const total = meta?.data[from]?.a;
+                    const name = <Link href={`/stock/${from}`}>{meta?.data[from]?.n}</Link>;
+                    return <tr key={i}>
+                        <th>{name}</th><td>{Div(amount, total, 1)}</td>
+                        <td>{Price(amount * price[from]?.c)}</td>
+                        <td className={styles.date}>
+                            <Link
+                                href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${no}`}
+                                target='_blank'
+                            >{date}</Link>
+                        </td>
+                    </tr>
+                });
+            setData(data);
+        } else {
+            setData([]);
         }
     }, [share])
-    return <div className={styles.shareTable}>
+    return <div className={styles.otherTable}>
         {data?.length ?
             <table>
                 <thead>
                     <tr>
-                        <th>이름</th><th>지분</th>
+                        <th>이름</th><th>시총대비</th><th>총액</th>
                         <th>기준일<Help span={`작년 사업보고서의 데이터를 기준으로 하며, 제공된 데이터에 따라 현재 상황과 차이가 날 수 있습니다.`} /></th>
                     </tr>
                 </thead>
-                <tbody>
-                    {data}
-                </tbody>
+                <tbody>{data}</tbody>
                 <tfoot>
                     <tr>
-                        <th>전체
-                            <Help
-                                title={'전체 주식발행량 대비 비율'}
-                                span={'100%에 맞지 않는 경우 임직원의 보유주식 혹은 공시 기간에 따른 오차입니다.'}
-                            />
-                        </th>
-                        <th>{foot}</th>
+                        <th>전체</th>
                         <th>-</th>
+                        <th>{Price(share?.map(e => price[e.from]?.c * e.amount).sum())}</th><th>-</th>
                     </tr>
                 </tfoot>
             </table> :
-            <>
-                <p>API에서 제공된<br />지분 데이터가 없습니다.</p>
-
-            </>}
+            <><p>이 회사가 소유한<br />다른 회사의 지분이 없습니다.</p></>
+        }
     </div>
 }
 
-function ShareElement(props) {
+function ShareElement({ meta, price, stockMeta, share, other }) {
     return <div>
-        <h3>지분 차트</h3>
+        <h3>지분 차트<Help {...overflowHelp} />
+        </h3>
         <div className={styles.share}>
-            <ShareDonut {...props} />
-            <ShareTable {...props} />
+            <ShareDonut share={share} meta={stockMeta} />
+            <ShareTable share={share} meta={meta} stockMeta={stockMeta} />
         </div>
         <h3>이 회사가 보유한 다른 회사의 주식</h3>
+        <div className={styles.share}>
+            <OtherTable share={other} meta={meta} price={price} />
+        </div>
     </div>;
 }
 

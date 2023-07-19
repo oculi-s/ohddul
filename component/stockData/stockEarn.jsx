@@ -5,19 +5,19 @@ import { useEffect, useState } from 'react';
 import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '#/base/Help';
 import '@/module/array';
-import { profitHelp, revenueHelp } from './HelpDescription';
+import { earnnullHelp, profitHelp, revenueHelp } from './HelpDescription';
 import { Bar } from '#/base/base';
 
-function EarnTable({ stockMeta, earn }) {
+function EarnTable({ meta, earn }) {
     if (!earn.length) return;
 
-    const amount = stockMeta?.a;
+    const amount = meta?.a;
     const [N, setN] = useState(5);
     const [view, setView] = useState(true);
     useEffect(() => {
         setN(5);
         setView(true);
-    }, [stockMeta])
+    }, [meta])
 
     const len = earn.length;
     earn = earn.qsort(dt.sort);
@@ -105,7 +105,7 @@ function EarnTable({ stockMeta, earn }) {
                 </tbody>
             </table>
         </div>
-        <h3>전체실적</h3>
+        <h3>전체실적<Help {...earnnullHelp} /></h3>
         <table className={styles.earnTable}>
             <thead>{head}</thead>
             <tbody>
@@ -123,11 +123,11 @@ function EarnTable({ stockMeta, earn }) {
     </div>;
 }
 
-function EarnElement(props) {
+function EarnElement({ earn, meta }) {
     return <>
         <h3>실적 차트</h3>
-        <EarnChart {...props} y={true} />
-        <EarnTable {...props} />
+        <EarnChart earn={earn} meta={meta} y={true} />
+        <EarnTable earn={earn} meta={meta} />
     </>;
 }
 

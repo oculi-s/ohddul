@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export const bpsHelp = {
     title: `Book per share, 주당 순자산`,
     span: <>
@@ -90,5 +92,37 @@ export const profitHelp = {
                 <tr><th>계산식</th><td>(분기별 이익) / (발행주식)</td></tr>
             </tbody>
         </table>
+    </>
+}
+
+export const earnnullHelp = {
+    title: '매출, 이익 등이 비어있는 경우',
+    span: <>
+        <p><Link href={'/stock/카카오?tab=earn'}>카카오</Link>의 실적정보를 보면 매출이 0원으로 기록되어 있습니다.</p>
+        <p>일반적인 다른 회사는 매출의 계정과목명을 <b>매출액</b>으로 표시하지만, 카카오는 <b>영업수익</b>으로 기록하여 매출이 표시되지 않습니다.</p>
+        <p>이처럼 </p>
+    </>
+}
+
+export const overflowHelp = {
+    title: '전체주식이 100%에 맞지 않는 경우',
+    span: <>
+        <p><Link href={`/stock/HMM?tab=share`}>HMM</Link>의 지분정보를 보면 총합이 100%를 초과하는 것을 볼 수 있습니다.</p>
+        <div class="Stock_shareTable__300V_">
+            <table>
+                <thead>
+                    <tr><th>이름</th><th>지분</th><th>기준일</th>
+                    </tr></thead>
+                <tbody>
+                    <tr><th>산업은행</th><td>75.4%</td><td><Link target="_blank" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20220104000076">2022-01-04</Link></td></tr>
+                    <tr><th>한국해양진흥공사</th><td>74.7%</td><td><Link target="_blank" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20220106000467">2022-01-06</Link></td></tr>
+                    <tr><th>소액주주</th><td>46.9%</td><td><Link target="_blank" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20230714000061">2023-07-14</Link></td></tr>
+                    <tr><th colSpan={3}>...</th></tr>
+                </tbody>
+            </table>
+        </div>
+        <p>주식의 대량 보유상황을 보고할 때 주권 (주식)이 아닌 전환사채, 신주인수권 등을 <b>보유주식 등</b>으로 묶어 공시하기 때문입니다.</p>
+        <p>기준일자에 걸려있는 공시 보고서 링크에 접속하여 <b>3. 보유주식등의 수 및 보유비율</b>의 주권 항목을 확인하면 정확한 보유비율을 알 수 있습니다.</p>
+        {/* <p>소액주주의 </p> */}
     </>
 }

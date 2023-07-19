@@ -99,13 +99,25 @@
             overflow: hidden;
         }
 
-        .date {
-            font-size: .9em;
-        }
 
         p {
             width: 100%;
         }
+    }
+
+    .otherTable {
+        padding: 10px;
+        text-align: center;
+        margin: 10px auto;
+        white-space: nowrap;
+
+        p {
+            margin: auto;
+        }
+    }
+
+    .date {
+        font-size: .9em;
     }
 }
 

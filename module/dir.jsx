@@ -16,6 +16,7 @@ export const stock = {
     price: code => encode(`&/${code}/price.json`),
     earn: code => encode(`&/${code}/earn.json`),
     share: code => encode(`&/${code}/share.json`),
+    other: code => encode(`&/${code}/other.json`),
     pred: code => encode(`#/${code}.json`),
     major: name => encode(`@/data/share/${name}.json`),
     light: {

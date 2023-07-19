@@ -8,7 +8,6 @@ function Index({ data, last, prev, count, name }) {
     const { avg60, top60, bot60 } = getMaData(data);
     last = last[name];
     prev = prev[name];
-    console.log(data);
     return <div className={styles.wrap}>
         <h3 className={styles.title}>
             {name == 'kospi' ? '코스피' : '코스닥'}&nbsp;

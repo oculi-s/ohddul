@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import dir from "@/module/dir";
 import json from "@/module/json";
 import { getPageSize } from "#/base/base";
+import App from 'next/app'
 
-export default function App({ Component, pageProps }) {
+export default function Index({ Component, pageProps }) {
 	const [mobAside, setAsideShow] = useState(false);
 	pageProps = { ...pageProps, mobAside, setAsideShow };
 	useEffect(() => { getPageSize(); }, [])
@@ -30,7 +31,8 @@ export default function App({ Component, pageProps }) {
  * getInitialProps가 client와 server를 연결하는 함수라서 json.read에 오류가 뜸
  * 일단 trycatch를 썼는데 수정 필요
  */
-App.getInitialProps = async function (ctx) {
+Index.getInitialProps = async function (ctx) {
+	const appProps = await App.getInitialProps(ctx);
 	let aside = {}, ban = [];
 	try {
 		aside = json.read(dir.stock.light.aside);

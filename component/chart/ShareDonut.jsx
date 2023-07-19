@@ -54,12 +54,12 @@ const options = {
     },
 }
 
-const ShareDonut = ({ share, stockMeta }) => {
+const ShareDonut = ({ share, meta }) => {
     const [data, setData] = useState({ labels: [], datasets: [] });
     useEffect(() => {
         if (share?.length) {
             console.time('share');
-            const amount = stockMeta?.a;
+            const amount = meta?.a;
             const shareData = share
                 ?.map(e => parseFix(e.amount / amount * 100, 1));
             const labels = share.map(e => e.name);

@@ -134,7 +134,8 @@ function refineData({
         const priceRaw = raw?.map(e => e?.c);
         const last = priceRaw.find(e => true);
         const start = Math.max(from, new Date(date[0]));
-        var mini = -1, maxi = -1, min, max;
+        const size = raw.length;
+        var mini = -1, maxi = -1, min, max, len = 0;
         for (let [i, e] of raw.entries()) {
             if (!e?.c && raw[i - 1]?.c && raw[i + 1]?.c) {
                 raw[i].c = raw[i - 1].c;
@@ -145,6 +146,7 @@ function refineData({
                 else if (c < min) mini = i, min = c;
                 if (maxi == -1) maxi = i, max = c;
                 else if (c > max) maxi = i, max = c;
+                len++;
             }
         }
         const {
@@ -205,8 +207,8 @@ function refineData({
                             borderColor: scss?.blueDark,
                             borderWidth: .5,
                         },
-                        maxPoint({ i: maxi, d: date[maxi], max, last, len: raw?.length }),
-                        minPoint({ i: mini, d: date[mini], min, last, len: raw?.length }),
+                        maxPoint({ i: maxi, d: date[maxi], max, last, left: (maxi - size + len) * 2 <= len }),
+                        minPoint({ i: mini, d: date[mini], min, last, left: (mini - size + len) * 2 <= len }),
                     ]
                 }
             }
