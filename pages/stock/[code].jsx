@@ -68,7 +68,7 @@ export async function getServerSideProps(ctx) {
 
     const Group = json.read(dir.stock.light.group);
     const Index = json.read(dir.stock.light.index).data;
-    const Induty = json.read(dir.stock.dart.induty).data;
+    const Induty = json.read(dir.stock.light.induty).data;
 
     const gname = Group?.index[code];
     const iname = Induty[code];
@@ -194,17 +194,19 @@ function MetaTable({
 
 function StockQuery({
     meta, price, stockPrice, loadStock, stockMeta,
-    earn, share, other, pred, ids
+    earn, share, other, pred, ids, ban,
 }) {
-    const tabContents = {
-        query: ['price', 'earn', 'share', 'pred'],
-        names: ['가격변화', '실적추이', '지분정보', '예측모음'],
-    };
+    const query = ['price', 'earn', 'share', 'pred'];
+    const names = ['가격변화', '실적추이', '지분정보', '예측모음'];
+    if (ban) {
+        query.pop();
+        names.pop();
+    }
     const router = useRouter();
     const tab = router?.query?.tab || 'price';
     const priceRaw = stockPrice?.priceRaw;
     return <>
-        <ToggleQuery {...tabContents} />
+        <ToggleQuery query={query} names={names} />
 
         {tab == 'price' ? <div>
             <PriceElement stockPrice={stockPrice} loadStock={loadStock} />
@@ -288,7 +290,6 @@ function Index(props) {
         stockPrice, loadStock,
     };
 
-    if (ban[code]) tabContents.names.pop()
     return (
         <>
             <StockHead {...props} />

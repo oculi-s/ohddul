@@ -40,8 +40,8 @@ export async function getServerSideProps(ctx) {
 
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
-    const index = json.read(dir.stock.induty);
-    const induty = json.read(dir.stock.dart.induty);
+    const index = json.read(dir.stock.light.index);
+    const induty = json.read(dir.stock.light.induty);
 
     const meta = Filter(Meta);
     const price = Filter(Price);

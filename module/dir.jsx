@@ -29,6 +29,7 @@ export const stock = {
         updown: encode('_/light/updown.json'),
         group: encode('_/light/group.json'),
         index: encode('_/light/index.json'),
+        induty: encode('_/light/induty.json'),
         ratio: encode('_/light/ratio.json'),
     },
     chart: {

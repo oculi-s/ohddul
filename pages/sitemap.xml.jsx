@@ -11,7 +11,7 @@ import dir from '@/module/dir';
 export async function getServerSideProps(ctx) {
     const meta = json.read(dir.stock.meta).data;
     const group = json.read(dir.stock.group).data;
-    const induty = json.read(dir.stock.induty).data;
+    const induty = json.read(dir.stock.light.index).data;
     const lastmod = new Date().toISOString();
     const priority = 1;
 

@@ -130,7 +130,7 @@ function resKeydown({ e, setTabIndex, tabIndex, inputRef }) {
 function moveQuery({ e, meta, users, router, setAsideShow, setView, result }) {
     e.preventDefault();
     const q = e.target?.q?.value?.toLowerCase();
-    const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.name?.toLowerCase() == q);
+    const resStock = Object.entries(meta?.data)?.find(([code, e]) => code == q || e.n?.toLowerCase() == q);
     const resUser = Object.values(users).find(e => e.id == q);
     if (resStock) {
         router.push(`/stock/${resStock[0]}`);

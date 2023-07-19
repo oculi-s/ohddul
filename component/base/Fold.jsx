@@ -20,7 +20,7 @@ const Fold = ({ head, body, name, view, setView }) => {
             </div>
             <div className={`${styles.content} ${view ? styles.view : ''}`}>
                 <table>
-                    <thead>{head}</thead>
+                    {head ? <thead>{head}</thead> : ''}
                     {body?.type == 'tbody' ?
                         body :
                         <tbody>{body}</tbody>

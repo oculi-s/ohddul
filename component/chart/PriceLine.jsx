@@ -137,9 +137,6 @@ function refineData({
         const size = raw.length;
         var mini = -1, maxi = -1, min, max, len = 0;
         for (let [i, e] of raw.entries()) {
-            if (!e?.c && raw[i - 1]?.c && raw[i + 1]?.c) {
-                raw[i].c = raw[i - 1].c;
-            }
             if (new Date(e.d) > from) {
                 const c = e.c;
                 if (mini == -1) mini = i, min = c;

@@ -33,27 +33,28 @@ function IndutyFold({
     const total = stock.map(e => meta[e]?.a * price[e]?.c || 0).sum();
     const name = <>
         <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${indutyNum}`}>{data?.n}</Link></h3>
-        <p>{data?.c} 종목 시총 : ({Price(total)}) ROE평균 : </p>
+        <p>{data?.c} 종목 {total ? <>시총 : ({Price(total)})</> : ''}</p>
     </>;
-    const Induty = ({ e }) => <>
+    const Induty = ({ e, br = false }) => <>
         <Link href={`/induty/${e.slice(1)}`}>{index[e]?.n}</Link>
-        <p className={styles.cnt}>({index[e]?.c}개)</p>
+        {br ? <br /> : ""}
+        <span className={styles.cnt}> ({index[e]?.c}개)</span>
     </>;
 
     const [view, setView] = useState(false);
     const body = <>
         <tr className='th'>
-            {index[parCode] && <th rowSpan={len} align='center'><Induty e={parCode} /></th>}
-            <th rowSpan={len} align='center'><Induty e={indutyCode} /></th>
+            {index[parCode] ? <th rowSpan={len} align='center'><Induty e={parCode} br={true} /></th> : ''}
+            <th rowSpan={len} align='center'><Induty e={indutyCode} br={true} /></th>
         </tr>
         {child.map(e => <tr key={e} className='th'>
             <th colSpan={3} align='center'><Induty e={e} /></th>
         </tr>
         )}
-        {stock?.length ? <tr className='th'>
-            <th align='center'>종목</th>
-            <th align='center'>전일종가</th>
-            <th align='center'>시총</th>
+        {stock?.length ? <tr className='th' align='center'>
+            <th>종목</th>
+            <th>전일종가</th>
+            <th>시총</th>
         </tr> : ""}
         {stock.map(code => {
             return <tr key={code}>
