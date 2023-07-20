@@ -34,7 +34,7 @@ export async function getServerSideProps(ctx) {
     }))
 
     const induties = Object.keys(induty).map(iname => ({
-        loc: `${process.env.URL}/induty/${iname.slice(1)}`,
+        loc: `${process.env.URL}/induty/${iname}`,
         priority, lastmod,
     }));
     const groups = Object.keys(group).map(gname => ({

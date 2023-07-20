@@ -51,7 +51,7 @@
 
         .stock {
             white-space: nowrap;
-            max-width: 40vw;
+            max-width: 100px;
         }
 
         tr>* {
@@ -83,4 +83,31 @@
 
 .cnt {
     font-size: .8em;
+}
+
+.induty {
+    h3 a span {
+        vertical-align: bottom;
+    }
+
+    svg {
+        padding: 0;
+        width: 1.2em;
+        height: 1.2em;
+
+        &,
+        * {
+            fill: $textBright !important;
+            stroke: $textBright !important;
+        }
+
+        margin-right: 5px;
+    }
+
+    th {
+        span {
+            z-index: 1;
+            position: relative;
+        }
+    }
 }

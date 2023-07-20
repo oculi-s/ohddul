@@ -7,7 +7,7 @@ const Fold = ({ head, body, name, view, setView }) => {
     if (!view && !setView) {
         [view, setView] = useState(false);
     }
-    toggleOnPageChange(useRouter(), setView);
+    // toggleOnPageChange(useRouter(), setView);
     return (
         <>
             <div className={styles.title}>

@@ -1,10 +1,12 @@
 import Link from 'next/link';
-import { Price, Big, Num } from '@/module/ba';
+import { Price, Num, Div } from '@/module/ba';
 import Fold from '#/base/Fold';
 import '@/module/array'
 import FavStar from '#/baseStock/FavStar';
 import styles from '$/Base/Fold.module.scss';
 import { useState } from 'react';
+import { Bar } from '#/base/base';
+import IndutyImg from '@/public/induty/Default';
 
 /**
  * json to table과 재귀함수 이용해서 만들었다가
@@ -19,36 +21,58 @@ function IndutyFold({
 }) {
     meta = meta?.data || meta;
     if (!induty) return;
-    const indutyCode = Big(induty[code] || code);
-    const parCode = indutyCode?.slice(0, -1);
-    const indutyNum = indutyCode?.slice(1);
-    const data = index[indutyCode] || index;
+    code = induty[code] || code;
+    let parent;
+    if (code == '_');
+    else if (code.length == 1) parent = '_';
+    else if (code.length == 3) parent = code[0];
+    else parent = code.slice(0, -1);
+    const data = index[code] || index;
     if (!data) return;
-    const child = Object.keys(index)?.filter(e => e.slice(0, -1) == indutyCode);
-    const stock = Object.keys(meta).filter(e => induty[e] == indutyNum)
+    const child = Object.keys(index)?.filter(e => {
+        if (e == '_') return 0;
+        if (code == '_') return e.length == 1;
+        if (code.length == 1) return e.slice(0, -2) == code;
+        return e.slice(0, -1) == code
+    })?.qsort((b, a) => index[a]?.p - index[b]?.p);
+    const stock = Object.keys(meta).filter(e => induty[e] == code)
         ?.filter(e => meta[e]?.a && price[e]?.c)
         ?.qsort((b, a) => meta[a]?.a * price[a]?.c - meta[b]?.a * price[b]?.c);
     const len = child?.length + stock?.length + 2;
 
-    const total = stock.map(e => meta[e]?.a * price[e]?.c || 0).sum();
     const name = <>
-        <h3 style={{ margin: "10px auto" }}><Link href={`/induty/${indutyNum}`}>{data?.n}</Link></h3>
-        <p>{data?.c} 종목 {total ? <>시총 : ({Price(total)})</> : ''}</p>
+        <h3 style={{ margin: "10px auto" }}>
+            <Link href={`/induty/${data?.n}`}>
+                <IndutyImg name={data?.n} />
+                <span>{data?.n}</span>
+            </Link>
+        </h3>
+        <p>{data?.c} 종목 {data?.p ? <>시총 : ({Price(data?.p)})</> : ''}</p>
     </>;
-    const Induty = ({ e, br = false }) => <>
-        <Link href={`/induty/${e.slice(1)}`}>{index[e]?.n}</Link>
-        {br ? <br /> : ""}
-        <span className={styles.cnt}> ({index[e]?.c}개)</span>
-    </>;
-
+    const Induty = ({ e, br = false, price = true }) => {
+        return <span>
+            <Link href={`/induty/${index[e]?.n}`}>{index[e]?.n}</Link>
+            {br ? <br /> : ""}
+            <span className={styles.cnt}>
+                ({index[e]?.c}개{price ? `, ${Price(index[e]?.p)}` : ""})
+            </span>
+        </span>;
+    }
     const [view, setView] = useState(false);
     const body = <>
         <tr className='th'>
-            {index[parCode] ? <th rowSpan={len} align='center'><Induty e={parCode} br={true} /></th> : ''}
-            <th rowSpan={len} align='center'><Induty e={indutyCode} br={true} /></th>
+            {parent ? <th rowSpan={len} align='center'>
+                <Induty e={parent} br={true} price={false} />
+            </th> : ""}
+            <th rowSpan={len} align='center'>
+                <Induty e={code} br={true} price={false} />
+            </th>
         </tr>
         {child.map(e => <tr key={e} className='th'>
-            <th colSpan={3} align='center'><Induty e={e} /></th>
+            <th colSpan={3} align='center' style={{ position: 'relative' }}>
+                <Bar width={Div(index[e]?.p, index[code]?.p, 3)} />
+                <Induty e={e} />
+            </th>
         </tr>
         )}
         {stock?.length ? <tr className='th' align='center'>
@@ -69,11 +93,12 @@ function IndutyFold({
                 <td>{Num(price[code]?.c)}</td>
                 <td>{Price(price[code]?.c * meta[code]?.a)}</td>
             </tr>;
-        }
-        )}
+        })}
     </>;
     const props = { name, body, view, setView };
-    return <Fold {...props} />;
+    return <div className={styles.induty}>
+        <Fold {...props} />
+    </div>
 }
 
 export default IndutyFold;

@@ -250,7 +250,10 @@ table {
     }
 
     .th {
-        * {
+        background: $thColor;
+
+        td,
+        th {
             background: $thColor;
         }
     }

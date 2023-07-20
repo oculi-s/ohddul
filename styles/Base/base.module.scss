@@ -85,7 +85,7 @@
 
 .bar {
     height: 100%;
-    background: $barColor;
+    background: $barColor !important;
     position: absolute;
     top: 0;
     left: 0;
