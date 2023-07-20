@@ -9,7 +9,7 @@ import { LastUpdate } from '#/base/base';
 import Help from '#/base/Help';
 import api from '../api';
 import json from '@/module/json';
-import dir, { stock } from '@/module/dir';
+import dir from '@/module/dir';
 import dt from '@/module/dt';
 import '@/module/array';
 
@@ -257,7 +257,7 @@ function Index(props) {
                 setPrice(prices[code]);
                 setLoadStock({ price: false });
             } else {
-                await api.json.read({ url: dir.stock.light.price(code) })
+                await api.json.read({ url: dir.stock.chart.price(code, '') })
                     .then(price => {
                         stockPrice.priceRaw = price;
                     })

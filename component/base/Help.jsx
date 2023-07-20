@@ -30,7 +30,6 @@ const Help = ({ data, span, title }) => {
     const inner = data || span;
     useEffect(() => {
         if (!hydrated) {
-            console.log(1);
             if (ref.current.span) {
                 setDirWidth({ ref })
             }
