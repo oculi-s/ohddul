@@ -16,9 +16,10 @@ export const Int = (s = '0') => {
     return parseInt(s.replace(/,/g, '')) || 0;
 }
 
-export const NumFix = (v = 0) => {
-    v = String(v.toFixed(1));
-    return Num(v.slice(0, -2)) + v.slice(-2);
+export const NumFix = (v = 0, f = 1) => {
+    v = String(v.toFixed(f));
+    const right = v.split('.')[1];
+    return Num(v.split('.')[0]) + (right ? '.' + right : '');
 }
 
 /**
@@ -42,10 +43,10 @@ export const Color = (a = 0, b = 0) => {
     return a == b ? '' : a > b ? 'red' : 'blue';
 }
 
-export const Price = (v = 0) => {
+export const Price = (v = 0, f = 1) => {
     if (v > 100000000) v /= 100000000;
     if (v > 10000)
-        return `${NumFix((v / 10000))}조`;
+        return `${NumFix(v / 10000, f)}조`;
     return `${Num(v)}억`;
 }
 

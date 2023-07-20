@@ -42,19 +42,22 @@ function IndutyFold({
 
     const name = <>
         <h3 style={{ margin: "10px auto" }}>
-            <Link href={`/induty/${data?.n}`}>
+            <Link href={`/induty/${code == '_' ? '' : data?.n}`}>
                 <IndutyImg name={data?.n} />
                 <span>{data?.n}</span>
             </Link>
         </h3>
-        <p>{data?.c} 종목 {data?.p ? <>시총 : ({Price(data?.p)})</> : ''}</p>
+        <p>{data?.c} 종목 {data?.p ? <>시총 : ({Price(data?.p, 0)})</> : ''}</p>
     </>;
     const Induty = ({ e, br = false, price = true }) => {
+        const n = e == '_' ? '' : index[e]?.n;
         return <span>
-            <Link href={`/induty/${index[e]?.n}`}>{index[e]?.n}</Link>
-            {br ? <br /> : ""}
+            <Link href={`/induty/${n}`}>{index[e]?.n}</Link>
+            {br ? <br /> : <> </>}
             <span className={styles.cnt}>
-                ({index[e]?.c}개{price ? `, ${Price(index[e]?.p)}` : ""})
+                ({index[e]?.c}개
+                {price ? `, ${Div(index[e]?.p, data?.p)}` : ""}
+                )
             </span>
         </span>;
     }
