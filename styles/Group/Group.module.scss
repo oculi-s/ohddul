@@ -13,8 +13,20 @@
     }
 }
 
-.groupChart {
-    height: 250px;
+.groupPrice {
+
+    .priceChart {
+        height: 420px;
+        padding: 20px;
+        background: $bgMidDark;
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    .groupChart {
+        height: 250px;
+    }
 }
 
 .title {

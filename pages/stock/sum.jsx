@@ -10,16 +10,19 @@ import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
+import { filterIndex } from '@/module/filter/filter';
 
 export async function getServerSideProps(ctx) {
     const Meta = json.read(dir.meta).data;
-    const Hist = json.read(dir.hist);
-    const Price = json.read(dir.all);
-    const group = json.read(dir.group);
-
     const p = parseInt(ctx?.query?.p || 1);
     const N = parseInt(ctx?.query?.N || 15);
     const T = Object.keys(Meta)?.length || 0;
+
+    const Hist = json.read(dir.hist);
+    const Price = json.read(dir.all);
+    const Induty = json.read(dir.light.induty).data;
+    const Index = json.read(dir.light.index).data;
+    const group = json.read(dir.group);
     const keys = Object.keys(Meta)
         ?.filter(e => Meta[e]?.a && Price[e]?.c)
         ?.qsort((b, a) =>
@@ -27,10 +30,11 @@ export async function getServerSideProps(ctx) {
         )
         ?.slice((p - 1) * N, p * N)
     const KeyMap = Object.fromEntries(keys.map(e => [e, 1]));
-    const Filter = (data) => {
+    function Filter(data) {
         return Object.fromEntries(Object.entries(data)
-            ?.filter(([k, v]) => KeyMap[k]))
+            ?.filter(([k, v]) => KeyMap[k]));
     }
+
     const meta = Filter(Meta);
     const price = Filter(Price);
     const hist = Object.fromEntries(Object.keys(Hist)
@@ -39,24 +43,28 @@ export async function getServerSideProps(ctx) {
         ?.map((e, i) => [e, { h: Hist[e], i }])
         ?.filter(([k, v]) => KeyMap[k])
     )
-    group.index = Filter(group.index);
 
-    const props = { p, N, T, keys, meta, price, group, hist };
+    group.index = Filter(group.index);
+    const induty = Filter(Induty);
+    const index = filterIndex(Index);
+
+    const props = { p, N, T, keys, meta, price, group, hist, induty, index: Index };
     return { props };
 }
 
-export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
+export default function Sum({ p, N, T, keys, meta, price, group, hist, induty, index }) {
     const body = keys?.map((e, i) => {
         const gname = group?.index[e];
+        const icode = induty[e];
+        const iname = index[icode]?.n;
         const d = hist[e]?.i - (i + (p - 1) * N);
         return <tr key={i}>
             <th align='center' className={styles.num}>{(p - 1) * N + i + 1}</th>
             <th className={styles.stockTh}>
                 <FavStar code={e} />
                 <Link href={`/stock/${meta[e]?.n}`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
-
             </th>
-            <td>{Price(meta[e]?.a * price[e]?.c)}</td>
+            <td className='mh'>{Price(meta[e]?.a * price[e]?.c)}</td>
             <td className={styles.num}>
                 {hist[e]?.i >= 0 ?
                     <>
@@ -72,23 +80,28 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist }) {
                     <GroupImg name={gname} />
                 </Link>
             </td>
+            <td className={styles.induty}>
+                <Link href={`/induty/${iname}`}>{iname}</Link>
+            </td>
         </tr>
     })
     const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
-            <col width={'10%'} />
-            <col width={'40%'} />
-            <col width={'15%'} />
-            <col width={'15%'} />
-            <col width={'20%'} />
+            <col width={20} />
+            <col width={120} />
+            <col width={60} className='mh' />
+            <col width={60} />
+            <col width={40} />
+            <col width={60} />
         </colgroup>
         <thead>
             <tr>
                 <th>#</th>
                 <th>종목명</th>
-                <th><span className='ph'>시총</span><span className='mh'>시가총액</span></th>
+                <th className='mh'>시총</th>
                 <th>1년전</th>
                 <th>그룹</th>
+                <th>업종</th>
             </tr>
         </thead>
         <tbody>{body}</tbody>

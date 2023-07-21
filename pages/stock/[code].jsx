@@ -67,12 +67,12 @@ export async function getServerSideProps(ctx) {
     // }
 
     const Group = json.read(dir.stock.light.group);
-    const Index = json.read(dir.stock.light.index).data;
     const Induty = json.read(dir.stock.light.induty).data;
+    const index = json.read(dir.stock.light.index).data;
 
     const gname = Group?.index[code];
     const iname = Induty[code];
-    const index = await filterIndex(Index, iname);
+    // const index = await filterIndex(Index, iname);
     const group = Group.data[gname] || false;
 
     const Filter = (data) => {
@@ -228,9 +228,9 @@ function Index(props) {
     const router = useRouter();
     const nums = [20, 60, 120];
 
-    const prices = {};
+    const [prices, setPrices] = useState({});
     const [userPred, setPred] = useState();
-    const [stockPrice, setPrice] = useState({});
+    const [stockPrice, setStockPrice] = useState({});
     const [loadUser, setLoadUser] = useState({ pred: true });
     const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
@@ -254,10 +254,9 @@ function Index(props) {
             console.time('priceLoad');
             setLoadStock({ price: true });
             if (prices[code]) {
-                setPrice(prices[code]);
-                setLoadStock({ price: false });
+                setStockPrice(prices[code]);
             } else {
-                await api.json.read({ url: dir.stock.chart.price(code, '') })
+                await api.json.read({ url: dir.stock.light.price(code) })
                     .then(price => {
                         stockPrice.priceRaw = price;
                     })
@@ -268,9 +267,10 @@ function Index(props) {
                         })
                 }
                 prices[code] = stockPrice;
-                setPrice(stockPrice);
-                setLoadStock({ price: false });
+                setPrices(prices);
+                setStockPrice(stockPrice);
             }
+            setLoadStock({ price: false });
             console.timeEnd('priceLoad');
         }
         fetch();

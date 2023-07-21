@@ -112,7 +112,7 @@ export const overflowHelp = {
     title: '전체주식이 100%에 맞지 않는 경우',
     span: <>
         <p><Link href={`/stock/HMM?tab=share`}>HMM</Link>의 지분정보를 보면 총합이 100%를 초과하는 것을 볼 수 있습니다.</p>
-        <div class="Stock_shareTable__300V_">
+        <div>
             <table>
                 <thead>
                     <tr><th>이름</th><th>지분</th><th>기준일</th>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Price, Num, Div } from '@/module/ba';
+import { Price, Num, Div, Per, Color } from '@/module/ba';
 import Fold from '#/base/Fold';
 import '@/module/array'
 import FavStar from '#/baseStock/FavStar';
@@ -76,14 +76,15 @@ function IndutyFold({
                 <Bar width={Div(index[e]?.p, index[code]?.p, 3)} />
                 <Induty e={e} />
             </th>
-        </tr>
-        )}
+        </tr>)}
         {stock?.length ? <tr className='th' align='center'>
             <th>종목</th>
             <th>전일종가</th>
             <th>시총</th>
         </tr> : ""}
         {stock.map(code => {
+            const c = price[code]?.c;
+            const p = price[code]?.p;
             return <tr key={code}>
                 <th className={styles.stock}>
                     <FavStar {...{ code, User, setUser }} />
@@ -93,7 +94,10 @@ function IndutyFold({
                     >{meta[code]?.n}
                     </Link>
                 </th>
-                <td>{Num(price[code]?.c)}</td>
+                <td>
+                    {Num(c)}&nbsp;
+                    <span className={`des ${Color(c - p)}`}>({Per(c, p)})</span>
+                </td>
                 <td>{Price(price[code]?.c * meta[code]?.a)}</td>
             </tr>;
         })}

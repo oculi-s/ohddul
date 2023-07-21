@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import GroupImg from '@/public/group/Default';
-import { Num, Price } from '@/module/ba';
+import { Color, Num, Per, Price } from '@/module/ba';
 import Fold from '#/base/Fold';
 import FavStar from '#/baseStock/FavStar';
 import styles from '$/Base/Fold.module.scss'
@@ -12,7 +12,7 @@ import '@/module/array';
  * 데이터를 원하는 그룹의 데이터만 입력
  */
 function GroupFold({
-    meta, price, group, predict,
+    meta, price, group, induty, index, predict,
     User, setUser
 }) {
     meta = meta?.data || meta;
@@ -32,8 +32,7 @@ function GroupFold({
             <th>이름</th>
             <th>전일종가</th>
             <th>시총</th>
-            <th>예측수</th>
-            <th>정답률</th>
+            <th>업종</th>
         </tr>
     </>;
 
@@ -42,7 +41,11 @@ function GroupFold({
         .filter(code => meta[code])
         .qsort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
         .map((code) => {
-            const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
+            // const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
+            const c = price[code]?.c;
+            const p = price[code]?.p;
+            const icode = induty[code];
+            const iname = index[icode]?.n;
             return <tr key={code}>
                 <th className={styles.stock}>
                     <FavStar {...{ code, User, setUser }} />
@@ -52,14 +55,22 @@ function GroupFold({
                     >{meta[code]?.n}
                     </Link>
                 </th>
-                <td>{Num(price[code]?.c)}</td>
+                <td>
+                    {Num(price[code]?.c)}&nbsp;
+                    <span className={`des ${Color(c - p)}`}>
+                        ({Per(c, p)})
+                    </span>
+                </td>
                 <td>{Price(priceDict[code])}</td>
-                <td>{cnt}</td>
-                <td>{(predict[code]?.right || 0 / cnt) || 0}%</td>
+                <td className={styles.ind}>
+                    <Link href={`/induty/${iname}`}>{iname}</Link>
+                </td>
             </tr>;
         });
     const props = { name, head, body, view, setView };
-    return <Fold {...props} />;
+    return <div className={styles.group}>
+        <Fold {...props} />
+    </div>
 }
 
 export default GroupFold;

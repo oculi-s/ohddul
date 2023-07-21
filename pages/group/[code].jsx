@@ -2,17 +2,18 @@ import styles from '$/Group/Group.module.scss'
 import { useRouter } from "next/router";
 import Link from "next/link";
 import GroupFold from "#/stockFold/GroupFold";
-import { ToggleTab } from '#/base/ToggleTab';
+import { ToggleQuery, ToggleTab } from '#/base/ToggleTab';
 import Help from '#/base/Help';
 
 import { priceHelp } from '#/group/HelpDescription';
 import PriceElement from '#/group/groupPrice';
-import { bpsHelp } from '#/stockData/HelpDescription';
 
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
 import '@/module/array';
+import { useEffect, useState } from 'react';
+import api from '../api';
 
 /**
  * 그룹 정보를 보여주는 페이지
@@ -24,6 +25,7 @@ import '@/module/array';
  * induty : 277 --> 238 (-39kb)
  */
 export async function getServerSideProps(ctx) {
+    const tab = ctx.query?.tab || 'price';
     const code = ctx.query?.code;
     const group = json.read(dir.stock.light.group).data[code] || {};
 
@@ -40,12 +42,12 @@ export async function getServerSideProps(ctx) {
 
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
-    const index = json.read(dir.stock.light.index);
-    const induty = json.read(dir.stock.light.induty);
+    const index = json.read(dir.stock.light.index).data;
+    const Induty = json.read(dir.stock.light.induty).data;
 
     const meta = Filter(Meta);
     const price = Filter(Price);
-    induty.data = Filter(induty.data);
+    const induty = Filter(Induty);
     const earn = group?.ch?.map(code => {
         const data = json.read(dir.stock.earn(code)).data.filter(e => e.data);
         const equity = data.map(e => e?.equity).sum();
@@ -59,6 +61,7 @@ export async function getServerSideProps(ctx) {
 
     const title = group?.n ? `${group?.n}그룹 : 오떨` : null;
     let props = {
+        tab,
         title, code,
         group, index, induty,
         predict,
@@ -105,20 +108,46 @@ function MetaTable({
     </div>;
 }
 
-function Group(props) {
+function Group({ group, tab, meta, price, code, earn, index, induty }) {
     const router = useRouter();
-    if (!props.group?.n) return <>그룹 정보가 없습니다.</>;
-    const code = router.query?.code;
-    props = { ...props, router, code };
-    const names = ['요약정보', '실적정보', '출자정보'];
-    const datas = [
-        <div key={0}>
-            <PriceElement {...props} />
-        </div>,
-        <div key={1}>
-            <h3>그룹사 상세정보</h3>
-        </div>
-    ];
+    const [load, setLoad] = useState({ price: true });
+    const [groupPrice, setGroupPrice] = useState({});
+    const [prices, setPrices] = useState({});
+
+    if (!group?.n) return <>그룹 정보가 없습니다.</>;
+    const props = { group, tab, meta, price, earn, index, induty, router, code, load, groupPrice };
+    const query = ['price', 'earn', 'share'];
+    const names = ['주가정보', '실적정보', '출자정보'];
+
+    useEffect(() => {
+        const nums = [20, 60, 120];
+        async function fetch() {
+            console.time('groupPriceLoad');
+            setLoad({ price: true });
+            if (prices[code]) {
+                setGroupPrice(prices[code]);
+            } else {
+                const groupPrice = {};
+                setGroupPrice(groupPrice);
+                await api.json.read({ url: dir.stock.groups.price(code) })
+                    .then(price => {
+                        groupPrice.priceRaw = price;
+                    })
+                for await (let num of nums) {
+                    await api.json.read({ url: dir.stock.chart.group(code, num) })
+                        .then(price => {
+                            groupPrice[num] = price;
+                        })
+                }
+                prices[code] = groupPrice;
+                setPrices(prices);
+                setGroupPrice(groupPrice);
+            }
+            setLoad({ price: false });
+            console.timeEnd('groupPriceLoad');
+        }
+        fetch();
+    }, [code])
     return <>
         <div>
             <h2 className={styles.title}>{code}그룹</h2>
@@ -127,9 +156,10 @@ function Group(props) {
             <MetaTable {...props} />
         </div>
         <hr />
-        <div style={{ height: 300 }}>
-            <ToggleTab names={names} datas={datas} />
-        </div>
+        <ToggleQuery query={query} names={names} />
+        {tab == 'price' ? <div className={styles.groupPrice}>
+            <PriceElement {...props} />
+        </div> : ''}
     </>;
 }
 

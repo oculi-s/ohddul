@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import styles from '$/Profile/Index.module.scss'
 import { getSession } from "next-auth/react";
-import { ToggleQuery, ToggleTab } from "#/base/ToggleTab";
+import { ToggleQuery } from "#/base/ToggleTab";
 
 import dir from "@/module/dir";
 import json from "@/module/json";
@@ -11,7 +11,7 @@ import { FavTable } from "#/profile/profileFavs";
 import ProfilePred from "#/profile/profilePred";
 import { useEffect, useState } from "react";
 import api from "@/pages/api";
-import { Int, Sleep } from "@/module/ba";
+import { Int } from "@/module/ba";
 import { getRank } from "#/User";
 import { MustLogin } from "#/base/Kakao";
 import HistLine from "#/chart/HistLine";

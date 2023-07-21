@@ -132,7 +132,7 @@ function refineData({
         if (!price[num] || !raw) continue;
         date = raw?.map(e => e?.d);
         const priceRaw = raw?.map(e => e?.c);
-        const last = priceRaw.slice(0, -1).find(e => true);
+        const last = priceRaw.slice(-1).find(e => true);
         const start = Math.max(from, new Date(date[0]));
         const size = raw.length;
         var mini = -1, maxi = -1, min, max, len = 0;
@@ -313,6 +313,7 @@ function PriceLine({
 
     // 20, 60, 120을 async로 미리 만들어 놓고, 그때그때 minmax만 따로 구해줘야함
     useEffect(() => {
+        setData({ labels: [], datasets: [] })
         if (!load?.price) {
             console.time('price');
             const [data, sub, option] = refineData({
@@ -324,10 +325,8 @@ function PriceLine({
             setSubData(sub);
             setOptions(merge(defaultOptions, option))
             console.timeEnd('price');
-        } else {
-            setData({ labels: [], datasets: [] })
         }
-    }, [load?.price, isEarn, isBollinger, isMinMax, num, len])
+    }, [load?.price, isEarn, isBollinger, isMinMax, num, len, prices])
 
     const props = {
         isBollinger, setBollinger,

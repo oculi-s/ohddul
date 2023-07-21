@@ -64,11 +64,10 @@ function BBTable({ stockPrice = [] }) {
     </table>;
 }
 
-const PriceElement = ({ stockPrice, stockMeta, loadStock }) => {
+const PriceElement = ({ stockPrice, loadStock }) => {
     const priceRaw = stockPrice?.priceRaw?.data;
     const chartProps = {
         prices: [stockPrice],
-        metas: [stockMeta],
         load: loadStock,
     }
     return <>
