@@ -108,44 +108,43 @@ function MetaTable({
     </div>;
 }
 
+const prices = {};
 function Group({ group, tab, meta, price, code, earn, index, induty }) {
     const router = useRouter();
+    const nums = [20, 60, 120];
     const [load, setLoad] = useState({ price: true });
     const [groupPrice, setGroupPrice] = useState({});
-    const [prices, setPrices] = useState({});
 
     const props = { group, tab, meta, price, earn, index, induty, router, code, load, groupPrice };
     const query = ['price', 'earn', 'share'];
     const names = ['주가정보', '실적정보', '출자정보'];
 
-    useEffect(() => {
-        const nums = [20, 60, 120];
-        async function fetch() {
-            console.time('groupPriceLoad');
-            setLoad({ price: true });
-            if (prices[code]) {
-                setGroupPrice(prices[code]);
-            } else {
-                const groupPrice = {};
-                setGroupPrice(groupPrice);
-                await api.json.read({ url: dir.stock.groups.price(code) })
-                    .then(price => {
-                        groupPrice.priceRaw = price;
-                    })
-                for await (let num of nums) {
-                    await api.json.read({ url: dir.stock.chart.group(code, num) })
-                        .then(price => {
-                            groupPrice[num] = price;
-                        })
-                }
-                prices[code] = groupPrice;
-                setPrices(prices);
-                setGroupPrice(groupPrice);
+    async function fetch() {
+        console.time('groupPriceLoad');
+        setLoad({ price: true });
+        if (prices[code]) {
+            setGroupPrice(prices[code]);
+        } else {
+            prices[code] = {};
+            await api.json.read({ url: dir.stock.groups.price(code) })
+                .then(price => {
+                    prices[code].priceRaw = price;
+                })
+            for (let num of nums) {
+                await api.json.read({
+                    url: dir.stock.chart.group(code, num)
+                }).then(price => {
+                    prices[code][num] = price;
+                })
             }
-            setLoad({ price: false });
-            console.timeEnd('groupPriceLoad');
+            setGroupPrice(prices[code]);
         }
-        fetch();
+        setLoad({ price: false });
+        console.timeEnd('groupPriceLoad');
+    }
+
+    useEffect(() => {
+        if (tab == 'price') fetch();
     }, [code]);
 
     if (!group?.n) return <>그룹 정보가 없습니다.</>;

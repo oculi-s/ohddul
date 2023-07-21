@@ -11,7 +11,7 @@ import scss from '$/variables.module.scss';
 import { maxPoint, minPoint } from "@/module/chart/annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
 import { hairline } from "@/module/chart/plugins";
-import { parseFix } from "@/module/ba";
+import { H2R, parseFix } from "@/module/ba";
 import { Loading } from "#/base/base";
 import '@/module/array'
 Chart.register(Annotation);
@@ -46,71 +46,51 @@ const defaultOptions = {
     }
 }
 
+const suboption = {
+    animation: {
+        x: { duration: 0 },
+        duration: 100
+    },
+    interaction: { intersect: false, mode: 'index', },
+    spanGaps: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            type: "time",
+            time: { tooltipFormat: "yyyy-MM-dd" },
+            display: false,
+        },
+        y: { min: -20, max: 120, display: true }
+    },
+    plugins: {
+        legend: { display: false },
+        annotation: {
+            drawTime: 'afterDatasetsDraw',
+            annotations: [{
+                type: 'line',
+                yMin: 50, yMax: 50,
+                borderColor: scss.bgBrighter,
+                borderWidth: 1,
+            }, {
+                type: 'box',
+                yMin: 0, yMax: 100,
+                borderColor: scss.bgBrighter,
+                backgroundColor: H2R(scss.bgBright, .3),
+                borderDash: [5, 5],
+                borderWidth: 1,
+            }]
+        },
+        tooltip: {
+            callbacks: {
+                label: function (ctx) {
+                    return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
+                },
+            }
+        }
+    }
+}
+
 const plugins = [hairline, Annotation];
-
-/**
- * 주의할 부분
- * 
- * priceRaw를 slice할 때 i+1-num 부터 i+1까지 해야함
- * 이유는 start부터 end-1까지 데이터를 구하기 때문
- * 2023.07.18 데이터를 미리 계산해 저장해두면서 폐기
- */
-// async function getData({
-//     price, isEarn, num, isMinMax, percentMa
-// }) {
-//     const dates = price?.map(e => e.d);
-//     const priceRaw = price?.map(e => e.c);
-//     const priceAvg = dates?.map((e, i) => Math.avg(priceRaw?.slice(i + 1 - num, i + 1)));
-//     const priceTop = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), 2))
-//     const priceBot = dates?.map((e, i) => Math.std(priceRaw?.slice(i + 1 - num, i + 1), -2))
-
-//     var props = { dates, priceRaw, priceAvg, priceTop, priceBot };
-//     var ymin = 2e9, ymax = -1;
-
-//     if (percentMa) {
-//         const priceMa = dates?.map((e, i) => {
-//             // if (!priceTop[i]) return 50;
-//             // if (!priceBot[i]) return 50;
-//             return (priceRaw[i] - priceBot[i]) / (priceTop[i] - priceBot[i]) * 100;
-//         })
-//         props = { ...props, priceMa };
-//     }
-
-//     // 앞뒤 종가가 있을 때만 데이터 수정
-//     priceRaw?.forEach((e, i) => {
-//         if (!e) {
-//             if (priceRaw[i - 1] && priceRaw[i + 1]) {
-//                 priceRaw[i] = priceRaw[i - 1];
-//             }
-//         }
-//     })
-//     if (isMinMax) {
-//         var mini = 0, maxi = 0, min = 2e9, max = -1;
-//         priceRaw?.forEach((e, i) => {
-//             if (e && e < min) mini = i, min = e;
-//             if (e && e > max) maxi = i, max = e;
-//         })
-//         ymin = min, ymax = max;
-//         props = { ...props, mini, maxi, min, max };
-//     }
-
-//     if (isEarn) {
-//         const stockEps = price?.map(e => {
-//             const v = e?.eps
-//             if (v && v < ymin) ymin = v;
-//             if (v && v > ymax) ymax = v;
-//             return v;
-//         });
-//         const stockBps = price?.map(e => {
-//             const v = e?.bps
-//             if (v && v < ymin) ymin = v;
-//             if (v && v > ymax) ymax = v;
-//             return v;
-//         });
-//         props = { ...props, stockEps, stockBps };
-//     }
-//     return { ...props, ymin, ymax };
-// }
 
 /**
  * 계산된 차트 데이터를 정제하여 차트에 입힐 수 있도록 만드는 함수
@@ -303,17 +283,18 @@ function PriceLine({
     const [isMinMax, setMinMax] = useState(minMax);
     const [isBollinger, setBollinger] = useState(addBollinger);
     const [options, setOptions] = useState(defaultOptions);
+    const [suboptions, setSuboptions] = useState(suboption);
 
     const [view, setView] = useState(false);
     const [data, setData] = useState({ labels: [], datasets: [] });
     const [subData, setSubData] = useState({ labels: [], datasets: [] });
     useEffect(() => {
+        setData({ labels: [], datasets: [] })
         setView(false);
     }, [prices])
 
     // 20, 60, 120을 async로 미리 만들어 놓고, 그때그때 minmax만 따로 구해줘야함
     useEffect(() => {
-        setData({ labels: [], datasets: [] })
         if (!load?.price) {
             console.time('price');
             const [data, sub, option] = refineData({
@@ -321,9 +302,12 @@ function PriceLine({
                 isEarn, isBollinger, isMinMax,
                 percentMa, from
             })
+            const suboptions = {};
+            suboptions.scales = option.scales;
             setData(data);
             setSubData(sub);
-            setOptions(merge(defaultOptions, option))
+            setOptions(merge(defaultOptions, option));
+            setSuboptions(merge(suboption, suboptions));
             console.timeEnd('price');
         }
     }, [load?.price, isEarn, isBollinger, isMinMax, num, len, prices])
@@ -337,36 +321,7 @@ function PriceLine({
         view, setView
     }
 
-    const suboption = {
-        scales: {
-            x: { min: from },
-            y: { min: -20, max: 120, display: true }
-        },
-        plugins: {
-            annotation: {
-                annotations: [{
-                    type: 'line',
-                    yMin: 50, yMax: 50,
-                    borderColor: scss.bgBrighter,
-                    borderWidth: 1,
-                }, {
-                    type: 'box',
-                    yMin: 0, yMax: 100,
-                    borderColor: scss.bgBrighter,
-                    backgroundColor: scss.bgOpacity,
-                    borderDash: [5, 5],
-                    borderWidth: 1,
-                }]
-            },
-            tooltip: {
-                callbacks: {
-                    label: function (ctx) {
-                        return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
-                    },
-                }
-            }
-        }
-    }
+
     return (<>
         <div className={`${styles.wrap} ${percentMa ? styles.withSub : ""} ${timeBtn || bollingerBtn ? styles.withBtn : ""}`}>
             {timeBtn || bollingerBtn ? <ButtonGroup {...props} /> : ""}
@@ -386,10 +341,9 @@ function PriceLine({
                         : <Line
                             plugins={plugins}
                             data={subData}
-                            options={merge(defaultOptions, suboption)}
+                            options={suboptions}
                         />}
-                </div>
-            }
+                </div>}
         </div >
     </>)
 }

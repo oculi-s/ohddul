@@ -207,7 +207,6 @@ function StockQuery({
     const priceRaw = stockPrice?.priceRaw;
     return <>
         <ToggleQuery query={query} names={names} />
-
         {tab == 'price' ? <div>
             <PriceElement stockPrice={stockPrice} loadStock={loadStock} />
             <LastUpdate last={priceRaw?.last} />
@@ -223,59 +222,63 @@ function StockQuery({
     </>
 }
 
+const prices = {};
 function Index(props) {
     const { meta, price, ban, code, stockMeta, tab } = props;
     const router = useRouter();
     const nums = [20, 60, 120];
 
-    const [prices, setPrices] = useState({});
     const [userPred, setPred] = useState();
     const [stockPrice, setStockPrice] = useState({});
     const [loadUser, setLoadUser] = useState({ pred: true });
     const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
-    useEffect(() => {
-        async function fetch() {
-            console.time('predBar');
-            if (uid && !userPred) {
-                api.json.read({
-                    url: dir.user.pred(uid),
-                    def: { queue: [], data: [] }
-                }).then(pred => {
-                    setPred(pred);
-                    setLoadUser({ pred: false });
+    async function fetchPrice(code) {
+        console.time('priceLoad');
+        setLoadStock({ price: true });
+        if (prices[code]) {
+            setStockPrice(prices[code]);
+        } else {
+            prices[code] = {};
+            await api.json.read({
+                url: dir.stock.light.price(code)
+            }).then(price => {
+                prices[code].priceRaw = price;
+            })
+            for (let num of nums) {
+                await api.json.read({
+                    url: dir.stock.chart.price(code, num)
+                }).then(price => {
+                    prices[code][num] = price;
                 })
-            } else {
-                setLoadUser({ pred: false });
             }
-            console.timeEnd('predBar');
-
-            if (tab != 'price') return;
-            console.time('priceLoad');
-            setLoadStock({ price: true });
-            if (prices[code]) {
-                setStockPrice(prices[code]);
-            } else {
-                await api.json.read({ url: dir.stock.light.price(code) })
-                    .then(price => {
-                        stockPrice.priceRaw = price;
-                    })
-                for await (let num of nums) {
-                    await api.json.read({ url: dir.stock.chart.price(code, num) })
-                        .then(price => {
-                            stockPrice[num] = price;
-                        })
-                }
-                prices[code] = stockPrice;
-                setPrices(prices);
-                setStockPrice(stockPrice);
-            }
-            setLoadStock({ price: false });
-            console.timeEnd('priceLoad');
+            setStockPrice(prices[code]);
         }
-        fetch();
+        setLoadStock({ price: false });
+        console.timeEnd('priceLoad');
+    }
+    async function fetchUser() {
+        console.time('predBar');
+        if (uid && !userPred) {
+            api.json.read({
+                url: dir.user.pred(uid),
+                def: { queue: [], data: [] }
+            }).then(pred => {
+                setPred(pred);
+                setLoadUser({ pred: false });
+            })
+        } else {
+            setLoadUser({ pred: false });
+        }
+        console.timeEnd('predBar');
+    }
+
+    useEffect(() => {
+        fetchUser();
+        if (tab == 'price') fetchPrice(code);
     }, [code])
 
+    console.log(stockPrice)
 
     if (!meta?.data) return;
     if (!stockMeta) {
