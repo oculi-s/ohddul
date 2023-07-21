@@ -136,7 +136,7 @@ function MetaTable({
     const total = amount * last?.c;
     const EPS = (last?.eps || 0);
     const BPS = (last?.bps || 0);
-    const ROE = Div(earn?.slice(0, 4)?.map(e => e?.profit).sum(), earn[0]?.equity);
+    const ROE = Div(earn?.slice(-4)?.map(e => e?.profit).sum(), earn.slice(-1)?.find(e => true)?.equity);
     const revenueSum = Object.values(earn)?.map(e => e?.revenue)?.sum();
     const profitSum = Object.values(earn)?.map(e => e?.profit)?.sum();
 

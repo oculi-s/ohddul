@@ -21,7 +21,7 @@ const Alert = ({ name, ohddul, change, date, origin }) => {
     };
     const value = (`${date}일 목표가 ${change + origin}원으로 `);
     const msg = `${name}, ${ohddul ? '' : value}${od(ohddul, change)}을 예측하셨습니다.`;
-    alert(msg);
+    window.alert(msg);
 }
 
 /**
@@ -46,11 +46,11 @@ async function submit({
 }) {
     if (again) return;
     if (!ohddul && !date) {
-        alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.');
+        window.alert('0일 뒤 변화는 예측할 수 없습니다.\n날짜를 선택해주세요.');
         return;
     }
     if (!testing && !uid) {
-        alert('로그인 정보가 없습니다. 관리자에게 문의해주세요.');
+        window.alert('로그인 정보가 없습니다. 관리자에게 문의해주세요.');
         return;
     }
     Alert({ name, ohddul, change, date, origin });
@@ -73,7 +73,7 @@ async function submit({
     }
 
     const predData = { ...data, uid };
-    const userData = { ...data, c: code };
+    const userData = { ...data, code };
     await api.json.queue({ url: dir.user.pred(uid), data: userData, });
     await api.json.queue({ url: dir.stock.pred(code), data: predData, });
     await api.json.up({

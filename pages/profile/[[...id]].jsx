@@ -49,8 +49,8 @@ export async function getServerSideProps(ctx) {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) =>
                 Object.keys(favs)?.includes(k)
-                || pred?.queue?.find(e => e.c == k)
-                || pred?.data?.find(e => e.c == k)))
+                || pred?.queue?.find(e => e.code == k)
+                || pred?.data?.find(e => e.code == k)))
     }
     const meta = Filter(Meta);
     const price = Filter(Price);

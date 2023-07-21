@@ -42,10 +42,10 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
         })
     }, [queue])
     const queueBody = queue?.map((e, i) => {
-        const { t, c, d, o, pr, od, at, uid } = e;
+        const { t, code, d, o, pr, od, at, uid } = e;
         return <tr key={`pred${i}`}>
             <th>{by == 'stock' ?
-                <Link href={`/stock/${meta[c]?.n}`}>{meta[c]?.n}</Link>
+                <Link href={`/stock/${meta[code]?.n}`}>{meta[code]?.n}</Link>
                 : <Link href={`/profile/${ids?.index[uid]}`}>{ids?.index[uid]}</Link>
             }</th>
             <td>{t == 'od' ? '오떨' : '가격'}</td>

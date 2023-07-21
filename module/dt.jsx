@@ -26,7 +26,7 @@ function toQuar(m = moment()) {
  * 장중이면 return 0
  * 
  * update하는 시간이 1시간까지 걸리는 것을 감안해 
- * 8:00부터 3:40분까지를 장중으로 함
+ * 8:59부터 3:40분까지를 장중으로 함
  * before이면 -1, after이면 1을 return
  */
 function market(m = moment()) {
@@ -34,7 +34,7 @@ function market(m = moment()) {
     const day = m.day();
     if (day == 0 || day == 6) return 1;
     const v = m.hour() * 60 + m.minute();
-    if (v < 480) return -1;
+    if (v < 539) return -1;
     if (v > 940) return 1;
     return 0;
 }
@@ -97,6 +97,7 @@ function pred(d = 0) {
 function scoring(d = 0) {
     d = moment(d);
     const mkt = market(d);
+    console.log(parse(d), mkt);
     const day = d.day();
     d.set({ hour: 15, minute: 30, second: 0 });
     if (day == 0) d.set({ date: d.date() + 1 });
