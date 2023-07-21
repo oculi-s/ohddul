@@ -278,8 +278,6 @@ function Index(props) {
         if (tab == 'price') fetchPrice(code);
     }, [code])
 
-    console.log(stockPrice)
-
     if (!meta?.data) return;
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;

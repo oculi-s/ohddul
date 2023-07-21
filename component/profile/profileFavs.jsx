@@ -12,23 +12,23 @@ export function FavTable({
     userPred: pred, setPred, loadUser: load,
 }) {
     const codes = Object.keys(favs);
-    const queue = pred?.queue;
+    const queue = pred?.queue?.sort(dt.sort);
 
     function Rows({ code }) {
-        const [time, setTime] = useState(queue?.find(e => e.c == code)?.d);
+        const [time, setTime] = useState(queue?.find(e => e.code == code)?.d);
         const [view, setView] = useState(false);
         const name = meta[code]?.n;
         const close = price[code]?.c;
         const prev = price[code]?.p;
         return <>
             <tr>
-                <th>
+                <th className={styles.stock}>
                     {mine && <FavStar {...{ code }} />}
                     <Link href={`/stock/${name}`}>{name}</Link>
                 </th>
                 <td>{Num(close)}</td>
                 <td className={Color(close - prev)}>{Per(close, prev)}</td>
-                <td>{ban[code] ?
+                <td className={styles.pred}>{ban[code] ?
                     <p className="des red">거래정지</p>
                     : dt.pred(time) ?
                         <p className={styles.open}>

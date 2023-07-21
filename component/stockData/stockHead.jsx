@@ -40,13 +40,13 @@ function StockHead({
 
     const queue = userPred?.queue;
     queue?.sort(dt.sort)
-    let orig = queue?.find(e => e.c == code)?.d;
+    let orig = queue?.find(e => e.code == code)?.d;
     let bar = dt.pred(orig);
     const [time, setTime] = useState(orig);
     const [view, setView] = useState(0);
 
     useEffect(() => {
-        orig = queue?.find(e => e.c == code)?.d;
+        orig = queue?.find(e => e.code == code)?.d;
         bar = dt.pred(orig);
         setTime(orig);
     }, [code]);
