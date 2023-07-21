@@ -21,7 +21,6 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
     const odQueueLen = queue?.filter(e => e.t == 'od')?.length || 0;
     const prQueueLen = queue?.filter(e => e.t == 'pr')?.length || 0;
     const odRight = data?.filter(e => e.t == 'od')?.filter(e => e.v >= 0).length;
-    console.log(meta);
     // const prRight = data?.filter(e => e.t == 'pr')?.filter(e => e.v >= 0).length;
     const bg = getBg(cur.color);
     return (
