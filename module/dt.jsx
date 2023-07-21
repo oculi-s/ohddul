@@ -97,7 +97,6 @@ function pred(d = 0) {
 function scoring(d = 0) {
     d = moment(d);
     const mkt = market(d);
-    console.log(parse(d), mkt);
     const day = d.day();
     d.set({ hour: 15, minute: 30, second: 0 });
     if (day == 0) d.set({ date: d.date() + 1 });

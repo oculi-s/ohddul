@@ -12,12 +12,37 @@
         }
     }
 
+    tr {
+        border-top: none;
+    }
+
     .predBar {
-        max-height: 0px;
-        display: none;
+
+        border: none;
+
+        >* {
+            border: none;
+            height: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .bar {
+            max-height: 0px;
+            transition: max-height .3s;
+
+            >div {
+                margin: 0;
+            }
+        }
 
         &.view {
-            display: table-row;
+            .bar {
+
+                max-height: 80px;
+            }
+
+            // display: table-row;
         }
     }
 

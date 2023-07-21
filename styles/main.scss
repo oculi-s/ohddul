@@ -69,11 +69,6 @@ main {
     margin-bottom: 50px;
 }
 
-hr {
-    position: relative;
-    z-index: 1;
-}
-
 h1,
 h2,
 h3,
@@ -240,6 +235,7 @@ table {
     tbody {
         tr>* {
             background: $tbColor;
+            z-index: 0;
         }
 
         &:not(thead+*) {

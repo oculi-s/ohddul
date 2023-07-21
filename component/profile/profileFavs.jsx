@@ -40,12 +40,14 @@ export function FavTable({
             {mine && dt.pred(time) && !ban[code] &&
                 <tr className={`${styles.predBar} ${view ? styles.view : ''}`}>
                     <th colSpan={4}>
-                        <PredBar {...{
-                            uid,
-                            setPred, setTime, setView,
-                            code, last: price[code],
-                            name, help: false,
-                        }} />
+                        <div className={styles.bar}>
+                            <PredBar {...{
+                                uid,
+                                setPred, setTime, setView,
+                                code, last: price[code],
+                                name, help: false,
+                            }} />
+                        </div>
                     </th>
                 </tr>}
         </>;

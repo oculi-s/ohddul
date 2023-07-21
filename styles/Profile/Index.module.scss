@@ -1,8 +1,20 @@
 @import '../variables.module.scss';
 
+.curtain {
+    opacity: 0.3;
+    width: 100%;
+    height: 80px;
+    left: 0;
+    top: var(--nav-height);
+    z-index: -1;
+    position: fixed;
+}
 
 .chart {
     margin-top: 20px;
+    padding: 10px;
+    background: $bgMidDark;
+    border-radius: 10px;
 }
 
 .bar {
@@ -12,7 +24,6 @@
     border-radius: 5px;
     background: $borderColor;
 
-    // overflow: hidden;
     >div {
         height: 100%;
         border-radius: 5px;

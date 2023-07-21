@@ -1,15 +1,5 @@
 @import '../variables.module.scss';
 
-.curtain {
-    opacity: 0.3;
-    width: 100%;
-    height: 80px;
-    left: 0;
-    top: var(--nav-height);
-    z-index: 0;
-    position: fixed;
-}
-
 .profile {
     padding: 20px 0;
 }
@@ -18,8 +8,6 @@
     width: min(100%, 300px);
     margin-right: 0;
     margin-left: auto;
-    z-index: 1;
-    position: relative;
     text-align: center;
     margin-top: 30px;
 }
@@ -42,8 +30,6 @@
 .id {
     color: white;
     font-size: 2em;
-    z-index: 1;
-    position: relative;
     display: inline-block;
 
     >span {

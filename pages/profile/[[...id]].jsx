@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import styles from '$/Profile/Index.module.scss'
 import { getSession } from "next-auth/react";
 import { ToggleQuery } from "#/base/ToggleTab";
+import scss from '$/variables.module.scss';
 
 import dir from "@/module/dir";
 import json from "@/module/json";
@@ -131,6 +132,8 @@ function Index({
         return <>{qid} : 존재하지 않는 사용자입니다.</>;
     }
 
+    const [prev, cur, next] = getRank(userMeta?.rank)
+
     const props = {
         userMeta, userPred, setPred, userHist, loadUser, // Client Fetch
         uid, favs, id, mine, // Server
@@ -154,6 +157,11 @@ function Index({
                 <h3>관심 종목</h3>
                 <FavTable {...props} />
             </div>}
+
+            <div
+                className={styles.curtain}
+                style={{ background: `linear-gradient(180deg, ${scss[cur.color]}, transparent)` }}
+            />
         </>
     );
 }

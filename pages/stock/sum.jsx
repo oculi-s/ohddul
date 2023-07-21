@@ -10,7 +10,6 @@ import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
-import { filterIndex } from '@/module/filter/filter';
 
 export async function getServerSideProps(ctx) {
     const Meta = json.read(dir.meta).data;
@@ -21,7 +20,7 @@ export async function getServerSideProps(ctx) {
     const Hist = json.read(dir.hist);
     const Price = json.read(dir.all);
     const Induty = json.read(dir.light.induty).data;
-    const Index = json.read(dir.light.index).data;
+    const index = json.read(dir.light.index).data;
     const group = json.read(dir.group);
     const keys = Object.keys(Meta)
         ?.filter(e => Meta[e]?.a && Price[e]?.c)
@@ -46,9 +45,8 @@ export async function getServerSideProps(ctx) {
 
     group.index = Filter(group.index);
     const induty = Filter(Induty);
-    const index = filterIndex(Index);
 
-    const props = { p, N, T, keys, meta, price, group, hist, induty, index: Index };
+    const props = { p, N, T, keys, meta, price, group, hist, induty, index };
     return { props };
 }
 

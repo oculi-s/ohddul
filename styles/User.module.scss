@@ -39,8 +39,6 @@
 }
 
 .box {
-    position: relative;
-
     >a {
         text-decoration: none;
         color: $textBright;
@@ -49,7 +47,7 @@
         padding: 10px;
         width: 35px;
         height: 35px;
-        position: relative;
+        text-align: center;
 
         &.alarm span {
             position: absolute;

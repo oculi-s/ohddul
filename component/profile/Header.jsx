@@ -2,7 +2,6 @@ import { AlarmSetting, getBg, getRank } from '#/User';
 import styles from '$/Profile/Header.module.scss'
 import { Div, Int } from '@/module/ba';
 import { Loading } from '#/base/base';
-import scss from '$/variables.module.scss';
 import dt from '@/module/dt';
 
 /**
@@ -25,10 +24,6 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
     const bg = getBg(cur.color);
     return (
         <div className={styles.profile}>
-            <div
-                className={styles.curtain}
-                style={{ background: `linear-gradient(180deg, ${scss[cur.color]}, transparent)` }}
-            />
             <div className={styles.header}>
                 <h2 className={styles.id}>
                     {load?.meta ? <Loading inline={true} size={40} />

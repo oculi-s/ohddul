@@ -1,25 +1,34 @@
 @import '../variables.module.scss';
 
-.queueTable,
-.dataTable {
+.box {
     background: $bgMid;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
     text-align: center;
     min-height: 150px;
+
+    >div {
+        width: 100%;
+    }
+
+    tr>* {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.stock {
+    max-width: 100px;
+    text-align: left;
 }
 
 .queueTable {
     table {
-        table-layout: fixed;
+        // table-layout: fixed;
 
-        tr>* {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
 
         thead {
             text-align: center;

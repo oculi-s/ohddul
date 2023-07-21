@@ -45,10 +45,12 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
     const queueBody = queue?.map((e, i) => {
         const { t, code, d, o, pr, od, at, uid } = e;
         return <tr key={`pred${i}`}>
-            <th>{by == 'stock' ?
-                <Link href={`/stock/${meta[code]?.n}`}>{meta[code]?.n}</Link>
-                : <Link href={`/profile/${ids?.index[uid]}`}>{ids?.index[uid]}</Link>
-            }</th>
+            <th className={styles.stock}>
+                {by == 'stock' ?
+                    <Link href={`/stock/${meta[code]?.n}`}>{meta[code]?.n}</Link>
+                    : <Link href={`/profile/${ids?.index[uid]}`}>{ids?.index[uid]}</Link>
+                }
+            </th>
             <td>{t == 'od' ? '오떨' : '가격'}</td>
             {t == 'pr'
                 ? <>
@@ -65,28 +67,30 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
         </tr>;
     });
     // moreTable을 쓰면 useRef을 통해 만든 타이머가 끊김.
-    return <div className={styles.queueTable}>
-        {queueBody?.length
-            ? <table>
-                <colgroup>
-                    <col width={'20%'} />
-                    <col width={'15%'} />
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>{by == 'stock' ? '종목' : '유저'}</th>
-                        <th><span className='mh'>예측</span>종류</th>
-                        <th>예측</th>
-                        <th><span className='mh'>예측</span>시간</th>
-                        <th>채점<span className='mh'>시간</span></th>
-                    </tr>
-                </thead>
-                <tbody>{queueBody}</tbody>
-            </table>
-            : <div>
-                <p>대기중인 예측이 없습니다.</p>
-                <p>지금 예측을 시작하고 랭크를 올려보세요.</p>
-            </div>}
+    return <div className={styles.box}>
+        <div className={styles.queueTable}>
+            {queueBody?.length
+                ? <table>
+                    <colgroup>
+                        <col width={'20%'} />
+                        <col width={'15%'} />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>{by == 'stock' ? '종목' : '유저'}</th>
+                            <th><span className='mh'>예측</span>종류</th>
+                            <th>예측</th>
+                            <th><span className='mh'>예측</span>시간</th>
+                            <th>채점<span className='mh'>시간</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>{queueBody}</tbody>
+                </table>
+                : <div>
+                    <p>대기중인 예측이 없습니다.</p>
+                    <p>지금 예측을 시작하고 랭크를 올려보세요.</p>
+                </div>}
+        </div>
     </div>
 }
 
@@ -96,7 +100,7 @@ export function UserPredTable({ data, meta, }) {
     const dataBody = data?.map((e, i) => {
         const { t, code, d, o, pr, od, at, uid, v } = e;
         return <tr key={`pred${i}`}>
-            <th>
+            <th className={styles.stock}>
                 <Link href={`/stock/${meta[code]?.n}`}>
                     {meta[code]?.n}
                 </Link>
@@ -104,7 +108,9 @@ export function UserPredTable({ data, meta, }) {
             <td>{t == 'od' ? '오떨' : '가격'}</td>
             {t == 'pr'
                 ? <>
-                    <td>{Num(pr)}<span className='mh'>&nbsp;</span><br className='ph' />
+                    <td>
+                        {Num(pr)}
+                        <span className='mh'>&nbsp;</span><br className='ph' />
                         <span className={Color(pr, o)}>({Per(pr, o)})</span>
                     </td>
                 </>
@@ -114,7 +120,8 @@ export function UserPredTable({ data, meta, }) {
             }
             <td><span className='des'>{dt.parse(d, 'M월D일 HH:mm')}</span></td>
             <td className='des'>
-                {NumFix(s += (i < 500 && v <= 0 ? 0 : v), 1)}&nbsp;
+                {NumFix(s += (i < 500 && v <= 0 ? 0 : v), 1)}
+                <span className='mh'>&nbsp;</span><br className='ph' />
                 <span className={Color(v)}>
                     ({i < 500 && v <= 0
                         ? <s>{Fix(v, 2)}</s>
@@ -131,12 +138,14 @@ export function UserPredTable({ data, meta, }) {
         <th><span className='mh'>예측</span>시간</th>
         <th>점수</th>
     </tr>;
-    return <div className={styles.dataTable}>
-        {dataBody.length
-            ? <MoreTable head={head} data={dataBody} start={10} step={10} />
-            : <div>
-                <p>아직 채점된 예측이 없습니다.</p>
-                <p>지금 예측을 시작하고 랭크를 올려보세요.</p>
-            </div>}
+    return <div className={styles.box}>
+        <div className={styles.dataTable}>
+            {dataBody.length
+                ? <MoreTable head={head} data={dataBody} start={10} step={10} />
+                : <div>
+                    <p>아직 채점된 예측이 없습니다.</p>
+                    <p>지금 예측을 시작하고 랭크를 올려보세요.</p>
+                </div>}
+        </div>
     </div>
 }
