@@ -114,7 +114,6 @@ function Group({ group, tab, meta, price, code, earn, index, induty }) {
     const [groupPrice, setGroupPrice] = useState({});
     const [prices, setPrices] = useState({});
 
-    if (!group?.n) return <>그룹 정보가 없습니다.</>;
     const props = { group, tab, meta, price, earn, index, induty, router, code, load, groupPrice };
     const query = ['price', 'earn', 'share'];
     const names = ['주가정보', '실적정보', '출자정보'];
@@ -147,7 +146,9 @@ function Group({ group, tab, meta, price, code, earn, index, induty }) {
             console.timeEnd('groupPriceLoad');
         }
         fetch();
-    }, [code])
+    }, [code]);
+
+    if (!group?.n) return <>그룹 정보가 없습니다.</>;
     return <>
         <div>
             <h2 className={styles.title}>{code}그룹</h2>
