@@ -3,7 +3,7 @@
  */
 
 import styles from '$/Stock/Sum.module.scss'
-import Pagination from "#/base/Pagination";
+import { Pagination } from "#/base/Pagination";
 import FavStar from "#/baseStock/FavStar";
 import { Color, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";

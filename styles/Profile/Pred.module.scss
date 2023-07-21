@@ -1,13 +1,39 @@
+@import '../variables.module.scss';
+
+.queueTable,
+.dataTable {
+    background: $bgMid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    min-height: 150px;
+}
+
 .queueTable {
-    table-layout: fixed;
+    table {
+        table-layout: fixed;
 
-    tr>* {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        tr>* {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        thead {
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+        }
     }
+}
 
-    thead {
-        text-align: center;
+.dataTable {
+    table {
+        margin: 0;
     }
 
     td {

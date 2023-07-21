@@ -63,8 +63,8 @@
         }
     }
 
-    .more {
-        cursor: pointer;
+    a * {
+        color: $anchor;
     }
 }
 

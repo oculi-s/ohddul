@@ -10,11 +10,13 @@ import { hairline } from "@/module/chart/plugins";
 import Annotation from "chartjs-plugin-annotation";
 import { Loading } from "#/base/base";
 import '@/module/array';
+import { useEffect, useState } from "react";
+import deepmerge from "deepmerge";
 Chart.register(Annotation);
 
 const plugins = [hairline, Annotation];
 
-const options = {
+const defaultOptions = {
     plugins: {
         legend: { display: false },
         annotation: {
@@ -62,74 +64,79 @@ const options = {
 }
 
 function HistLine({ rank, signed, data, load }) {
-    console.log(rank, signed)
-    data.push({ d: signed, v: 0 });
-    data?.qsort(dt.lsort)?.slice(-252);
-    if (data.findIndex(e => e.d == dt.parse()) == -1) {
-        data?.push({ d: dt.num(), v: 0 });
-        options.scales.x.max = dt.num();
-    }
-    const dates = data.map(e => e.d);
-    var s = 1000;
-    data = data.map(({ d, v }) => {
-        s += v;
-        return parseFix(s, 1);
-    })
     const [prev, cur, next] = getRank(rank);
-    const chartData = {
-        labels: dates,
-        datasets: [{
-            data,
-            borderColor: scss[cur.color] || scss.unranked,
-            backgroundColor: scss[cur.color] || scss.unranked,
-            borderWidth: 2,
-            pointRadius: 0
-        }]
-    }
-    options.scales.y.min = Int(Math.min(...data)) - 3;
-    options.scales.y.max = Int(Math.max(...data)) + 3;
-    options.plugins.annotation = {
-        annotations: [
-            {
-                type: 'box',
-                yMin: prev.score, yMax: cur.score,
-                borderColor: H2R(scss[prev.color], .3),
-                backgroundColor: H2R(scss[prev.color], .3),
-                borderDash: [5, 5],
-                borderWidth: 1,
-            },
-            {
-                type: 'box',
-                yMin: cur.score, yMax: next.score,
-                borderColor: H2R(scss[cur.color], .3),
-                backgroundColor: H2R(scss[cur.color], .3),
-                borderDash: [5, 5],
-                borderWidth: 1,
-            }, {
-                type: 'label',
-                color: scss[cur.color],
-                content: `${cur.color?.slice(0, 1)?.toUpperCase()}${cur.num}`,
-                font: { size: 14, family: 'sans-serif' },
-                position: {
-                    x: 'end',
-                    y: 'center'
+    const [chartData, setData] = useState({ labels: [], datasets: [] });
+    const [options, setOptions] = useState(defaultOptions);
+    useEffect(() => {
+        data.push({ d: signed, v: 0 });
+        data?.qsort(dt.lsort)?.slice(-252);
+        if (data.findIndex(e => e.d == dt.parse()) == -1) {
+            data?.push({ d: dt.num(), v: 0 });
+        }
+        const dates = data.map(e => e.d);
+        options.scales.x.max = dt.num();
+        var s = 1000;
+        data = data.map(({ d, v }) => {
+            s += v;
+            return parseFix(s, 1);
+        })
+        setData({
+            labels: dates,
+            datasets: [{
+                data,
+                borderColor: scss[cur.color] || scss.unranked,
+                backgroundColor: scss[cur.color] || scss.unranked,
+                borderWidth: 2,
+                pointRadius: 0
+            }]
+        });
+        const option = { scales: { y: {} }, plugins: {} }
+        option.scales.y.min = Int(Math.min(...data)) - 3;
+        option.scales.y.max = Int(Math.max(...data)) + 3;
+        option.plugins.annotation = {
+            annotations: [
+                {
+                    type: 'box',
+                    yMin: prev.score, yMax: cur.score,
+                    borderColor: H2R(scss[prev.color], .3),
+                    backgroundColor: H2R(scss[prev.color], .3),
+                    borderDash: [5, 5],
+                    borderWidth: 1,
                 },
-                xValue: dt.num(),
-                yValue: cur.score,
-            }, {
-                type: 'label',
-                color: scss[next.color],
-                content: `${next.color?.slice(0, 1)?.toUpperCase()}${next.num}`,
-                font: { size: 14, family: 'sans-serif' },
-                position: {
-                    x: 'end',
-                    y: 'center'
-                },
-                xValue: dt.num(),
-                yValue: next.score,
-            }
-        ]
-    }
+                {
+                    type: 'box',
+                    yMin: cur.score, yMax: next.score,
+                    borderColor: H2R(scss[cur.color], .3),
+                    backgroundColor: H2R(scss[cur.color], .3),
+                    borderDash: [5, 5],
+                    borderWidth: 1,
+                }, {
+                    type: 'label',
+                    color: scss[cur.color],
+                    content: `${cur.color?.slice(0, 1)?.toUpperCase()}${cur.num}`,
+                    font: { size: 14, family: 'sans-serif' },
+                    position: {
+                        x: 'end',
+                        y: 'center'
+                    },
+                    xValue: dt.num(),
+                    yValue: cur.score,
+                }, {
+                    type: 'label',
+                    color: scss[next.color],
+                    content: `${next.color?.slice(0, 1)?.toUpperCase()}${next.num}`,
+                    font: { size: 14, family: 'sans-serif' },
+                    position: {
+                        x: 'end',
+                        y: 'center'
+                    },
+                    xValue: dt.num(),
+                    yValue: next.score,
+                }
+            ]
+        }
+        setOptions(deepmerge(defaultOptions, option));
+    }, [load?.hist, data])
 
     return (
         <div className={styles.wrap}>

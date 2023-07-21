@@ -80,7 +80,7 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
                 </tbody>
             </table>
             <div className={styles.meta}>
-                <span>가입일 : {dt.toString(meta?.signed, { time: 1, day: 1 })}</span>
+                <span>가입일 : {dt.toString(meta?.signed || 1, { time: 1, day: 1 })}</span>
             </div>
         </div>
     );

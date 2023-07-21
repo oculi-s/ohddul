@@ -1,8 +1,9 @@
 import styles from '$/Profile/Pred.module.scss';
-import { Color, Num, Per } from "@/module/ba";
+import { Color, Fix, Num, NumFix, Per } from "@/module/ba";
 import Link from "next/link";
 import dt from '@/module/dt';
 import { useEffect, useRef, useState } from 'react';
+import { MoreTable } from '#/base/Pagination';
 
 /**
  * 주의할 점
@@ -63,20 +64,79 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
             <td><span className='des' ref={e => { ref.current[d] = e }}></span></td>
         </tr>;
     });
-    return <table className={styles.queueTable}>
-        <colgroup>
-            <col width={'20%'} />
-            <col width={'15%'} />
-        </colgroup>
-        <thead>
-            <tr>
-                <th>{by == 'stock' ? '종목' : '유저'}</th>
-                <th><span className='mh'>예측</span>종류</th>
-                <th>예측</th>
-                <th><span className='mh'>예측</span>시간</th>
-                <th>채점<span className='mh'>시간</span></th>
-            </tr>
-        </thead>
-        <tbody>{queueBody}</tbody>
-    </table>
+    // moreTable을 쓰면 useRef을 통해 만든 타이머가 끊김.
+    return <div className={styles.queueTable}>
+        {queueBody?.length
+            ? <table>
+                <colgroup>
+                    <col width={'20%'} />
+                    <col width={'15%'} />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>{by == 'stock' ? '종목' : '유저'}</th>
+                        <th><span className='mh'>예측</span>종류</th>
+                        <th>예측</th>
+                        <th><span className='mh'>예측</span>시간</th>
+                        <th>채점<span className='mh'>시간</span></th>
+                    </tr>
+                </thead>
+                <tbody>{queueBody}</tbody>
+            </table>
+            : <div>
+                <p>대기중인 예측이 없습니다.</p>
+                <p>지금 예측을 시작하고 랭크를 올려보세요.</p>
+            </div>}
+    </div>
+}
+
+export function UserPredTable({ data, meta, }) {
+    data?.sort(dt.lsort);
+    var s = 1000;
+    const dataBody = data?.map((e, i) => {
+        const { t, code, d, o, pr, od, at, uid, v } = e;
+        return <tr key={`pred${i}`}>
+            <th>
+                <Link href={`/stock/${meta[code]?.n}`}>
+                    {meta[code]?.n}
+                </Link>
+            </th>
+            <td>{t == 'od' ? '오떨' : '가격'}</td>
+            {t == 'pr'
+                ? <>
+                    <td>{Num(pr)}<span className='mh'>&nbsp;</span><br className='ph' />
+                        <span className={Color(pr, o)}>({Per(pr, o)})</span>
+                    </td>
+                </>
+                : <td>
+                    <span className={`fa fa-chevron-${od == 1 ? 'up red' : 'down blue'}`} />
+                </td>
+            }
+            <td><span className='des'>{dt.parse(d, 'M월D일 HH:mm')}</span></td>
+            <td className='des'>
+                {NumFix(s += (i < 500 && v <= 0 ? 0 : v), 1)}&nbsp;
+                <span className={Color(v)}>
+                    ({i < 500 && v <= 0
+                        ? <s>{Fix(v, 2)}</s>
+                        : Fix(v, 2)
+                    })
+                </span>
+            </td>
+        </tr>;
+    });
+    const head = <tr>
+        <th>종목</th>
+        <th><span className='mh'>예측</span>종류</th>
+        <th>예측</th>
+        <th><span className='mh'>예측</span>시간</th>
+        <th>점수</th>
+    </tr>;
+    return <div className={styles.dataTable}>
+        {dataBody.length
+            ? <MoreTable head={head} data={dataBody} start={10} step={10} />
+            : <div>
+                <p>아직 채점된 예측이 없습니다.</p>
+                <p>지금 예측을 시작하고 랭크를 올려보세요.</p>
+            </div>}
+    </div>
 }

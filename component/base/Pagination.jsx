@@ -1,7 +1,8 @@
 import styles from '$/Base/Pagination.module.scss';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-export default function Pagination({ data, p, N, T }) {
+export function Pagination({ data, p, N, T }) {
     const M = parseInt(T / N);
 
     const pages = Array.from(Array(5).keys())
@@ -48,4 +49,29 @@ export default function Pagination({ data, p, N, T }) {
 
         </div>
     </div>
+}
+
+export function MoreTable({ head, data, step = 5, start = 5 }) {
+    const [N, setN] = useState(start);
+    const [view, setView] = useState(true);
+    const T = data?.length;
+    useEffect(() => {
+        setN(start);
+        setView(true);
+    }, [head])
+
+    return <table className={styles.moreTable}>
+        <thead>{head}</thead>
+        <tbody>
+            {data?.slice(0, N)}
+        </tbody>
+        <tfoot>
+            {view && <tr onClick={() => {
+                setN(N + step);
+                if (N + step >= T) { setView(false); }
+            }} className={styles.more}>
+                <th colSpan={6}>더보기</th>
+            </tr>}
+        </tfoot>
+    </table>
 }

@@ -8,19 +8,12 @@ import '@/module/array';
 import { earnnullHelp, profitHelp, revenueHelp } from './HelpDescription';
 import { Bar } from '#/base/base';
 import Link from 'next/link';
+import { MoreTable } from '#/base/Pagination';
 
 function EarnTable({ meta, earn }) {
     if (!earn.length) return;
 
     const amount = meta?.a;
-    const [N, setN] = useState(5);
-    const [view, setView] = useState(true);
-    useEffect(() => {
-        setN(5);
-        setView(true);
-    }, [meta])
-
-    const len = earn.length;
     earn = earn.qsort(dt.sort);
     const head = <tr>
         <th>분기</th>
@@ -32,26 +25,26 @@ function EarnTable({ meta, earn }) {
     </tr>;
     const avgQuar = Array(5).map(() => false);
     const avgYear = {};
-    earn.forEach(({ date, profit, equity }) => {
+    earn.forEach(({ date, profit, revenue, equity }) => {
         const year = date.slice(0, 4);
         if (!avgYear[year]) avgYear[year] = { profit: 0, equity, cnt: 0 };
         avgYear[year].profit += profit;
         avgYear[year].cnt++;
-    });
-    const data = earn.map((e, i) => {
-        const { no, date, equity, revenue, profit } = e;
         const { Y, Q } = Quar(date);
         if (!avgQuar[Q]) avgQuar[Q] = { Q, equity: 0, revenue: 0, profit: 0, cnt: 0 };
         avgQuar[Q].equity += equity;
         avgQuar[Q].revenue += revenue;
         avgQuar[Q].profit += profit;
         avgQuar[Q].cnt++;
-
+    });
+    const data = earn.map((e, i) => {
+        const { no, date, equity, revenue, profit } = e;
+        const { Y, Q } = Quar(date);
         const PR = Div(profit, revenue);
         const ROE = avgYear[Y];
         var isRoe = Q == 4;
         if (ROE?.cnt < 4) isRoe = true;
-        return <tr key={date} className={i >= N ? 'd' : ''}>
+        return <tr key={i}>
             <th>
                 <Link href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${no}`}>
                     <span className='mh'>{Y.slice(0, 2)}</span>
@@ -109,20 +102,9 @@ function EarnTable({ meta, earn }) {
             </table>
         </div>
         <h3>전체실적<Help {...earnnullHelp} /></h3>
-        <table className={styles.earnTable}>
-            <thead>{head}</thead>
-            <tbody>
-                {data}
-            </tbody>
-            <tfoot>
-                {view && <tr onClick={() => {
-                    setN(N + 5);
-                    if (N + 5 >= len) { setView(false); }
-                }} className={styles.more}>
-                    <th colSpan={6}>더보기</th>
-                </tr>}
-            </tfoot>
-        </table>
+        <div className={styles.earnTable}>
+            <MoreTable head={head} data={data} />
+        </div>
     </div>;
 }
 

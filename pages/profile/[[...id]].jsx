@@ -15,6 +15,7 @@ import { Int, Sleep } from "@/module/ba";
 import { getRank } from "#/User";
 import { MustLogin } from "#/base/Kakao";
 import HistLine from "#/chart/HistLine";
+import { UserPredTable } from "#/baseStock/PredTable";
 
 /**
  * asdf
@@ -145,6 +146,8 @@ function Index({
             {tab == 'rank' ? <div className={styles.box}>
                 <h3>랭크 변화</h3>
                 <Graph {...props} />
+                <h3>점수 변화</h3>
+                <UserPredTable {...{ data: userPred?.data, meta }} />
             </div> : tab == 'pred' ? <div>
                 <ProfilePred {...props} />
             </div> : <div>
