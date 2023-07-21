@@ -100,7 +100,7 @@ export function Alarms({ uid, setAsideShow }) {
             <Link
                 href={'/alarm'}
                 className={`fa fa-bell ${styles.alarm}`}
-                onClick={e => setAsideShow(false)}
+                onClick={e => { if (setAsideShow) setAsideShow(false) }}
             >
                 {len ? <span data-count={len} /> : ''}
             </Link>
@@ -114,15 +114,15 @@ function Setting({ setAsideShow }) {
             <Link
                 className='fa fa-cog'
                 href={'/setting'}
-                onClick={e => setAsideShow(false)}
+                onClick={e => { if (setAsideShow) setAsideShow(false) }}
             />
         </div>
     </>
 }
 
-export function AlarmSetting({ user, setAsideShow }) {
-    return <div className={styles.alarmSetting}>
-        <Alarms uid={user?.uid} setAsideShow={setAsideShow} />
+export function AlarmSetting({ uid, setAsideShow }) {
+    return <span className={styles.alarmSetting}>
+        <Alarms uid={uid} setAsideShow={setAsideShow} />
         <Setting setAsideShow={setAsideShow} />
-    </div>
+    </span>
 }

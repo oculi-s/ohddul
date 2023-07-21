@@ -61,10 +61,14 @@ const options = {
     },
 }
 
-function Index({ rank, name, data, load }) {
+function HistLine({ rank, signed, data, load }) {
+    console.log(rank, signed)
+    data.push({ d: signed, v: 0 });
     data?.qsort(dt.lsort)?.slice(-252);
-    if (data.findIndex(e => e.d == dt.parse()) == -1)
-        data?.push({ d: dt.parse(), v: 0 })
+    if (data.findIndex(e => e.d == dt.parse()) == -1) {
+        data?.push({ d: dt.num(), v: 0 });
+        options.scales.x.max = dt.num();
+    }
     const dates = data.map(e => e.d);
     var s = 1000;
     data = data.map(({ d, v }) => {
@@ -78,7 +82,7 @@ function Index({ rank, name, data, load }) {
             data,
             borderColor: scss[cur.color] || scss.unranked,
             backgroundColor: scss[cur.color] || scss.unranked,
-            borderWidth: 1,
+            borderWidth: 2,
             pointRadius: 0
         }]
     }
@@ -142,4 +146,4 @@ function Index({ rank, name, data, load }) {
     )
 }
 
-export default Index;
+export default HistLine;

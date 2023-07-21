@@ -7,6 +7,7 @@ import Help from '#/base/Help';
 import '@/module/array';
 import { earnnullHelp, profitHelp, revenueHelp } from './HelpDescription';
 import { Bar } from '#/base/base';
+import Link from 'next/link';
 
 function EarnTable({ meta, earn }) {
     if (!earn.length) return;
@@ -38,7 +39,7 @@ function EarnTable({ meta, earn }) {
         avgYear[year].cnt++;
     });
     const data = earn.map((e, i) => {
-        const { date, equity, revenue, profit } = e;
+        const { no, date, equity, revenue, profit } = e;
         const { Y, Q } = Quar(date);
         if (!avgQuar[Q]) avgQuar[Q] = { Q, equity: 0, revenue: 0, profit: 0, cnt: 0 };
         avgQuar[Q].equity += equity;
@@ -52,9 +53,11 @@ function EarnTable({ meta, earn }) {
         if (ROE?.cnt < 4) isRoe = true;
         return <tr key={date} className={i >= N ? 'd' : ''}>
             <th>
-                <span className='mh'>{Y.slice(0, 2)}</span>
-                <span>{Y.slice(2)} </span>
-                {Q}Q
+                <Link href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${no}`}>
+                    <span className='mh'>{Y.slice(0, 2)}</span>
+                    <span>{Y.slice(2)} </span>
+                    {Q}Q
+                </Link>
             </th>
             <td>{Num(equity / amount)}</td>
             <td className={Color(revenue)}>{Num(revenue / amount)}</td>

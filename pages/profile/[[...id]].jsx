@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
 import styles from '$/Profile/Index.module.scss'
 import { getSession } from "next-auth/react";
-import LineChart from '#/chart/HistLine';
-import { ToggleTab } from "#/base/ToggleTab";
+import { ToggleQuery, ToggleTab } from "#/base/ToggleTab";
 
 import dir from "@/module/dir";
 import json from "@/module/json";
@@ -15,6 +14,7 @@ import api from "@/pages/api";
 import { Int, Sleep } from "@/module/ba";
 import { getRank } from "#/User";
 import { MustLogin } from "#/base/Kakao";
+import HistLine from "#/chart/HistLine";
 
 /**
  * asdf
@@ -22,9 +22,10 @@ import { MustLogin } from "#/base/Kakao";
 export async function getServerSideProps(ctx) {
     const ids = json.read(dir.user.ids);
 
+    const tab = ctx.query?.tab || 'rank';
     const qid = ctx.query?.id?.find(e => true);
     const session = await getSession(ctx);
-    let props = {};
+    let props = { tab };
 
     let pred = { queue: [], data: [] }, favs = [];
     let id = false, uid = false, mine = false;
@@ -61,10 +62,11 @@ export async function getServerSideProps(ctx) {
 
 function Graph({ userMeta: meta, userHist: data, loadUser: load }) {
     const rank = meta?.rank;
+    const signed = meta?.signed;
     const [prev, cur] = getRank(rank);
     const forNext = Int(rank - cur.score);
 
-    const props = { rank, data, load };
+    const props = { rank, signed, data, load };
     return (
         <>
             <div className={styles.bar}>
@@ -72,15 +74,15 @@ function Graph({ userMeta: meta, userHist: data, loadUser: load }) {
             </div>
             <p className="des">다음랭크까지(+{100 - forNext})</p>
             <div className={styles.chart}>
-                <LineChart {...props} />
+                <HistLine {...props} />
             </div>
         </>
     );
 }
 
 function Index({
-    mine,
-    uid, id, favs, // user
+    tab, mine,
+    uid, id, favs, signed, // user
     email,
     meta, price, ban, // stock
 }) {
@@ -133,27 +135,22 @@ function Index({
         uid, favs, id, mine, // Server
         meta, price, ban, // stock
     };
-    const tabContents = {
-        names: ["랭크변화", mine ? "내 예측" : "예측", "관심종목"],
-        datas: [
-            <div key={0} className={styles.box}>
-                <h3>랭크 변화</h3>
-                <Graph {...props} />
-            </div>,
-            <div key={1}>
-                <ProfilePred {...props} />
-            </div>,
-            <div key={2}>
-                <h3>관심 종목</h3>
-                <FavTable {...props} />
-            </div>
-        ]
-    };
+    const query = ['rank', 'pred', 'favs']
+    const names = ["랭크변화", mine ? "내 예측" : "예측", "관심종목"];
     return (
         <>
             <Header {...props} />
             <hr />
-            <ToggleTab {...tabContents} />
+            <ToggleQuery query={query} names={names} />
+            {tab == 'rank' ? <div className={styles.box}>
+                <h3>랭크 변화</h3>
+                <Graph {...props} />
+            </div> : tab == 'pred' ? <div>
+                <ProfilePred {...props} />
+            </div> : <div>
+                <h3>관심 종목</h3>
+                <FavTable {...props} />
+            </div>}
         </>
     );
 }

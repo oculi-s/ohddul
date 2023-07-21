@@ -23,7 +23,7 @@ function LogOut({ user, setAsideShow }) {
         <div className={styles.logout}>
             <User user={user} setAsideShow={setAsideShow} />
             <div className={styles.buttonWrap}>
-                <AlarmSetting user={user} setAsideShow={setAsideShow} />
+                <AlarmSetting uid={user?.uid} setAsideShow={setAsideShow} />
                 <button onClick={e => signOut()}>로그아웃</button>
             </div>
         </div>
