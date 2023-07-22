@@ -36,12 +36,6 @@ export function Stock([code, name], i) {
 }
 
 function Help({ aside, tab, cnt, earn, none, ban }) {
-    const router = useRouter();
-    useEffect(() => {
-        if (router?.query?.p) {
-            history.replaceState(null, null, location.href?.split('?')[0]);
-        }
-    }, [])
     const query = ['base', 'pred', 'score']//,'chart','community'];
     const names = ['기본정보', '예측방법', '고유점수']//, '차트보는법', '커뮤니티규칙'];
     return <>

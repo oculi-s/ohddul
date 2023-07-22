@@ -69,8 +69,8 @@
         width: max-content !important;
     }
 
-    .flowchart-label {
 
+    .flowchart-label {
         .label-container {
             fill: $bgBright !important;
             stroke: none !important;
@@ -78,19 +78,26 @@
     }
 
     .label {
-        // foreignObject {
-        //     width: auto !important;
-        // }
-
-        // div {
-        //     max-width: 100px !important;
-        //     white-space: break-spaces !important;
-        // }
-
         .nodeLabel {
             color: $textColor !important;
         }
 
+    }
+
+    .subgraph {
+        stroke-width: 10 !important;
+        rx: 10 !important;
+
+        rect {
+            fill: $bgDark !important;
+            stroke: $bgDark !important;
+            padding: 10px;
+        }
+
+        .nodeLabel {
+            color: $textBright !important;
+            font-weight: bold;
+        }
     }
 
     .edgeLabel {
