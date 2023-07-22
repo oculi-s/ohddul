@@ -51,13 +51,13 @@ export function Pagination({ data, p, N, T }) {
     </div>
 }
 
-export function MoreTable({ head, data, step = 5, start = 5 }) {
-    const [N, setN] = useState(start);
-    const [view, setView] = useState(true);
+export function MoreTable({ head, data, foot, step = 5, start = 5 }) {
     const T = data?.length;
+    const [N, setN] = useState(start);
+    const [view, setView] = useState(start < T);
     useEffect(() => {
         setN(start);
-        setView(true);
+        setView(start < T);
     }, [head])
 
     return <table className={styles.moreTable}>
@@ -72,6 +72,7 @@ export function MoreTable({ head, data, step = 5, start = 5 }) {
             }} className={styles.more}>
                 <th colSpan={6}>더보기</th>
             </tr>}
+            {foot}
         </tfoot>
     </table>
 }

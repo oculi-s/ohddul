@@ -2,7 +2,7 @@ import GroupTreeMap from '#/chart/GroupTreeMap';
 import PriceLine from '#/chart/PriceLine';
 import styles from '$/Group/Group.module.scss';
 
-function PriceElement({
+function GroupPriceElement({
     group, meta, price,
     groupPrice, load
 }) {
@@ -19,4 +19,4 @@ function PriceElement({
     </>;
 }
 
-export default PriceElement;
+export default GroupPriceElement;

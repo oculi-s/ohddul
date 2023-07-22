@@ -4,6 +4,7 @@
     position: fixed;
     top: var(--nav-height);
     left: 0;
+    width: 100%;
     height: calc(100% - var(--nav-height));
     z-index: 15;
 }

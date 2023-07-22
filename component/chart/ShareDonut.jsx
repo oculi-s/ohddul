@@ -6,7 +6,7 @@ import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import scss from '$/variables.module.scss';
 import { useEffect, useState } from 'react';
-import NameDict from '#/stockData/NameDict';
+import NameDict from '@/data/NameDict';
 
 const options = {
     spanGaps: true,

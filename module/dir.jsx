@@ -24,6 +24,7 @@ export const stock = {
         market: encode('_/light/market.json'),
         price: code => encode(`&/${code}/priceClose.json`),
         earn: code => encode(`&/${code}/earnFixed.json`),
+        share: code => encode(`&/${code}/shareFixed.json`),
         count: encode('_/light/count.json'),
         tree: encode('_/light/tree.json'),
         updown: encode('_/light/updown.json'),

@@ -4,7 +4,7 @@ import { Div } from '@/module/ba';
 import Link from 'next/link';
 import '@/module/array';
 import FavStar from '#/baseStock/FavStar';
-import NameDict from '#/stockData/NameDict';
+import NameDict from '@/data/NameDict';
 
 function Inner({ share }) {
     share?.qsort((b, a) => a?.a * b?.t - b?.a * a?.t);

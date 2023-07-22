@@ -1,0 +1,40 @@
+@import '$/variables.module.scss';
+
+.wrap {
+    position: relative;
+
+    i {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    .chart {
+        overflow: auto;
+        height: 600px;
+        background: $bgMidDark;
+        padding: 10px;
+        border-radius: 10px;
+        display: flex;
+
+    }
+
+    &.fixed {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 100%;
+        height: calc(100% - var(--nav-height));
+        z-index: 15;
+
+        >div {
+            width: 100% !important;
+            height: 100%;
+
+            >*,
+            svg {
+                width: 100% !important;
+            }
+        }
+    }
+}

@@ -4,9 +4,10 @@ import { Div, Price } from "@/module/ba";
 import Help from '#/base/Help';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import NameDict from '#/stockData/NameDict';
+import NameDict from '@/data/NameDict';
 import { overflowHelp } from './HelpDescription';
 import { Loading } from '#/base/base';
+import { MoreTable } from '#/base/Pagination';
 
 function ShareTable({ meta, share, stockMeta }) {
     if (!share) return;
@@ -17,6 +18,7 @@ function ShareTable({ meta, share, stockMeta }) {
         if (share?.length) {
             let res = 0;
             const data = share
+                ?.filter(e => e?.amount / stockMeta?.a > 0.001)
                 ?.map((e, i) => {
                     let { no, name, amount, date } = e;
                     const total = stockMeta?.a;
@@ -36,34 +38,27 @@ function ShareTable({ meta, share, stockMeta }) {
                         </td>
                     </tr>;
                 });
+            setFoot(<tr>
+                <th>전체</th>
+                <th>{Div(res, stockMeta?.a)}</th>
+                <th>-</th>
+            </tr>)
             setData(data);
-            setFoot(Div(res, stockMeta?.a));
             setLoad(false);
         } else {
             setData([]);
-            setFoot(Div(0, 1));
-            setLoad(true);
+            setLoad(false);
         }
     }, [share]);
+    const head = <tr>
+        <th>이름</th><th>지분</th>
+        <th>기준일<Help span={`작년 사업보고서의 데이터를 기준으로 하며, 제공된 데이터에 따라 현재 상황과 차이가 날 수 있습니다.`} /></th>
+    </tr>;
     return <div className={styles.shareTable}>
         {load ? <Loading left='auto' right='auto' />
             : data?.length ?
-                <table>
-                    <thead>
-                        <tr>
-                            <th>이름</th><th>지분</th>
-                            <th>기준일<Help span={`작년 사업보고서의 데이터를 기준으로 하며, 제공된 데이터에 따라 현재 상황과 차이가 날 수 있습니다.`} /></th>
-                        </tr>
-                    </thead>
-                    <tbody>{data}</tbody>
-                    <tfoot>
-                        <tr>
-                            <th>전체</th>
-                            <th>{foot}</th>
-                            <th>-</th>
-                        </tr>
-                    </tfoot>
-                </table> :
+                <MoreTable head={head} data={data} foot={foot} start={8} />
+                :
                 <><p>API에서 제공된<br />지분 데이터가 없습니다.</p></>}
     </div>;
 }

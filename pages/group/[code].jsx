@@ -6,7 +6,7 @@ import { ToggleQuery, ToggleTab } from '#/base/ToggleTab';
 import Help from '#/base/Help';
 
 import { priceHelp } from '#/group/HelpDescription';
-import PriceElement from '#/group/groupPrice';
+import GroupPriceElement from '#/group/groupPrice';
 
 import { Num, Price } from "@/module/ba";
 import dir from '@/module/dir';
@@ -14,6 +14,7 @@ import json from '@/module/json';
 import '@/module/array';
 import { useEffect, useState } from 'react';
 import api from '../api';
+import GroupShareElement from '#/group/groupShare';
 
 /**
  * 그룹 정보를 보여주는 페이지
@@ -28,24 +29,21 @@ export async function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'price';
     const code = ctx.query?.code;
     const group = json.read(dir.stock.light.group).data[code] || {};
+    let props = { tab, code, group };
 
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) => group?.ch?.includes(k)))
     }
 
-    // const groupPrice = group.ch?.map(e=>{
-    //     const price = json.read(dir.stock.price(e)).data;
-
-    // })
     const predict = json.read(dir.stock.predAll);
 
-    const Meta = json.read(dir.stock.meta).data;
+    const meta = json.read(dir.stock.meta);
     const Price = json.read(dir.stock.all);
     const index = json.read(dir.stock.light.index).data;
     const Induty = json.read(dir.stock.light.induty).data;
 
-    const meta = Filter(Meta);
+    meta.data = Filter(meta.data);
     const price = Filter(Price);
     const induty = Filter(Induty);
     const earn = group?.ch?.map(code => {
@@ -55,25 +53,27 @@ export async function getServerSideProps(ctx) {
         const profit = data.map(e => e?.profit).sum();
         return { code, equity, revenue, profit };
     }) || []
-    const share = group?.ch?.map(e =>
-        [e, json.read(dir.stock.share(e)).data]
-    ) || []
+    if (tab == 'share') {
+        const share = group?.ch?.map(e =>
+            [e, json.read(dir.stock.light.share(e)).data]
+        ) || []
+        props = { ...props, share };
+    }
 
     const title = group?.n ? `${group?.n}그룹 : 오떨` : null;
-    let props = {
-        tab,
-        title, code,
-        group, index, induty,
+    props = {
+        ...props,
+        title,
+        index, induty,
         predict,
-        meta, price, earn, share
+        meta, price, earn
     };
     return { props }
 }
 
 function MetaTable({
-    group, meta, price, code, earn
+    group, meta, price, code, earn, groupPrice
 }) {
-    meta.light = true;
     if (!group) return;
 
     const groupEarn = {
@@ -82,42 +82,41 @@ function MetaTable({
         profit: earn?.map(e => e?.profit)?.sum()
     };
     const priceTotal = group?.p;
-    const groupPrice = group?.ch
-        ?.map(e => ({ code: e, c: meta[e]?.a * price[e]?.c }))
-        ?.qsort((b, a) => a.c - b.c);
-    const groupClose = groupPrice?.map(e => e?.c).sum() / group?.ch?.map(e => meta[e]?.a).sum();
-    const first = groupPrice?.find(e => true);
+    console.log(groupPrice)
+    // const last = groupPrice?.priceRaw?.data?.slice(-1)?.find(e => true)?.c;
 
     const amount = group?.ch?.map(e => meta[e]?.a)?.sum();
     const BPS = groupEarn.equity / amount;
     return <div className={styles.meta}>
         <table><tbody>
             <tr><th>시가총액</th><td>{Price(priceTotal)}</td></tr>
-            <tr><th>수정주가<Help {...priceHelp} /></th><td>{Num(groupClose)}</td></tr>
+            {/* <tr><th>수정주가<Help {...priceHelp} /></th><td>{Num(last)}</td></tr> */}
             {/* <tr><th>BPS<Help {...bpsHelp} /></th><td>{Num(BPS)}</td></tr> */}
             <tr><th>종목 수</th><td>{group?.ch?.length}</td></tr>
             <tr>
-                <th>대표주</th>
+                {/* <th>대표주</th>
                 <td>
                     <Link href={`/stock/${first?.code}`}>
                         {meta[first?.code]?.n}
                     </Link>
-                </td>
+                </td> */}
             </tr>
         </tbody></table>
     </div>;
 }
 
 const prices = {};
-function Group({ group, tab, meta, price, code, earn, index, induty }) {
+function Group({
+    group, tab, meta, price, code, index, induty, earn, share
+}) {
     const router = useRouter();
     const nums = [20, 60, 120];
     const [load, setLoad] = useState({ price: true });
     const [groupPrice, setGroupPrice] = useState({});
 
-    const props = { group, tab, meta, price, earn, index, induty, router, code, load, groupPrice };
+    const props = { group, tab, meta, price, earn, share, index, induty, router, code, load, groupPrice };
     const query = ['price', 'earn', 'share'];
-    const names = ['주가정보', '실적정보', '출자정보'];
+    const names = ['주가정보', '실적정보', '출자구조'];
 
     async function fetch() {
         console.time('groupPriceLoad');
@@ -145,7 +144,7 @@ function Group({ group, tab, meta, price, code, earn, index, induty }) {
 
     useEffect(() => {
         if (tab == 'price') fetch();
-    }, [code]);
+    }, [code, tab]);
 
     if (!group?.n) return <>그룹 정보가 없습니다.</>;
     return <>
@@ -158,8 +157,11 @@ function Group({ group, tab, meta, price, code, earn, index, induty }) {
         <hr />
         <ToggleQuery query={query} names={names} />
         {tab == 'price' ? <div className={styles.groupPrice}>
-            <PriceElement {...props} />
-        </div> : ''}
+            <GroupPriceElement {...props} />
+        </div> : tab == 'earn' ? '' : <div className=''>
+            <GroupShareElement {...props} />
+        </div>
+        }
     </>;
 }
 

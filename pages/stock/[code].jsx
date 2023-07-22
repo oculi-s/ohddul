@@ -21,7 +21,7 @@ import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/stockPred';
 
 import { filterIndex } from '@/module/filter/filter';
-import NameDict from '#/stockData/NameDict';
+import NameDict from '@/data/NameDict';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -57,7 +57,7 @@ export async function getServerSideProps(ctx) {
     earn = json.read(dir.stock.light.earn(code));
     props = { ...props, earn };
     // } else if (tab == 'share') {
-    share = json.read(dir.stock.share(code));
+    share = json.read(dir.stock.light.share(code));
     other = json.read(dir.stock.other(code));
     share.data = share.data?.filter(e => e.amount);
     props = { ...props, share, other };
@@ -276,7 +276,7 @@ function Index(props) {
     useEffect(() => {
         fetchUser();
         if (tab == 'price') fetchPrice(code);
-    }, [code])
+    }, [code, tab])
 
     if (!meta?.data) return;
     if (!stockMeta) {
