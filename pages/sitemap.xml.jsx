@@ -15,13 +15,14 @@ export async function getServerSideProps(ctx) {
     const lastmod = new Date().toISOString();
     const priority = 1;
 
-    const defaultFields = [{
-        loc: process.env.URL,
+    const defList = [
+        '', 'help', 'induty', 'group',
+        'stock/sum', 'stock/up', 'stock/down'
+    ]
+    const defaultFields = defList.map(e => ({
+        loc: `${process.env.URL}/${e}`,
         priority, lastmod,
-    }, {
-        loc: `${process.env.URL}/help`,
-        priority, lastmod,
-    },];
+    }));
 
     const stocks = Object.keys(meta).map(code => ({
         loc: `${process.env.URL}/stock/${code}`,
@@ -33,16 +34,25 @@ export async function getServerSideProps(ctx) {
         priority, lastmod,
     }))
 
-    const induties = Object.keys(induty).map(iname => ({
-        loc: `${process.env.URL}/induty/${iname}`,
+    const induties = Object.keys(induty).map(icode => ({
+        loc: `${process.env.URL}/induty/${icode}`,
         priority, lastmod,
     }));
+
+    const indutyName = Object.values(induty).map(meta => ({
+        loc: `${process.env.URL}/induty/${encodeURIComponent(meta.n)}`,
+        priority, lastmod,
+    }));
+
     const groups = Object.keys(group).map(gname => ({
         loc: `${process.env.URL}/group/${encodeURIComponent(gname)}`,
         priority, lastmod,
     }));
 
-    const fields = [...defaultFields, ...stocks, ...stockName, ...induties, ...groups];
+    const fields = [
+        ...defaultFields, ...stocks, ...stockName,
+        ...induties, ...indutyName, ...groups
+    ];
     return getServerSideSitemapLegacy(ctx, fields);
 }
 
