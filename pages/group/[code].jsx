@@ -82,7 +82,6 @@ function MetaTable({
         profit: earn?.map(e => e?.profit)?.sum()
     };
     const priceTotal = group?.p;
-    console.log(groupPrice)
     // const last = groupPrice?.priceRaw?.data?.slice(-1)?.find(e => true)?.c;
 
     const amount = group?.ch?.map(e => meta[e]?.a)?.sum();

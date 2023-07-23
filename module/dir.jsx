@@ -6,7 +6,6 @@ export const stock = {
     hist: encode('_/hist.json'),
     code: encode('_/code.json'),
     crno: encode('_/crno.json'),
-    name: encode('_/name.json'),
     meta: encode('_/meta.json'),
     date: encode('_/date.json'),
     group: encode('_/group.json'),

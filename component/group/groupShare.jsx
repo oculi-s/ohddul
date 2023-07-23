@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { Loading } from "#/base/base";
-import Name from "@/data/NameDict";
 import { Div } from "@/module/ba";
 import '@/module/array';
 import scss from '$/variables.module.scss';
@@ -70,7 +69,6 @@ const GroupShareElement = ({ meta, share, group }) => {
                 let holder = x.name;
                 let amount = x.amount;
                 if (holder === '소액주주' || holder === '국민연금') return;
-                holder = Name(holder, stockName);
                 let link = ch.includes(holder) ? '-->' : '-.->'
                 const code = meta.index[holder];
                 const label = make(holder);
@@ -109,6 +107,8 @@ const GroupShareElement = ({ meta, share, group }) => {
         <div className={`${styles.wrap} ${fixed ? styles.fixed : ''}`}>
             {/* {share.map(e => e[1]).flat().map(e => Name(e.name)).unique().map(e => `"${e}":""`).join(', ')} */}
             {/* <pre>{data}</pre> */}
+            <h3>출자구조 요약</h3>
+            <h3>출자지도</h3>
             <div className={styles.chart}>
                 <Mermaid chart={data} />
             </div>

@@ -6,7 +6,6 @@ import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import scss from '$/variables.module.scss';
 import { useEffect, useState } from 'react';
-import NameDict from '@/data/NameDict';
 
 const options = {
     spanGaps: true,
@@ -34,7 +33,6 @@ const options = {
                 const data = ctx?.chart?.data;
                 const sum = data?.datasets[0].data?.sum();
                 var label = data?.labels[i];
-                label = NameDict[label] || label;
                 return `${label}\n${Div(value, sum, 1)}`;
             }
         },
@@ -47,7 +45,7 @@ const options = {
                 },
                 title: function (ctx) {
                     const n = ctx[0]?.label;
-                    return NameDict[n] || n;
+                    return n;
                 }
             }
         },
@@ -59,16 +57,17 @@ const ShareDonut = ({ share, meta }) => {
     useEffect(() => {
         if (share?.length) {
             console.time('share');
-            const amount = meta?.a;
+            const total = meta?.a;
+            share = share.filter(e => e.amount / total * 100 > 0.1);
             const shareData = share
-                ?.map(e => parseFix(e.amount / amount * 100, 1));
+                ?.map(e => parseFix(e.amount / total * 100, 1))
             const labels = share.map(e => e.name);
             const len = shareData.length;
             let backgroundColor = colors.slice(0, len);
-            let res = amount - share.map(e => e.amount).sum();
+            let res = total - share.map(e => e.amount).sum();
             res = Math.max(0, res);
             if (res > 1) {
-                shareData.push(parseFix(res / amount * 100, 1));
+                shareData.push(parseFix(res / total * 100, 1));
                 labels.push('데이터없음');
                 backgroundColor = [...colors.slice(0, len), scss.bgDark];
             }

@@ -60,7 +60,7 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist, induty, i
             <th align='center' className={styles.num}>{(p - 1) * N + i + 1}</th>
             <th className={styles.stockTh}>
                 <FavStar code={e} />
-                <Link href={`/stock/${meta[e]?.n}`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
+                <Link href={`/stock/${meta[e]?.n}?tab=share`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
             </th>
             <td className='mh'>{Price(meta[e]?.a * price[e]?.c)}</td>
             <td className={styles.num}>

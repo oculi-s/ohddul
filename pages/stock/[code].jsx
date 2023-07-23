@@ -21,7 +21,6 @@ import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/stockPred';
 
 import { filterIndex } from '@/module/filter/filter';
-import NameDict from '@/data/NameDict';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -81,7 +80,7 @@ export async function getServerSideProps(ctx) {
                 if (k == code) return 1;
                 if (iname && Induty[k] == iname) return 1;
                 if (gname && Group?.index[k] == gname) return 1;
-                if (share.data?.find(e => Meta.data[k]?.n == (NameDict[e.name] || e.name)))
+                if (share.data?.find(e => Meta.data[k]?.n == e.name))
                     return 1;
                 if (other.data?.find(e => e.from == k))
                     return 1;
@@ -94,7 +93,7 @@ export async function getServerSideProps(ctx) {
                 if (v == code) return 1;
                 if (iname && Induty[v] == iname) return 1;
                 if (gname && Group?.index[v] == gname) return 1;
-                if (share.data?.find(e => Meta.data[v]?.n == (NameDict[e.name] || e.name)))
+                if (share.data?.find(e => Meta.data[v]?.n == e.name))
                     return 1;
                 if (other.data?.find(e => e.from == v))
                     return 1;

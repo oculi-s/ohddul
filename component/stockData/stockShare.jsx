@@ -4,7 +4,6 @@ import { Div, Price } from "@/module/ba";
 import Help from '#/base/Help';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import NameDict from '@/data/NameDict';
 import { overflowHelp } from './HelpDescription';
 import { Loading } from '#/base/base';
 import { MoreTable } from '#/base/Pagination';
@@ -25,7 +24,6 @@ function ShareTable({ meta, share, stockMeta }) {
                 ?.map((e, i) => {
                     let { no, name, amount, date, rate } = e;
                     res += rt ? rate || 0 : amount;
-                    if (NameDict[name]) name = NameDict[name];
                     const code = meta?.index[name];
                     if (code) {
                         name = <Link href={`/stock/${code}`}>{name}</Link>;
@@ -116,6 +114,7 @@ function OtherTable({ meta, share, price }) {
 }
 
 function ShareElement({ meta, price, stockMeta, share, other }) {
+    share = share.sort((b, a) => a.amount - b.amount);
     return <div>
         <h3>지분 차트<Help {...overflowHelp} />
         </h3>
