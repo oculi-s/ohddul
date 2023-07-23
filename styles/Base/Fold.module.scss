@@ -83,8 +83,12 @@
 }
 
 .induty {
-    h3 a span {
-        vertical-align: bottom;
+    h3 {
+        margin: 10px auto;
+
+        a span {
+            vertical-align: bottom;
+        }
     }
 
     svg {

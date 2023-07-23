@@ -9,6 +9,7 @@ export const stock = {
     meta: encode('_/meta.json'),
     date: encode('_/date.json'),
     group: encode('_/group.json'),
+    child: encode('_/child.json'),
     market: encode('_/market.json'),
     induty: encode('_/index.json'),
     predAll: encode('_/predict.json'),

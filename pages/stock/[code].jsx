@@ -21,6 +21,7 @@ import ShareElement from '#/stockData/stockShare';
 import PredElement from '#/stockData/stockPred';
 
 import { filterIndex } from '@/module/filter/filter';
+import ChildFold from '#/stockFold/ChildFold';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -73,6 +74,8 @@ export async function getServerSideProps(ctx) {
     const iname = Induty[code];
     // const index = await filterIndex(Index, iname);
     const group = Group.data[gname] || false;
+    const child = json.read(dir.stock.child).data[code] || false;
+    if (child) child.push(code);
 
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
@@ -84,6 +87,7 @@ export async function getServerSideProps(ctx) {
                     return 1;
                 if (other.data?.find(e => e.from == k))
                     return 1;
+                if (child && child?.includes(k)) return 1;
                 return 0;
             }))
     }
@@ -97,6 +101,7 @@ export async function getServerSideProps(ctx) {
                     return 1;
                 if (other.data?.find(e => e.from == v))
                     return 1;
+                if (child && child?.includes(v)) return 1;
                 return 0;
             }))
     }
@@ -115,7 +120,7 @@ export async function getServerSideProps(ctx) {
     props = {
         ...props,
         title, ids,
-        price, meta, group, index, induty,
+        price, meta, group, index, induty, child,
         predict,
     };
     return { props };
@@ -294,7 +299,9 @@ function Index(props) {
         <>
             <StockHead {...props} />
             <hr />
-            <GroupFold {...props} />
+            {props?.group
+                ? <GroupFold {...props} />
+                : <ChildFold {...props} />}
             <IndutyFold {...props} />
             <MetaTable {...props} />
             <hr />

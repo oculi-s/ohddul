@@ -41,7 +41,7 @@ function IndutyFold({
     const len = child?.length + stock?.length + 2;
 
     const name = <>
-        <h3 style={{ margin: "10px auto" }}>
+        <h3>
             <Link href={`/induty/${code == '_' ? '' : data?.n}`}>
                 <IndutyImg name={data?.n} />
                 <span>{data?.n}</span>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Chart } from "chart.js/auto";
 import 'chartjs-adapter-date-fns';
 import Annotation from "chartjs-plugin-annotation";
-import merge from 'deepmerge';
+import deepmerge from 'deepmerge';
 import styles from '$/Chart/Price.module.scss';
 import dt from "@/module/dt";
 import { Line } from "react-chartjs-2";
@@ -304,10 +304,11 @@ function PriceLine({
             })
             const suboptions = {};
             suboptions.scales = option.scales;
+            console.log(data);
             setData(data);
             setSubData(sub);
-            setOptions(merge(defaultOptions, option));
-            setSuboptions(merge(suboption, suboptions));
+            setOptions(deepmerge(defaultOptions, option));
+            setSuboptions(deepmerge(suboption, suboptions));
             console.timeEnd('price');
         }
     }, [load?.price, isEarn, isBollinger, isMinMax, num, len, prices])
@@ -329,9 +330,9 @@ function PriceLine({
                 {load?.price
                     ? <Loading left={"auto"} right={"auto"} />
                     : <Line
-                        options={options}
                         plugins={plugins}
                         data={data}
+                        options={options}
                     />}
             </div>
             {percentMa &&
