@@ -4,19 +4,27 @@ import dir from "@/module/dir";
 import json from "@/module/json";
 import { getSession } from "next-auth/react";
 import { MustLogin } from '#/base/Kakao';
+import api from './api';
+import { useEffect } from 'react';
 
 export async function getServerSideProps(ctx) {
     const session = await getSession(ctx);
     const aside = json.read(dir.stock.light.aside);
     const uid = session?.user?.uid;
     const alarm = json.read(dir.user.alarm(uid), []);
-    json.write(dir.user.alarm(uid), alarm.map(e => { e.ch = true; return e }));
-    const props = { aside, alarm, session }
+    const props = { aside, alarm, session, uid }
     return { props };
 }
 
-export default function Alarm({ alarm, session }) {
+export default function Alarm({ alarm, uid, session }) {
     if (!session) return <MustLogin />;
+    useEffect(() => {
+        if (alarm.find(e => !e.ch))
+            api.json.write({
+                url: dir.user.alarm(uid),
+                data: alarm.map(e => { e.ch = true; return e })
+            });
+    }, [])
     return <>
         <h2>알림</h2>
         <div className={styles.wrap}>
