@@ -63,6 +63,10 @@
     align-items: center;
     margin: auto;
 
+    path {
+        stroke-opacity: .5;
+    }
+
     >*,
     svg {
         height: 100% !important;
@@ -71,17 +75,26 @@
 
 
     .flowchart-label {
+
+        rect {
+            fill: $bgDark !important;
+            stroke: $bgDark !important;
+            rx: 10 !important;
+            stroke-width: 10 !important;
+        }
+
         .label-container {
             fill: $bgBright !important;
             stroke: none !important;
         }
     }
 
-    .label {
-        .nodeLabel {
+    .nodeLabel {
+
+        &,
+        span {
             color: $textColor !important;
         }
-
     }
 
     .subgraph {

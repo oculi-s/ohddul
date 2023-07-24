@@ -1,4 +1,4 @@
-const groupColors = {
+export const GroupBg = {
     삼성: '#034ea2',
     LG: '#a50034',
     SK: '#ea002c',
@@ -74,4 +74,7 @@ const groupColors = {
     넥슨: '#003DA6'
 };
 
-export default groupColors;
+export const GroupText = {
+    카카오: '#000000',
+    영풍: '#000000'
+}

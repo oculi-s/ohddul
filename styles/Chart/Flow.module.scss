@@ -1,7 +1,6 @@
 @import '$/variables.module.scss';
 
 .wrap {
-    position: relative;
 
     i {
         position: absolute;
@@ -16,25 +15,21 @@
         padding: 10px;
         border-radius: 10px;
         display: flex;
+        position: relative;
 
-    }
+        &.fixed {
+            position: fixed;
+            top: var(--nav-height);
+            left: 0;
+            width: 100%;
+            height: calc(100% - var(--nav-height));
+            z-index: 15;
 
-    &.fixed {
-        position: fixed;
-        top: var(--nav-height);
-        left: 0;
-        width: 100%;
-        height: calc(100% - var(--nav-height));
-        z-index: 15;
-
-        >div {
-            width: 100% !important;
-            height: 100%;
-
-            >*,
+            >div,
             svg {
                 width: 100% !important;
             }
         }
     }
+
 }

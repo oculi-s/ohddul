@@ -1,6 +1,6 @@
 import squarify from 'squarify'
 import styles from '$/Chart/Tree.module.scss'
-import groupColors from '@/public/group/color';
+import { GroupBg, GroupText } from '@/public/group/color';
 import colors from '@/module/colors';
 import scss from '$/variables.module.scss';
 import Link from 'next/link';
@@ -18,8 +18,8 @@ function stockElement(index, {
     const inner = v > 0.5;
     const br = Math.pow(v, .05);
     const color = c ?
-        H2R(groupColors[gn] || colors[0], br) :
-        H2R(groupColors[gn], .5);
+        H2R(GroupBg[gn] || colors[0], br) :
+        H2R(GroupBg[gn], .5);
 
     return <div
         key={i}

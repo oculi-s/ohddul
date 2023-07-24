@@ -11,7 +11,6 @@ import GroupImg from "@/public/group/Default";
 import Link from "next/link";
 import '@/module/array';
 import { ToggleQuery } from '#/base/ToggleTab';
-import groupColors from '@/public/group/color';
 import colors from '@/module/colors';
 
 import "chart.js/auto";
@@ -23,6 +22,7 @@ import { useEffect, useRef, useState } from 'react';
 import deepmerge from 'deepmerge';
 import api from '../api';
 import { Loading } from '#/base/base';
+import { GroupBg } from '@/public/group/color';
 
 export async function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'rank';
@@ -138,8 +138,8 @@ function GroupChart() {
                 ?.map(e => [e, ratio[e]])
                 ?.map(([g, e], i) => ({
                     label: g,
-                    borderColor: groupColors[g] || colors[i],
-                    backgroundColor: H2R(groupColors[g] || colors[i], .5 - i * .05),
+                    borderColor: GroupBg[g] || colors[i],
+                    backgroundColor: H2R(GroupBg[g] || colors[i], .5 - i * .05),
                     borderWidth: 1,
                     pointRadius: 0,
                     fill: true,
