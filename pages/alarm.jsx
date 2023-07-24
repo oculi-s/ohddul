@@ -17,7 +17,6 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Alarm({ alarm, uid, session }) {
-    if (!session) return <MustLogin />;
     useEffect(() => {
         if (alarm.find(e => !e.ch))
             api.json.write({
@@ -25,6 +24,7 @@ export default function Alarm({ alarm, uid, session }) {
                 data: alarm.map(e => { e.ch = true; return e })
             });
     }, [])
+    if (!session) return <MustLogin />;
     return <>
         <h2>알림</h2>
         <div className={styles.wrap}>
