@@ -7,7 +7,6 @@ import scss from '$/variables.module.scss';
 import styles from '$/Chart/Flow.module.scss';
 import Icon from "@/public/icon";
 import { SubGraph } from "./groupShareMeta";
-import { GroupBg, GroupText } from "@/public/group/color";
 
 var cnt = 0;
 mermaid.initialize({
@@ -16,6 +15,7 @@ mermaid.initialize({
     flowchart: {
         arrowMarkerAbsolute: true,
         useMaxWidth: true,
+        useWidth: true,
         htmlLabels: true,
         defaultRenderer: "elk",
         curve: 'stepAfter',
@@ -162,7 +162,7 @@ const GroupShareElement = ({ meta, share, group }) => {
             <table className="fixed">
                 <thead>
                     <tr>
-                        <th>오너일가/재단</th>
+                        <th>오너일가<span className="mh">/재단</span></th>
                         <th>소액주주</th>
                         <th>연기금</th>
                         <th>상호출자</th>
