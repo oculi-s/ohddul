@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { Loading } from "#/base/base";
-import { Div, Fix, parseFix } from "@/module/ba";
+import { Div, Fix, Price, parseFix } from "@/module/ba";
 import '@/module/array';
 import scss from '$/variables.module.scss';
 import styles from '$/Chart/Flow.module.scss';
@@ -21,7 +21,7 @@ mermaid.initialize({
         curve: 'stepAfter',
     },
 });
-const Mermaid = ({ chart }) => {
+const GroupShareFlow = ({ chart }) => {
     const ref = useRef(null);
     const [chartLoad, setChartLoad] = useState(true);
     const [data, setData] = useState('');
@@ -47,109 +47,142 @@ const Mermaid = ({ chart }) => {
     );
 };
 
-const GroupShareElement = ({ meta, price, share, group }) => {
-    const ch = group?.ch?.map(e => meta.data[e]?.n);
 
+const GroupShareElement = ({ meta, share, group }) => {
+    const ch = group?.ch?.map(e => meta.data[e]?.n);
     const [fixed, setFixed] = useState(false);
-    const [chartLoad, setChartLoad] = useState(true);
     const edges = [], classes = [], styless = [];
-    const ids = {}, labels = {}, rates = {};
-    let RATE = 1;
-    // if (group?.n == '카카오') RATE = 5;
+    const ids = {}, labels = {}, rev = {};
+    const RATE = 1;
+
     const sub = SubGraph[group?.n];
     const subs = Object.values(sub || {})?.flat();
-    const subDict = Object.fromEntries(Object.entries(sub || {})?.map(([a, b]) => b.map(e => [e, a]))?.flat());
+    const subDict = sub ? Object.fromEntries(Object.entries(sub)
+        ?.map(([k, v]) => {
+            if (v.constructor == Array)
+                return v.map(e => [e, k])
+            else return Object.values(v).flat().map(e => [e, k]);
+        })?.flat()) : {};
 
-
-    const total = group?.p;
-    const make = name => name?.replace(/ /g, '-');
-    share.forEach(([e, share]) => {
-        const stockName = meta.data[e]?.n;
-        const stockId = make(stockName);
-        const p = parseFix(meta.data[e]?.a * price[e]?.c * 100 / total);
-        const stockLabel = `
-            <a href="/stock/${stockName}">${stockName}</a>
-        `.replace(/\n/g, '').trim();
-        ids[stockName] = stockId;
-        labels[stockName] = stockLabel;
-        classes.push(`class ${stockId} stock`);
-
-        share
-            ?.filter(x =>
-                // subs?.includes(x.name)
-                // || ch?.includes(x.name)
-                // || x.name?.includes(group?.n)
-                true
-            )
-            ?.filter(x => x.amount / meta.data[e]?.a * 100 > RATE)
-            ?.forEach(x => {
-                const holderName = x.name;
-                const a = x.amount;
-                if (holderName === '소액주주' || holderName === '국민연금') return;
-                const arrow = ch.includes(holderName) ? '-->' : '-.->'
-                const code = meta.index[holderName];
-                const holderId = make(holderName);
-                const holderLabel = code
-                    ? `<a href="/stock/${holderName}">${holderName}</a>`
-                    : holderName;
-                const holderClass = ch.includes(holderName)
-                    ? 'stock'
-                    : !subs.includes(holderName)
-                        ? 'other'
-                        : subDict[holderName] || 'auto';
-                // 순환출자 때문에 사이클이 생기므로 지분율은 직접소유만 이용해 구함
-                if (!rates[holderName]) rates[holderName] = 0;
-                rates[holderName] += a * price[e]?.c;
-
-                ids[holderName] = holderId;
-                labels[holderName] = holderLabel;
-                classes.push(`class ${holderId} ${holderClass}`);
-                edges.push(`${holderId} ${arrow} |${Div(a, meta.data[e]?.a, 1)}| ${stockId}`);
-            });
-    });
-
+    const shareData = share
+        ?.filter(e => e.r >= RATE)
+        ?.filter(e => e.n != '소액주주' && e.n != '국민연금');
+    [...ch, ...shareData].unique().forEach((x, i) => {
+        const n = x.n || x;
+        ids[n] = `ch${i}`, rev[ids[n]] = n;
+        const code = meta.index[n];
+        let className = subDict[n] || 'other';
+        if (ch.includes(n)) className = 'stock';
+        if (code) {
+            labels[n] = `<a href="/stock/${n}">${n}</a>${x.r ? `<br>${x.r}%` : ''}`;
+        } else {
+            labels[n] = `${n}<br>${x.r}%`;
+        }
+        classes.push(`class ${ids[n]} ${className}`);
+    })
+    console.log(rev, ids)
+    shareData
+        ?.forEach((x, i) => {
+            edges?.push(...x.ch
+                ?.filter(e => e.r >= RATE)
+                ?.map(c => {
+                    const n = meta.data[c.code]?.n;
+                    return { from: ids[x.n], to: ids[n], r: c.r, p: c.p };
+                }))
+        });
     let data = `
-        flowchart TD
+        flowchart LR
         classDef 오너일가 fill:${scss.bgBrighter},color:${scss.textBright};
         classDef other fill:${scss.bgMidDark},color:${scss.textDark},font-size:.9em;
         `
     if (sub) {
+        const filtersub = sub => {
+            if (sub.constructor == Array)
+                return sub.filter(e => ids[e]);
+            return Object.values(sub).map(e => filtersub(e)).flat();
+        }
+        const makesub = (key, sub, par) => {
+            if (!sub) return '';
+            if (sub?.constructor == Array) {
+                sub = sub?.filter(e => ids[e]);
+                if (!sub?.length) return '';
+                let per = '';
+                if (key == '오너일가' || par == '오너일가')
+                    per = `<br>${parseFix(share.filter(x => sub.find(e => e == x.n))?.map(e => e.r)?.sum())}%`
+                return `
+                ${key ? `subgraph ${key}${per}
+                direction TB`: ''}
+                ${sub.map(c => `${ids[c]}(${labels[c]})`).join('\n')}
+                ${key ? 'end' : ''}`;
+            }
+            return `
+            subgraph ${key}
+            direction TB
+            ${makesub(null, sub?._)}
+            ${Object.entries(sub)
+                    ?.filter(([k, v]) => k != '_')
+                    ?.map(([k, v]) => makesub(k, v, key)).join('\n')}
+            end`;
+
+        }
         const other = Object.keys(ids).filter(e => !subs.includes(e));
         data = `${data}
-        ${other.map(e => `${ids[e]}(${labels[e]})`).join('\n')};
-        ${Object.entries(sub).map(([k, v]) => {
-            return `subgraph ${k}
-            direction LR
-            ${v.map(c => {
-                const r = rates[c] ? `<br><span class=des>${Div(rates[c], total)}</span>` : '';
-                return `${ids[c]}(${labels[c]}${r})`
-            }).join('\n')}\n`
-        }).join('end\n')}end
-        ${edges?.join("\n")}
+        ${other.map(c => `${ids[c]}(${labels[c]})`).join('\n')}
+        ${Object.entries(sub)?.map(([k, v]) => {
+            if (!filtersub(v).flat().length) return false;
+            return makesub(k, v);
+        })?.filter(e => e).join('')}
+        ${edges?.map(({ from, to, r, p }) =>
+            `${from} --> |${r}%<p class=d>${rev[from]}-${rev[to]} ${Price(p)}</p>| ${to}`
+            // `${from} --> |${r}%| ${to}`
+        )?.join("\n")}
         ${classes?.join('\n')}
         ${styless?.join('\n')}
         `;
-        console.log(data);
-    }
-    else {
-        data = `${data}
-            ${Object.keys(ids)?.map(e => `${ids[e]}(${labels[e]})`)
-                ?.unique()?.join("\n")}\n
-            ${edges?.join("\n")}`;
-    }
-    // union find로 subgraph만들기
 
-    {/* {share.map(e => e[1]).flat().map(e => Name(e.name)).unique().map(e => `"${e}":""`).join(', ')} */ }
-    {/* <pre>{data}</pre> */ }
+    } else {
+        data = `${data}
+        ${Object.keys(ids)?.map(e => `${ids[e]}(${labels[e]})`)
+                ?.unique()?.join("\n")}\n
+        ${edges?.map(({ from, to, r, p }) =>
+                    `${from} --> |${r}%<p class=d>${rev[from]}-${rev[to]} ${Price(p)}</p>| ${to}`
+                )?.join("\n")}`;
+    }
+    data = data.split('\n').map(e => e.trim()).filter(e => e.length).join("\n");
+    console.log(data);
+    const owner = share.filter(e => subDict[e.n] == '오너일가' || subDict[e.n] == '재단')
+        ?.map(e => e.p).sum();
+    const ant = share.find(e => e.n == '소액주주');
+    const child = ch?.map(n => share.find(x => x.n == n)?.p || 0).sum();
+    const gov = share.filter(e => e.n == '국민연금' || e.n == '산업은행')?.map(e => e.p)?.sum();
+
     return (
-        <div className={`${styles.wrap}`}>
-            <h3>출자구조 요약</h3>
-            {/* <pre>{data}</pre> */}
+        <div className={`${styles.wrap} `}>
+            <h3>지배력 요약</h3>
+            <table className="fixed">
+                <thead>
+                    <tr>
+                        <th>오너일가/재단</th>
+                        <th>소액주주</th>
+                        <th>연기금</th>
+                        <th>상호출자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr align='center'>
+                        <td>{Div(owner, group?.p, 1)}</td>
+                        <td>{Div(ant?.p, group?.p, 1)}</td>
+                        <td>{Div(gov, group?.p, 1)}</td>
+                        <td>{Div(child, group?.p, 1)}</td>
+                    </tr>
+                </tbody>
+            </table>
             <h3>출자지도</h3>
-            <div className={`${styles.chart} ${fixed ? styles.fixed : ''}`}>
-                <Mermaid chart={data} />
+            <div className={`${styles.chart} ${fixed ? styles.fixed : ''} `}>
+                <GroupShareFlow chart={data} />
                 <i onClick={e => { setFixed(!fixed); }}><Icon name='FullScreen' /></i>
             </div>
+            <p className="des">* 그룹에 대한 지배력이 1%이상인 주주만 표시됩니다.</p>
         </div>
     );
 };

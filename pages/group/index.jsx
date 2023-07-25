@@ -23,6 +23,7 @@ import deepmerge from 'deepmerge';
 import api from '../api';
 import { Loading } from '#/base/base';
 import { GroupBg } from '@/public/group/color';
+import { Pagination } from '#/base/Pagination';
 
 export async function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'rank';
@@ -30,29 +31,33 @@ export async function getServerSideProps(ctx) {
     let props = { tab };
     if (tab == 'rank') {
         const Group = json.read(dir.light.group);
+        const p = parseInt(ctx?.query?.p || 1);
+        const N = parseInt(ctx?.query?.N || 15);
+        const T = Object.keys(Group.data)?.length || 0;
         const group = Object.values(Group.data)
             ?.filter(g => g?.ch?.length)
-            ?.qsort((b, a) => a.p - b.p);
-        props = { ...props, group };
+            ?.qsort((b, a) => a.p - b.p)
+            ?.slice((p - 1) * N, p * N);
+        props = { ...props, group, p, N, T };
     }
     return { props };
 }
 
-function GroupTable({ group }) {
+function GroupTable({ p, N, T, group }) {
     const hisSort = Array.from(group)?.qsort((b, a) => a.h - b.h);
     const body = group?.map((e, i) => {
-        const { n, p, ch, h } = e;
+        const { n, p: pr, ch, h } = e;
         const j = hisSort?.findIndex(e => e.h == h);
         const d = j - i;
         return <tr key={i}>
-            <th align='center' className={styles.num}>{i + 1}</th>
+            <th align='center' className={styles.num}>{(p - 1) * N + i + 1}</th>
             <th className={styles.groupTh}>
                 <Link href={`/group/${n}`}>
                     <GroupImg name={n} />
                     <span className={`${styles.gname} mh`}>&nbsp;({n})</span>
                 </Link>
             </th>
-            <td>{Price(p)}</td>
+            <td>{Price(pr)}</td>
             <td className={styles.num}>
                 {j + 1}<span>&nbsp;</span>
                 {d ? <span className={Color(d)}>
@@ -62,7 +67,8 @@ function GroupTable({ group }) {
             <td>{ch?.length}개</td>
         </tr>
     })
-    return <table className={`${styles.stockSum} fixed`}>
+
+    const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
             <col width={'10%'} />
             <col width={'30%'} />
@@ -83,6 +89,7 @@ function GroupTable({ group }) {
         </thead>
         <tbody>{body}</tbody>
     </table>
+    return <Pagination {...{ p, N, T, data }} />
 }
 
 const defaultOptions = {
@@ -179,7 +186,7 @@ function GroupChart() {
     </div>
 }
 
-export default function Group({ tab, group }) {
+export default function Group({ tab, group, p, N, T }) {
     const query = ['rank', 'change'];
     const names = ['순위', '변화'];
 
@@ -193,7 +200,7 @@ export default function Group({ tab, group }) {
         </div>
         <ToggleQuery names={names} query={query} />
         {tab == 'rank' ? <div className={styles.wrap}>
-            <GroupTable group={group} />
+            <GroupTable group={group} p={p} N={N} T={T} />
         </div> : <div className={styles.wrap}>
             <GroupChart />
         </div>}

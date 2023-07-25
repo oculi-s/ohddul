@@ -38,7 +38,8 @@ export const stock = {
         group: (name, num = 20) => encode(`@/data/group/${name}/priceChart${num}.json`),
     },
     groups: {
-        price: (name) => encode(`@/data/group/${name}/price.json`)
+        price: (name) => encode(`@/data/group/${name}/price.json`),
+        share: (name) => encode(`@/data/group/${name}/share.json`),
     },
     dart: {
         induty: encode('_/induty.json'),

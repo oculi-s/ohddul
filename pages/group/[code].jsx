@@ -54,9 +54,7 @@ export async function getServerSideProps(ctx) {
         return { code, equity, revenue, profit };
     }) || []
     if (tab == 'share') {
-        const share = group?.ch?.map(e =>
-            [e, json.read(dir.stock.light.share(e)).data]
-        ) || []
+        const share = json.read(dir.stock.groups.share(code)).data;
         props = { ...props, share };
     }
 
@@ -89,8 +87,7 @@ function MetaTable({
     return <div className={styles.meta}>
         <table><tbody>
             <tr><th>시가총액</th><td>{Price(priceTotal)}</td></tr>
-            {/* <tr><th>수정주가<Help {...priceHelp} /></th><td>{Num(last)}</td></tr> */}
-            {/* <tr><th>BPS<Help {...bpsHelp} /></th><td>{Num(BPS)}</td></tr> */}
+            {/* <tr><th>수정주가</th><td>{Num(last)}</td></tr> */}
             <tr><th>종목 수</th><td>{group?.ch?.length}</td></tr>
             <tr>
                 {/* <th>대표주</th>
