@@ -5,7 +5,7 @@
 import styles from '$/Stock/Sum.module.scss'
 import { Pagination } from "#/base/Pagination";
 import FavStar from "#/baseStock/FavStar";
-import { Color, Price } from "@/module/ba";
+import { Color, Per, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
@@ -56,13 +56,18 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist, induty, i
         const icode = induty[e];
         const iname = index[icode]?.n;
         const d = hist[e]?.i - (i + (p - 1) * N);
+        const c = price[e]?.c;
+        const pr = price[e]?.p
         return <tr key={i}>
             <th align='center' className={styles.num}>{(p - 1) * N + i + 1}</th>
             <th className={styles.stockTh}>
                 <FavStar code={e} />
                 <Link href={`/stock/${meta[e]?.n}`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
             </th>
-            <td className='mh'>{Price(meta[e]?.a * price[e]?.c)}</td>
+            <td className='mh'>
+                {Price(meta[e]?.a * c)}&nbsp;
+                <span className={`des ${Color(c - pr)}`}>({Per(c, pr)})</span>
+            </td>
             <td className={styles.num}>
                 {hist[e]?.i >= 0 ?
                     <>
@@ -86,9 +91,9 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist, induty, i
     const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
             <col width={20} />
-            <col width={120} />
+            <col width={100} />
             <col width={60} className='mh' />
-            <col width={60} />
+            <col width={40} />
             <col width={40} />
             <col width={60} />
         </colgroup>
