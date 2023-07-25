@@ -80,7 +80,6 @@ const GroupShareElement = ({ meta, share, group }) => {
         }
         classes.push(`class ${ids[n]} ${className}`);
     })
-    console.log(rev, ids)
     shareData
         ?.forEach((x, i) => {
             edges?.push(...x.ch
@@ -149,7 +148,6 @@ const GroupShareElement = ({ meta, share, group }) => {
                 )?.join("\n")}`;
     }
     data = data.split('\n').map(e => e.trim()).filter(e => e.length).join("\n");
-    console.log(data);
     const owner = share.filter(e => subDict[e.n] == '오너일가' || subDict[e.n] == '재단')
         ?.map(e => e.p).sum();
     const ant = share.find(e => e.n == '소액주주');
