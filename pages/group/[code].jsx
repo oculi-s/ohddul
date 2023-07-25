@@ -79,14 +79,13 @@ function MetaTable({
         revenue: earn?.map(e => e?.revenue)?.sum(),
         profit: earn?.map(e => e?.profit)?.sum()
     };
-    const priceTotal = group?.p;
     // const last = groupPrice?.priceRaw?.data?.slice(-1)?.find(e => true)?.c;
 
     const amount = group?.ch?.map(e => meta[e]?.a)?.sum();
     const BPS = groupEarn.equity / amount;
     return <div className={styles.meta}>
         <table><tbody>
-            <tr><th>시가총액</th><td>{Price(priceTotal)}</td></tr>
+            <tr><th>시가총액</th><td>{Price(group?.c)}</td></tr>
             {/* <tr><th>수정주가</th><td>{Num(last)}</td></tr> */}
             <tr><th>종목 수</th><td>{group?.ch?.length}</td></tr>
             <tr>

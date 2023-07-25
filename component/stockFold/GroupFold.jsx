@@ -20,12 +20,11 @@ function GroupFold({
     const gname = group?.n;
     if (!gname) return;
     const priceDict = Object.fromEntries(group?.ch.map(e => [e, meta[e]?.a * price[e]?.c]));
-    const priceSum = Object.values(priceDict).sum();
     const name = <>
         <Link href={`/group/${gname}`}>
             <GroupImg name={gname} />
         </Link>
-        <p>{gname}그룹 시총 : ({Price(priceSum)})</p>
+        <p>{gname}그룹 시총 : ({Price(group?.c)})</p>
     </>;
     const head = <>
         <tr>
