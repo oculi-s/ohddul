@@ -62,7 +62,7 @@ function GroupTable({ p, N, T, group }) {
                 <span className={`des ${Color(c - pr)}`}>({Per(c, pr)})</span>
             </td>
             <td className={styles.num}>
-                {j + 1}<span>&nbsp;</span>
+                {(p - 1) * N + j + 1}<span>&nbsp;</span>
                 {d ? <span className={Color(d)}>
                     (<span className={`fa fa-caret-${d > 0 ? 'up' : 'down'}`} />{Math.abs(d)})
                 </span> : '(-)'}
