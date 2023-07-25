@@ -3,7 +3,7 @@
  */
 
 import styles from '$/Stock/Sum.module.scss'
-import { Color, H2R, Price } from "@/module/ba";
+import { Color, H2R, Per, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import dt from '@/module/dt';
@@ -46,7 +46,7 @@ export async function getServerSideProps(ctx) {
 function GroupTable({ p, N, T, group }) {
     const hisSort = Array.from(group)?.qsort((b, a) => a.h - b.h);
     const body = group?.map((e, i) => {
-        const { n, p: pr, ch, h } = e;
+        const { n, c, p: pr, ch, h } = e;
         const j = hisSort?.findIndex(e => e.h == h);
         const d = j - i;
         return <tr key={i}>
@@ -57,24 +57,27 @@ function GroupTable({ p, N, T, group }) {
                     <span className={`${styles.gname} mh`}>&nbsp;({n})</span>
                 </Link>
             </th>
-            <td>{Price(pr)}</td>
+            <td>
+                {Price(c)}&nbsp;
+                <span className={`des ${Color(c - pr)}`}>({Per(c, pr)})</span>
+            </td>
             <td className={styles.num}>
                 {j + 1}<span>&nbsp;</span>
                 {d ? <span className={Color(d)}>
                     (<span className={`fa fa-caret-${d > 0 ? 'up' : 'down'}`} />{Math.abs(d)})
                 </span> : '(-)'}
             </td>
-            <td>{ch?.length}개</td>
+            <td className='mh'>{ch?.length}개</td>
         </tr>
     })
 
     const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
-            <col width={'10%'} />
-            <col width={'30%'} />
-            <col width={'15%'} />
-            <col width={'15%'} />
-            <col width={'20%'} />
+            <col width={20} />
+            <col width={50} />
+            <col width={50} />
+            <col width={20} />
+            <col width={20} className='mh' />
         </colgroup>
         <thead>
             <tr>
@@ -84,7 +87,7 @@ function GroupTable({ p, N, T, group }) {
                     <span className='ph'>시총</span><span className='mh'>시가총액</span>
                 </th>
                 <th>1년전</th>
-                <th>자회사</th>
+                <th className='mh'>자회사</th>
             </tr>
         </thead>
         <tbody>{body}</tbody>
