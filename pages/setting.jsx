@@ -92,7 +92,7 @@ function ChangeEmail() {
 }
 
 export default function Setting() {
-    const names = ['개인정보 수정', '알림설정']
+    const names = ['개인정보 수정']//, '알림설정']
     const datas = [
         <div key={0}>
             <h4>아이디 변경</h4>

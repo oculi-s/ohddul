@@ -10,9 +10,7 @@ export function getServerSideProps(ctx) {
 export default function Editor({ session }) {
     const [type, setType] = useState(0);
 
-    return <>준비중입니다.</>;
     if (!session) return <MustLogin />
-
     if (type == 0) {
         return <div className={styles.box}>
             <button onClick={e => setType(1)}>
@@ -20,9 +18,11 @@ export default function Editor({ session }) {
             </button>
             <button onClick={e => setType(2)}>
                 HTML
+                <span className="fa fa-code"></span>
             </button>
             <button onClick={e => setType(3)}>
                 MarkDown
+                <span className="fa fa-hashtag"></span>
             </button>
         </div>
     } else if (type == 1) {
