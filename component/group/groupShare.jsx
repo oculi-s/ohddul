@@ -8,7 +8,6 @@ import styles from '$/Chart/Flow.module.scss';
 import Icon from "@/public/icon";
 import Help from "#/base/Help";
 
-var cnt = 0;
 mermaid.initialize({
     startOnLoad: true,
     theme: "default",
@@ -21,13 +20,14 @@ mermaid.initialize({
         curve: 'stepAfter',
     },
 });
-const GroupShareFlow = ({ share }) => {
+const GroupShareFlow = ({ share, group }) => {
     const ref = useRef(null);
+    const chartRef = useRef(null);
     const [chartLoad, setChartLoad] = useState(true);
     const [data, setData] = useState('');
+    const [width, setWidth] = useState();
 
     useEffect(() => {
-        setChartLoad(true);
         const chart = `flowchart LR
         classDef 오너일가 fill:${scss.bgBrighter},color:${scss.textBright};
         classDef other fill:${scss.bgMidDark},color:${scss.textDark},font-size:.9em;
@@ -40,19 +40,28 @@ const GroupShareFlow = ({ share }) => {
         }
     }, [share?.chart, ref?.current]);
 
+    useEffect(() => {
+        if (data.length && chartRef?.current) {
+            const H = chartRef?.current?.getBoundingClientRect()?.height;
+            const svg = chartRef?.current?.firstChild;
+            const elem = svg?.querySelector('.subgraphs');
+            const width = elem?.getBoundingClientRect()?.width;
+            const height = elem?.getBoundingClientRect()?.height;
+            setWidth(H * width / height);
+        }
+    }, [data])
     return (
-        <div className="shareMermaid">
-            <div ref={ref} id={`flow${cnt++}`} className="d">{share?.chart}</div>
+        <div className="shareMermaid" style={{ width }}>
+            <div ref={ref} id={`flow${group?.n}`} className="d">{share?.chart}</div>
             {chartLoad
                 ? <Loading left="auto" right="auto" />
-                : <div dangerouslySetInnerHTML={{ __html: data }}></div>
+                : <div dangerouslySetInnerHTML={{ __html: data }} ref={chartRef} style={{ width }}></div>
             }
         </div>
     );
 };
 
 function GroupShareTable({ share, group }) {
-    console.log(share.chart);
     return <table className="fixed">
         <thead>
             <tr>
@@ -86,7 +95,7 @@ const GroupShareElement = ({ share, group }) => {
             <GroupShareTable share={share} group={group} />
             <h3>출자지도</h3>
             <div className={`${styles.chart} ${fixed ? styles.fixed : ''} `}>
-                <GroupShareFlow share={share} />
+                <GroupShareFlow share={share} group={group} />
                 <i onClick={e => { setFixed(!fixed); }}><Icon name='FullScreen' /></i>
             </div>
             <p className="des">* 그룹에 대한 지배력이 1%이상인 주주만 표시됩니다.</p>

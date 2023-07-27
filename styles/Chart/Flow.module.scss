@@ -14,8 +14,8 @@
         background: $bgMidDark;
         padding: 10px;
         border-radius: 10px;
-        display: flex;
         position: relative;
+        width: 100%;
 
         &.fixed {
             position: fixed;

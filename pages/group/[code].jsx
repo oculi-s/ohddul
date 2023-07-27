@@ -156,7 +156,7 @@ function Group({
                 <span className='fa fa-chevron-left' />&nbsp;
                 {prev} 그룹
             </Link> : <span></span>}
-            {next ? <Link href={`/group/${next}?tab=share`}>
+            {next ? <Link href={`/group/${next}`}>
                 {next} 그룹&nbsp;
                 <span className='fa fa-chevron-right' />
             </Link> : ''}

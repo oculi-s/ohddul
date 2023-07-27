@@ -57,12 +57,11 @@
 
 .shareMermaid {
     height: 100% !important;
-    width: max-content !important;
-    min-width: max-content !important;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
+    min-width: 100%;
 
     path {
         stroke-opacity: .5;
@@ -71,7 +70,6 @@
     >*,
     svg {
         height: 100% !important;
-        width: max-content !important;
     }
 
 
