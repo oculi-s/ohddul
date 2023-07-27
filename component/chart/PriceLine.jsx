@@ -304,7 +304,6 @@ function PriceLine({
             })
             const suboptions = {};
             suboptions.scales = option.scales;
-            console.log(data);
             setData(data);
             setSubData(sub);
             setOptions(deepmerge(defaultOptions, option));

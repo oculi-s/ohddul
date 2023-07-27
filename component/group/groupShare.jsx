@@ -8,6 +8,7 @@ import styles from '$/Chart/Flow.module.scss';
 import Icon from "@/public/icon";
 import Help from "#/base/Help";
 
+var cnt = 0;
 mermaid.initialize({
     startOnLoad: true,
     theme: "default",
@@ -47,12 +48,14 @@ const GroupShareFlow = ({ share, group }) => {
             const elem = svg?.querySelector('.subgraphs');
             const width = elem?.getBoundingClientRect()?.width;
             const height = elem?.getBoundingClientRect()?.height;
-            setWidth(H * width / height);
+            if (width > height) {
+                setWidth(H * width / height);
+            }
         }
     }, [data])
     return (
         <div className="shareMermaid" style={{ width }}>
-            <div ref={ref} id={`flow${group?.n}`} className="d">{share?.chart}</div>
+            <div ref={ref} id={`flow${cnt++}`} className="d">{share?.chart}</div>
             {chartLoad
                 ? <Loading left="auto" right="auto" />
                 : <div dangerouslySetInnerHTML={{ __html: data }} ref={chartRef} style={{ width }}></div>
