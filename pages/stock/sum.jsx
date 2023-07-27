@@ -10,6 +10,7 @@ import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
+import '@/module/array';
 
 export async function getServerSideProps(ctx) {
     const Meta = json.read(dir.meta).data;
@@ -64,11 +65,11 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist, induty, i
                 <FavStar code={e} />
                 <Link href={`/stock/${meta[e]?.n}`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
             </th>
-            <td className='mh'>
+            <td>
                 {Price(meta[e]?.a * c)}&nbsp;
                 <span className={`des ${Color(c - pr)}`}>({Per(c, pr)})</span>
             </td>
-            <td className={styles.num}>
+            <td className={`${styles.num} mh`}>
                 {hist[e]?.i >= 0 ?
                     <>
                         {hist[e]?.i + 1}<span>&nbsp;</span>
@@ -91,18 +92,18 @@ export default function Sum({ p, N, T, keys, meta, price, group, hist, induty, i
     const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
             <col width={20} />
-            <col width={100} />
-            <col width={60} className='mh' />
-            <col width={40} />
-            <col width={40} />
-            <col width={60} />
+            <col width={80} />
+            <col width={80} />
+            <col width={40} className='mh' />
+            <col width={30} />
+            <col width={50} />
         </colgroup>
         <thead>
             <tr>
                 <th>#</th>
                 <th>종목명</th>
-                <th className='mh'>시총</th>
-                <th>1년전</th>
+                <th>시총</th>
+                <th className='mh'>1년전</th>
                 <th>그룹</th>
                 <th>업종</th>
             </tr>
