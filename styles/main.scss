@@ -58,6 +58,7 @@
 .shareMermaid {
     height: 100% !important;
     width: max-content !important;
+    min-width: max-content !important;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -28,8 +28,15 @@ import GroupShareElement from '#/group/groupShare';
 export async function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'price';
     const code = ctx.query?.code;
-    const group = json.read(dir.stock.light.group).data[code] || {};
-    let props = { tab, code, group };
+    const Group = json.read(dir.stock.light.group).data;
+
+    const List = Object.values(Group)
+        ?.filter(e => e.p)
+        ?.sort((b, a) => a.p - b.p);
+    const i = List.findIndex(e => e.n == code);
+    const prev = List[i - 1]?.n || false, next = List[i + 1]?.n || false;
+    const group = Group[code] || {};
+    let props = { tab, code, group, next, prev };
 
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
@@ -54,7 +61,7 @@ export async function getServerSideProps(ctx) {
         return { code, equity, revenue, profit };
     }) || []
     if (tab == 'share') {
-        const share = json.read(dir.stock.groups.share(code)).data;
+        const share = json.read(dir.stock.chart.share(code));
         props = { ...props, share };
     }
 
@@ -102,7 +109,8 @@ function MetaTable({
 
 const prices = {};
 function Group({
-    group, tab, meta, price, code, index, induty, earn, share
+    next, prev, group, tab,
+    meta, price, code, index, induty, earn, share
 }) {
     const router = useRouter();
     const nums = [20, 60, 120];
@@ -113,7 +121,7 @@ function Group({
     const query = ['price', 'earn', 'share'];
     const names = ['주가정보', '실적정보', '출자구조'];
 
-    async function fetch() {
+    async function fetchPrice() {
         console.time('groupPriceLoad');
         setLoad({ price: true });
         if (prices[code]) {
@@ -138,11 +146,21 @@ function Group({
     }
 
     useEffect(() => {
-        if (tab == 'price') fetch();
+        if (tab == 'price') fetchPrice();
     }, [code, tab]);
 
     if (!group?.n) return <>그룹 정보가 없습니다.</>;
     return <>
+        <div className={styles.nextprev}>
+            {prev ? <Link href={`/group/${prev}`}>
+                <span className='fa fa-chevron-left' />&nbsp;
+                {prev} 그룹
+            </Link> : <span></span>}
+            {next ? <Link href={`/group/${next}?tab=share`}>
+                {next} 그룹&nbsp;
+                <span className='fa fa-chevron-right' />
+            </Link> : ''}
+        </div>
         <div>
             <h2 className={styles.title}>{code}그룹</h2>
             <hr />

@@ -3,10 +3,11 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import api from './api';
-import { ToggleTab } from '#/base/ToggleTab';
+import { ToggleQuery, ToggleTab } from '#/base/ToggleTab';
 
-export function getServerSideProps() {
-    const props = {};
+export function getServerSideProps(ctx) {
+    const tab = ctx.query?.tab || 'meta';
+    const props = { tab };
     return { props };
 }
 
@@ -91,20 +92,19 @@ function ChangeEmail() {
     </div>
 }
 
-export default function Setting() {
+export default function Setting({ tab }) {
+    const query = ['meta', 'alarm'];
     const names = ['개인정보 수정']//, '알림설정']
-    const datas = [
-        <div key={0}>
-            <h4>아이디 변경</h4>
-            <ChangeId />
-            <h4>이메일 변경</h4>
-            <ChangeEmail />
-        </div>
-    ]
     return <>
         <h2>환경설정</h2>
         <div className={styles.setting}>
-            <ToggleTab names={names} datas={datas} />
+            <ToggleQuery names={names} query={query} />
+            {tab == 'meta' ? <div>
+                <h4>아이디 변경</h4>
+                <ChangeId />
+                <h4>이메일 변경</h4>
+                <ChangeEmail />
+            </div> : ""}
         </div>
     </>
 }

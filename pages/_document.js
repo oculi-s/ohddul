@@ -8,7 +8,7 @@ export default function Document() {
                 {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1762696463079495"
                     crossOrigin="anonymous"></script> */}
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7774182904979409"
-                    crossorigin="anonymous"></script>
+                    crossOrigin="anonymous"></script>
             </Head>
             <body>
                 <Main />

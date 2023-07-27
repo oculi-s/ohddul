@@ -117,10 +117,10 @@ function PredBlock4({ ban }) {
                 회사의 지분을 매입한 뒤 사명을 변경하는 방식으로
                 우회상장하는 목적으로 설립된 회사입니다.
             </>}
-        />
+        /> ({SPAC?.length}개)
         </H4>
         <Collapse>{SPAC?.map(Stock)}</Collapse>
-        <H4>기타 거래정지주</H4>
+        <H4>기타 거래정지주 ({notSPAC?.length}개)</H4>
         <Collapse>{notSPAC?.map(Stock)}</Collapse>
     </div>
 }

@@ -1,5 +1,21 @@
 @import '../variables.module.scss';
 
+.nextprev {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+
+    font-size: .9em;
+
+    a {
+        color: $textBright;
+    }
+
+    span {
+        font-size: .8em;
+    }
+}
+
 .meta {
     width: fit-content;
     margin-left: auto;

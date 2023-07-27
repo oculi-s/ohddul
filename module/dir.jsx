@@ -36,6 +36,7 @@ export const stock = {
     chart: {
         price: (code, num = 20) => encode(`&/${code}/priceChart${num}.json`),
         group: (name, num = 20) => encode(`@/data/group/${name}/priceChart${num}.json`),
+        share: (name) => encode(`@/data/group/${name}/shareChart.json`),
     },
     groups: {
         price: (name) => encode(`@/data/group/${name}/price.json`),
