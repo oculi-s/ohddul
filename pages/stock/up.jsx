@@ -10,6 +10,7 @@ import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
+import '@/module/array';
 
 export async function getServerSideProps(ctx) {
     const Meta = json.read(dir.meta).data;
