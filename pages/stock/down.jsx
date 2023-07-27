@@ -51,12 +51,11 @@ export default function Down({ p, N, T, keys, meta, price, group }) {
             <th className={styles.stockTh}>
                 <FavStar code={e} />
                 <Link href={`/stock/${meta[e]?.n}`}>{meta[e]?.n}{meta[e]?.t == 'Q' ? '*' : ''}</Link>
-
             </th>
             <td>{Price(meta[e]?.a * price[e]?.c)}</td>
             <td>{Num(price[e]?.c)}&nbsp;
                 <span
-                    className={`${Color(price[e]?.c - price[e]?.p)} ${styles.num}`}
+                    className={`${Color(price[e]?.c - price[e]?.p)} des`}
                 >
                     ({Per(price[e]?.c, price[e]?.p)})
                 </span>
@@ -70,11 +69,11 @@ export default function Down({ p, N, T, keys, meta, price, group }) {
     })
     const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
-            <col width={'10%'} />
-            <col width={'40%'} />
-            <col width={'15%'} />
-            <col width={'15%'} />
-            <col width={'20%'} />
+            <col width={10} />
+            <col width={80} />
+            <col width={30} />
+            <col width={40} />
+            <col width={30} />
         </colgroup>
         <thead>
             <tr>
@@ -90,9 +89,9 @@ export default function Down({ p, N, T, keys, meta, price, group }) {
 
     return <>
         <div className={styles.title}>
-            <h2>오른종목</h2>
-            <Link href={'/stock/down'}>
-                떨어진 종목 보러가기&nbsp;
+            <h2>떨어진종목</h2>
+            <Link href={'/stock/up'}>
+                오른 종목 보러가기&nbsp;
                 <span className='fa fa-chevron-right'></span>
             </Link>
         </div>

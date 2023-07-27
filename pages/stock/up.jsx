@@ -52,7 +52,7 @@ export default function Up({ p, N, T, keys, meta, price, group }) {
             <td>{Price(meta[e]?.a * price[e]?.c)}</td>
             <td>{Num(price[e]?.c)}&nbsp;
                 <span
-                    className={`${Color(price[e]?.c - price[e]?.p)} ${styles.num}`}
+                    className={`${Color(price[e]?.c - price[e]?.p)} des`}
                 >
                     ({Per(price[e]?.c, price[e]?.p)})
                 </span>
@@ -66,11 +66,11 @@ export default function Up({ p, N, T, keys, meta, price, group }) {
     })
     const data = <table className={`${styles.stockSum} fixed`}>
         <colgroup>
-            <col width={'10%'} />
-            <col width={'40%'} />
-            <col width={'15%'} />
-            <col width={'15%'} />
-            <col width={'20%'} />
+            <col width={10} />
+            <col width={80} />
+            <col width={30} />
+            <col width={40} />
+            <col width={30} />
         </colgroup>
         <thead>
             <tr>
