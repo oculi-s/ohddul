@@ -208,12 +208,11 @@ function StockQuery({
     }
     const router = useRouter();
     const tab = router?.query?.tab || 'price';
-    const priceRaw = stockPrice?.priceRaw;
     return <>
         <ToggleQuery query={query} names={names} />
         {tab == 'price' ? <div>
             <PriceElement stockPrice={stockPrice} loadStock={loadStock} />
-            <LastUpdate last={priceRaw?.last} />
+            <LastUpdate last={stockPrice?.last} />
         </div> : tab == 'earn' ? <div>
             <EarnElement earn={earn?.data} meta={stockMeta} />
             <LastUpdate last={earn?.last} />
@@ -230,8 +229,6 @@ const prices = {};
 function Index(props) {
     const { meta, price, ban, code, stockMeta, tab } = props;
     const router = useRouter();
-    const nums = [20, 60, 120];
-
     const [userPred, setPred] = useState();
     const [stockPrice, setStockPrice] = useState({});
     const [loadUser, setLoadUser] = useState({ pred: true });
@@ -247,15 +244,8 @@ function Index(props) {
             await api.json.read({
                 url: dir.stock.light.price(code)
             }).then(price => {
-                prices[code].priceRaw = price;
+                prices[code] = price;
             })
-            for (let num of nums) {
-                await api.json.read({
-                    url: dir.stock.chart.price(code, num)
-                }).then(price => {
-                    prices[code][num] = price;
-                })
-            }
             setStockPrice(prices[code]);
         }
         setLoadStock({ price: false });

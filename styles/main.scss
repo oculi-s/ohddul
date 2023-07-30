@@ -9,8 +9,7 @@
 // curtain에도 문제 생김
 @include mobtab {
     :root {
-        --main-width: 100%;
-        --nav-margin: 0;
+        --side-margin: 0;
         --nav-height: 85px;
         --top: 100px;
     }
@@ -34,9 +33,8 @@
 
 @include desktop {
     :root {
-        --main-width: #{$mainWidth};
+        --side-margin: calc((100% - #{$mainWidth} - #{$navWidth} - 40px) / 2);
         --nav-height: 60px;
-        --nav-margin: calc((100% - #{$mainWidth} - 2 * #{$navWidth} - 40px) / 2);
         --top: 110px;
     }
 
@@ -158,11 +156,12 @@
 }
 
 main {
-    margin: auto;
+    margin-left: var(--side-margin);
     display: block;
     text-align: left;
     margin-top: var(--top);
-    width: var(--main-width);
+    width: $mainWidth;
+    max-width: 100%;
     padding-bottom: 800px;
     margin-bottom: 50px;
 }
@@ -217,6 +216,7 @@ main img {
 
 canvas {
     max-height: unset;
+    cursor: crosshair;
 }
 
 i {

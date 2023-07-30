@@ -1,11 +1,12 @@
 import styles from '$/Stock/Stock.module.scss';
 import Help from "#/base/Help";
-import PriceLine from "#/chart/PriceLine";
+// import PriceLine from "#/chart/PriceLine";
 import { Color, Div, Per } from '@/module/ba';
 import { bbHelp, maHelp } from './HelpDescription';
 import { getMaData } from '@/module/filter/priceAvg';
 import dt from '@/module/dt';
 import '@/module/array';
+import PriceLine from '#/chart/TradeChart';
 
 function MaTable({ stockPrice = [] }) {
     const price = Array.from(stockPrice)?.sort(dt.sort);
@@ -65,20 +66,15 @@ function BBTable({ stockPrice = [] }) {
 }
 
 const PriceElement = ({ stockPrice, loadStock }) => {
-    const priceRaw = stockPrice?.priceRaw?.data;
-    const chartProps = {
-        prices: [stockPrice],
-        load: loadStock,
-    }
     return <>
         <h3>가격차트</h3>
-        <div className={styles.priceChart}>
-            <PriceLine {...chartProps} />
+        <div className={styles.priceChart} style={{ height: 500 }}>
+            <PriceLine price={stockPrice?.data} load={loadStock} />
         </div>
         <h3>가격지표</h3>
         <div>
-            <MaTable stockPrice={priceRaw} />
-            <BBTable stockPrice={priceRaw} />
+            <MaTable stockPrice={stockPrice?.data} />
+            <BBTable stockPrice={stockPrice?.data} />
         </div>
     </>
 }

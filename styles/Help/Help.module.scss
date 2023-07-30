@@ -2,6 +2,8 @@
 
 .docs {
     counter-reset: h3;
+    margin-left: auto;
+    max-width: calc(#{$mainWidth} - #{$navWidth});
 
     .box {
 

@@ -2,7 +2,7 @@ export default function Footer() {
     return (
         <>
             <footer>
-                V1.0 by oculis
+                V2.0 by oculis
             </footer>
         </>
     )

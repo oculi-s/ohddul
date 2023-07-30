@@ -1,10 +1,10 @@
 $kakao: #FEE500;
 
 $mobWidth: 450px;
-$mainWidth: 800px;
+$mainWidth: 1000px;
 $navWidth: 260px;
 $navHeight: 60px;
-$midWidth: $mainWidth + 2*$navWidth;
+$midWidth: $mainWidth + $navWidth;
 
 $bgDarker: #030d18;
 $bgDark: #04091e;

@@ -10,10 +10,15 @@ import colors from "@/module/colors";
 import scss from '$/variables.module.scss';
 import { maxPoint, minPoint } from "@/module/chart/annotations";
 import { CheckBox, RadioSelect } from "#/base/InputSelector";
-import { hairline } from "@/module/chart/plugins";
+import { caret, hairline } from "@/module/chart/plugins";
 import { H2R, parseFix } from "@/module/ba";
 import { Loading } from "#/base/base";
 import '@/module/array'
+// import "chartjs-plugin-zoom";
+
+// import dynamic from 'next/dynamic'
+// const ZoomPlugin = dynamic(() => import('chartjs-plugin-zoom').then((mod) => Chart.register(mod.default)), { ssr: false })
+
 Chart.register(Annotation);
 
 /**
@@ -26,6 +31,22 @@ const defaultOptions = {
         legend: { display: false },
         annotation: {
             drawTime: 'afterDatasetsDraw',
+        },
+        zoom: {
+            limits: { x: 1690462838125 },
+            zoom: {
+                wheel: {
+                    enabled: true,
+                },
+                pinch: {
+                    enabled: true,
+                },
+                mode: 'x',
+            },
+            pan: {
+                enabled: true,
+                mode: 'x',
+            },
         },
     },
     animation: {
@@ -40,10 +61,17 @@ const defaultOptions = {
             type: "time",
             time: {
                 tooltipFormat: "yyyy-MM-dd"
-
+            },
+            ticks: {
+                maxTicksLimit: 5,
+                callback: function (value) {
+                    return dt.parse(value);
+                }
             }
-        }, y: {}
-    }
+        }, y: {
+
+        }
+    },
 }
 
 const suboption = {
@@ -86,11 +114,11 @@ const suboption = {
                     return `${ctx?.dataset?.label} ${parseFix(ctx?.raw)}%`;
                 },
             }
-        }
+        },
     }
 }
 
-const plugins = [hairline, Annotation];
+const plugins = [Annotation];
 
 /**
  * 계산된 차트 데이터를 정제하여 차트에 입힐 수 있도록 만드는 함수
@@ -273,8 +301,14 @@ function PriceLine({
     bollingerBtn = true, timeBtn = true,
     x = false, y = false,
 }) {
-    defaultOptions.scales.x.display = x;
-    defaultOptions.scales.y.display = y;
+    useEffect(() => {
+        if (typeof window !== "undefined")
+            import("chartjs-plugin-zoom").then((plugin) => {
+                Chart.register(plugin.default);
+            });
+    }, []);
+    // defaultOptions.scales.x.display = x;
+    // defaultOptions.scales.y.display = y;
 
     const [len, setLen] = useState(L);
     const from = dt.num() - len;

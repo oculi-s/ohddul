@@ -103,7 +103,7 @@ function ScoringBlock1() {
         </Collapse>
         <p>따라서 당일 최대한 <span className='red'>적은 사람이 예측한 종목을 예측하는 것</span>이 점수를 올리는 데에 도움이 됩니다.</p>
         <H4>가격 예측</H4>
-        <p>가격 예측의 채점은 <span className='red'>채점가격과 예측 가격의 차이</span>가 적을수록, <span className='red'>기간내 가격 변동성</span>이 클수록 더 높은 점수를 받습니다.</p>
+        <p>가격 예측의 채점은 <span className='red'>채점가격과 예측 가격의 차이</span>가 적을수록, <span className='red'>기간내 가격 변동성</span>이 클수록, <span className='red'>예측 기간이 길수록</span> 더 높은 점수를 받습니다.</p>
         <p>가격 예측의 단위 점수는 다음과 같이 계산됩니다.</p>
         <table>
             <colgroup>
@@ -113,10 +113,10 @@ function ScoringBlock1() {
             <tbody>
                 <tr><th>계산식</th><td>
                     <p style={{ lineHeight: '1.5em' }}>
-                        <IM math='v=5\times (2e^{-3.5d}-1)' />,&nbsp;
+                        <IM math='v=5\times (2e^{-0.1K\times D}-1)' />,&nbsp;
                         <span className='des'>
-                            <IM math='(d=\dfrac{|a-s|}{s+|h-l|}' />,&nbsp;
-                            <IM math='3.5\simeq\ln{2}/0.2)' />
+                            (<IM math='D=\dfrac{|a-s|}{|h-l|}' />,&nbsp;
+                            <IM math='K=\dfrac{1}{\sqrt{\triangle{d}/90)}}' />)
                         </span>
                     </p>
                 </td></tr>
@@ -125,10 +125,11 @@ function ScoringBlock1() {
                     <p><IM math='s' /> = 채점기준일 가격</p>
                     <p><IM math='h' /> = 예측일부터 기준일까지의 고가</p>
                     <p><IM math='l' /> = 예측일부터 기준일까지의 저가</p>
+                    <p><IM math='\triangle{d}' /> = 예측일부터 기준일까지의 기간 (일 수)</p>
                 </td></tr>
             </tbody>
         </table>
-        <p>(예측가격과 기준가격의 차이)가 (기준가격과 변화량의 합)의 <b>20%</b>를 벗어날 때부터 점수가 깎이게 되며, 최소 -5점부터 최대 5점의 점수를 얻을 수 있습니다.</p>
+        <p>(예측가격과 기준가격의 차이)가 (기간동안의 가격범위)의 <b>20%</b>를 벗어날 때부터 점수가 깎이게 되며, 최소 -5점부터 최대 5점의 점수를 얻을 수 있습니다.</p>
         <H4>가격 예측 예시</H4>
         <Collapse title={'예시1'}>
             <p>예를들어 2023년 1월4일 삼성전자의 종가는 <b>57,800</b>원입니다. 90영업일 뒤인 2023년 5월17일의 종가를 <b>70,000</b>원으로 예측하겠습니다.</p>
