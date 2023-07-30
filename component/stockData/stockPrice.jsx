@@ -65,11 +65,11 @@ function BBTable({ stockPrice = [] }) {
     </table>;
 }
 
-const PriceElement = ({ stockPrice, loadStock }) => {
+const PriceElement = ({ stockPrice, loadStock, setLoadStock }) => {
     return <>
         <h3>가격차트</h3>
         <div className={styles.priceChart} style={{ height: 500 }}>
-            <PriceLine price={stockPrice?.data} load={loadStock} />
+            <PriceLine price={stockPrice?.data} load={loadStock} setLoad={setLoadStock} />
         </div>
         <h3>가격지표</h3>
         <div>

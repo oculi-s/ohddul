@@ -6,7 +6,6 @@ import { Logo } from '#/base/base';
 
 export default function Nav(props) {
     const [view, setView] = useState(false);
-    const setAsideShow = props?.setAsideShow;
     return <nav className={styles.nav}>
         <div className={styles.inner}>
             <div className={styles.buttonList}>
@@ -19,7 +18,7 @@ export default function Nav(props) {
             <div className={styles.buttonList2} >
                 <button
                     className={`fa fa-bars ph`}
-                    onClick={e => { setAsideShow(c => !c) }}
+                    onClick={e => { props?.setAsideShow() }}
                 />
             </div>
             <Search {...{ ...props, view, setView }} />

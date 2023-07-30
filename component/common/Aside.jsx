@@ -55,7 +55,7 @@ function AsideTable({ data, setAsideShow }) {
             <th>
                 <Link
                     href={`/stock/${n}`}
-                    onClick={e => setAsideShow(false)}
+                    onClick={e => setAsideShow()}
                 >{n}</Link>
             </th>
             <td align='right'>{Num(c)}</td>
@@ -71,7 +71,7 @@ function AsideGroup({ data, setAsideShow }) {
             <th>
                 <Link
                     href={`/group/${n}`}
-                    onClick={e => setAsideShow(false)}
+                    onClick={e => setAsideShow()}
                 ><GroupImg name={n} /></Link>
             </th>
             <td align='right'>{Price(c)}</td>
@@ -90,7 +90,7 @@ function StockList({ aside, setAsideShow }) {
         <div className={styles.box}>
             <Link
                 href="/stock/sum"
-                onClick={e => setAsideShow(false)}
+                onClick={e => setAsideShow()}
             >
                 <Logo size={18} />
                 <span className={styles.sum}>시가총액 순위</span>
@@ -101,7 +101,7 @@ function StockList({ aside, setAsideShow }) {
         <div className={styles.box}>
             <Link
                 href="/group"
-                onClick={e => setAsideShow(false)}
+                onClick={e => setAsideShow()}
             >
                 <Logo size={18} />
                 <span className={styles.sum}>그룹 순위</span>
@@ -112,7 +112,7 @@ function StockList({ aside, setAsideShow }) {
         <div className={styles.box}>
             <Link
                 href="/stock/up"
-                onClick={e => setAsideShow(false)}
+                onClick={e => setAsideShow()}
             >
                 <span className={styles.up}>오른종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
@@ -122,7 +122,7 @@ function StockList({ aside, setAsideShow }) {
         <div className={styles.box}>
             <Link
                 href="/stock/down"
-                onClick={e => setAsideShow(false)}
+                onClick={e => setAsideShow()}
             >
                 <span className={styles.down}>떨어진종목</span>
                 &nbsp;<span className='fa fa-chevron-right'></span>
@@ -194,10 +194,10 @@ export default function Aside(props) {
                 </div>
             </aside>
             <div className={styles.shadow}
-                onClick={e => setAsideShow(false)}
+                onClick={e => setAsideShow()}
             >
                 <button className='fa fa-close'
-                    onClick={e => setAsideShow(false)}
+                    onClick={e => setAsideShow()}
                 />
             </div>
         </>

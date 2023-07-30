@@ -71,7 +71,7 @@ export function User({ user, setAsideShow }) {
     if (cur.color == 'unranked') rankName = "IRON";
     return (
         <div className={styles.user}>
-            <Link href='/profile' onClick={e => setAsideShow(false)}>
+            <Link href='/profile' onClick={e => setAsideShow()}>
                 <div className={styles.id}>{id}</div>
                 <div className={styles.rank}>
                     {Lazy(<>
@@ -100,7 +100,7 @@ export function Alarms({ uid, setAsideShow }) {
             <Link
                 href={'/alarm'}
                 className={`fa fa-bell ${styles.alarm}`}
-                onClick={e => { if (setAsideShow) setAsideShow(false) }}
+                onClick={e => { if (setAsideShow) setAsideShow() }}
             >
                 {len ? <span data-count={len} /> : ''}
             </Link>

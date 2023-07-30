@@ -197,7 +197,7 @@ function MetaTable({
 }
 
 function StockQuery({
-    meta, price, stockPrice, loadStock, stockMeta,
+    meta, price, stockPrice, loadStock, setLoadStock, stockMeta,
     earn, share, other, pred, ids, ban,
 }) {
     const query = ['price', 'earn', 'share', 'pred'];
@@ -211,7 +211,7 @@ function StockQuery({
     return <>
         <ToggleQuery query={query} names={names} />
         {tab == 'price' ? <div>
-            <PriceElement stockPrice={stockPrice} loadStock={loadStock} />
+            <PriceElement stockPrice={stockPrice} loadStock={loadStock} setLoadStock={setLoadStock} />
             <LastUpdate last={stockPrice?.last} />
         </div> : tab == 'earn' ? <div>
             <EarnElement earn={earn?.data} meta={stockMeta} />
@@ -248,8 +248,6 @@ function Index(props) {
             })
             setStockPrice(prices[code]);
         }
-        setLoadStock({ price: false });
-        console.timeEnd('priceLoad');
     }
     async function fetchUser() {
         console.time('predBar');
@@ -282,7 +280,7 @@ function Index(props) {
         uid,
         last, router, ban: ban[code],
         userPred, loadUser, setPred,
-        stockPrice, loadStock,
+        stockPrice, loadStock, setLoadStock,
     };
 
     return (

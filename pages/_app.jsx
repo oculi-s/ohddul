@@ -10,9 +10,14 @@ import json from "@/module/json";
 import { getPageSize } from "#/base/base";
 import App from 'next/app'
 
+import asideStyles from '$/Common/Aside.module.scss';
+
+const setAsideShow = () => {
+	document?.querySelector('aside')?.classList?.toggle(asideStyles.show);
+}
+
 export default function Index({ Component, pageProps }) {
-	const [mobAside, setAsideShow] = useState(false);
-	pageProps = { ...pageProps, mobAside, setAsideShow };
+	pageProps = { ...pageProps, setAsideShow };
 	useEffect(() => { getPageSize(); }, [])
 	return (
 		<SessionProvider session={pageProps.session}>
@@ -32,7 +37,6 @@ export default function Index({ Component, pageProps }) {
  * 일단 trycatch를 썼는데 수정 필요
  */
 Index.getInitialProps = async function (ctx) {
-	const appProps = await App.getInitialProps(ctx);
 	let aside = {}, ban = [];
 	try {
 		aside = json.read(dir.stock.light.aside);
