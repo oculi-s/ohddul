@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import useDimensions from 'react-use-dimensions'
 import {
+    ema,
+    MovingAverageTooltip,
     bollingerBand,
     elderRay,
-    ema,
     discontinuousTimeScaleProviderBuilder,
     Chart,
     ChartCanvas,
@@ -14,7 +15,6 @@ import {
     CandlestickSeries,
     ElderRaySeries,
     LineSeries,
-    MovingAverageTooltip,
     OHLCTooltip,
     SingleValueTooltip,
     lastVisibleItemBasedZoomAnchor,
@@ -27,78 +27,62 @@ import {
     ZoomButtons,
     withDeviceRatio,
     withSize,
-    BollingerBandTooltip
+    BollingerBandTooltip,
+    BollingerSeries,
+    StackedBarSeries,
+    AlternatingFillAreaSeries,
+    AreaSeries,
+    GroupTooltip,
 } from "react-financial-charts";
 import scss from '$/variables.module.scss';
 import { Loading } from "#/base/base";
+import { H2R, Int, Price } from "@/module/ba";
 
-function PriceLine({ price }) {
-    if (!price?.length) return <Loading left="auto" right="auto" />;
-    price = price?.map(({ o, h, l, c, v, d }) => ({ open: o, high: h, low: l, close: c, v, d }));
-    const [ref, { width, height }] = useDimensions();
+const ws = [0, 20, 60, 120];
+const PriceChart = ({ price, width, height, addEarn, isGroup }) => {
+    // console.log(...price.slice(-2))
+    const [windowIndex, setBollinger] = useState(2);
+    const [isEarn, setEarn] = useState(false);
+    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.date));
+    const margin = { left: 0, right: 60, top: 0, bottom: 24 };
 
-    const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d.d));
-    const margin = { left: 0, right: 48, top: 0, bottom: 24 };
+    const bb = bollingerBand().id(1).options({ windowSize: ws[windowIndex] }).merge((d, c) => { d.bb = c; d.pb = (d.close - d.bb?.bottom) / (d.bb?.top - d.bb?.bottom) * 100; }).accessor(d => d.bb);
+    const pb = bollingerBand().id(2).options({ windowSize: ws[windowIndex] }).merge((d, c) => { d.bb = c; d.pb = (d.close - d.bb?.bottom) / (d.bb?.top - d.bb?.bottom) * 100; }).accessor(d => d.pb);
 
-    const ema20 = ema()
-        .id(1)
-        .options({ windowSize: 20 })
-        .merge((d, c) => { d.ema20 = c; })
-        .accessor((d) => d.ema20);
-    const ema60 = ema()
-        .id(2)
-        .options({ windowSize: 60 })
-        .merge((d, c) => { d.ema60 = c; })
-        .accessor((d) => d.ema60);
-    const ema120 = ema()
-        .id(3)
-        .options({ windowSize: 120 })
-        .merge((d, c) => { d.ema120 = c; })
-        .accessor((d) => d.ema120);
-    const bb20 = bollingerBand()
-        .id(4)
-        .options({ windowSize: 20 })
-        .merge((d, c) => { d.bb20 = c; })
-        .accessor(d => d.bb20?.top);
+    const bpsSeries = d => d.bps;
+    const epsSeries = d => d.eps;
 
-    const elder = elderRay();
-    const calculatedData = elder(ema120(ema60(ema20(bb20(price)))));
+    const calculatedData = bb(price);
     const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(price);
-    const yFormat = format(".0f");
+    // console.log(data);
+    const ohlcFormat = isGroup ? d => Price(d, 0, true) : format('d');
+    const yFormat = isGroup ? d => Price(d, 0, true) : format(".0f");
+    const pbFormat = d => `${d.toFixed(2)}%`;
     const max = xAccessor(data[data.length - 1]);
-    const min = xAccessor(data[Math.max(0, data.length - 100)]);
+    const min = xAccessor(data[Math.max(0, data.length - 300)]);
     const xExtents = [min, max + 5];
 
     const gridHeight = height - margin.top - margin.bottom;
 
-    const elderRayHeight = 100;
-    const elderRayOrigin = (_, h) => [0, h - elderRayHeight];
+    const subChartHeight = 100;
+    const subChartOrigin = (_, h) => [0, h - subChartHeight];
     const barChartHeight = gridHeight / 4;
-    const barChartOrigin = (_, h) => [0, h - barChartHeight - elderRayHeight];
-    const chartHeight = gridHeight - elderRayHeight;
-    const yExtents = (d) => [d.high, d.low];
-    const dateTimeFormat = "%m-%d";
+    const barChartOrigin = (_, h) => [0, h - barChartHeight - subChartHeight];
+    const chartHeight = gridHeight - subChartHeight;
+    const dateTimeFormat = "%Y-%m-%d";
     const timeDisplayFormat = timeFormat(dateTimeFormat);
 
     const barChartExtents = (d) => d.v;
-    const candleChartExtents = (d) => [d.high, d.low];
+    const candleChartExtents = isEarn ? (d) => [Math.max(d.high, d.bps, d.eps), Math.min(d.bps, d.eps, d.low)] : d => [d.high, d.low];
     const yEdgeIndicator = (d) => d.close;
 
     const volumeColor = (d) => {
-        return d.close > d.open
-            ? "rgba(38, 166, 154, 0.3)"
-            : "rgba(239, 83, 80, 0.3)";
+        return d.close > d.open ? "rgba(38, 166, 154, 0.3)" : "rgba(239, 83, 80, 0.3)";
     };
-
     const volumeSeries = (d) => d.v;
-    const openCloseColor = (data) => {
-        return data.close > data.open ? "#26a69a" : "#ef5350";
-    };
-
-    return <div
-        ref={ref}
-        style={{ width: '100%', height: '100%' }}
-    >
+    const openCloseColor = (d) => d.close > d.open ? "#26a69a" : "#ef5350";
+    const pbColor = (d) => H2R(d.pb < 50 ? "#26a69a" : "#ef5350", .3);
+    return <>
         <ChartCanvas
             ratio={3}
             height={height}
@@ -112,26 +96,35 @@ function PriceLine({ price }) {
             xExtents={xExtents}
             zoomAnchor={lastVisibleItemBasedZoomAnchor}
         >
-            <Chart
-                id={2}
-                height={barChartHeight}
-                origin={barChartOrigin}
-                yExtents={barChartExtents}
-            >
+            <Chart id={2} height={barChartHeight} origin={barChartOrigin} yExtents={barChartExtents}>
                 <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
             </Chart>
             <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
                 <XAxis showGridLines showTickLabel={false} gridLinesStrokeStyle={scss.bgMidBright} tickLabelFill={scss.textBright} />
                 <YAxis showGridLines tickFormat={yFormat} gridLinesStrokeStyle={scss.bgMidBright} tickLabelFill={scss.textBright} />
+
                 <CandlestickSeries />
-                <LineSeries yAccessor={bb20.accessor()} strokeStyle={bb20.stroke()} />
-                <CurrentCoordinate yAccessor={bb20.accessor()} fillStyle={bb20.stroke()} />
-                <LineSeries yAccessor={ema20.accessor()} strokeStyle={ema20.stroke()} />
-                <CurrentCoordinate yAccessor={ema20.accessor()} fillStyle={ema20.stroke()} />
-                <LineSeries yAccessor={ema60.accessor()} strokeStyle={ema60.stroke()} />
-                <CurrentCoordinate yAccessor={ema60.accessor()} fillStyle={ema60.stroke()} />
-                <LineSeries yAccessor={ema120.accessor()} strokeStyle={ema120.stroke()} />
-                <CurrentCoordinate yAccessor={ema120.accessor()} fillStyle={ema120.stroke()} />
+                {windowIndex ? <><BollingerSeries yAccessor={bb.accessor()} strokeStyle={bb.stroke()} />
+                    <CurrentCoordinate yAccessor={bb.accessor()} fillStyle={bb.stroke()} /></> : ''}
+
+                {addEarn && isEarn ? <><LineSeries yAccessor={bpsSeries} strokeStyle={scss.red} />
+                    <CurrentCoordinate yAccessor={bpsSeries} fillStyle={scss.red} />
+                    <LineSeries yAccessor={epsSeries} strokeStyle={scss.blue} />
+                    <CurrentCoordinate yAccessor={epsSeries} fillStyle={scss.blue} /></> : ''}
+
+                <OHLCTooltip origin={[8, 16]} textFill={openCloseColor} ohlcFormat={ohlcFormat} changeFormat={ohlcFormat} labelFill={scss.textBright} />
+                <BollingerBandTooltip origin={[8, 32]} options={bb.options()} onClick={e => setBollinger((windowIndex + 1) % ws.length)} displayFormat={yFormat} textFill={scss.textBright} />
+                {addEarn ? <GroupTooltip origin={[8, 48]} displayFormat={d => parseInt(d)} onClick={e => setEarn(!isEarn)}
+                    options={[{
+                        yAccessor: d => d.bps,
+                        yLabel: 'BPS',
+                        valueFill: scss.textBright,
+                    }, {
+                        yAccessor: d => d.eps,
+                        yLabel: 'EPS',
+                        valueFill: scss.textBright
+                    }]}
+                /> : ''}
                 <MouseCoordinateY rectWidth={margin.right} displayFormat={yFormat} />
                 <EdgeIndicator
                     itemType="last"
@@ -140,59 +133,41 @@ function PriceLine({ price }) {
                     lineStroke={openCloseColor}
                     displayFormat={yFormat}
                     yAccessor={yEdgeIndicator} />
-
-                <BollingerBandTooltip
-                    origin={[8, 72]}
-                    options={[{
-                        yAccessor: bb20.accessor(),
-                        stroke: bb20.stroke(),
-                        windowSize: bb20.options().windowSize
-                    }]}
-                />
-                <MovingAverageTooltip
-                    origin={[8, 24]}
-                    textFill={scss.textBright}
-                    options={[{
-                        yAccessor: ema20.accessor(),
-                        type: "EMA",
-                        stroke: ema20.stroke(),
-                        windowSize: ema20.options().windowSize
-                    }, {
-                        yAccessor: ema60.accessor(),
-                        type: "EMA",
-                        stroke: ema60.stroke(),
-                        windowSize: ema60.options().windowSize
-                    }, {
-                        yAccessor: ema120.accessor(),
-                        type: "EMA",
-                        stroke: ema120.stroke(),
-                        windowSize: ema120.options().windowSize
-                    },]} />
-                <ZoomButtons />
-                <OHLCTooltip origin={[8, 16]} textFill={scss.textBright} ohlcFormat={e => parseInt(e)} />
+                <ZoomButtons fill={scss.textColor} fillOpacity={.8} stroke="none" />
             </Chart>
-            <Chart
-                id={4}
-                height={elderRayHeight}
-                yExtents={[0, elder.accessor()]}
-                origin={elderRayOrigin}
-                padding={{ top: 8, bottom: 8 }}
-            >
+            <Chart id={4} height={subChartHeight} yExtents={[-20, 120]} origin={subChartOrigin} padding={{ top: 8, bottom: 8 }}>
                 <XAxis showGridLines gridLinesStrokeStyle={scss.bgMidBright} tickLabelFill={scss.textBright} />
-                <YAxis ticks={3} tickFormat={yFormat} tickLabelFill={scss.textBright} />
+                <YAxis ticks={3} tickFormat={pbFormat} tickLabelFill={scss.textBright} zoomEnabled={false} />
                 <MouseCoordinateX displayFormat={timeDisplayFormat} />
-                <MouseCoordinateY rectWidth={margin.right} displayFormat={yFormat} />
-                <ElderRaySeries yAccessor={elder.accessor()} />
-
-                <SingleValueTooltip
-                    yAccessor={elder.accessor()}
-                    yLabel="%B"
-                    // yDisplayFormat={(d) => `${yFormat(d.bullPower)}, ${yFormat(d.bearPower)}`}
-                    origin={[8, 16]} />
+                <MouseCoordinateY rectWidth={margin.right} displayFormat={pbFormat} />
+                <LineSeries yAccessor={pb.accessor()} strokeStyle={scss.textColor} />
+                <BarSeries yAccessor={pb.accessor()} baseAt={50} fillStyle={pbColor} />
+                <SingleValueTooltip yAccessor={pb.accessor()} yLabel="%B" yDisplayFormat={pbFormat} origin={[8, 16]} valueFill={scss.textBright} />
+                <EdgeIndicator
+                    itemType="last"
+                    rectWidth={margin.right}
+                    yAccessor={pb.accessor()}
+                    displayFormat={pbFormat}
+                />
             </Chart>
             <CrossHairCursor />
         </ChartCanvas>
+    </>
+}
+
+function PriceLine({ price, addEarn, isGroup }) {
+    if (!price?.length) return <Loading left="auto" right="auto" />;
+    price = price?.map(({ o, h, l, c, v, d, bps, eps }) => ({
+        open: o, high: h, low: l, close: c, v, date: d, bps, eps,
+    }));
+    const [ref, { width, height }] = useDimensions();
+
+    return <div
+        ref={ref}
+        style={{ width: '100%', height: '100%' }}
+    >
+        <PriceChart width={width} height={height} price={price} addEarn={addEarn} isGroup={isGroup} />
     </div>
 }
 
-export default PriceLine;
+export default withDeviceRatio()(PriceLine);

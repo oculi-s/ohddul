@@ -129,16 +129,7 @@ function Group({
         } else {
             prices[code] = {};
             await api.json.read({ url: dir.stock.groups.price(code) })
-                .then(price => {
-                    prices[code].priceRaw = price;
-                })
-            for (let num of nums) {
-                await api.json.read({
-                    url: dir.stock.chart.group(code, num)
-                }).then(price => {
-                    prices[code][num] = price;
-                })
-            }
+                .then(price => { prices[code] = price.data; })
             setGroupPrice(prices[code]);
         }
         setLoad({ price: false });

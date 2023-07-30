@@ -1,6 +1,6 @@
 import Help from '#/base/Help';
 import GroupTreeMap from '#/chart/GroupTreeMap';
-import PriceLine from '#/chart/PriceLine';
+import PriceLine from '#/chart/TradeChart';
 import styles from '$/Group/Group.module.scss';
 import { priceHelp } from './HelpDescription';
 
@@ -8,11 +8,11 @@ function GroupPriceElement({
     group, meta, price,
     groupPrice, load
 }) {
-    const prices = [groupPrice];
+    console.log(groupPrice[0]);
     return <>
-        <h3>수정주가 차트<Help {...priceHelp} /></h3>
+        <h3>시가총액 차트</h3>
         <div className={styles.priceChart}>
-            <PriceLine prices={prices} load={load} />
+            <PriceLine price={groupPrice} addEarn={false} isGroup={true} />
         </div>
         <h3>구성 비율</h3>
         <div className={styles.groupChart}>

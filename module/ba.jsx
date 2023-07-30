@@ -43,13 +43,12 @@ export const Color = (a = 0, b = 0) => {
     return a == b ? '' : a > b ? 'red' : 'blue';
 }
 
-export const Price = (v = 0, f = 1) => {
-    if (v > 100000000) v /= 100000000;
-    if (v > 10000)
+export const Price = (v = 0, f = 1, sym = false) => {
+    if (Math.abs(v) > 100000000) v /= 100000000;
+    if (Math.abs(v) > 10000)
         return `${NumFix(v / 10000, f)}조`;
-    return `${Num(v)}억`;
+    return `${sym ? (v > 0 ? '+' : '') : ''}${Num(v)}억`;
 }
-
 
 /**
  * cur - prev / prev의 퍼센트를 구하는 지표
