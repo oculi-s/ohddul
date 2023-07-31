@@ -16,20 +16,18 @@ function ShareTable({ meta, share, stockMeta }) {
     useEffect(() => {
         if (share?.length) {
             let res = 0;
-            const tot = share.map(e => e.amount).sum();
             const total = stockMeta?.a;
-            var rt = false//tot > total;
             const data = share
                 ?.filter(e => e?.amount / stockMeta?.a > 0.001)
                 ?.map((e, i) => {
-                    let { no, name, amount, date, rate } = e;
-                    res += rt ? rate || 0 : amount;
+                    let { no, name, amount, date } = e;
+                    res += amount;
                     const code = meta?.index[name];
                     if (code) {
                         name = <Link href={`/stock/${code}`}>{name}</Link>;
                     }
                     return <tr key={i}>
-                        <th>{name}</th><td>{rt ? Div(rate, 100, 1) : Div(amount, total, 1)}</td>
+                        <th>{name}</th><td>{Div(amount, total, 1)}</td>
                         <td className={styles.date}>
                             <Link
                                 href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${no}`}
@@ -40,7 +38,7 @@ function ShareTable({ meta, share, stockMeta }) {
                 });
             setFoot(<tr>
                 <th>전체</th>
-                <th>{rt ? Div(res, 100) : Div(res, stockMeta?.a)}</th>
+                <th>{Div(res, stockMeta?.a)}</th>
                 <th>-</th>
             </tr>)
             setData(data);
@@ -113,19 +111,24 @@ function OtherTable({ meta, share, price }) {
     </div>
 }
 
-function ShareElement({ meta, price, stockMeta, share, other }) {
-    console.log(share, other);
+function ShareElement({ meta, price, stockMeta, share, other, load }) {
     share = share?.sort((b, a) => a.amount - b.amount);
     return <div>
         <h3>지분 차트<Help {...overflowHelp} />
         </h3>
         <div className={styles.share}>
-            <ShareDonut share={share} meta={stockMeta} />
-            <ShareTable share={share} meta={meta} stockMeta={stockMeta} />
+            {load.share
+                ? <Loading />
+                : <ShareDonut share={share} meta={stockMeta} />}
+            {load.share
+                ? <Loading />
+                : <ShareTable share={share} meta={meta} stockMeta={stockMeta} />}
         </div>
         <h3>이 회사가 보유한 다른 회사의 주식</h3>
         <div className={styles.share}>
-            <OtherTable share={other} meta={meta} price={price} />
+            {load.other
+                ? <Loading />
+                : <OtherTable share={other} meta={meta} price={price} />}
         </div>
     </div>;
 }

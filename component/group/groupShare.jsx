@@ -57,7 +57,7 @@ const GroupShareFlow = ({ share, group }) => {
         <div className="shareMermaid" style={{ width }}>
             <div ref={ref} id={`flow${cnt++}`} className="d">{share?.chart}</div>
             {chartLoad
-                ? <Loading left="auto" right="auto" />
+                ? <Loading />
                 : <div dangerouslySetInnerHTML={{ __html: data }} ref={chartRef} style={{ width }}></div>
             }
         </div>

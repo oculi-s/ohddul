@@ -133,7 +133,7 @@ export async function getServerSideProps(ctx) {
 function MetaTable({
     stockMeta: meta, pred, last, earn,
 }) {
-    earn = earn.data;
+    earn = earn?.data || [];
     earn?.qsort(dt.lsort);
 
     const amount = meta?.a;
@@ -211,13 +211,13 @@ function StockQuery({
     return <>
         <ToggleQuery query={query} names={names} />
         {tab == 'price' ? <div>
-            <PriceElement stockPrice={stockPrice} loadStock={loadStock} setLoadStock={setLoadStock} />
+            <PriceElement stockPrice={stockPrice} load={loadStock} setLoad={setLoadStock} />
             <LastUpdate last={stockPrice?.last} />
         </div> : tab == 'earn' ? <div>
-            <EarnElement earn={earn?.data} meta={stockMeta} />
+            <EarnElement earn={earn?.data} meta={stockMeta} load={loadStock} setLoad={setLoadStock} />
             <LastUpdate last={earn?.last} />
         </div> : tab == 'share' ? <div>
-            <ShareElement meta={meta} share={share?.data} other={other?.data} price={price} stockMeta={stockMeta} />
+            <ShareElement meta={meta} share={share?.data} other={other?.data} price={price} stockMeta={stockMeta} load={loadStock} setLoad={setLoadStock} />
             <LastUpdate last={share?.last} />
         </div> : <div>
             <PredElement meta={meta} ids={ids} pred={pred} />
@@ -235,16 +235,18 @@ function Index(props) {
     const [share, setShare] = useState([]);
     const [other, setOther] = useState([]);
     const [loadUser, setLoadUser] = useState({ pred: true });
-    const [loadStock, setLoadStock] = useState({ price: true });
+    const [loadStock, setLoadStock] = useState({ price: true, earn: true, share: true, pred: true });
     const uid = props?.session?.user?.uid;
+
     async function fetchPrice(code) {
-        console.time('priceLoad');
-        setLoadStock({ price: true });
+        loadStock.price = true;
+        setLoadStock(loadStock);
         if (prices[code]) {
             setStockPrice(prices[code]);
         } else {
+            console.time('priceLoad');
             setStockPrice()
-            api.json.read({
+            await api.json.read({
                 url: dir.stock.light.price(code)
             }).then(price => {
                 prices[code] = price;
@@ -252,6 +254,8 @@ function Index(props) {
                 console.timeEnd('priceLoad');
             })
         }
+        loadStock.price = false;
+        setLoadStock(loadStock)
     }
     async function fetchUser() {
         console.time('predBar');
@@ -270,49 +274,64 @@ function Index(props) {
     }
 
     async function fetchEarn(code) {
-        console.time('earnLoad');
+        loadStock.earn = true;
+        setLoadStock(loadStock);
         if (earns[code]) {
             setEarn(earns[code]);
         } else {
-            api.json.read({
+            console.time('earnLoad');
+            setEarn();
+            await api.json.read({
                 url: dir.stock.light.earn(code)
             }).then(earn => {
                 setEarn(earn);
                 earns[code] = earn;
+                console.timeEnd('earnLoad');
             })
-            console.timeEnd('earnLoad');
         }
+        loadStock.earn = false;
+        setLoadStock(loadStock)
     }
 
     async function fetchShare(code) {
-        console.time('shareLoad');
+        loadStock.share = true;
+        setLoadStock(loadStock);
         if (shares[code]) {
             setShare(shares[code]);
         } else {
-            api.json.read({
+            setShare();
+            console.time('shareLoad');
+            await api.json.read({
                 url: dir.stock.light.share(code)
             }).then(share => {
                 share.data = share.data.filter(e => e.amount);
                 setShare(share);
                 shares[code] = share;
+                console.timeEnd('shareLoad');
             })
-            console.timeEnd('shareLoad');
         }
+        loadStock.share = false;
+        setLoadStock(loadStock);
     }
 
     async function fetchOther(code) {
-        console.time('otherLoad');
+        loadStock.other = true;
+        setLoadStock(loadStock);
         if (others[code]) {
             setOther(others[code]);
         } else {
-            api.json.read({
+            setOther();
+            console.time('otherLoad');
+            await api.json.read({
                 url: dir.stock.other(code)
             }).then(other => {
                 setOther(other);
                 others[code] = other;
+                console.timeEnd('otherLoad');
             })
-            console.timeEnd('otherLoad');
         }
+        loadStock.other = false;
+        setLoadStock(loadStock);
     }
 
     useEffect(() => {

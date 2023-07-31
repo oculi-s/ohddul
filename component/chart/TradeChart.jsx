@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 import {
+    ema,
     bollingerBand,
     discontinuousTimeScaleProviderBuilder,
     Chart,
@@ -25,19 +26,29 @@ import {
     BollingerBandTooltip,
     BollingerSeries,
     GroupTooltip,
+    LabelAnnotation,
 } from "react-financial-charts";
 import scss from '$/variables.module.scss';
 import { Loading } from "#/base/base";
 import { H2R, Price } from "@/module/ba";
 import stockstyles from '$/Stock/Stock.module.scss';
+import groupstyles from '$/Group/Group.module.scss';
 
 const ws = [0, 20, 60, 120];
 const margin = { left: 0, right: 60, top: 0, bottom: 24 };
 const ScaleProvider = discontinuousTimeScaleProviderBuilder().inputDateAccessor((d) => new Date(d?.d));
 const bpsSeries = d => d.bps;
 const epsSeries = d => d.eps;
-const bbs = ws.map((e, i) => bollingerBand().id(1).options({ windowSize: ws[i] }).merge((d, c) => { d.bb = c; d.pb = (d.close - d.bb?.bottom) / (d.bb?.top - d.bb?.bottom) * 100; }).accessor(d => d.bb));
-const pbs = ws.map((e, i) => bollingerBand().id(2).options({ windowSize: ws[i] }).merge((d, c) => { d.bb = c; d.pb = (d.close - d.bb?.bottom) / (d.bb?.top - d.bb?.bottom) * 100; }).accessor(d => d.pb));
+const bbs = ws.map((e, i) => bollingerBand()
+    .id(1)
+    .options({ windowSize: ws[i] })
+    .merge((d, c) => {
+        d.bb = c;
+        d.pb = (d.close - d.bb?.bottom) / (d.bb?.top - d.bb?.bottom) * 100;
+    })
+    .accessor(d => d.bb)
+);
+const mapb = ema().id(3).options({ windowSize: 12, sourcePath: 'pb' }).merge((d, c) => { d.ma = c; });
 
 // const barChartExtents = (d) => d.v;
 // const volumeColor = (d) => H2R(d.close > d.open ? scss.tradeUp : scss.tradeDown, .3);
@@ -60,8 +71,9 @@ const zoomButtonStyles = {
     textFill: "#9EAAC7"
 };
 
-function PriceChart({ width, height, price, addEarn, isGroup, load, setLoad,
-    data, xScale, xAccessor, displayXAccessor, windowIndex, setBollinger, isEarn, setEarn, bb, pb,
+function PriceChart({
+    width, height, addEarn, isGroup, load, setLoad,
+    data, xScale, xAccessor, displayXAccessor, windowIndex, setBollinger, isEarn, setEarn, bb,
 }) {
     const max = xAccessor(data[data.length - 1]);
     const min = xAccessor(data[Math.max(0, data.length - 300)]);
@@ -82,11 +94,12 @@ function PriceChart({ width, height, price, addEarn, isGroup, load, setLoad,
     const candleChartExtents = isEarn ? (d) => [Math.max(d.high, d.bps, d.eps), Math.min(d.bps, d.eps, d.low)] : d => [d.high, d.low];
 
     async function makeFixed(e) {
-        const par = e.target?.closest(`.${stockstyles.priceChart}`);
+        const par = e.target?.closest(`.${stockstyles.priceChart}, .${groupstyles.priceChart}`);
         par?.classList?.toggle(stockstyles.fixed);
+        par?.classList?.toggle(groupstyles.fixed);
     }
 
-    if (!data?.length) return <Loading left="auto" right="auto" />
+    if (!data?.length) return <Loading />
     return <ChartCanvas
         ratio={3}
         height={height}
@@ -107,7 +120,8 @@ function PriceChart({ width, height, price, addEarn, isGroup, load, setLoad,
             </Chart> */}
         <Chart id={3} height={chartHeight} yExtents={candleChartExtents} >
             <XAxis showGridLines showTickLabel={false} gridLinesStrokeStyle={scss.bgMidBright} tickLabelFill={scss.textBright} className="d" />
-            <YAxis showGridLines {...axisStyles} tickFormat={yFormat} />
+            <YAxis showGridLines {...axisStyles} tickFormat={yFormat} fontSize={14} />
+            <LabelAnnotation xAccessor={xAccessor} xScale={xScale} text={'123'} x={max} />
 
             <CandlestickSeries />
             {windowIndex ? <><BollingerSeries yAccessor={bb.accessor()} strokeStyle={bb.stroke()} />
@@ -126,56 +140,30 @@ function PriceChart({ width, height, price, addEarn, isGroup, load, setLoad,
                     { yAccessor: d => d.eps, yLabel: 'EPS', valueFill: scss.textBright }
                 ]} /> : ''}
             <MouseCoordinateY rectWidth={margin.right} displayFormat={yFormat} />
-            <EdgeIndicator
-                itemType="last"
-                rectWidth={margin.right}
-                fill={openCloseColor}
-                lineStroke={openCloseColor}
-                displayFormat={yFormat}
-                yAccessor={yEdgeIndicator} />
+            <EdgeIndicator itemType="last" rectWidth={margin.right} fill={openCloseColor} lineStroke={openCloseColor} displayFormat={yFormat} yAccessor={yEdgeIndicator} />
             <ZoomButtons {...zoomButtonStyles} onReset={e => { console.log(e.target) }} />
         </Chart>
         <Chart id={4} height={subChartHeight} yExtents={[-20, 120]} origin={subChartOrigin} padding={{ top: 8, bottom: 8 }}>
             <XAxis showGridLines gridLinesStrokeStyle={scss.bgMidBright} tickLabelFill={scss.textBright} />
-            <YAxis ticks={3} tickFormat={pbFormat} tickLabelFill={scss.textBright} zoomEnabled={false} />
+            <YAxis ticks={3} tickLabelFill={scss.textBright} zoomEnabled={false} fontSize={14} />
+
             <MouseCoordinateX displayFormat={timeDisplayFormat} />
             <MouseCoordinateY rectWidth={margin.right} displayFormat={pbFormat} />
-            <LineSeries yAccessor={pb.accessor()} strokeStyle={scss.textColor} />
-            <BarSeries yAccessor={pb.accessor()} baseAt={50} fillStyle={pbColor} />
-            <SingleValueTooltip yAccessor={pb.accessor()} yLabel="%B" yDisplayFormat={pbFormat} origin={[8, 16]} valueFill={scss.textBright} />
-            <EdgeIndicator
-                itemType="last"
-                rectWidth={margin.right}
-                yAccessor={pb.accessor()}
-                displayFormat={pbFormat} />
+            <LineSeries yAccessor={d => d.ma} strokeStyle={scss.textColor} />
+            <LineSeries yAccessor={d => 90} strokeDasharray="ShortDash2" strokeStyle={H2R(scss.tradeDown, .8)} />
+            <LineSeries yAccessor={d => 10} strokeDasharray="ShortDash2" strokeStyle={H2R(scss.tradeUp, .8)} />
+            <BarSeries yAccessor={d => d.pb} baseAt={50} fillStyle={pbColor} />
+            <SingleValueTooltip yAccessor={d => d.pb} yLabel="%B" yDisplayFormat={pbFormat} origin={[8, 16]} valueFill={scss.textBright} />
+            <EdgeIndicator itemType="last" rectWidth={margin.right} yAccessor={d => d.pb} displayFormat={pbFormat} />
         </Chart>
         <CrossHairCursor />
     </ChartCanvas>;
 }
 
-import PropTypes from "prop-types";
-
-PriceChart.propTypes = {
-    dateTimeFormat: PropTypes.string,
-    height: PropTypes.number,
-    margin: PropTypes.object,
-    priceDisplayFormat: PropTypes.func,
-    ratio: PropTypes.number,
-    width: PropTypes.number
-};
-
-PriceChart.defaultProps = {
-    dateTimeFormat: "%d %b '%y \xa0 %H:%M",
-    margin: { left: 0, right: 48, top: 0, bottom: 24 },
-    priceDisplayFormat: format(".2f"),
-    ratio: 0,
-};
-
 function PriceLine(props) {
     const price = props?.price;
     const [windowIndex, setBollinger] = useState(2);
     const [isEarn, setEarn] = useState(false);
-    const pb = pbs[windowIndex];
     const bb = bbs[windowIndex];
     if (!price?.find(e => true)?.open) {
         price?.forEach((e) => {
@@ -186,17 +174,17 @@ function PriceLine(props) {
         });
     }
     if (price) {
-        bb(price);
+        mapb(bb(price));
         props = {
             ...props, ...ScaleProvider(price),
             windowIndex, setBollinger, isEarn, setEarn,
-            bb, pb
+            bb
         };
     }
     return (
         <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            {!price
-                ? <Loading left="auto" right="auto" />
+            {!price || props?.load?.price
+                ? <Loading />
                 : <PriceChart {...props} />}
         </div>
     )

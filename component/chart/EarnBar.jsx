@@ -9,6 +9,7 @@ import scss from '$/variables.module.scss';
 import { Int } from '@/module/ba';
 import merge from 'deepmerge';
 import '@/module/array';
+import { Loading } from '#/base/base';
 
 const defaultOptions = {
     plugins: {
@@ -31,12 +32,13 @@ const defaultOptions = {
 
 const plugins = [hairline];
 
-function EarnChart({ earn, meta }) {
+function EarnChart({ earn, meta, load }) {
+    console.log(load);
     const amount = meta?.a || 1;
-    earn = earn.qsort((a, b) => new Date(a.date) - new Date(b.date));
-    const labels = earn.map(e => e.date);
-    const profitData = earn.map(e => Math.round(e.profit / amount));
-    const equityData = earn.map(e => Math.round(e.equity / amount));
+    earn = earn?.qsort((a, b) => new Date(a.date) - new Date(b.date));
+    const labels = earn?.map(e => e.date);
+    const profitData = earn?.map(e => Math.round(e.profit / amount));
+    const equityData = earn?.map(e => Math.round(e.equity / amount));
 
     const [options, setOptions] = useState(defaultOptions);
     const [equity, setEquity] = useState({ labels: [], datasets: [] });
@@ -73,18 +75,22 @@ function EarnChart({ earn, meta }) {
     return (
         <div className={styles.wrap}>
             <div className={styles.chart}>
-                {earn.length ? <Bar
-                    plugins={plugins}
-                    options={options}
-                    data={equity}
-                /> : NULL}
+                {load.earn
+                    ? <Loading />
+                    : earn?.length ? <Bar
+                        plugins={plugins}
+                        options={options}
+                        data={equity}
+                    /> : NULL}
             </div>
             <div className={styles.chart}>
-                {earn.length ? <Bar
-                    plugins={plugins}
-                    options={options}
-                    data={profit}
-                /> : NULL}
+                {load.earn
+                    ? <Loading />
+                    : earn?.length ? <Bar
+                        plugins={plugins}
+                        options={options}
+                        data={profit}
+                    /> : NULL}
             </div>
         </div>
     )

@@ -55,13 +55,15 @@ export function Collapse({ title, children }) {
 }
 
 export const Loading = ({
-    left = 'auto', right = 10, size = 60
+    left = 'auto', right = 'auto', size = 60
 }) => {
     return <div
         className={styles.spinner}
         style={{
             marginRight: right,
             marginLeft: left,
+            marginTop: 'auto',
+            marginBottom: 'auto'
         }}
     >
         <div

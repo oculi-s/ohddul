@@ -65,11 +65,11 @@ function BBTable({ stockPrice = [] }) {
     </table>;
 }
 
-const PriceElement = ({ stockPrice, loadStock, setLoadStock }) => {
+const PriceElement = ({ stockPrice, load, setLoad }) => {
     return <>
         <h3>가격차트</h3>
         <div className={styles.priceChart}>
-            <PriceLine price={stockPrice?.data} load={loadStock} setLoad={setLoadStock} addEarn={true} />
+            <PriceLine price={stockPrice?.data} load={load} setLoad={setLoad} addEarn={true} />
         </div>
         <p className='des'>* 더블클릭시 전체화면으로 전환됩니다.</p>
         <h3>가격지표</h3>

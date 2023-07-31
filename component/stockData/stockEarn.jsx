@@ -10,7 +10,7 @@ import { Bar } from '#/base/base';
 import Link from 'next/link';
 import { MoreTable } from '#/base/Pagination';
 
-function EarnTable({ meta, earn }) {
+function EarnTable({ meta, earn, load }) {
     if (!earn?.length) return;
 
     const amount = meta?.a;
@@ -108,12 +108,11 @@ function EarnTable({ meta, earn }) {
     </div>;
 }
 
-function EarnElement({ earn, meta }) {
-    console.log(earn);
+function EarnElement({ earn, meta, load, setLoad }) {
     return <>
         <h3>실적 차트</h3>
-        <EarnChart earn={earn} meta={meta} y={true} />
-        <EarnTable earn={earn} meta={meta} />
+        <EarnChart earn={earn} meta={meta} y={true} load={load} setLoad={setLoad} />
+        <EarnTable earn={earn} meta={meta} load={load} setLoad={setLoad} />
     </>;
 }
 

@@ -38,6 +38,15 @@
         position: relative;
         overflow: hidden;
         border-radius: 10px;
+        z-index: 1;
+
+        &.fixed {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .groupChart {
