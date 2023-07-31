@@ -54,13 +54,13 @@ export async function getServerSideProps(ctx) {
     const stockMeta = Meta?.data[code] || false;
     props = { ...props, stockMeta, earn, share };
     // if (tab == 'earn') {
-    earn = json.read(dir.stock.light.earn(code));
-    props = { ...props, earn };
+    // earn = json.read(dir.stock.light.earn(code));
+    // props = { ...props, earn };
     // } else if (tab == 'share') {
     share = json.read(dir.stock.light.share(code));
     other = json.read(dir.stock.other(code));
     share.data = share.data?.filter(e => e.amount);
-    props = { ...props, share, other };
+    // props = { ...props, share, other };
     // } else if (tab == 'pred') {
     const pred = json.read(dir.stock.pred(code));
     props = { ...props, pred };
@@ -131,7 +131,7 @@ export async function getServerSideProps(ctx) {
  *  
 */
 function MetaTable({
-    stockMeta: meta, pred, last, earn = { data: [] },
+    stockMeta: meta, pred, last, earn,
 }) {
     earn = earn.data;
     earn?.qsort(dt.lsort);
@@ -140,7 +140,7 @@ function MetaTable({
     const total = amount * last?.c;
     const EPS = (last?.eps || 0);
     const BPS = (last?.bps || 0);
-    const ROE = Div(earn?.slice(-4)?.map(e => e?.profit).sum(), earn.slice(-1)?.find(e => true)?.equity);
+    const ROE = Div(earn?.slice(-4)?.map(e => e?.profit).sum(), earn?.slice(-1)?.find(e => true)?.equity);
     const revenueSum = Object.values(earn)?.map(e => e?.revenue)?.sum();
     const profitSum = Object.values(earn)?.map(e => e?.profit)?.sum();
 
@@ -225,12 +225,15 @@ function StockQuery({
     </>
 }
 
-const prices = {};
+const prices = {}, earns = {}, shares = {}, others = {};
 function Index(props) {
     const { meta, price, ban, code, stockMeta, tab } = props;
     const router = useRouter();
     const [userPred, setPred] = useState();
     const [stockPrice, setStockPrice] = useState({});
+    const [earn, setEarn] = useState({ data: [] });
+    const [share, setShare] = useState([]);
+    const [other, setOther] = useState([]);
     const [loadUser, setLoadUser] = useState({ pred: true });
     const [loadStock, setLoadStock] = useState({ price: true });
     const uid = props?.session?.user?.uid;
@@ -240,13 +243,14 @@ function Index(props) {
         if (prices[code]) {
             setStockPrice(prices[code]);
         } else {
-            prices[code] = {};
-            await api.json.read({
+            setStockPrice()
+            api.json.read({
                 url: dir.stock.light.price(code)
             }).then(price => {
                 prices[code] = price;
+                setStockPrice(price);
+                console.timeEnd('priceLoad');
             })
-            setStockPrice(prices[code]);
         }
     }
     async function fetchUser() {
@@ -265,9 +269,57 @@ function Index(props) {
         console.timeEnd('predBar');
     }
 
+    async function fetchEarn(code) {
+        console.time('earnLoad');
+        if (earns[code]) {
+            setEarn(earns[code]);
+        } else {
+            api.json.read({
+                url: dir.stock.light.earn(code)
+            }).then(earn => {
+                setEarn(earn);
+                earns[code] = earn;
+            })
+            console.timeEnd('earnLoad');
+        }
+    }
+
+    async function fetchShare(code) {
+        console.time('shareLoad');
+        if (shares[code]) {
+            setShare(shares[code]);
+        } else {
+            api.json.read({
+                url: dir.stock.light.share(code)
+            }).then(share => {
+                share.data = share.data.filter(e => e.amount);
+                setShare(share);
+                shares[code] = share;
+            })
+            console.timeEnd('shareLoad');
+        }
+    }
+
+    async function fetchOther(code) {
+        console.time('otherLoad');
+        if (others[code]) {
+            setOther(others[code]);
+        } else {
+            api.json.read({
+                url: dir.stock.other(code)
+            }).then(other => {
+                setOther(other);
+                others[code] = other;
+            })
+            console.timeEnd('otherLoad');
+        }
+    }
+
     useEffect(() => {
         fetchUser();
         if (tab == 'price') fetchPrice(code);
+        if (tab == 'earn') fetchEarn(code);
+        if (tab == 'share') fetchShare(code), fetchOther(code);
     }, [code, tab])
 
     if (!meta?.data) return;
@@ -281,6 +333,7 @@ function Index(props) {
         last, router, ban: ban[code],
         userPred, loadUser, setPred,
         stockPrice, loadStock, setLoadStock,
+        earn, share, other,
     };
 
     return (

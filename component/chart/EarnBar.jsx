@@ -1,4 +1,5 @@
 import 'chartjs-adapter-date-fns';
+import 'chart.js/auto'
 import styles from '$/Chart/Earn.module.scss';
 import { Bar } from "react-chartjs-2";
 import { hairline } from '../../module/chart/plugins';

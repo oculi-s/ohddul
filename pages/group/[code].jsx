@@ -113,26 +113,28 @@ function Group({
     meta, price, code, index, induty, earn, share
 }) {
     const router = useRouter();
-    const nums = [20, 60, 120];
     const [load, setLoad] = useState({ price: true });
-    const [groupPrice, setGroupPrice] = useState({});
+    const [groupPrice, setGroupPrice] = useState([]);
 
-    const props = { group, tab, meta, price, earn, share, index, induty, router, code, load, groupPrice };
+    const props = { group, tab, meta, price, earn, share, index, induty, router, code, load, setLoad, groupPrice };
     const query = ['price', 'earn', 'share'];
     const names = ['주가정보', '실적정보', '출자구조'];
 
     async function fetchPrice() {
         console.time('groupPriceLoad');
-        setLoad({ price: true });
         if (prices[code]) {
             setGroupPrice(prices[code]);
         } else {
+            setLoad({ price: true });
             prices[code] = {};
-            await api.json.read({ url: dir.stock.groups.price(code) })
-                .then(price => { prices[code] = price.data; })
-            setGroupPrice(prices[code]);
+            await api.json.read({
+                url: dir.stock.groups.price(code)
+            }).then(price => {
+                prices[code] = price.data;
+                setGroupPrice(price.data);
+            })
+            setLoad({ price: false });
         }
-        setLoad({ price: false });
         console.timeEnd('groupPriceLoad');
     }
 

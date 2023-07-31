@@ -34,6 +34,9 @@ const withTM = require('next-transpile-modules')([
 
 const nextConfig = {
   reactStrictMode: false,
+  compiler: {
+    styledComponents: true,
+  },
   webpack5: true,
   webpack: (config) => {
     config.module.rules.push({

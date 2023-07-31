@@ -11,12 +11,21 @@
 }
 
 .priceChart {
-    height: 420px;
+    height: 600px;
     background: $bgMidDark;
     padding: 20px;
     border-radius: 10px;
     box-sizing: border-box;
     overflow-y: hidden;
+
+    &.fixed {
+        position: fixed;
+        top: $navHeight;
+        left: 0;
+        width: 100%;
+        height: calc(100% - #{$navHeight});
+        z-index: 1;
+    }
 }
 
 .priceTable {
@@ -111,5 +120,9 @@
         >* {
             max-width: unset;
         }
+    }
+
+    .priceChart {
+        height: 400px;
     }
 }

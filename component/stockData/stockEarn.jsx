@@ -11,10 +11,10 @@ import Link from 'next/link';
 import { MoreTable } from '#/base/Pagination';
 
 function EarnTable({ meta, earn }) {
-    if (!earn.length) return;
+    if (!earn?.length) return;
 
     const amount = meta?.a;
-    earn = earn.qsort(dt.sort);
+    earn = earn?.qsort(dt.sort);
     const head = <tr>
         <th>분기</th>
         <th>자본</th>
@@ -109,6 +109,7 @@ function EarnTable({ meta, earn }) {
 }
 
 function EarnElement({ earn, meta }) {
+    console.log(earn);
     return <>
         <h3>실적 차트</h3>
         <EarnChart earn={earn} meta={meta} y={true} />

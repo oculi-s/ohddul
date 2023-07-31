@@ -67,7 +67,7 @@ function OtherTable({ meta, share, price }) {
     const [data, setData] = useState();
     useEffect(() => {
         if (share?.length) {
-            share.sort((b, a) =>
+            share?.sort((b, a) =>
                 price[a.from]?.c * a.amount - price[b.from]?.c * b.amount)
             const data = share
                 ?.map((e, i) => {
@@ -114,7 +114,8 @@ function OtherTable({ meta, share, price }) {
 }
 
 function ShareElement({ meta, price, stockMeta, share, other }) {
-    share = share.sort((b, a) => a.amount - b.amount);
+    console.log(share, other);
+    share = share?.sort((b, a) => a.amount - b.amount);
     return <div>
         <h3>지분 차트<Help {...overflowHelp} />
         </h3>
