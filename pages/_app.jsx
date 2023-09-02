@@ -25,7 +25,15 @@ export default function Index({ Component, pageProps }) {
 			<Nav {...pageProps} />
 			<Aside {...pageProps} />
 			<main>
+				<ins className="kakao_ad_area" style={{ marginBottom: 10 }}
+					data-ad-unit="DAN-x6nBfAkOv0q7zNPV"
+					data-ad-width="320"
+					data-ad-height="100"></ins>
 				<Component {...pageProps} />
+				<ins className="kakao_ad_area" style={{ marginTop: 10 }}
+					data-ad-unit="DAN-x6nBfAkOv0q7zNPV"
+					data-ad-width="320"
+					data-ad-height="100"></ins>
 			</main>
 			<Footer />
 		</SessionProvider>
