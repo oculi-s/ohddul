@@ -31,8 +31,6 @@ function Index({ data, last, prev, count, name }) {
         </div>
         <table><tbody>
             <tr>
-                <th>%60</th>
-                <td className={Color(avg60 - last)}>{Div(last - avg60, avg60, 1)}</td>
                 <th>%B</th>
                 <td>{Div(last - bot60, top60 - bot60, 1)}</td>
                 <th>BW</th>

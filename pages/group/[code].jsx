@@ -122,10 +122,10 @@ function Group({
 
     async function fetchPrice() {
         console.time('groupPriceLoad');
+        setLoad({ price: true });
         if (prices[code]) {
             setGroupPrice(prices[code]);
         } else {
-            setLoad({ price: true });
             prices[code] = {};
             await api.json.read({
                 url: dir.stock.groups.price(code)
@@ -133,8 +133,8 @@ function Group({
                 prices[code] = price.data;
                 setGroupPrice(price.data);
             })
-            setLoad({ price: false });
         }
+        setLoad({ price: false });
         console.timeEnd('groupPriceLoad');
     }
 
