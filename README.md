@@ -1,10 +1,19 @@
 ## 주식 가격을 예측하고 점수를 쌓는 커뮤니티
 
-<a href="https://ohddul.com" target=blank align="center">
-<img src='./public/android-chrome-512x512.png' width=100>
-</a>
-
-2023년 개발한 주식커뮤니티 오떨의 소스코드입니다.
+<div align="center">
+  <a href="https://ohddul.com">
+    <img src="./public/android-chrome-512x512.png" alt="Logo" width="80" height="80">
+  </a>
+  <h3 align="center">Ohddul</h3>
+  <p align="center">
+    주식가격을 예측고 점수를 쌓는 커뮤니티
+    <br />
+    <a href="https://ohddul.com"><strong>카카오로 가입하고 주식 가격 예측하기 »</strong></a>
+    <br/>
+    <br/>
+    상호명 오떨 · 대표명 김현식 · 사업자 등록번호 832-32-01348 · 통신판매 사업자 미등록
+  </p>
+</div>
 
 ### 개발정보
 1) DB control : File-system
