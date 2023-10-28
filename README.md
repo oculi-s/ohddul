@@ -1,4 +1,4 @@
-## 주식 가격을 예측하고 점수를 쌓는 커뮤니티
+## 오르고 떨어지고, 오떨
 
 <div align="center">
   <a href="https://ohddul.com">
