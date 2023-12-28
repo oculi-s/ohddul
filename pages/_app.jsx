@@ -26,6 +26,7 @@ export default function Index({ Component, pageProps }) {
 			<Aside {...pageProps} />
 			<main>
 				<p style={{ color: 'red', fontStyle: 'italic' }}>오떨 업데이트 진행중 (~2024.06)</p>
+				<p style={{ color: 'red', fontStyle: 'italic' }}>업데이트 기간동안 채점과 랭킹이 중단됩니다.</p>
 				<ins className="kakao_ad_area" style={{ marginBottom: 10 }}
 					data-ad-unit="DAN-x6nBfAkOv0q7zNPV"
 					data-ad-width="320"
