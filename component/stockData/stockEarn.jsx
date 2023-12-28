@@ -42,7 +42,6 @@ function EarnTable({ meta, earn, load }) {
         const PR = Div(profit, revenue);
         const ROE = avgYear[Y];
         var isRoe = Q == 4;
-        console.log(Y, Q, isRoe);
         if (ROE?.cnt < 4 && ROE?.cnt == Q) isRoe = true;
         return <tr key={i}>
             <th>

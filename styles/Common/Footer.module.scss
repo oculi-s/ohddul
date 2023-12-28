@@ -1,0 +1,21 @@
+@import '../variables.module.scss';
+
+.footer {
+    font-size: .8em;
+    height: 150px;
+    background: $bgMidDark;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.inner {
+    margin: 0 var(--side-margin);
+
+    p {
+        margin: 8px 0;
+    }
+
+    a {
+        margin-right: 5px;
+    }
+}

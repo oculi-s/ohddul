@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import styles from '$/Help/Help.module.scss';
 
 import json from '@/module/json';
@@ -36,11 +36,12 @@ export function Stock([code, name], i) {
 }
 
 function Help({ aside, tab, cnt, earn, none, ban }) {
+    const docsRef = useRef();
     const query = ['base', 'pred', 'score']//,'chart','community'];
     const names = ['기본정보', '예측방법', '고유점수']//, '차트보는법', '커뮤니티규칙'];
     return <>
-        <ToC />
-        <div className={styles.docs}>
+        <ToC docsRef={docsRef} />
+        <div className={styles.docs} ref={docsRef}>
             <span className={styles.title}>
                 예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
             </span>

@@ -33,7 +33,6 @@ const defaultOptions = {
 const plugins = [hairline];
 
 function EarnChart({ earn, meta, load }) {
-    console.log(load);
     const amount = meta?.a || 1;
     earn = earn?.qsort((a, b) => new Date(a.date) - new Date(b.date));
     const labels = earn?.map(e => e.date);

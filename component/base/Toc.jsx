@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from '$/Base/Toc.module.scss';
 import scss from '$/variables.module.scss';
 import { Int } from "@/module/ba";
@@ -60,10 +60,13 @@ function Headings({ headings, selected, click }) {
  * 
  * header의 scroll-margin-top이 navHeight+5px이기 때문
  */
-const ToC = () => {
+const ToC = ({ docsRef }) => {
     const router = useRouter();
     const [nestedHeadings, setHeading] = useState([]);
     const [selected, setSelected] = useState(0);
+    const initialdocsTop = docsRef?.current?.getBoundingClientRect()?.top;
+
+    const [tocpos, setTocpos] = useState({ position: 'absolute', top: initialdocsTop });
 
     function onclick(e) {
         e.preventDefault();
@@ -92,7 +95,13 @@ const ToC = () => {
             }, 300);
         }
         window.addEventListener('scroll', () => {
+            const docsTop = docsRef?.current?.getBoundingClientRect()?.top;
             const top = -document?.body?.getBoundingClientRect()?.top + Int(scss?.navHeight) + 8;
+            if (docsTop < 50) {
+                setTocpos({ position: 'fixed', top: Int(scss?.navHeight) });
+            } else {
+                setTocpos({ position: 'absolute', top: initialdocsTop });
+            }
             const at = headings?.find(e => e?.offsetTop >= top)
             const i = headings?.findIndex(e => e == at) - 1;
             if (i == -1) setSelected(0);
@@ -101,7 +110,7 @@ const ToC = () => {
         });
     }, [router?.query])
 
-    return <div className={styles.wrap}>
+    return <div className={styles.wrap} style={tocpos}>
         <div className={styles.toc}>
             <Headings
                 headings={nestedHeadings}
