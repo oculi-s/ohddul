@@ -18,7 +18,7 @@ export const stock = {
     share: code => encode(`&/${code}/share.json`),
     other: code => encode(`&/${code}/other.json`),
     pred: code => encode(`#/${code}.json`),
-    major: name => encode(`@/data/share/${name}.json`),
+    major: name => encode(`d/share/${name}.json`),
     light: {
         aside: encode('_/light/aside.json'),
         market: encode('_/light/market.json'),
@@ -35,12 +35,12 @@ export const stock = {
     },
     chart: {
         price: (code, num = 20) => encode(`&/${code}/priceChart${num}.json`),
-        group: (name, num = 20) => encode(`@/data/group/${name}/priceChart${num}.json`),
-        share: (name) => encode(`@/data/group/${name}/shareChart.json`),
+        group: (name, num = 20) => encode(`d/group/${name}/priceChart${num}.json`),
+        share: (name) => encode(`d/group/${name}/shareChart.json`),
     },
     groups: {
-        price: (name) => encode(`@/data/group/${name}/price.json`),
-        share: (name) => encode(`@/data/group/${name}/share.json`),
+        price: (name) => encode(`d/group/${name}/price.json`),
+        share: (name) => encode(`d/group/${name}/share.json`),
     },
     dart: {
         induty: encode('_/induty.json'),
@@ -50,17 +50,17 @@ export const stock = {
 }
 
 export const user = {
-    ids: encode('@/data/user/ids.json'),
-    meta: uid => encode(`@/data/user/${uid}/meta.json`),
-    favs: uid => encode(`@/data/user/${uid}/favs.json`),
-    pred: uid => encode(`@/data/user/${uid}/pred.json`),
-    hist: uid => encode(`@/data/user/${uid}/hist.json`),
-    alarm: uid => encode(`@/data/user/${uid}/alarm.json`),
+    ids: encode('d/user/ids.json'),
+    meta: uid => encode(`d/user/${uid}/meta.json`),
+    favs: uid => encode(`d/user/${uid}/favs.json`),
+    pred: uid => encode(`d/user/${uid}/pred.json`),
+    hist: uid => encode(`d/user/${uid}/hist.json`),
+    alarm: uid => encode(`d/user/${uid}/alarm.json`),
 }
 
 export const board = {
-    ideas: encode('@/data/board/meta/idea.json'),
-    idea: uid => encode(`@/data/board/idea/${uid}.json`)
+    ideas: encode('d/board/meta/idea.json'),
+    idea: uid => encode(`d/board/idea/${uid}.json`)
 }
 
 export default { stock, user, board };

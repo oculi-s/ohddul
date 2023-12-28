@@ -1,12 +1,15 @@
 import path from 'path';
 
 const o = path.resolve('.');
+const d = path.resolve('../ohddulApi/data');
 const adict = {
     "@": o,
     "$": path.resolve(o, "public"),
-    "#": path.resolve(o, "data", "pred"),
-    "&": path.resolve(o, "data", "stock"),
-    "_": path.resolve(o, "data", "meta"),
+    "#": path.resolve(d, "pred"),
+    "&": path.resolve(d, "stock"),
+    "_": path.resolve(d, "meta"),
+    "d": d,
+
 }
 export default function encode(url) {
     url = url.split('/').filter(e => e);

@@ -1,7 +1,6 @@
 import styles from '$/Stock/Stock.module.scss';
 import EarnChart from '#/chart/EarnBar';
 import dt from '@/module/dt';
-import { useEffect, useState } from 'react';
 import { Color, Div, Num, Quar } from '@/module/ba';
 import Help from '#/base/Help';
 import '@/module/array';
@@ -43,7 +42,8 @@ function EarnTable({ meta, earn, load }) {
         const PR = Div(profit, revenue);
         const ROE = avgYear[Y];
         var isRoe = Q == 4;
-        if (ROE?.cnt < 4) isRoe = true;
+        console.log(Y, Q, isRoe);
+        if (ROE?.cnt < 4 && ROE?.cnt == Q) isRoe = true;
         return <tr key={i}>
             <th>
                 <Link href={`https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${no}`}>

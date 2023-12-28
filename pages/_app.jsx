@@ -25,6 +25,7 @@ export default function Index({ Component, pageProps }) {
 			<Nav {...pageProps} />
 			<Aside {...pageProps} />
 			<main>
+				<p style={{ color: 'red', fontStyle: 'italic' }}>오떨 업데이트 진행중 (~2024.06)</p>
 				<ins className="kakao_ad_area" style={{ marginBottom: 10 }}
 					data-ad-unit="DAN-x6nBfAkOv0q7zNPV"
 					data-ad-width="320"
