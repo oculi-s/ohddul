@@ -11,12 +11,12 @@ export function FavTable({
     meta, price, mine, favs, ban, uid,
     userPred: pred, setPred, loadUser: load,
 }) {
-    const codes = Object.keys(favs);
     const queue = pred?.queue?.sort(dt.sort);
 
     function Rows({ code }) {
         const [time, setTime] = useState(queue?.find(e => e.code == code)?.d);
         const [view, setView] = useState(false);
+        if (!meta[code]) return null;
         const name = meta[code]?.n;
         const close = price[code]?.c;
         const prev = price[code]?.p;
@@ -61,7 +61,7 @@ export function FavTable({
     return <>
         <table className={styles.favTable}>
             <thead>{head}</thead>
-            <tbody>{codes?.map(code => <Rows code={code} key={code} />)}</tbody>
+            <tbody>{favs?.map(code => <Rows code={code} key={code} />)}</tbody>
         </table>
         {!mine && <p className="des">관심종목에 종목을 추가하면 <Link href={'/profile'}>내 프로필</Link>에서 예측바를 통해 바로 예측을 진행할 수 있습니다.</p>}
     </>;

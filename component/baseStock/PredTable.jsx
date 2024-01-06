@@ -51,7 +51,7 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
                     : <Link href={`/profile/${ids?.index[uid]}`}>{ids?.index[uid]}</Link>
                 }
             </th>
-            <td>{t == 'od' ? '오떨' : '가격'}</td>
+            {/* <td>{t == 'od' ? '오떨' : '가격'}</td> */}
             {t == 'pr'
                 ? <>
                     <td>{Num(pr)}<span className='mh'>&nbsp;</span><br className='ph' />

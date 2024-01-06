@@ -11,7 +11,7 @@ async function toggleFav({ code, uid, update }) {
 
 export default function FavStar({ code }) {
     const { data: session, update } = useSession();
-    const orig = session?.user?.favs[code];
+    const orig = session?.user?.favs?.includes(code);
     const [favs, setFavs] = useState(orig);
     useEffect(() => {
         setFavs(orig);

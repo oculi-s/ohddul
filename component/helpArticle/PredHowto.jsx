@@ -34,7 +34,7 @@ function PredBlock2({ aside }) {
                 name, code, last, testing: true, help: false
             }} />
         </div>
-        <p>오/떨 맞추기를 선택하시면 각각 오름과 떨어짐을, 가격 맞추기를 선택하시면 목표 가격을 맞추실 수 있습니다.</p>
+        {/* <p>오/떨 맞추기를 선택하시면 각각 오름과 떨어짐을, 가격 맞추기를 선택하시면 목표 가격을 맞추실 수 있습니다.</p> */}
         <H4>오/떨 맞추기</H4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
@@ -42,7 +42,7 @@ function PredBlock2({ aside }) {
                 defaultType: 1, help: false
             }} />
         </div>
-        PC버전에서는 F9, F10을 이용해 빠르게 예측을 진행할 수 있습니다. (준비중입니다.)
+        {/* PC버전에서는 F9, F10을 이용해 빠르게 예측을 진행할 수 있습니다. (준비중입니다.)
         <H4>가격 맞추기</H4>
         <div className={styles.predBarWrap}>
             <PredBar {...{
@@ -50,7 +50,7 @@ function PredBlock2({ aside }) {
                 defaultType: 2, help: false
             }} />
         </div>
-        <p>목표가의 예측은 다음 영업일부터 최대 90일 후까지 가능하며, <span className='red'>최대 5배</span>까지 예측할 수 있습니다.</p>
+        <p>목표가의 예측은 다음 영업일부터 최대 90일 후까지 가능하며, <span className='red'>최대 5배</span>까지 예측할 수 있습니다.</p> */}
     </div>
 }
 

@@ -45,22 +45,26 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
             </div>
             <table className={`${styles.metaTable} fixed`}>
                 <thead>
-                    <tr><th></th><th>오/떨</th><th>가격</th></tr>
+                    <tr>
+                        <th></th><th>오/떨</th>
+                        {/* <th>가격</th> */}
+                    </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th>예측완료</th>
                         <td>{Lazy(odDataLen, '...')}개</td>
-                        <td>{Lazy(prDataLen, '...')}개</td>
+                        {/* <td>{Lazy(prDataLen, '...')}개</td> */}
                     </tr>
                     <tr>
                         <th>채점대기</th>
                         <td>{Lazy(odQueueLen, '...')}개</td>
-                        <td>{Lazy(prQueueLen, '...')}개</td>
+                        {/* <td>{Lazy(prQueueLen, '...')}개</td> */}
                     </tr>
-                    <tr><th>오/떨 적중률</th>
-                        <td colSpan={2}>
-                            {Lazy(Div(odRight, odDataLen), '...%')}&nbsp;
+                    <tr><th>적중률</th>
+                        {/* <td colSpan={2}> */}
+                        <td>
+                            {Lazy(Div(odRight, odDataLen), '...%')}<br />
                             ({Lazy(odRight, '...')}/{Lazy(odDataLen, '...')})
                         </td>
                         {/* <td>

@@ -45,13 +45,14 @@ export async function getServerSideProps(ctx) {
     }
     props = { ...props, mine, uid, id, favs };
     pred = json.read(dir.user.pred(uid), { data: [], queue: [] });
+
     const Meta = json.read(dir.stock.meta).data;
     const Price = json.read(dir.stock.all);
 
     const Filter = (data) => {
         return Object.fromEntries(Object.entries(data)
             ?.filter(([k, v]) =>
-                Object.keys(favs)?.includes(k)
+                favs?.includes(k)
                 || pred?.queue?.find(e => e.code == k)
                 || pred?.data?.find(e => e.code == k)))
     }

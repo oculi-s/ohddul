@@ -61,6 +61,7 @@ function InfoBlock1({
             <table><tbody>
                 {YEARS.slice(len / 2).map(year => {
                     const yearCount = earn[year];
+                    if (!yearCount) return null;
                     return <tr key={year}><th>{year}</th>
                         {yearCount.map((c, i) => (
                             <td key={`${year}_${i}`}>

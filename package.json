@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "kill": "sudo pm2 delete ohddul",
     "init-start": "sudo pm2 start --name ohddul \"npm run start\"",
     "restart": "sudo pm2 delete ohddul; npm run init-start;",
     "rebuild": "next build; npm run restart;"

@@ -225,57 +225,59 @@ export default function PredBar({
     }, [code]);
 
 
-    if (type == 0) {
-        return <div className={styles.type}>
-            <button onClick={() => setType(1)}>
-                오/떨 맞추기
-            </button>
-            <button onClick={() => setType(2)}>
-                가격 맞추기
-            </button>
-        </div>;
-    } else if (type == 1) {
-        return <div className={`${styles.type} ${styles.type1}`}>
-            <Return {...{ setType }} />
-            <button onClick={e => {
-                e.preventDefault();
-                submit({ ...submitProps, ohddul: 1 });
-            }} className={styles.up}>
-                오른다 <span className='mh'>(F9)</span>
-            </button>
-            <button onClick={e => {
-                e.preventDefault();
-                submit({ ...submitProps, ohddul: -1 });
-            }} className={styles.down}>
-                떨어진다 <span className='mh'>(F10)</span>
-            </button>
-        </div>;
-    }
-    return <div className={styles.fade}>
-        <div className={`${styles.type} ${styles.type2}`}>
-            <Return {...{ setType, setChange }} />
-            <form
-                className={styles.predForm}
-                onSubmit={e => {
-                    e.preventDefault();
-                    submit(submitProps);
-                }}
-            >
-                <DateForm {...{ date, setDate }} />
-                <PriceForm {...{ change, origin, setChange, submitProps }} />
-                <button type='submit' className='fa fa-arrow-right'></button>
-            </form>
-        </div>
-        {help && <div className={styles.help}>
-            <Help {...{
-                des: ' 단축키',
-                data: <>
-                    <tr><th>&uarr;, &darr;</th><td rowSpan={2}>가격 변경</td></tr>
-                    <tr><th>+, -</th></tr>
-                    <tr><th>Enter</th><td>맞추기</td></tr>
-                    <tr><th>R</th><td>가격 초기화</td></tr>
-                </>
-            }} />
-        </div>}
-    </div>
+    // 2024.01.06 가격예측 삭제
+    // if (type == 0) {
+    //     return <div className={styles.type}>
+    //         <button onClick={() => setType(1)}>
+    //             오/떨 맞추기
+    //         </button>
+    //         <button onClick={() => setType(2)}>
+    //             가격 맞추기
+    //         </button>
+    //     </div>;
+    // } else 
+    // if (type == 1 || type == 0) {
+    return <div className={`${styles.type} ${styles.type1}`}>
+        {/* <Return {...{ setType }} /> */}
+        <button onClick={e => {
+            e.preventDefault();
+            submit({ ...submitProps, ohddul: 1 });
+        }} className={styles.up}>
+            오른다 <span className='mh'>(F9)</span>
+        </button>
+        <button onClick={e => {
+            e.preventDefault();
+            submit({ ...submitProps, ohddul: -1 });
+        }} className={styles.down}>
+            떨어진다 <span className='mh'>(F10)</span>
+        </button>
+    </div>;
+    // }
+    // return <div className={styles.fade}>
+    //     <div className={`${styles.type} ${styles.type2}`}>
+    //         <Return {...{ setType, setChange }} />
+    //         <form
+    //             className={styles.predForm}
+    //             onSubmit={e => {
+    //                 e.preventDefault();
+    //                 submit(submitProps);
+    //             }}
+    //         >
+    //             <DateForm {...{ date, setDate }} />
+    //             <PriceForm {...{ change, origin, setChange, submitProps }} />
+    //             <button type='submit' className='fa fa-arrow-right'></button>
+    //         </form>
+    //     </div>
+    //     {help && <div className={styles.help}>
+    //         <Help {...{
+    //             des: ' 단축키',
+    //             data: <>
+    //                 <tr><th>&uarr;, &darr;</th><td rowSpan={2}>가격 변경</td></tr>
+    //                 <tr><th>+, -</th></tr>
+    //                 <tr><th>Enter</th><td>맞추기</td></tr>
+    //                 <tr><th>R</th><td>가격 초기화</td></tr>
+    //             </>
+    //         }} />
+    //     </div>}
+    // </div>
 }

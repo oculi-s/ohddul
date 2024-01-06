@@ -117,9 +117,9 @@ const callbacks = {
                 return token;
             } else if (session.favs) {
                 const code = session?.favs;
-                const favs = token?.user?.favs || {};
-                if (favs[code]) delete favs[code];
-                else favs[code] = 1;
+                var favs = token?.user?.favs || [];
+                if (favs.includes(code)) favs = favs.filter(e => e != code);
+                else favs.push(code);
                 token.user.favs = favs;
                 json.write(dir.user.favs(uid), favs, 0);
                 return token;
