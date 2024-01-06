@@ -336,8 +336,8 @@ function Index(props) {
 
     useEffect(() => {
         fetchUser();
+        fetchEarn(code);
         if (tab == 'price') fetchPrice(code);
-        if (tab == 'earn') fetchEarn(code);
         if (tab == 'share') fetchShare(code), fetchOther(code);
     }, [code, tab])
 

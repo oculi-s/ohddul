@@ -78,7 +78,7 @@ async function submit({
     await api.json.queue({ url: dir.stock.pred(code), data: predData, });
     await api.json.up({
         url: dir.stock.predAll,
-        data: { code, key: 'queue' }
+        data: { code, key: 'queue', up: ohddul }
     });
     setPred(e => { e.queue.push(userData); return e });
     setTime(dt.num());

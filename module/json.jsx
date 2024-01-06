@@ -71,15 +71,15 @@ function toggle(url, elem) {
     return data;
 }
 
-function up(url, def) {
-    const { code, key } = def;
+function up(url, def, last) {
+    const { code, key, up } = def;
     const init = {};
     init[code] = {};
     const data = read(url, init);
     data[code] = data[code] || {};
-    if (data[code][key]) data[code][key]++;
-    else data[code][key] = 1;
-    return write(url, data);
+    data[code][key] = data[code][key] || [0, 0];
+    data[code][key][up]++;
+    return write(url, data, last);
 }
 
 export default {

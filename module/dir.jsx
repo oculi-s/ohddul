@@ -12,7 +12,7 @@ export const stock = {
     child: encode('_/child.json'),
     market: encode('_/market.json'),
     induty: encode('_/index.json'),
-    predAll: encode('_/predict.json'),
+    predAll: encode('_/pred.json'),
     price: code => encode(`&/${code}/price.json`),
     earn: code => encode(`&/${code}/earn.json`),
     share: code => encode(`&/${code}/share.json`),

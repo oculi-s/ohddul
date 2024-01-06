@@ -78,7 +78,7 @@ export function QueueTable({ queue, meta, by = 'stock', ids }) {
                     <thead>
                         <tr>
                             <th>{by == 'stock' ? '종목' : '유저'}</th>
-                            <th><span className='mh'>예측</span>종류</th>
+                            {/* <th><span className='mh'>예측</span>종류</th> */}
                             <th>예측</th>
                             <th><span className='mh'>예측</span>시간</th>
                             <th>채점<span className='mh'>시간</span></th>
@@ -98,7 +98,7 @@ export function UserPredTable({ data, meta, }) {
     data?.sort(dt.lsort);
     var s = 1000;
     const dataBody = data?.map((e, i) => {
-        const { t, code, d, o, pr, od, at, uid, v } = e;
+        const { t, code, d, o, pr, od, at, uid, p } = e;
         return <tr key={`pred${i}`}>
             <th className={styles.stock}>
                 <Link href={`/stock/${meta[code]?.n}`}>
@@ -120,12 +120,12 @@ export function UserPredTable({ data, meta, }) {
             }
             <td><span className='des'>{dt.parse(d, 'M월D일 HH:mm')}</span></td>
             <td className='des'>
-                {NumFix(s += (i < 500 && v <= 0 ? 0 : v), 1)}
+                {NumFix(s += (i < 500 && p <= 0 ? 0 : p), 1)}
                 <span className='mh'>&nbsp;</span><br className='ph' />
                 <span className={Color(v)}>
-                    ({i < 500 && v <= 0
-                        ? <s>{Fix(v, 2)}</s>
-                        : Fix(v, 2)
+                    ({i < 500 && p <= 0
+                        ? <s>{Fix(p, 2)}</s>
+                        : Fix(p, 2)
                     })
                 </span>
             </td>
