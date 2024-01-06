@@ -66,6 +66,7 @@ export async function getServerSideProps(ctx) {
 function Graph({ userMeta: meta, userHist: data, loadUser: load }) {
     const rank = meta?.rank;
     const signed = meta?.signed;
+    if (!signed) return <></>;
     const [prev, cur] = getRank(rank);
     const forNext = Int(rank - cur.score);
 

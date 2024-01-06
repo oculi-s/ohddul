@@ -98,7 +98,7 @@ export function UserPredTable({ data, meta, }) {
     data?.sort(dt.lsort);
     var s = 1000;
     const dataBody = data?.map((e, i) => {
-        const { t, code, d, o, pr, od, at, uid, p } = e;
+        const { t, code, d, o, pr, od, p } = e;
         return <tr key={`pred${i}`}>
             <th className={styles.stock}>
                 <Link href={`/stock/${meta[code]?.n}`}>
@@ -120,9 +120,9 @@ export function UserPredTable({ data, meta, }) {
             }
             <td><span className='des'>{dt.parse(d, 'M월D일 HH:mm')}</span></td>
             <td className='des'>
-                {NumFix(s += (i < 500 && p <= 0 ? 0 : p), 1)}
+                {Num(s += (i < 500 && p <= 0 ? 0 : p))}
                 <span className='mh'>&nbsp;</span><br className='ph' />
-                <span className={Color(v)}>
+                <span className={Color(p)}>
                     ({i < 500 && p <= 0
                         ? <s>{Fix(p, 2)}</s>
                         : Fix(p, 2)

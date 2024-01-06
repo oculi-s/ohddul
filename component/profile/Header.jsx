@@ -15,11 +15,11 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
     // const dataLen = data?.length || 0;
     // const queueLen = queue?.length || 0;
     // const right = data?.filter(e => e.v >= 0).length;
-    const odDataLen = data?.filter(e => e.t == 'od')?.length || 0;
+    const odDataLen = data?.filter(e => e.od != null)?.length || 0;
     const prDataLen = data?.filter(e => e.t == 'pr')?.length || 0;
-    const odQueueLen = queue?.filter(e => e.t == 'od')?.length || 0;
+    const odQueueLen = queue?.filter(e => e.od != null)?.length || 0;
     const prQueueLen = queue?.filter(e => e.t == 'pr')?.length || 0;
-    const odRight = data?.filter(e => e.t == 'od')?.filter(e => e.v >= 0).length;
+    const odRight = data?.filter(e => e.od != null)?.filter(e => e.p >= 0).length;
     // const prRight = data?.filter(e => e.t == 'pr')?.filter(e => e.v >= 0).length;
     const bg = getBg(cur.color);
     return (

@@ -121,7 +121,7 @@ const callbacks = {
                 if (favs.includes(code)) favs = favs.filter(e => e != code);
                 else favs.push(code);
                 token.user.favs = favs;
-                json.write(dir.user.favs(uid), favs, 0);
+                json.write(dir.user.favs(uid), favs, false);
                 return token;
             }
             return token;
