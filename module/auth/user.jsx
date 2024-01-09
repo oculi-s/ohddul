@@ -27,7 +27,8 @@ export function meta() {
     const ids = json.read(dir.ids).index;
     const res = Object.keys(ids)
         ?.map(uid => json.read(dir.meta(uid)))
-        ?.map((meta) => ([meta.id, meta.rank]));
+        ?.filter(meta => meta.id)
+        ?.map(meta => ([meta.id, meta.rank]));
     return res || [];
 }
 

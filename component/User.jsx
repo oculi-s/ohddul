@@ -72,7 +72,7 @@ export function User({ user, setAsideShow }) {
     return (
         <div className={styles.user}>
             <Link href='/profile' onClick={e => setAsideShow()}>
-                <div className={styles.id}>{user?.name}</div>
+                <div className={styles.id}>{user?.id}</div>
                 <div className={styles.rank}>
                     {Lazy(<>
                         <span className={cur.color}>
