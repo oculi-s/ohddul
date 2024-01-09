@@ -32,7 +32,7 @@ export default function Header({ userMeta: meta, userPred: pred, loadUser: load,
                             ranknum={cur.num}
                             style={{ backgroundImage: `url(${bg.src})` }}>
                         </span>}
-                    {meta?.name}
+                    {meta?.id}
                 </h2>
                 {mine ? <AlarmSetting uid={uid} /> : ''}
             </div>
