@@ -10,7 +10,7 @@ import Link from "next/link";
  */
 export function findUid(uid) {
     const id = json.read(dir.ids).index[uid];
-    const favs = json.read(dir.favs(uid), {});
+    const favs = json.read(dir.favs(uid), []);
     if (id) return { id, uid, favs };
     else return false;
 }
@@ -79,5 +79,5 @@ export function create(user) {
     json.write(dir.meta(uid), data, false);
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);
-    return { id: name, name, uid, favs: {} };
+    return { id: name, name, uid, favs: [] };
 }

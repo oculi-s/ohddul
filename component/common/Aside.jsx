@@ -172,6 +172,7 @@ function Total() {
 }
 
 export default function Aside(props) {
+
     const mobAside = props?.mobAside;
     const setAsideShow = props?.setAsideShow;
     props = {
