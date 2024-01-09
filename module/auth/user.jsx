@@ -26,8 +26,8 @@ export function findId(id) {
 export function meta() {
     const ids = json.read(dir.ids).index;
     const res = Object.keys(ids)
-        ?.map(uid => [ids[uid], json.read(dir.meta(uid))])
-        ?.map(([id, meta]) => ([id, meta.rank]));
+        ?.map(uid => json.read(dir.meta(uid)))
+        ?.map((meta) => ([meta.id, meta.rank]));
     return res || [];
 }
 
@@ -70,13 +70,13 @@ export function create(user) {
     const uid = user?.id;
     const name = user?.name;
     const email = user?.email;
-    const meta = json.read(dir.ids);
-    const data = { id: uid, name, email, rank: 1000 };
-    meta[uid] = uid;
-    meta.index[uid] = uid;
-    json.write(dir.ids, meta, false);
+    const ids = json.read(dir.ids);
+    const data = { id: name, name, email, rank: 1000 };
+    ids[name] = uid;
+    ids.index[uid] = name;
+    json.write(dir.ids, ids, false);
     json.write(dir.meta(uid), data, false);
     json.write(dir.alarm(uid), firstAlarm, false);
     console.log(`${uid} user created`);
-    return { id: uid, uid, favs: {} };
+    return { id: name, name, uid, favs: {} };
 }

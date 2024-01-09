@@ -1,8 +1,6 @@
 async function Fetch(url, props) {
     props = JSON.stringify(props || {});
-    let res = await fetch(url, {
-        body: props, method: 'post'
-    });
+    let res = await fetch(url, { body: props, method: 'post' });
     if (res.ok) {
         try {
             return await res.json();

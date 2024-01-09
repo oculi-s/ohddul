@@ -108,7 +108,6 @@ const callbacks = {
             }
         } else if (trigger == 'update') {
             const uid = token?.user?.uid;
-            console.log(trigger, session, uid);
             if (session?.id) {
                 token.user.id = session?.id;
                 return token;

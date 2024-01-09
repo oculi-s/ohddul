@@ -7,7 +7,7 @@ import dt from '@/module/dt';
 /**
  * Profile에서 curtain까지 전부 다룸
  */
-export default function Header({ id, userMeta: meta, userPred: pred, loadUser: load, mine, uid }) {
+export default function Header({ userMeta: meta, userPred: pred, loadUser: load, mine, uid }) {
     const [prev, cur, next] = getRank(meta?.rank);
     const Lazy = (data, L = <Loading size={15} />) => load?.meta ? L : data;
     const queue = pred?.queue;
@@ -32,7 +32,7 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
                             ranknum={cur.num}
                             style={{ backgroundImage: `url(${bg.src})` }}>
                         </span>}
-                    {id}
+                    {meta?.name}
                 </h2>
                 {mine ? <AlarmSetting uid={uid} /> : ''}
             </div>
@@ -40,7 +40,7 @@ export default function Header({ id, userMeta: meta, userPred: pred, loadUser: l
                 <div className={cur.color}>
                     {Lazy(cur.color == 'unranked' ?
                         <b>IRON {Int(meta?.rank)}</b> :
-                        <b>{cur.color.slice(0, 1).toUpperCase() + cur.num} {Int(meta?.rank)}</b>)}
+                        <b>{cur?.color?.slice(0, 1)?.toUpperCase() + cur?.num} {Int(meta?.rank)}</b>)}
                 </div>
             </div>
             <table className={`${styles.metaTable} fixed`}>

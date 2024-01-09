@@ -33,7 +33,7 @@ export async function getServerSideProps(ctx) {
     let id = false, uid = false, mine = false;
     if (qid) {
         if (session?.user?.id == qid) mine = true;
-        uid = ids[qid];
+        uid = ids[qid] ?? '';
         id = qid;
         favs = json.read(dir.user.favs(uid), []);
     } else if (session?.user) {

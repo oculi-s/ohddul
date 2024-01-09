@@ -15,6 +15,7 @@ import { Int } from '@/module/ba'
 import { Loading } from './base/base'
 
 export const getBg = rank => {
+    if (!rank) return bgIron;
     return rank.includes('bronze') ? (bgBronze
     ) : rank.includes('silver') ? (bgSilver
     ) : rank.includes('gold') ? (bgGold
@@ -52,7 +53,6 @@ export const getRank = rank => {
  * 유저정보 박스, 완전히 독립적으로 실행되도록 해야함.
  */
 export function User({ user, setAsideShow }) {
-    const id = user?.id;
     const [meta, setMeta] = useState({ rank: 1000 });
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -67,12 +67,12 @@ export function User({ user, setAsideShow }) {
     }, [])
     const Lazy = (data) => loading ? <Loading size={14} /> : data;
     const [prev, cur, next] = getRank(meta?.rank);
-    let rankName = cur.color[0]?.toUpperCase() + cur.num;
+    let rankName = cur?.color?.at(0)?.toUpperCase() + cur.num;
     if (cur.color == 'unranked') rankName = "IRON";
     return (
         <div className={styles.user}>
             <Link href='/profile' onClick={e => setAsideShow()}>
-                <div className={styles.id}>{id}</div>
+                <div className={styles.id}>{user?.name}</div>
                 <div className={styles.rank}>
                     {Lazy(<>
                         <span className={cur.color}>
@@ -89,7 +89,7 @@ export function Alarms({ uid, setAsideShow }) {
     const [len, setLen] = useState(0);
     useEffect(() => {
         async function lazyLoad() {
-            const data = await api.json.read({ url: dir.user.alarm(uid) });
+            const data = await api.json.read({ url: dir.user.alarm(uid), def: [] });
             setLen(data?.filter(e => !e.ch)?.length);
         }
         if (uid) lazyLoad();

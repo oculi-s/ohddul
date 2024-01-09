@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 export async function getServerSideProps(ctx) {
     const session = await getSession(ctx);
     const aside = json.read(dir.stock.light.aside);
-    const uid = session?.user?.uid;
+    const uid = session?.user?.uid ?? '';
     const alarm = json.read(dir.user.alarm(uid), []);
     const props = { aside, alarm, session, uid }
     return { props };
