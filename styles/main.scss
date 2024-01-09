@@ -184,7 +184,7 @@ h1,
 h2,
 h3,
 h4 {
-    scroll-margin-top: calc(var(--nav-height) + 5px);
+    scroll-margin-top: calc(var(--nav-height) + 10px);
     color: $textBright;
 
     * {

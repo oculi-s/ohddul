@@ -102,7 +102,7 @@ const ToC = ({ docsRef }) => {
             } else {
                 setTocpos({ position: 'absolute', top: initialdocsTop });
             }
-            const at = headings?.find(e => e?.offsetTop >= top)
+            const at = headings?.find(e => e?.offsetTop - 200 >= top)
             const i = headings?.findIndex(e => e == at) - 1;
             if (i == -1) setSelected(0);
             else if (i >= 0) setSelected(i);

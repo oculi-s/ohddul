@@ -24,7 +24,7 @@ import Link from 'next/link';
 export const getServerSideProps = async (ctx) => {
     const tab = ctx.query?.tab || 'base';
 
-    const ban = json.read(dir.stock.ban);
+    const ban = json.read(dir.stock.ban, []);
     const count = json.read(dir.stock.light.count);
     const title = "오떨 사용방법";
 

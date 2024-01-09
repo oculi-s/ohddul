@@ -49,7 +49,7 @@ function InfoBlock1({
                 {YEARS.slice(0, len / 2).map(year => {
                     const yearCount = earn[year];
                     return <tr key={year}><th>{year}</th>
-                        {yearCount.map((c, i) => (
+                        {yearCount?.map((c, i) => (
                             <td key={`${year}_${i}`}>
                                 <span>{i + 1}Q <span className={styles.per}>({Div(c, cnt)})</span></span>
                                 <div className={styles.bar} style={{ width: Div(c, cnt) }}></div>
