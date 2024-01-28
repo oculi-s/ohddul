@@ -25,8 +25,8 @@ export default function Index({ Component, pageProps }) {
 			<Nav {...pageProps} />
 			<Aside {...pageProps} />
 			<main>
-				<p style={{ color: 'red', fontStyle: 'italic' }}>오떨 업데이트 진행중 (~2024.06)</p>
-				<p style={{ color: 'red', fontStyle: 'italic' }}>이전까지의 예측이 모두 사라집니다.</p>
+				{/* <p style={{ color: 'red', fontStyle: 'italic' }}>오떨 업데이트 진행중 (~2024.06)</p>
+				<p style={{ color: 'red', fontStyle: 'italic' }}>이전까지의 예측이 모두 사라집니다.</p> */}
 				<div>
 					<ins className="kakao_ad_area" style={{ marginBottom: 10 }}
 						data-ad-unit="DAN-x6nBfAkOv0q7zNPV"
