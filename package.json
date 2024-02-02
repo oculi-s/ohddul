@@ -5,11 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
     "lint": "next lint",
     "kill": "sudo pm2 delete ohddul",
-    "init-start": "sudo pm2 start --name ohddul \"npm run start\"",
-    "restart": "sudo pm2 delete ohddul; npm run init-start;",
+    "start": "sudo pm2 start --name ohddul \"npx next start\"",
+    "restart": "sudo pm2 delete ohddul; npm run start;",
     "rebuild": "next build; npm run restart;"
   },
   "dependencies": {
