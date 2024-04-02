@@ -1,7 +1,7 @@
 import path from 'path';
 
 const o = path.resolve('.');
-const d = path.resolve('../ohddulApi/data');
+const d = path.resolve('../ohddul-api/data');
 const adict = {
     "@": o,
     "$": path.resolve(o, "public"),
