@@ -1,23 +1,8 @@
 import NextAuth from 'next-auth'
 import KakaoProvider from 'next-auth/providers/kakao'
-// import CredentialsProvider from 'next-auth/providers/credentials';
 import { findUid, create } from '@/module/auth/user';
 import json from '@/module/json';
 import dir from '@/module/dir';
-// import { hashSync, compareSync } from 'bcryptjs'
-// import { nanoid } from 'nanoid';
-// import dir from '@/module/dir';
-// import json from '@/module/json';
-
-// const status = {
-//     exist: 300,
-//     emptyID: 400,
-//     emptyPW: 401,
-//     regex: 402,
-//     pwdiff: 403,
-//     failed: 404
-// }
-// const pwRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*\W)(?!.* ).{8,16}$/);
 
 const providers = [
     KakaoProvider({
@@ -25,46 +10,6 @@ const providers = [
         clientSecret: process.env.KAKAO_CLIENT_SECRET,
         checks: ['none']
     }),
-    // CredentialsProvider({
-    //     id: "ohddul",
-    //     name: 'Credentials',
-    //     type: 'credentials',
-    //     credentials: {
-    //         id: {}, pw: {}
-    //     },
-    //     async authorize(credentials, req) {
-    //         let { isCreate, id, pw, pwCheck } = credentials;
-    //         const user = find(id);
-    //         if (!id) throw new Error(status.emptyID);
-    //         if (!pw) throw new Error(status.emptyPW);
-
-    //         if (isCreate) {
-    //             if (user) {
-    //                 throw new Error(status.exist);
-    //             } else if (!pwRegex.test(pw)) {
-    //                 throw new Error(status.regex);
-    //             } else if (pw != pwCheck) {
-    //                 throw new Error(status.pwdiff);
-    //             } else {
-    //                 let uid = nanoid(11);
-    //                 pw = hashSync(pw, 5);
-    //                 create({ id, pw, uid });
-    //             }
-    //         } else {
-    //             if (!user) {
-    //                 throw new Error(status.failed);
-    //             } else if (!compareSync(pw, user.pw)) {
-    //                 throw new Error(status.failed);
-    //             }
-    //         }
-    //         const admin = user?.admin;
-    //         const uid = user?.uid;
-    //         const meta = json.read(dir.user.meta)[uid];
-    //         const queue = json.read(dir.user.pred(uid), { queue: [] })?.queue;
-    //         const favs = json.read(dir.user.favs(uid));
-    //         return { id, uid, admin, meta, queue, favs };
-    //     }
-    // }),
 ]
 
 /**

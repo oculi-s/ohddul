@@ -53,7 +53,7 @@ export default function MajorShare({ major }) {
     const names = Object.keys(List);
     const datas = Object.keys(List).map(e => {
         const datas = List[e]?.map((e, i) =>
-            <Inner share={major[e]} key={i} />
+            <Inner share={major?.[e]} key={i} />
         )
         return <ToggleTab names={List[e]} datas={datas} />
     })

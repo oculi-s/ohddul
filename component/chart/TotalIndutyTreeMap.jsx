@@ -44,7 +44,7 @@ const TotalIndutyTree = ({ tree }) => {
     const [fixed, setFixed] = useState(false);
 
     useEffect(() => {
-        setData(tree.induty?.slice(0, N)?.map(e => {
+        setData(tree?.induty?.slice(0, N)?.map(e => {
             const t = { ...e };
             if (!stock) delete t.children;
             return t;
