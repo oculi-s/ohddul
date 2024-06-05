@@ -1,20 +1,18 @@
-import styles from '$/Group/Group.module.scss'
-import { useRouter } from "next/router";
+import styles from '$/Group/Group.module.scss';
+import { ToggleQuery } from '@/components/base/ToggleTab';
+import GroupFold from "@/components/stockFold/GroupFold";
 import Link from "next/link";
-import GroupFold from "#/stockFold/GroupFold";
-import { ToggleQuery, ToggleTab } from '#/base/ToggleTab';
-import Help from '#/base/Help';
+import { useRouter } from "next/router";
 
-import { priceHelp } from '#/group/HelpDescription';
-import GroupPriceElement from '#/group/groupPrice';
+import GroupPriceElement from '@/components/group/groupPrice';
 
-import { Num, Price } from "@/module/ba";
+import GroupShareElement from '@/components/group/groupShare';
+import '@/module/array';
+import { Price } from "@/module/ba";
 import dir from '@/module/dir';
 import json from '@/module/json';
-import '@/module/array';
 import { useEffect, useState } from 'react';
 import api from '../api';
-import GroupShareElement from '#/group/groupShare';
 
 /**
  * 그룹 정보를 보여주는 페이지

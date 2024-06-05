@@ -2,28 +2,28 @@
  * 이걸로 Pagination을 연습하고 게시판에 적용
  */
 
-import styles from '$/Stock/Sum.module.scss'
+import styles from '$/Stock/Sum.module.scss';
+import { ToggleQuery } from '@/components/base/ToggleTab';
+import '@/module/array';
 import { Color, H2R, Per, Price } from "@/module/ba";
+import colors from '@/module/colors';
 import { stock as dir } from "@/module/dir";
-import json from "@/module/json";
 import dt from '@/module/dt';
+import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
-import '@/module/array';
-import { ToggleQuery } from '#/base/ToggleTab';
-import colors from '@/module/colors';
 
+import { Loading } from '@/components/base/base';
+import { RadioSelect } from '@/components/base/InputSelector';
+import { Pagination } from '@/components/base/Pagination';
+import { hairline } from '@/module/chart/plugins';
+import { GroupBg } from '@/public/group/color';
 import "chart.js/auto";
 import 'chartjs-adapter-date-fns';
-import { Line } from 'react-chartjs-2';
-import { hairline } from '@/module/chart/plugins';
-import { RadioSelect } from '#/base/InputSelector';
-import { useEffect, useRef, useState } from 'react';
 import deepmerge from 'deepmerge';
+import { useEffect, useRef, useState } from 'react';
+import { Line } from 'react-chartjs-2';
 import api from '../api';
-import { Loading } from '#/base/base';
-import { GroupBg } from '@/public/group/color';
-import { Pagination } from '#/base/Pagination';
 
 export async function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'rank';

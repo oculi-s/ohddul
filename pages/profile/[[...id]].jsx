@@ -1,22 +1,22 @@
-import { useRouter } from "next/router";
-import styles from '$/Profile/Index.module.scss'
-import { getSession } from "next-auth/react";
-import { ToggleQuery } from "#/base/ToggleTab";
+import styles from '$/Profile/Index.module.scss';
 import scss from '$/variables.module.scss';
+import { ToggleQuery } from "@/components/base/ToggleTab";
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import dir from "@/module/dir";
 import json from "@/module/json";
 
-import Header from "#/profile/Header";
-import { FavTable } from "#/profile/profileFavs";
-import ProfilePred from "#/profile/profilePred";
-import { useEffect, useState } from "react";
-import api from "@/pages/api";
+import { getRank } from "@/components/User";
+import { MustLogin } from "@/components/base/Kakao";
+import { UserPredTable } from "@/components/baseStock/PredTable";
+import HistLine from "@/components/chart/HistLine";
+import Header from "@/components/profile/Header";
+import { FavTable } from "@/components/profile/profileFavs";
+import ProfilePred from "@/components/profile/profilePred";
 import { Int } from "@/module/ba";
-import { getRank } from "#/User";
-import { MustLogin } from "#/base/Kakao";
-import HistLine from "#/chart/HistLine";
-import { UserPredTable } from "#/baseStock/PredTable";
+import api from "@/pages/api";
+import { useEffect, useState } from "react";
 
 /**
  * asdf

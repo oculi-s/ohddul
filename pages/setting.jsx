@@ -1,9 +1,9 @@
 import styles from '$/Setting.module.scss';
+import { ToggleQuery } from '@/components/base/ToggleTab';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import api from './api';
-import { ToggleQuery, ToggleTab } from '#/base/ToggleTab';
 
 export function getServerSideProps(ctx) {
     const tab = ctx.query?.tab || 'meta';

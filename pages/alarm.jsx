@@ -1,11 +1,11 @@
-import styles from '$/Alarm.module.scss'
-import dt from '@/module/dt';
+import styles from '$/Alarm.module.scss';
+import { MustLogin } from '@/components/base/Kakao';
 import dir from "@/module/dir";
+import dt from '@/module/dt';
 import json from "@/module/json";
 import { getSession } from "next-auth/react";
-import { MustLogin } from '#/base/Kakao';
-import api from './api';
 import { useEffect } from 'react';
+import api from './api';
 
 export async function getServerSideProps(ctx) {
     const session = await getSession(ctx);

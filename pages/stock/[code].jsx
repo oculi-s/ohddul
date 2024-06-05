@@ -1,27 +1,26 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import styles from '$/Stock/Stock.module.scss';
-import { Num, Price, Color, Per, Div } from '@/module/ba';
-import { bpsHelp, epsHelp, prHelp, roeHelp } from '#/stockData/HelpDescription';
-import StockHead from '#/stockData/stockHead';
-import { ToggleQuery } from '#/base/ToggleTab';
-import { LastUpdate } from '#/base/base';
-import Help from '#/base/Help';
-import api from '../api';
-import json from '@/module/json';
+import { LastUpdate } from '@/components/base/base';
+import Help from '@/components/base/Help';
+import { ToggleQuery } from '@/components/base/ToggleTab';
+import { bpsHelp, epsHelp, prHelp, roeHelp } from '@/components/stockData/HelpDescription';
+import StockHead from '@/components/stockData/stockHead';
+import '@/module/array';
+import { Color, Div, Num, Per, Price } from '@/module/ba';
 import dir from '@/module/dir';
 import dt from '@/module/dt';
-import '@/module/array';
+import json from '@/module/json';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import api from '../api';
 
-import GroupFold from '#/stockFold/GroupFold';
-import IndutyFold from '#/stockFold/IndutyFold';
-import PriceElement from '#/stockData/stockPrice';
-import EarnElement from '#/stockData/stockEarn';
-import ShareElement from '#/stockData/stockShare';
-import PredElement from '#/stockData/stockPred';
+import EarnElement from '@/components/stockData/stockEarn';
+import PredElement from '@/components/stockData/stockPred';
+import PriceElement from '@/components/stockData/stockPrice';
+import ShareElement from '@/components/stockData/stockShare';
+import GroupFold from '@/components/stockFold/GroupFold';
+import IndutyFold from '@/components/stockFold/IndutyFold';
 
-import { filterIndex } from '@/module/filter/filter';
-import ChildFold from '#/stockFold/ChildFold';
+import ChildFold from '@/components/stockFold/ChildFold';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.

@@ -169,17 +169,6 @@
     display: none;
 }
 
-main {
-    margin-left: var(--side-margin);
-    display: block;
-    text-align: left;
-    margin-top: var(--top);
-    width: $mainWidth;
-    max-width: 100%;
-    // padding-bottom: 200px;
-    // margin-bottom: 50px;
-}
-
 h1,
 h2,
 h3,
@@ -202,26 +191,6 @@ p {
     margin: 0;
 }
 
-html {
-    background: $bgDark;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-}
-
-* {
-    color: $textColor;
-    border-color: $borderColor;
-    box-sizing: border-box;
-    font-family: sans-serif;
-    outline: none;
-}
-
 main img {
     max-width: 100%;
     width: auto;
@@ -238,10 +207,6 @@ i {
     height: 1em;
     cursor: pointer;
     display: inline-block;
-}
-
-.fa {
-    font-size: 1em;
 }
 
 a {

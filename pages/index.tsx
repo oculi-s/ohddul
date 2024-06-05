@@ -1,11 +1,11 @@
-import Market from "#/subIndex/MarketInfo";
-import GroupInduty from "#/subIndex/GroupInduty";
-import MajorShare from "#/subIndex/MajorShare";
+import GroupInduty from "@/components/subIndex/GroupInduty";
+import MajorShare from "@/components/subIndex/MajorShare";
+import Market from "@/components/subIndex/MarketInfo";
 
 import "@/module/array";
-import { useEffect, useState } from "react";
-import Fetcher from "@/module/fetcher";
+import { FetcherRead } from "@/module/fetcher";
 import { TreeType } from "@/utils/type";
+import { useEffect, useState } from "react";
 
 const N = 252;
 const list = [
@@ -38,24 +38,24 @@ function Index() {
   async function fetchMajor() {
     const major = {};
     for await (const e of list) {
-      const res = await Fetcher("read", { url: `share/${e}.json` });
+      const res = await FetcherRead(`share/${e}.json`);
       major[e] = res.data.slice(0, 10);
     }
     return major;
   }
   useEffect(() => {
-    Fetcher("read", { url: "meta/light/tree.json" }).then((res) => {
+    FetcherRead("meta/light/tree.json").then((res) => {
       setTree(res);
     });
-    Fetcher("read", { url: "meta/pred.json" }).then((res) => {
+    FetcherRead("meta/pred.json").then((res) => {
       setPredict(res);
     });
-    Fetcher("read", { url: "meta/light/market.json" }).then((res) => {
+    FetcherRead("meta/light/market.json").then((res) => {
       res.kospi = res.kospi.slice(0, N);
       res.kosdaq = res.kosdaq.slice(0, N);
       setMarket(res);
     });
-    Fetcher("read", { url: "meta/light/updown.json" }).then((res) => {
+    FetcherRead("meta/light/updown.json").then((res) => {
       setCount(res);
     });
     fetchMajor().then((res) => {
@@ -72,11 +72,11 @@ function Index() {
 
   const props = { tree, predict, market, major, count };
   return (
-    <section>
+    <div>
       <Market {...props} />
       <GroupInduty {...props} />
       <MajorShare {...props} />
-    </section>
+    </div>
   );
 }
 

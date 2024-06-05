@@ -1,6 +1,6 @@
-import { MustLogin } from "#/base/Kakao";
+import styles from '$/Editor.module.scss';
+import { MustLogin } from "@/components/base/Kakao";
 import { useState } from "react";
-import styles from '$/Editor.module.scss'
 
 export function getServerSideProps(ctx) {
     const props = {};

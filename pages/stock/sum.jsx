@@ -2,15 +2,15 @@
  * 이걸로 Pagination을 연습하고 게시판에 적용
  */
 
-import styles from '$/Stock/Sum.module.scss'
-import { Pagination } from "#/base/Pagination";
-import FavStar from "#/baseStock/FavStar";
+import styles from '$/Stock/Sum.module.scss';
+import { Pagination } from "@/components/base/Pagination";
+import FavStar from "@/components/baseStock/FavStar";
+import '@/module/array';
 import { Color, Per, Price } from "@/module/ba";
 import { stock as dir } from "@/module/dir";
 import json from "@/module/json";
 import GroupImg from "@/public/group/Default";
 import Link from "next/link";
-import '@/module/array';
 
 export async function getServerSideProps(ctx) {
     const Meta = json.read(dir.meta).data;

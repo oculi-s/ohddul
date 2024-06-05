@@ -1,10 +1,10 @@
 import styles from '$/Group/Induty.module.scss';
+import IndutyFold from "@/components/stockFold/IndutyFold";
 import { useRouter } from "next/router";
-import IndutyFold from "#/stockFold/IndutyFold";
 
-import json from '@/module/json';
 import dir from '@/module/dir';
 import { filterIndex } from "@/module/filter/filter";
+import json from '@/module/json';
 
 export async function getServerSideProps(ctx) {
     const Index = json.read(dir.stock.light.index).data;

@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html,
+body,
+#__next {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    color: #aaa;
+}
+
+* {
+    box-sizing: border-box !important;
+    outline: none !important;
+    font-family: NanumSquare;
+    resize: none !important;
+    border-color: #1a1a2d;
+}
+
+html {
+    @apply bg-trade-600;
+}

@@ -1,16 +1,15 @@
-import { useEffect, useRef } from 'react';
 import styles from '$/Help/Help.module.scss';
+import { useRef } from 'react';
 
-import json from '@/module/json';
-import ToC from '#/base/Toc';
+import ToC from '@/components/base/Toc';
 import dir from '@/module/dir';
+import json from '@/module/json';
 
-import { ToggleQuery } from '#/base/ToggleTab';
-import DataInfo from '#/helpArticle/DataInfo';
-import PredHowto from '#/helpArticle/PredHowto';
-import Scoring from '#/helpArticle/Scoring';
+import { ToggleQuery } from '@/components/base/ToggleTab';
+import DataInfo from '@/components/helpArticle/DataInfo';
+import PredHowto from '@/components/helpArticle/PredHowto';
+import Scoring from '@/components/helpArticle/Scoring';
 
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 /**

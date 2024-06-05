@@ -8,3 +8,7 @@ export default function Fetcher(type: 'read' | 'write', body?: any) {
         body: JSON.stringify(body)
     }).then(res => res.json())
 }
+
+export function FetcherRead(url: string) {
+    return Fetcher('read', { url })
+}
