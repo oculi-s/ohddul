@@ -4,7 +4,7 @@ import Market from "@/components/subIndex/MarketInfo";
 
 import "@/module/array";
 import { FetcherRead } from "@/module/fetcher";
-import { TreeType } from "@/utils/type";
+import { TotalTreeType } from "@/utils/type/chartTree";
 import { useEffect, useState } from "react";
 
 const N = 252;
@@ -29,7 +29,7 @@ const list = [
 ];
 
 function Index() {
-  const [tree, setTree] = useState<TreeType>();
+  const [tree, setTree] = useState<TotalTreeType>();
   const [predict, setPredict] = useState();
   const [market, setMarket] = useState();
   const [major, setMajor] = useState();

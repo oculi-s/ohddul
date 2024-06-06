@@ -9,7 +9,6 @@ function Index({ data, last, prev, count, name, loading }) {
     const { avg60, top60, bot60 } = getMaData(data);
     last = last[name];
     prev = prev[name];
-    console.log(Per(last, prev));
     const up = count?.up[name];
     const down = count?.down[name];
     const total = count?.all[name];
@@ -57,7 +56,7 @@ const Market = ({ market, count }) => {
     const [loading, setLoading] = useState<Boolean>(true);
     useEffect(() => {
         if (market && count) setLoading(false);
-    }, [market])
+    }, [market, count])
     const kospi = market?.kospi?.qsort(dt.sort);
     const kosdaq = market?.kosdaq?.qsort(dt.sort);
     const last = { kospi: kospi?.[0]?.c, kosdaq: kosdaq?.[0]?.c };

@@ -83,7 +83,9 @@ function AsideGroup({ data, setAsideShow }) {
                 <Link
                     href={`/group/${n}`}
                     onClick={e => setAsideShow()}
-                ><GroupImg name={n} className='w-full h-5 flex justify-center' /></Link>
+                >
+                    <GroupImg name={n} className='!h-5 flex justify-center' />
+                </Link>
             </th>
             <td align='right'>{Price(c)}</td>
             <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
@@ -98,7 +100,7 @@ function StockList({ aside, setAsideShow }) {
             <Link
                 href="/stock/sum"
                 onClick={e => setAsideShow()}
-                className='flex items-center gap-2 justify-between'
+                className='flex items-center gap-2 justify-between text-slate-100'
             >
                 <div className='flex gap-1 items-center'>
                     <Logo size={18} />
@@ -112,7 +114,7 @@ function StockList({ aside, setAsideShow }) {
             <Link
                 href="/group"
                 onClick={e => setAsideShow()}
-                className='flex items-center gap-2 justify-between'
+                className='flex items-center gap-2 justify-between text-slate-100'
             >
                 <div className='flex gap-1 items-center'>
                     <Logo size={18} />
@@ -126,7 +128,7 @@ function StockList({ aside, setAsideShow }) {
             <Link
                 href="/stock/up"
                 onClick={e => setAsideShow()}
-                className='flex items-center gap-2 justify-between'
+                className='flex items-center gap-2 justify-between text-slate-100'
             >
                 <div className='flex gap-1 items-center'>
                     <Logo size={18} />
@@ -140,7 +142,7 @@ function StockList({ aside, setAsideShow }) {
             <Link
                 href="/stock/down"
                 onClick={e => setAsideShow()}
-                className='flex items-center gap-2 justify-between'
+                className='flex items-center gap-2 justify-between text-slate-100'
             >
                 <div className='flex gap-1 items-center'>
                     <Logo size={18} />

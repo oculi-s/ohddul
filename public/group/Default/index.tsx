@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import 애경 from './AK.svg';
 import BGF from './BGF.svg';
 import CJ from './CJ.svg';
@@ -101,8 +102,11 @@ groupImg["KT&G"] = KTG;
 groupImg["S-Oil"] = SOil;
 
 export default function GroupImg({ name, className }: {
-    name: string, className?: string
+    name: string,
+    className?: string
 }) {
     if (!groupImg[name]) return;
-    return <div className={className}>{groupImg[name]({ style: { maxHeight: '100%', maxWidth: '100%' } })}</div>
+    return <div className={cn('w-full h-full', className)}>
+        {groupImg[name]({ style: { maxHeight: '100%', maxWidth: '100%' } })}
+    </div>
 };

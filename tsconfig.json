@@ -5,10 +5,13 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "es5",
+    "module": "commonjs",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
     "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
     "noEmit": true,
     "esModuleInterop": true,
     "moduleResolution": "node",

@@ -39,9 +39,9 @@ function Help({ aside, tab, cnt, earn, none, ban }) {
     const docsRef = useRef();
     const query = ['base', 'pred', 'score']//,'chart','community'];
     const names = ['기본정보', '예측방법', '고유점수']//, '차트보는법', '커뮤니티규칙'];
-    return <>
+    return <div className='w-full h-full grid lg:grid-cols-4 gap-0.5 p-0.5'>
         <ToC docsRef={docsRef} />
-        <div className={styles.docs} ref={docsRef}>
+        <div className='col-span-3 col-start-2 bg-trade-700 p-3' ref={docsRef}>
             <span className={styles.title}>
                 예측으로 얘기하자! 오르고 떨어지고, 오떨에 오신 여러분을 환영합니다.
             </span>
@@ -57,7 +57,7 @@ function Help({ aside, tab, cnt, earn, none, ban }) {
                 {/* <BoardRules {...props} /> */}
             </div>}
         </div>
-    </>;
+    </div>;
 }
 
 export default Help;

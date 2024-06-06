@@ -1,11 +1,10 @@
-import '@/module/array';
-import styles from '$/Chart/Share.module.scss';
-import colors from '@/module/colors';
-import { Div, parseFix } from '@/module/ba';
-import { Doughnut } from 'react-chartjs-2';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import scss from '$/variables.module.scss';
+import '@/module/array';
+import { Div, parseFix } from '@/module/ba';
+import colors from '@/module/colors';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect, useState } from 'react';
+import { Doughnut } from 'react-chartjs-2';
 
 const options = {
     spanGaps: true,
@@ -85,7 +84,7 @@ const ShareDonut = ({ share, meta }) => {
     }, [share]);
 
     return (
-        <div className={styles.wrap}>
+        <div className='w-full h-full justify-center items-center flex p-10'>
             {share?.length ? <Doughnut
                 data={data}
                 options={options}

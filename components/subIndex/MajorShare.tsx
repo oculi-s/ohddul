@@ -27,8 +27,10 @@ function Inner({ share }) {
                 {share?.map((e, i) => {
                     return <tr key={i}>
                         <th className='text-left'>
-                            <FavStar code={e?.code} />
-                            <Link href={`/stock/${e?.n}`}>{e?.n}</Link>
+                            <div className='flex items-center gap-2'>
+                                <FavStar code={e?.code} />
+                                <Link href={`/stock/${e?.n}`}>{e?.n}</Link>
+                            </div>
                         </th>
                         <td>{Div(e.p, 1, 2)}</td>
                         <td>{Div(e?.a, e?.t, 1)}</td>
@@ -40,9 +42,6 @@ function Inner({ share }) {
     </div>;
 }
 
-/**
- * 미리 데이터 저장해서 만들어놔야함
- */
 const List = {
     연기금: ['국민연금', '산업은행'],
     기관: ['KB금융', '신한지주', '미래에셋증권', '삼성증권', '한국금융지주', '메리츠금융지주', 'OK저축은행', 'VIP자산운용'],

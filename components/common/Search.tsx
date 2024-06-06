@@ -3,9 +3,8 @@ import scss from '$/variables.module.scss';
 import { ToggleTab } from '@/components/base/ToggleTab';
 import { getRank } from '@/components/User';
 import { Int } from '@/module/ba';
-import dir from '@/module/dir';
-import api from '@/pages/api';
-import cn from 'classnames';
+import { FetcherRead } from '@/module/fetcher';
+import { UserMetaType } from '@/utils/type';
 import Inko from 'inko';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -238,7 +237,7 @@ function Index(props) {
         </div>
     ];
     return (
-        <div className={cn(styles.search, 'hidden')}>
+        <div className={styles.search}>
             <form onSubmit={e => moveQuery({ e, ...props })}>
                 <div className={styles.inputWrap}>
                     <span className={styles.placeHolder}>
@@ -273,23 +272,29 @@ function Index(props) {
 export default function Search(props) {
     const [meta, setMeta] = useState();
     const [group, setGroup] = useState();
-    const [users, setUsers] = useState();
+    const [users, setUsers] = useState<Array<[string, UserMetaType]>>([]);
     useEffect(() => {
-        /**
-         * meta와 userMeta의 lazyloading
-         */
-        async function lazyLoad() {
-            setMeta(await api.json.read({ url: dir.stock.meta }));
-            setGroup(await api.json.read({ url: dir.stock.group }));
-            setUsers(await api.user.meta({}));
+        FetcherRead('/meta/light/group.json').then(e => setGroup(e.data));
+        FetcherRead('/meta/meta.json').then(e => setMeta(e.data));
+        FetcherRead('/user/ids.json').then(async e => {
+            let users = [];
+            for await (let id of Object.keys(e.index)) {
+                let res = await FetcherRead(`/user/${id}/meta.json`);
+                users.push([res.id, res.rank])
+            }
+            setUsers(users);
+        })
+        return () => {
+            setMeta();
+            setGroup();
+            setUsers([]);
         }
-        lazyLoad();
-    }, [])
+    }, []);
 
     const setAsideShow = props?.setAsideShow;
     const stockRef = useRef([]);
     const userRef = useRef([]);
-    const inputRef = useRef();
+    const inputRef = useRef<HTMLInputElement>();
 
     const router = useRouter();
     props = {
@@ -306,10 +311,12 @@ export default function Search(props) {
                 if (window.innerWidth < Int(scss.midWidth)) {
                     if (setAsideShow) setAsideShow(false);
                 }
-                inputRef?.current?.focus();
+                if (inputRef?.current) {
+                    inputRef?.current?.focus();
+                };
             }
         });
-    })
+    }, [])
 
     return <Index {...props} />
 }

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { FaRegStar, FaStar } from "react-icons/fa";
 
 async function toggleFav({ code, uid, update }) {
     if (!uid) {
@@ -19,15 +20,17 @@ export default function FavStar({ code }) {
     const uid = session?.user?.uid;
     return (
         <span
-            className={`${favs ? 'yellow' : ''}`}
-            style={{ paddingRight: '5px', cursor: 'pointer' }}
+            className={`cursor-pointer inline-block ${favs ? 'text-yellow-500' : 'text-gray-500'}`}
         >
-            <span
-                className={`fa fa-star${favs ? '' : '-o'}`}
+            {favs ? <FaStar
                 onClick={(e) => {
                     toggleFav({ code, uid, update });
                 }}
-            />
+            /> : <FaRegStar
+                onClick={(e) => {
+                    toggleFav({ code, uid, update });
+                }}
+            />}
         </span>
     );
 }

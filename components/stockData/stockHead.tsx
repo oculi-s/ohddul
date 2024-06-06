@@ -1,9 +1,9 @@
 import styles from '$/Stock/StockHead.module.scss';
-import { Loading } from '@/components/base/base';
 import FavStar from '@/components/baseStock/FavStar';
-import PredBar from '@/components/baseStock/PredBar';
 import '@/module/array';
 import dt from '@/module/dt';
+import { StockCloseType, StockMetaLightType } from '@/utils/type';
+import cn from 'classnames';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -34,6 +34,15 @@ function StockHead({
     code, last, ban,
     stockMeta,
     userPred, loadUser: load, setPred
+}: {
+    stockMeta: StockMetaLightType,
+    code: string,
+    last: StockCloseType,
+    uid: string,
+    userPred: any,
+    setPred: any,
+    load: boolean,
+    ban: boolean
 }) {
     const name = stockMeta?.n;
     const type = stockMeta?.t;
@@ -57,30 +66,23 @@ function StockHead({
         name, code, last,
     };
     if (!name) return <></>;
-    return <>
-        <div className={styles.head}>
-            <h2 className={ban ? styles.ban : ''}>
-                <FavStar {...props} />
-                <Link href={'/stock/' + code}>{name}</Link>
-                <span
-                    className={`${styles.market} ${styles[type == "K" ? 'k' : 'q']}`}
-                    title={type == "K" ? "코스피(유가증권)" : "코스닥"}
-                ></span>
-            </h2>
-            {load.pred
-                ? <Loading right={70} size={25} />
-                : <Open {...{ uid, ban, time: orig, view, setView }} />
-            }
-        </div>
-        {uid && bar && !ban &&
-            <div className={`${styles.slide} ${view ? styles.view : ''}`}>
-                <div>
-                    <div className={styles.fade}>
-                        <PredBar {...props} />
-                    </div>
+    return (
+        <div className='flex justify-between bg-trade-700 p-2'>
+            <div className='flex gap-2 justify-start items-center'>
+                <div className='flex items-center gap-2'>
+                    <FavStar {...props} />
+                    <Link href={'/stock/' + code} className='text-xl text-slate-100'>{name}</Link>
                 </div>
-            </div>}
-    </>;
+                <div
+                    className={cn('rounded-full w-6 h-6 text-white text-sm flex items-center justify-center', {
+                        'bg-emerald-800': type == "K",
+                        'bg-rose-700': type == "Q"
+                    })}
+                    title={type == "K" ? "코스피(유가증권)" : "코스닥"}
+                >{type == 'K' ? '유' : '코'}</div>
+            </div>
+        </div>
+    )
 }
 
 export default StockHead;

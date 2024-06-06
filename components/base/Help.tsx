@@ -24,27 +24,31 @@ const setDirWidth = ({ ref }) => {
     }
 }
 
-const Help = ({ data, span, title }) => {
+function Help({ data, span, title }: {
+    data?: JSX.Element[];
+    span?: JSX.Element;
+    title?: string;
+}) {
     const [hydrated, setHydrated] = useState(false);
     const ref = useRef({});
     const inner = data || span;
     useEffect(() => {
         if (!hydrated) {
             if (ref.current.span) {
-                setDirWidth({ ref })
+                setDirWidth({ ref });
             }
             setHydrated(true);
         }
-    })
+    });
     if (!innerText(inner)) return <></>;
     const innerData = <span
-        ref={e => { ref.current.span = e }}
+        ref={e => { ref.current.span = e; }}
         className={styles.help}
     >
         <span className={`fa fa-question-circle ${styles.question}`}>
             <span className={styles.arrow} />
         </span>
-        <dialog ref={e => { ref.current.dialog = e }}>
+        <dialog ref={e => { ref.current.dialog = e; }}>
             <div>
                 {title && <h4 className={styles.head}>{title}</h4>}
                 {span && <span>{span}</span>}
@@ -55,13 +59,13 @@ const Help = ({ data, span, title }) => {
                 </table>}
             </div>
         </dialog>
-    </span>
+    </span>;
     if (span)
         return innerData;
     return (
         <div className={`${styles.wrap}`}>
             {innerData}
         </div>
-    )
+    );
 }
 export default Help;

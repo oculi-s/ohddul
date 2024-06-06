@@ -1,4 +1,3 @@
-import { Inner } from '@/components';
 import { Logo } from '@/components/base/base';
 import Search from '@/components/common/Search';
 import Link from 'next/link';
@@ -7,8 +6,8 @@ import { IoMenuOutline } from "react-icons/io5";
 
 export default function Header(props) {
     const [view, setView] = useState(false);
-    return <nav className="fixed bg-trade-700 border-b-1 z-10 w-full top-0 left-0 py-3 shadow-lg h-header">
-        <Inner className="max-w-header flex justify-between items-center">
+    return <nav className="fixed bg-trade-700 border-b-1 z-50 w-full top-0 left-0 py-3 px-3 shadow-lg h-header">
+        <div className="flex justify-between items-center">
             <div className='flex gap-3 items-center'>
                 <Link href="/">
                     <Logo />
@@ -22,6 +21,6 @@ export default function Header(props) {
                     props?.setAsideShow();
                 }} />
             <Search {...{ ...props, view, setView }} />
-        </Inner>
+        </div>
     </nav >
 }

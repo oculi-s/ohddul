@@ -1,14 +1,16 @@
-import squarify from 'squarify'
-import styles from '$/Chart/Tree.module.scss'
-import { GroupBg, GroupText } from '@/public/group/color';
-import colors from '@/module/colors';
+import styles from '$/Chart/Tree.module.scss';
 import scss from '$/variables.module.scss';
-import Link from 'next/link';
-import { Int, H2R, parseFix } from '@/module/ba';
 import '@/module/array';
-import { useEffect, useState } from 'react';
+import { H2R, Int, parseFix } from '@/module/ba';
+import colors from '@/module/colors';
+import { GroupBg } from '@/public/group/color';
 import GroupImg from '@/public/group/Default';
 import Icon from '@/public/icon';
+import { TotalTreeType } from '@/utils/type/chartTree';
+import cn from 'classnames';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import squarify from 'squarify';
 
 function stockElement(index, {
     x0, y0, x1, y1, c, g, n, value: v
@@ -23,7 +25,7 @@ function stockElement(index, {
 
     return <div
         key={i}
-        className={`${styles.stock} ${styles[gn]}`}
+        className={cn('absolute', styles[gn])}
         style={{
             left: `${x0}%`,
             top: `${y0}%`,
@@ -33,11 +35,11 @@ function stockElement(index, {
             filter: `brightness(${c ? '1' : '1.5'})`,
         }}
     >
-        <div className={styles.inner}>
-            {inner && <div className={styles.info} onClick={e => { e.stopPropagation(); }}>
+        <div className='w-full h-full'>
+            {inner && <div className='w-full h-full' onClick={e => { e.stopPropagation(); }}>
                 {c ?
-                    <Link href={`/stock/${n}`}>{n}</Link> :
-                    <Link href={`/group/${gn}`}>
+                    <Link href={`/stock/${n}`} className='w-full h-full'>{n}</Link> :
+                    <Link href={`/group/${gn}`} className='w-full h-full'>
                         <GroupImg name={gn} />
                     </Link>}
                 <p className={styles.percent}>({parseFix(v / 10, 1)}%)</p>
@@ -46,13 +48,16 @@ function stockElement(index, {
     </div>;
 }
 
-const TotalGroupTree = ({ tree }) => {
+function TotalGroupTree({ tree }: {
+    tree: TotalTreeType;
+}) {
     const [stock, setStock] = useState(0);
     const [data, setData] = useState([]);
     const [N, setN] = useState(20);
     const [fixed, setFixed] = useState(false);
 
     useEffect(() => {
+        if (!tree?.group) return;
         setData(tree?.group?.slice(0, N)?.map(e => {
             const t = { ...e };
             if (!stock) delete t.children;
@@ -63,22 +68,20 @@ const TotalGroupTree = ({ tree }) => {
         } else {
             setN(20);
         }
-    }, [stock, N])
+    }, [stock, N, tree]);
 
     const box = { x0: 0, y0: 0, x1: 100, y1: 100 };
     const index = tree?.index?.group;
 
     return (
-        <>
-            <div
-                className={`${styles.wrap} ${fixed ? styles.fixed : ''}`}
-                onClick={e => setStock(c => 1 - c)}
-            >
-                {squarify(data, box)?.map((e, i) => stockElement(index, e, i))}
-                <i onClick={e => { e.preventDefault(); setFixed(!fixed); e.stopPropagation() }}><Icon name='FullScreen' /></i>
-            </div>
-        </>
+        <div
+            className='w-full h-full relative'
+            onClick={e => setStock(c => 1 - c)}
+        >
+            {squarify(data, box)?.map((e, i) => stockElement(index, e, i))}
+            <i onClick={e => { e.preventDefault(); setFixed(!fixed); e.stopPropagation(); }}><Icon name='FullScreen' /></i>
+        </div>
     );
-};
+}
 
 export default TotalGroupTree;
