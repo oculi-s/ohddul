@@ -1,6 +1,6 @@
 import scss from '$/variables.module.scss';
 import '@/module/array';
-import { Div, parseFix } from '@/module/ba';
+import { parseFix } from '@/module/ba';
 import colors from '@/module/colors';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect, useState } from 'react';
@@ -24,15 +24,15 @@ const options = {
             color: '#fff',
             textAlign: 'center',
             font: {
-                size: 14,
+                size: 16,
+                family: 'NanumSquare',
             },
             display: 'auto',
             formatter: function (value, ctx) {
                 const i = ctx?.dataIndex;
                 const data = ctx?.chart?.data;
-                const sum = data?.datasets[0].data?.sum();
                 var label = data?.labels[i];
-                return `${label}\n${Div(value, sum, 1)}`;
+                return `${label}\n${value}%`;
             }
         },
         legend: false,
@@ -90,7 +90,7 @@ const ShareDonut = ({ share, meta }) => {
                 options={options}
                 plugins={[ChartDataLabels]}
             /> :
-                <p>API에서 제공된<br />지분 데이터가 없습니다.</p>
+                <div>API에서 제공된<br />지분 데이터가 없습니다.</div>
             }
         </div>
     )

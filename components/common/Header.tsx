@@ -12,7 +12,7 @@ export default function Header(props) {
                 <Link href="/">
                     <Logo />
                 </Link>
-                <Link href="/help" className='hover:brightness-110'>도움말</Link>
+                <Link href="/help" className='hover:brightness-110 text-gray-200'>도움말</Link>
                 {/* <div className={styles.button}><Link href="/board">의견게시판</Link></div> */}
             </div>
             <IoMenuOutline

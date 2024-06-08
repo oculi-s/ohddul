@@ -11,7 +11,7 @@ export const Num = (n: number = 0) => {
 /**
  * Simple string to int
  */
-export const Int = (s: string = '0') => {
+export const Int = (s: string | number = '0') => {
     s = String(s);
     return parseInt(s.replace(/,/g, '')) || 0;
 }
@@ -41,7 +41,7 @@ export const parseFix = (f, n = 2) => {
  * a>b인경우 red, a<b인경우 blue를 return
  */
 export const Color = (a = 0, b = 0) => {
-    return a == b ? '' : a > b ? 'red' : 'blue';
+    return a == b ? '' : a > b ? 'text-rose-400' : 'text-blue-400';
 }
 
 export const Price = (v = 0, f = 1, sym = false) => {
@@ -57,7 +57,7 @@ export const Price = (v = 0, f = 1, sym = false) => {
 export const Per = (cur, prev) => {
     return Fix((cur - prev) / prev * 100, 1) + '%'
 }
-export const Div = (a, b, Fix = 0) => {
+export const Div = (a: number, b: number, Fix: number = 0) => {
     if (a < 0 && b < 0) return '-';
     if (b == 0) return '-';
     const d = Math.pow(10, Fix);
@@ -68,7 +68,7 @@ export const Sleep = (ms) => {
     return new Promise(resolve => setTimeout(() => resolve(true), ms));
 }
 
-export const Big = (code = '') => {
+export const Big = (code: string = '') => {
     const del = [3, 8, 34, 35, 39, 42, 47, 52, 56, 63, 66, 68, 73, 76, 84, 85, 87, 91, 96, 98, 99];
     const key = parseInt(code.slice(0, 2));
     for (let [i, d] of del.entries()) {
@@ -79,16 +79,19 @@ export const Big = (code = '') => {
     return code;
 }
 
-export const Quar = (date) => {
+export const Quar = (date: string) => {
     const qdict = { '03': 1, '06': 2, '09': 3, '12': 4, }
     const [Y, M, D] = date.split('-');
     const Q = qdict[M];
-    const res = { Y, M, D, Q };
+    const res = { Y, M, D, Q, s: '' };
     res.s = `${Y} ${qdict[M]}Q`
     return res;
 }
 
-export const H2R = (hex = "#000000", alpha = 1) => {
+export const H2R = (
+    hex: string = "#000000",
+    alpha: number = 1
+) => {
     const [r, g, b] = hex?.match(/\w\w/g)?.map(x => parseInt(x, 16));
     return `rgba(${r},${g},${b},${alpha})`;
 };

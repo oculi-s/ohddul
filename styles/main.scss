@@ -207,10 +207,6 @@ i {
     display: inline-block;
 }
 
-a {
-    color: $anchor;
-}
-
 a:not(:hover) {
     text-decoration: none;
 }
@@ -288,63 +284,6 @@ button {
     background: none;
     border: none;
 }
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 10px auto;
-    border-radius: 10px;
-    box-shadow: 0 0 10px $bgDarker;
-    border-radius: 10px;
-    overflow: hidden;
-
-    thead,
-    tfoot {
-        text-align: center;
-
-        tr>* {
-            background: $thColor;
-        }
-    }
-
-    tbody {
-        tr>* {
-            background: $tbColor;
-            z-index: 0;
-        }
-
-        &:not(thead+*) {
-            th {
-                background: $thColor;
-            }
-        }
-    }
-
-    .th {
-        background: $thColor;
-
-        td,
-        th {
-            background: $thColor;
-        }
-    }
-}
-
-tr {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-    border-color: $bgDark;
-
-    >* {
-        padding: 2px 3px;
-        word-break: keep-all;
-    }
-}
-
-table.fixed {
-    table-layout: fixed;
-}
-
 
 .unranked,
 .unranked * {

@@ -2,6 +2,7 @@ import scss from '$/variables.module.scss';
 import '@/module/array';
 import colors from '@/module/colors';
 import { ChartData } from 'chart.js';
+import { PriceCloseDailyType } from '../type/stock';
 
 /**
  * 주의할 부분
@@ -32,15 +33,17 @@ export function getData({
  * 20, 60, 120을 미리 만들어서 렌더하는 것으로 수정
  * 시간절약 : 4~6ms -> 1ms 미만
  */
-export function refineData({
+export async function refineData({
     data, num, isBollinger
 }: {
-    data: any[], num: number, isBollinger: boolean
-}): ChartData<'line'>[] {
+    data: PriceCloseDailyType[],
+    num: number,
+    isBollinger: boolean
+}): Promise<ChartData<'line'>[]> {
     let mainData = [], date;
     date = data?.map(e => e?.d);
     var mini = -1, maxi = -1, min, max;
-    for (let [i, e] of data?.entries()) {
+    for await (let [i, e] of data?.entries()) {
         if (!e?.c && data[i - 1]?.c && data[i + 1]?.c) {
             data[i].c = data[i - 1].c;
         }
@@ -50,9 +53,16 @@ export function refineData({
         if (maxi == -1) maxi = i, max = c;
         else if (c > max) maxi = i, max = c;
     }
-    const {
+    let {
         priceAvg, priceTop, priceBot, priceRaw
     } = getData({ data, num });
+    if (isBollinger) {
+        priceRaw = priceRaw?.slice(60);
+        priceAvg = priceAvg?.slice(60);
+        priceTop = priceTop?.slice(60);
+        priceBot = priceBot?.slice(60);
+        date = date?.slice(60);
+    }
     mainData = [...mainData, {
         data: priceRaw, label: '종가',
         borderColor: 'gray',
@@ -64,18 +74,18 @@ export function refineData({
         backgroundColor: colors[0],
         borderWidth: 1.5,
         pointRadius: 0,
-    }];
-    const def = { borderWidth: 1, pointRadius: 0 }
-    mainData = [...mainData, {
+    }, {
         data: priceTop, label: "BB상단",
         borderColor: scss?.red,
         backgroundColor: scss?.red,
-        ...def
+        borderWidth: 1,
+        pointRadius: 0,
     }, {
         data: priceBot, label: "BB하단",
         borderColor: scss?.blue,
         backgroundColor: scss?.blue,
-        ...def
+        borderWidth: 1,
+        pointRadius: 0,
     }]
     return [
         { labels: date, datasets: mainData },

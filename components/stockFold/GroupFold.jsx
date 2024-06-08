@@ -19,10 +19,10 @@ function GroupFold({
     if (!group) return;
     const gname = group?.n;
     if (!gname) return;
-    const priceDict = Object.fromEntries(group?.ch.map(e => [e, meta[e]?.a * price[e]?.c]));
+    const priceDict = Object.fromEntries(group?.ch.map(e => [e, meta[e]?.a * price?.[e]?.c]));
     const name = <>
-        <Link href={`/group/${gname}`}>
-            <GroupImg name={gname} />
+        <Link href={`/group/${gname}`} className='h-10 flex'>
+            <GroupImg name={gname} className='flex justify-center items-center' />
         </Link>
         <p>{gname}그룹 시총 : ({Price(group?.c)})</p>
     </>;
@@ -38,36 +38,39 @@ function GroupFold({
     const [view, setView] = useState(false);
     const body = group?.ch
         .filter(code => meta[code])
-        .qsort((a, b) => (priceDict[b] || 0) - (priceDict[a] || 0))
+        .qsort((a, b) => (priceDict?.[b] || 0) - (priceDict?.[a] || 0))
         .map((code) => {
             // const cnt = predict[code]?.queue || 0 + predict[code]?.data || 0;
-            const c = price[code]?.c;
-            const p = price[code]?.p;
-            const icode = induty[code];
-            const iname = index[icode]?.n;
+            const c = price?.[code]?.c;
+            const p = price?.[code]?.p;
+            const icode = induty?.[code];
+            const iname = index?.[icode]?.n;
             return <tr key={code}>
-                <th className={styles.stock}>
-                    <FavStar {...{ code, User, setUser }} />
-                    <Link
-                        href={`/stock/${meta[code]?.n}`}
-                        onClick={e => setView(false)}
-                    >{meta[code]?.n}
-                    </Link>
+                <th>
+                    <div className='flex gap-1 items-center justify-start'>
+                        <FavStar {...{ code, User, setUser }} />
+                        <Link
+                            href={`/stock/${meta?.[code]?.n}`}
+                            onClick={e => setView(false)}
+                        >
+                            {meta?.[code]?.n}
+                        </Link>
+                    </div>
                 </th>
                 <td>
-                    {Num(price[code]?.c)}&nbsp;
+                    {Num(price?.[code]?.c)}&nbsp;
                     <span className={`des ${Color(c - p)}`}>
                         ({Per(c, p)})
                     </span>
                 </td>
-                <td>{Price(priceDict[code])}</td>
+                <td>{Price(priceDict?.[code])}</td>
                 <td className={styles.ind}>
                     <Link href={`/induty/${iname}`}>{iname}</Link>
                 </td>
             </tr>;
         });
     const props = { name, head, body, view, setView };
-    return <div className={styles.group}>
+    return <div>
         <Fold {...props} />
     </div>
 }

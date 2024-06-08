@@ -1,6 +1,7 @@
 import scss from '$/variables.module.scss';
 
 export const hairline = {
+    id: 'hairline',
     afterDraw: function (chart) {
         if (chart.tooltip?._active?.length) {
             let x = chart.tooltip._active[0].element.x;

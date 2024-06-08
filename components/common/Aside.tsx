@@ -59,39 +59,27 @@ function UserInfo({ session, setAsideShow }) {
 }
 
 const N = 12;
-function AsideTable({ data, setAsideShow }) {
+function AsideTable({ data, setAsideShow, isGroup = false }: {
+    data: any,
+    setAsideShow: Function,
+    isGroup?: boolean
+}) {
     const body = data?.map(e => {
         const { code, n, c, p } = e;
-        return <tr key={code}>
-            <th>
+        return <tr key={isGroup ? n : code}>
+            <th className='text-left'>
                 <Link
-                    href={`/stock/${n}`}
-                    onClick={e => setAsideShow()}
-                >{n}</Link>
-            </th>
-            <td align='right'>{Num(c)}</td>
-            <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
-        </tr>
-    })
-    return <table><tbody>{body}</tbody></table>;
-}
-function AsideGroup({ data, setAsideShow }) {
-    const body = data?.map(e => {
-        const { n, c, p } = e;
-        return <tr key={n}>
-            <th>
-                <Link
-                    href={`/group/${n}`}
+                    href={isGroup ? `/group/${n}` : `/stock/${n}`}
                     onClick={e => setAsideShow()}
                 >
-                    <GroupImg name={n} className='!h-5 flex justify-center' />
+                    {isGroup ? <GroupImg name={n} className='!h-5 flex justify-center' /> : n}
                 </Link>
             </th>
-            <td align='right'>{Price(c)}</td>
+            <td align='right'>{isGroup ? Price(c) : Num(c)}</td>
             <td className={Color(c - p)} align='center'>{Per(c, p)}</td>
         </tr>
     })
-    return <table><tbody>{body}</tbody></table>;
+    return <table className='w-full'><tbody>{body}</tbody></table>;
 }
 
 function StockList({ aside, setAsideShow }) {
@@ -122,7 +110,7 @@ function StockList({ aside, setAsideShow }) {
                 </div>
                 <FaChevronRight />
             </Link>
-            <AsideGroup data={aside?.group} setAsideShow={setAsideShow} />
+            <AsideTable data={aside?.group} setAsideShow={setAsideShow} isGroup={true} />
         </Box>
         <Box>
             <Link

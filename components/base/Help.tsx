@@ -26,7 +26,7 @@ const setDirWidth = ({ ref }) => {
 
 function Help({ data, span, title }: {
     data?: JSX.Element[];
-    span?: JSX.Element;
+    span?: JSX.Element | string;
     title?: string;
 }) {
     const [hydrated, setHydrated] = useState(false);

@@ -26,5 +26,5 @@ html {
 }
 
 a {
-    color: #9dc9d6;
+    @apply text-blue-300;
 }

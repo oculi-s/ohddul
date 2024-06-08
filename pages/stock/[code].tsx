@@ -19,7 +19,7 @@ import IndutyFold from '@/components/stockFold/IndutyFold';
 
 import ChildFold from '@/components/stockFold/ChildFold';
 import { FetcherRead } from '@/module/fetcher';
-import { CloseType, EarnFixedType, MetaType, ShareFixedType, ShareOtherType, StockMetaLightType, StockPriceType } from '@/utils/type';
+import { CloseType, EarnFixedType, MetaType, ShareFixedType, ShareOtherType, StockPriceType } from '@/utils/type';
 
 /**
  * user가 존재하는 경우이거나 user의 페이지인 경우 유저 데이터를 불러와야함.
@@ -57,6 +57,8 @@ export async function getServerSideProps(ctx) {
 */
 function MetaTable({
     stockMeta: meta, pred, last, earn,
+}: {
+    stockMeta: any,
 }) {
     earn = earn?.data || [];
     earn?.qsort(dt.lsort);
@@ -78,7 +80,9 @@ function MetaTable({
             <table className='!w-auto ml-auto mr-0'><tbody>
                 <tr><th>시가총액</th><td>{Price(total)}</td></tr>
                 <tr>
-                    <th>최근종가</th><td>{Num(last?.c)}&nbsp;
+                    <th>최근종가</th>
+                    <td>
+                        <div>{Num(last?.c)}</div>
                         <span className={styles.percent}>
                             (<span className={Color(last?.c - last?.p)}>
                                 {Per(last?.c, last?.p)}
@@ -88,7 +92,8 @@ function MetaTable({
                 </tr>
                 {EPS ? <tr>
                     <th>EPS<Help {...epsHelp} /></th>
-                    <td>{Num(EPS)}&nbsp;
+                    <td>
+                        <div>{Num(EPS)}</div>
                         <span className={styles.percent}>
                             (<span className={Color(EPS - last?.c)}>
                                 {Per(EPS, last?.c)}
@@ -98,7 +103,8 @@ function MetaTable({
                 </tr> : ''}
                 {BPS ? <tr>
                     <th>BPS<Help {...bpsHelp} /></th>
-                    <td>{Num(BPS)}&nbsp;
+                    <td>
+                        <div>{Num(BPS)}</div>
                         <span className={styles.percent}>
                             (<span className={Color(BPS - last?.c)}>
                                 {Per(BPS, last?.c)}
@@ -158,20 +164,22 @@ function Index({ ban, name, tab, session }: {
     session: any
 }) {
     const [meta, setMeta] = useState<MetaType>();
-    const [stockMeta, setStockMeta] = useState<StockMetaLightType>();
+    const [group, setGroup] = useState<GroupType>();
+    const [induty, setInduty] = useState<IndutyType>();
+    const [index, setIndex] = useState<IndexType>();
+    const [price, setPrice] = useState<CloseType>();
+
     const [earn, setEarn] = useState<EarnFixedType>();
     const [share, setShare] = useState<ShareFixedType>();
     const [other, setOther] = useState<ShareOtherType>();
     const [stockPrice, setStockPrice] = useState<StockPriceType>();
-    const [code, setCode] = useState<string>();
-    const [price, setPrice] = useState<CloseType>();
+    const [code, setCode] = useState<string>('');
 
     const router = useRouter();
     const [userPred, setPred] = useState();
     const [loadUser, setLoadUser] = useState({ pred: true });
     const [loadStock, setLoadStock] = useState({ price: false, earn: false, share: false, pred: false });
     const uid = session?.user?.uid;
-
 
     useEffect(() => {
         console.log(name)
@@ -180,11 +188,21 @@ function Index({ ban, name, tab, session }: {
         console.time('shareLoad');
         console.time('otherLoad');
         console.time('priceLoad');
+        FetcherRead('/meta/light/group.json').then(e => {
+            setGroup(e);
+        }).catch(e => { console.log(e) });
+        FetcherRead('/meta/light/induty.json').then(e => {
+            setInduty(e);
+        }).catch(e => { console.log(e) });
+        FetcherRead('/meta/light/index.json').then(e => {
+            setIndex(e);
+        }).catch(e => { console.log(e) });
+
         FetcherRead('/meta/meta.json').then(e => {
-            setMeta(e.data);
-            const code = e.index[name];
+            const code = e.index[name] || name;
+            console.log(name, code);
             setCode(code);
-            setStockMeta(e.data[code]);
+            setMeta(e.data);
             console.timeEnd('meta');
             FetcherRead(`/stock/${code}/earnFixed.json`).then(e => {
                 setEarn(e);
@@ -218,6 +236,15 @@ function Index({ ban, name, tab, session }: {
         }
     }, [name]);
 
+    console.log(code);
+    if (!code) {
+        return <div>종목 정보가 없습니다.</div>;
+    }
+
+    const stockMeta = meta?.[code];
+    const stockGroup = group?.data[group?.index?.[code]]
+    const stockInduty = induty?.data[induty?.index?.[code]]
+
     if (!stockMeta) {
         return <div>종목 정보가 없습니다.</div>;
     }
@@ -231,7 +258,7 @@ function Index({ ban, name, tab, session }: {
     };
 
     return (
-        <div className='p-0.5 gap-0.5 h-full flex-col flex'>
+        <div>
             <StockHead
                 stockMeta={stockMeta}
                 ban={ban[code]}
@@ -239,16 +266,21 @@ function Index({ ban, name, tab, session }: {
                 last={last}
                 uid={uid}
                 userPred={userPred}
-                loadUser={loadUser}
                 setPred={setPred}
                 load={loadStock.price}
             />
-            {props?.group
-                ? <GroupFold meta={meta} price={price} />
-                : <ChildFold {...props} />}
-            <IndutyFold {...props} />
-            <MetaTable stockMeta={stockMeta} earn={earn} last={last} pred={[]} />
-            <StockQuery {...props} />
+            <div className='grid lg:grid-cols-6'>
+                <div className='max-lg:hidden p-0.5'>
+                    <MetaTable stockMeta={stockMeta} earn={earn} last={last} pred={[]} />
+                </div>
+                <div className='p-0.5 gap-0.5 h-full flex-col flex col-span-5'>
+                    {group
+                        ? <GroupFold meta={meta} price={price} group={stockGroup} induty={stockInduty} index={index} />
+                        : <ChildFold {...props} />}
+                    <IndutyFold {...props} />
+                    <StockQuery {...props} />
+                </div>
+            </div>
         </div>
     );
 }

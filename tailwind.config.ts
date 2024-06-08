@@ -53,7 +53,10 @@ const config: Config = {
       },
       height: {
         header: headerHeight
-      }
+      },
+      inset: {
+        header: headerHeight
+      },
     },
   },
 }

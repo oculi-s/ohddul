@@ -60,8 +60,8 @@ export function MoreTable({ head, data, foot, step = 5, start = 5 }) {
         setView(start < T);
     }, [head])
 
-    return <table className={styles.moreTable}>
-        <thead>{head}</thead>
+    return <table>
+        <thead className='bg-trade-600'>{head}</thead>
         <tbody>
             {data?.slice(0, N)}
         </tbody>

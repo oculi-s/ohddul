@@ -27,7 +27,7 @@ function ShareTable({ meta, share, stockMeta }) {
                     if (code) {
                         name = <Link href={`/stock/${code}`}>{name}</Link>;
                     }
-                    return <tr key={i}>
+                    return <tr key={i} className='border-b-1'>
                         <th>{name}</th><td>{Div(amount, total, 1)}</td>
                         <td>
                             <Link
@@ -45,7 +45,7 @@ function ShareTable({ meta, share, stockMeta }) {
             setData(data);
             setLoad(false);
         } else {
-            setData([]);
+            setData(null);
             setLoad(false);
         }
     }, [share]);
@@ -53,10 +53,11 @@ function ShareTable({ meta, share, stockMeta }) {
         <th>이름</th><th>지분</th>
         <th>기준일<Help span={`작년 사업보고서의 데이터를 기준으로 하며, 제공된 데이터에 따라 현재 상황과 차이가 날 수 있습니다.`} /></th>
     </tr>;
-    return <div className={styles.shareTable}>
-        {load ? <Loading left='auto' right='auto' />
-            : data?.length ?
-                <MoreTable head={head} data={data} foot={foot} start={8} />
+    return <div className='flex justify-center'>
+        {load
+            ? <Loading left='auto' right='auto' />
+            : data?.length
+                ? <MoreTable head={head} data={data} foot={foot} start={8} />
                 : <><p>API에서 제공된<br />지분 데이터가 없습니다.</p></>}
     </div>;
 }
@@ -67,7 +68,7 @@ function OtherTable({ meta, share, price }: {
     price: CloseType,
 }) {
     if (!share?.data) return;
-    const [data, setData] = useState();
+    const [data, setData] = useState<React.ReactNode[]>();
     useEffect(() => {
         share.data?.sort((b, a) =>
             price?.[a.from]?.c * a.amount - price?.[b.from]?.c * b.amount)
@@ -116,7 +117,7 @@ function ShareElement({ meta, price, stockMeta, share, other, load }) {
     share = share?.sort((b, a) => a.amount - b.amount);
     return <div className='p-3 flex flex-col gap-5'>
         <h3>지분 차트<Help {...overflowHelp} /></h3>
-        <div className='grid lg:grid-cols-2 min-h-[400px] bg-trade-600 rounded-xl p-3'>
+        <div className='grid lg:grid-cols-2 min-h-[400px] rounded-xl p-3 justify-center'>
             {load.share
                 ? <Loading />
                 : <ShareDonut share={share} meta={stockMeta} />}
@@ -125,7 +126,7 @@ function ShareElement({ meta, price, stockMeta, share, other, load }) {
                 : <ShareTable share={share} meta={meta} stockMeta={stockMeta} />}
         </div>
         <h3>이 회사가 보유한 다른 회사의 주식</h3>
-        <div className='grid lg:grid-cols-2 min-h-[400px] bg-trade-600 rounded-xl p-3'>
+        <div className='grid lg:grid-cols-2 min-h-[400px] rounded-xl p-3'>
             {load.other
                 ? <Loading />
                 : <OtherTable share={other} meta={meta} price={price} />}

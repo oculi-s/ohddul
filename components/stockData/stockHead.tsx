@@ -67,19 +67,21 @@ function StockHead({
     };
     if (!name) return <></>;
     return (
-        <div className='flex justify-between bg-trade-700 p-2'>
-            <div className='flex gap-2 justify-start items-center'>
-                <div className='flex items-center gap-2'>
-                    <FavStar {...props} />
-                    <Link href={'/stock/' + code} className='text-xl text-slate-100'>{name}</Link>
+        <div className='p-0.5'>
+            <div className='flex justify-between bg-trade-700 p-2'>
+                <div className='flex gap-2 justify-start items-center'>
+                    <div className='flex items-center gap-2'>
+                        <FavStar {...props} />
+                        <Link href={'/stock/' + stockMeta?.n} className='text-xl text-slate-100'>{name}</Link>
+                    </div>
+                    <div
+                        className={cn('rounded-full w-6 h-6 text-white text-sm flex items-center justify-center', {
+                            'bg-emerald-800': type == "K",
+                            'bg-rose-700': type == "Q"
+                        })}
+                        title={type == "K" ? "코스피(유가증권)" : "코스닥"}
+                    >{type == 'K' ? '유' : '코'}</div>
                 </div>
-                <div
-                    className={cn('rounded-full w-6 h-6 text-white text-sm flex items-center justify-center', {
-                        'bg-emerald-800': type == "K",
-                        'bg-rose-700': type == "Q"
-                    })}
-                    title={type == "K" ? "코스피(유가증권)" : "코스닥"}
-                >{type == 'K' ? '유' : '코'}</div>
             </div>
         </div>
     )
